@@ -1,0 +1,107 @@
+<div class="card-columns">
+  <div class="card">
+    <div class="card-header">
+      Verfügbarer Speicherplatz
+    </div>
+    <div class="card-body">
+      <div style="display: block">
+        <canvas
+          baseChart
+          [data]="spaceChartData"
+          [labels]="spaceChartLabels"
+          [chartType]="spaceChartType"
+          [colors]="spaceChartColors"
+          [options]="spaceChartOptions"
+        >
+        </canvas>
+      </div>
+      <button class="btn btn-primary" (click)="updateChart()">
+        Aktualisieren
+      </button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      What's new
+    </div>
+    <div class="card-body">
+      <ngb-accordion [closeOthers]="true" activeIds="content-0">
+        <ngb-panel
+          id="content-{{ version.id }}"
+          title="{{ version.version }}"
+          *ngFor="let version of whatsnew"
+        >
+          <ng-template ngbPanelContent>
+            <ul>
+              <li *ngFor="let news of version.news">{{ news }}</li>
+            </ul>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      Nächste Termine
+    </div>
+    <div class="card-body">
+      <ol>
+        <li *ngFor="let date of dates">
+          am {{ date.weekday }}, {{ date.date }} um
+          {{ date.starttime }} Uhr<br /><b> noch {{ date.countdown }}</b>
+          <br /><span class="headline">Filmen der zu Ehrenden</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!--<h4>Verfügbarer Speicherplatz</h4>
+
+   
+  </div>
+  <div class="widget col-md-6 col-sm-12 col-xs-12">
+    
+      </div>
+    </div>
+  </div>
+
+  <div class="widget col-md-6 col-sm-12 col-xs-12">
+    <h4>Nächste Termine:</h4>
+    <ol>
+      <li>
+        am Montag, 01.07.2019 um 07:45 Uhr<br /><b
+          >noch 2 Monate, 6 Tage, 19 Stunden und 41 Minuten</b
+        ><br /><span class="headline">Filmen der zu Ehrenden</span>
+      </li>
+      <li>
+        am Montag, 08.07.2019 um 07:45 Uhr<br /><b
+          >noch 2 Monate, 13 Tage, 19 Stunden und 41 Minuten</b
+        ><br /><span class="headline">Berlin 1</span>
+      </li>
+      <li>
+        am Montag, 15.07.2019 um 07:45 Uhr<br /><b
+          >noch 2 Monate, 20 Tage, 19 Stunden und 41 Minuten</b
+        ><br /><span class="headline">Praktikum</span>
+      </li>
+      <li>
+        am Montag, 15.07.2019 um 07:45 Uhr<br /><b
+          >noch 2 Monate, 20 Tage, 19 Stunden und 41 Minuten</b
+        ><br /><span class="headline">Berlin 2</span>
+      </li>
+      <li>
+        am Mittwoch, 24.07.2019 um 09:00 Uhr<br /><b
+          >noch 2 Monate, 29 Tage, 20 Stunden und 56 Minuten</b
+        ><br /><span class="headline">Schulfest</span>
+      </li>
+    </ol>
+  </div>
+
+
+  <div class="widget col-md-6 col-sm-12 col-xs-12">
+    <h4>Aktuelle Version</h4>
+    <div class="alert alert-info ">
+      <h3>3.03.05</h3>
+    </div>
+  </div>
+-->

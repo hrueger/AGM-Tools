@@ -1,0 +1,12 @@
+<navbar *ngIf="currentUser"></navbar>
+<div class="container-fluid" *ngIf="currentUser">
+  <div class="row">
+    <app-sidebar></app-sidebar>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <alert></alert>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<router-outlet *ngIf="!currentUser"></router-outlet>

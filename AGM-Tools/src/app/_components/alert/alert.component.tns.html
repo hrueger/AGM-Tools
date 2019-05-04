@@ -1,0 +1,11 @@
+<StackLayout class="home-panel">
+    <!--Add your page content here-->
+    <Label *ngIf="message"
+    [ngClass]="{
+      alert: message,
+      'alert-success': message.type === 'success',
+      'alert-danger': message.type === 'error'
+    }"
+  textWrap="true" text="{{ message.text }}" class="h2 description-label"></Label>
+    
+</StackLayout>
