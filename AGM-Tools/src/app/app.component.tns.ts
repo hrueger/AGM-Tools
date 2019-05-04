@@ -16,7 +16,9 @@ import { DrawerTransitionBase, RadSideDrawer, SlideInOnTopTransition } from "nat
 export class AppComponent {
   private _sideDrawerTransition: DrawerTransitionBase;
 
-  currentUser: User = null;
+  currentUser: User;
+  username = "";
+  useremail = "";
   
 
   constructor(
@@ -24,7 +26,11 @@ export class AppComponent {
     private authenticationService: AuthenticationService
   ) {
     this.authenticationService.currentUser.subscribe(
-      x => (this.currentUser = x)
+      x => {
+        this.currentUser = x;
+        this.useremail = "Email";
+        this.username = x.firstName + " " + x.lastName
+      }
     );
   }
 

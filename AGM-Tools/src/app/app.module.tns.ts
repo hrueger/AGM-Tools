@@ -20,8 +20,6 @@ import { AboutComponent } from './_components/about/about.component';
 import { NavbarComponent } from './_components/navbar/navbar.component';
 import { AlertComponent } from './_components/alert/alert.component';
 import { SidebarComponent } from './_components/sidebar/sidebar.component';
-import { TNSFontIconModule, TNSFontIconService } from 'nativescript-ngx-fonticon';
-import { NativeScriptCommonModule } from "nativescript-angular/common";
 import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
 import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
 import { NativeScriptUICalendarModule } from "nativescript-ui-calendar/angular";
@@ -30,7 +28,6 @@ import { NativeScriptUIDataFormModule } from "nativescript-ui-dataform/angular";
 import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
 
 
-TNSFontIconService.debug = true;
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from 'nativescript-angular/forms';
@@ -69,10 +66,7 @@ TNSFontIconService.debug = true;
     NativeScriptUIChartModule,
     NativeScriptUIDataFormModule,
     NativeScriptUIGaugeModule,
-    TNSFontIconModule.forRoot({
-			'fa': './assets/font-awesome.css',
-			
-		})
+    
   ],
   providers: [],
   bootstrap: [AppComponent],
