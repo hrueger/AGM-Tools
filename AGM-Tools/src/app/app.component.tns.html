@@ -1,61 +1,61 @@
-<RadSideDrawer [drawerTransition]="sideDrawerTransition">
+<RadSideDrawer #rsd [drawerTransition]="sideDrawerTransition">
 	<GridLayout tkDrawerContent rows="auto, *" class="sidedrawer sidedrawer-left">
 		<StackLayout row="0" class="sidedrawer-header">
-			<Label class="sidedrawer-header-image fa" text="&#xf2bd;"></Label>
+			<Label class="sidedrawer-header-image fas" text="&#xf2bd;"></Label>
 			<Label class="sidedrawer-header-brand" text="{{username}}"></Label>
 			<Label class="footnote" text="{{useremail}}"></Label>
 		</StackLayout>
 
 		<ScrollView row="1">
 			<StackLayout class="sidedrawer-content">
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf3fd;" class="fas"></Label>
-					<Label col="1" text="Dashboard" class="p-r-10"></Label>
+					<Label col="1" text="Dashboard" [nsRouterLink]="['/dashboard']" (tap)="hideDrawer()" class="p-r-10"></Label>
 				</GridLayout>
 
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf1ea;" class="fas"></Label>
-					<Label col="1" text="Benutzer" class="p-r-10"></Label>
+					<Label col="1" text="Benutzer" [nsRouterLink]="['/users']" class="p-r-10"></Label>
 				</GridLayout>
 
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf086;" class="fa"></Label>
-					<Label col="1" text="Chat" class="p-r-10"></Label>
+					<Label col="1" text="Chat" [nsRouterLink]="['/chat']" class="p-r-10"></Label>
 				</GridLayout>
 
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf0e0;" class="fas"></Label>
-					<Label col="1" text="Benachrichtigungen" class="p-r-10"></Label>
+					<Label col="1" text="Benachrichtigungen" [nsRouterLink]="['/notifications']" class="p-r-10"></Label>
 				</GridLayout>
 
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf073;" class="fas"></Label>
-					<Label col="1" text="Kalender" class="p-r-10"></Label>
+					<Label col="1" text="Kalender" [nsRouterLink]="['/calendar']" class="p-r-10"></Label>
 				</GridLayout>
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf07b;" class="fas"></Label>
-					<Label col="1" text="Projekte" class="p-r-10"></Label>
+					<Label col="1" text="Projekte" [nsRouterLink]="['/projects']" class="p-r-10"></Label>
 				</GridLayout>
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf15c;" class="fas"></Label>
-					<Label col="1" text="Dateien" class="p-r-10"></Label>
+					<Label col="1" text="Dateien" [nsRouterLink]="['/files']" class="p-r-10"></Label>
 				</GridLayout>
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf1c5;" class="fas"></Label>
-					<Label col="1" text="Vorlagen" class="p-r-10"></Label>
+					<Label col="1" text="Vorlagen" [nsRouterLink]="['/templates']" class="p-r-10"></Label>
 				</GridLayout>
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf188;" class="fas"></Label>
-					<Label col="1" text="Fehler / Verbesserungen" class="p-r-10"></Label>
+					<Label col="1" text="Fehler / Verbesserungen" [nsRouterLink]="['/bugs']" class="p-r-10"></Label>
 				</GridLayout>
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf00c;" class="fas"></Label>
-					<Label col="1" text="Fertig" class="p-r-10"></Label>
+					<Label col="1" text="Fertig" [nsRouterLink]="['/dashboard']" class="p-r-10"></Label>
 				</GridLayout>
 				<StackLayout class="hr-light"></StackLayout>
-				<GridLayout columns="auto, *" class="sidedrawer-list-item">
+				<GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
 					<Label col="0" text="&#xf3cd;" class="fas"></Label>
-					<Label col="1" text="Client-Software" class="p-r-10"></Label>
+					<Label col="1" text="Client-Software" [nsRouterLink]="['/clientsoftware']" class="p-r-10"></Label>
 				</GridLayout>
 
 				

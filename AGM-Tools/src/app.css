@@ -30,7 +30,7 @@ ActionBar {
     color: #022734;
 }
 .sidedrawer.sidedrawer-left {
-    background-color: #3A53FF;
+    background-color: #f5f5f5;
 }
 .sidedrawer.sidedrawer-left .sidedrawer-header-image {
     color: #F8F8F8;
@@ -45,31 +45,39 @@ ActionBar {
     color: rgba(255,255,255,0.5);
 }
 .sidedrawer .sidedrawer-header {
-    background-color: #3A53FF;
+    background-color: #428bca;
+    border-bottom: 4px solid #f5f5f5;
+    margin-bottom: 4px;
+    
+    
 }
 .sidedrawer .sidedrawer-header .sidedrawer-header-brand {
     color: #fff;
 }
 .sidedrawer .sidedrawer-content{ 
-    background-color: #fff;
+    background-color: #f5f5f5;
 }
 .sidedrawer .sidedrawer-content .sidedrawer-list-item{
     padding-left: 15;
-    font-size: 1.3rem;
+    font-size: 15;
 }
 .sidedrawer .sidedrawer-content .sidedrawer-list-item Label {
     vertical-align: center;
-    color: #022734;
+    color: #428bca;
+
 }
-.sidedrawer .sidedrawer-content .sidedrawer-list-item .fa {
+.sidedrawer .sidedrawer-content .sidedrawer-list-item .fas, .sidedrawer .sidedrawer-content .sidedrawer-list-item .fa {
     width: 20;
     margin-right: 10;
     margin-left: 5;
 }
-.sidedrawer .sidedrawer-content .sidedrawer-list-item.selected {
-    background-color: #F8F8F8;
+.sidedrawer .sidedrawer-content .sidedrawer-list-item.active {
+    
+     background-color:#428bca;
+     
 }
-.sidedrawer .sidedrawer-content .sidedrawer-list-item.selected Label {
-    color:#3A53FF;
+.sidedrawer .sidedrawer-content .sidedrawer-list-item.active Label{
+    
+    color:white;
+     
 }
- 

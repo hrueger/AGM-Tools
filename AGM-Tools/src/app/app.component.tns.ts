@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { User } from './_models/user';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './_services/authentication.service';
@@ -15,7 +15,7 @@ import { DrawerTransitionBase, RadSideDrawer, SlideInOnTopTransition } from "nat
 })
 export class AppComponent {
   private _sideDrawerTransition: DrawerTransitionBase;
-
+  @ViewChild("rsd") rSideDrawer: ElementRef;
   currentUser: User;
   username = "";
   useremail = "";
@@ -44,5 +44,8 @@ export class AppComponent {
   }
   get sideDrawerTransition(): DrawerTransitionBase {
     return this._sideDrawerTransition;
-}
+  }
+  onDrawerButtonTap(): void {
+    this.rSideDrawer.nativeElement.toggleDrawerState();
+  }
 }
