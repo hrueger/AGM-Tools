@@ -24,6 +24,7 @@ import { ChartsModule } from "ng2-charts";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { AvatarModule } from 'ngx-avatar';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
-    ChartsModule
+    ChartsModule,
+    AvatarModule
   ],
   providers: [
     {

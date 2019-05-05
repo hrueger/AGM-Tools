@@ -1,1 +1,18 @@
-.headline{color:white;text-align:left;display:block}.navbar-right{text-align:right;display:inline}.nav-item,.nav-link{display:inline}.navbar-brand{padding-top:5px;padding-bottom:5px;font-size:1.5rem}
+.headline {
+  color: white;
+  text-align: left;
+  display: block;
+}
+.navbar-right {
+  text-align: right;
+  display: inline;
+}
+.nav-item,
+.nav-link {
+  display: inline;
+}
+.navbar-brand {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 1.5rem;
+}

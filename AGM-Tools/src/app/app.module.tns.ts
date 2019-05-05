@@ -26,7 +26,9 @@ import { NativeScriptUICalendarModule } from "nativescript-ui-calendar/angular";
 import { NativeScriptUIChartModule } from "nativescript-ui-chart/angular";
 import { NativeScriptUIDataFormModule } from "nativescript-ui-dataform/angular";
 import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
-
+import { AvatarModule } from 'ngx-avatar';
+import { NavbarService } from './_services/navbar.service';
+import { AccordionModule } from "nativescript-accordion/angular";
 
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
@@ -66,9 +68,11 @@ import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
     NativeScriptUIChartModule,
     NativeScriptUIDataFormModule,
     NativeScriptUIGaugeModule,
+    AvatarModule,
+    AccordionModule
     
   ],
-  providers: [],
+  providers: [NavbarService],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA]
 })

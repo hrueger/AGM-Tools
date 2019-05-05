@@ -7,8 +7,22 @@ ActionBar {
     color: white;
 }
 
+StackLayout.content {
+    padding: 8;
+}
 
+.card {
+    border-width: 1;
+    border-color: #cfcfcf;
+    border-radius: 10;
+    padding: 5;
+    margin: 5;
+}
 
+.headline {
+    font-size: 20;
+    text-decoration: underline;
+}
 
 .fa {
     font-family: "Font Awesome 5 Free", "fa-regular-400";
@@ -34,6 +48,7 @@ ActionBar {
 }
 .sidedrawer.sidedrawer-left .sidedrawer-header-image {
     color: #F8F8F8;
+    background-color: rgb(6, 219, 138);
     height: 60;
     width: 60;
     font-size: 60;

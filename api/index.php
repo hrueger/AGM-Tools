@@ -177,7 +177,7 @@ function dashboardGetDates() {
                 }
                 
 
-                $ret[] = array("weekday" => $weekday, "date"=> $date, "starttime"=>$starttime, "countdown" => $countdown);
+                $ret[] = array("name" => $termin["headline"], "weekday" => $weekday, "date"=> $date, "starttime"=>$starttime, "countdown" => $countdown);
             }
             die(json_encode($ret));
         } else {

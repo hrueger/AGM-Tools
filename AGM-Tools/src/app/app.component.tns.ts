@@ -19,7 +19,7 @@ export class AppComponent {
   currentUser: User;
   username = "";
   useremail = "";
-  
+  initials = "";
 
   constructor(
     private router: Router,
@@ -30,6 +30,7 @@ export class AppComponent {
         this.currentUser = x;
         this.useremail = "Email";
         this.username = x.firstName + " " + x.lastName
+        this.initials = x.firstName.charAt(0) + " " + x.lastName.charAt(0);
       }
     );
   }
@@ -45,7 +46,7 @@ export class AppComponent {
   get sideDrawerTransition(): DrawerTransitionBase {
     return this._sideDrawerTransition;
   }
-  onDrawerButtonTap(): void {
+  public hideDrawer(): void {
     this.rSideDrawer.nativeElement.toggleDrawerState();
   }
 }
