@@ -3,6 +3,15 @@
 require_once("db.inc.php");
 require_once("library.php");
 
+
+
+function log_to_file($log_msg) {
+    $log_filename = "log.txt";
+    
+    
+    file_put_contents($log_filename, $log_msg . "\n", FILE_APPEND);
+}
+
 /*file_put_contents("log.txt", $_POST, FILE_APPEND);
 file_put_contents("log.txt", "------------------------------\n", FILE_APPEND);
 file_put_contents("log.txt", file_get_contents('php://input'), FILE_APPEND);
@@ -12,6 +21,7 @@ file_put_contents("log.txt", "------------------------------\n------------------
 
 $data = file_get_contents('php://input');
 @$data = json_decode($data);
+log_to_file(print_r($data, true));
 if ($data) {
     if (isset($data->action)) {
         switch ($data->action) {
@@ -26,6 +36,9 @@ if ($data) {
                 break;
             case "dashboardGetDates":
                 dashboardGetDates();
+                break;
+             case "chatGetContacts":
+                chatGetContacts();
                 break;
             default: 
                 break;
@@ -189,4 +202,104 @@ function dashboardGetDates() {
     dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
 }
 
+function chatGetContacts() {
+    
+    $db = connect();
+    $ret = array();
+    $result = array();
+    $userid = $db->real_escape_string(getSession("userid"));
+	//var_dump( $db->query("(SELECT id FROM receivers WHERE members=$userid)")->fetch_all());
+	$res = $db->query("SELECT r.name, r.id as rid, r.members, r.type, messages.message, users.username as sendername FROM receivers as r LEFT JOIN messages ON messages.id = (
+        SELECT id FROM messages
+        
+		WHERE 
+			(r.type = 'group' 
+				AND messages.receiver = r.id
+			) OR (
+				r.type = 'private' 
+				AND
+					(messages.receiver IN (SELECT id FROM receivers WHERE members='$userid') AND messages.sender IN (SELECT members FROM receivers WHERE id = r.id) )
+					OR
+					(messages.sender = '$userid' AND messages.receiver = r.id )
+			)
+		
+        
+		ORDER BY `timestamp` DESC
+        LIMIT 1
+	)
+	LEFT JOIN users ON users.id = messages.sender 
+	ORDER BY `timestamp` DESC
+	");
+
+
+	if ($res) {
+		$res = $res->fetch_all(MYSQLI_ASSOC);
+	} else {
+		$res = array();
+	}
+
+
+	$ret = [];
+	$ret["action"] = "gotContacts";
+	$ret["status"] = "true";
+	$ret["message"] = "";
+	//var_dump($clients);
+
+    //log_to_file(print_r($res, true));
+    require_once("./vendor/autoload.php");
+    
+	foreach ($res as $line) {
+
+		//echo "<br>Receivers.members: ".$line[ "members" ];
+		//echo "<br>Messages.sender: ".$line[ "sender" ];
+
+        $members = explode("-", $line["members"]);
+        $colorpair = ColorGenerator::generatePair();
+		if ($line["type"] == "private") {
+
+			if (!in_array($userid, $members)) {
+				//echo "hi<br>";
+				//$name = htmlentities(mb_convert_encoding($line["name"], 'UTF-8', 'ASCII'), ENT_SUBSTITUTE, "UTF-8"); //encoding auf UTF 8
+				$name = $line["name"];
+
+				$latestmessage = trim_text($line["message"], 40);
+				$result[] = array(
+                    "contact" => array(
+                        /*"avatar" => 'https://randomuser.me/api/portraits/med/men/'.random_int(0, 100).'.jpg',*/
+                          "avatar" => new LetterAvatar($line["name"]),
+                        "name" => htmlspecialchars($line["name"])
+                    ),
+                    "type" => "DIRECT",
+                    "when" => time(),
+                    "muted" => false,
+                    "unread" => 0,
+                    "text" => [htmlspecialchars($latestmessage)],
+                    "rid" => $line["rid"]
+                );
+			}
+		} else {
+			if (in_array($userid, $members)) {
+				//echo "hi<br>";
+				//$name = htmlentities(mb_convert_encoding($line["name"], 'UTF-8', 'ASCII'), ENT_SUBSTITUTE, "UTF-8"); //encoding auf UTF 8
+				$name = $line["name"];
+				$latestmessage = explode(" ", $line["sendername"])[0] . ": " . trim_text($line["message"], 40);
+				$result[] = array(
+                    "contact" => array(
+                        "avatar" => new LetterAvatar($line["name"]),
+                        "name" => htmlspecialchars($line["name"])
+                    ),
+                    "type" => "DIRECT",
+                    "when" => time(),
+                    "muted" => false,
+                    "unread" => 0,
+                    "text" => [htmlspecialchars($latestmessage)],
+                    "rid" => $line["rid"]
+                );
+			}
+		}
+	}
+
+	die(json_encode($result));
+    dieWithMessage("Es wurden keine Kontakte gefunden!".$db->error);
+}
 ?>

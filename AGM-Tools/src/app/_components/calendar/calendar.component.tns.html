@@ -1,2 +1,14 @@
 <navbar></navbar>
-<Label textWrap="true" text="Calendar Page" class="h2 description-label"></Label>
+<RadCalendar
+    [eventSource]="calendarEvents"
+    eventsViewMode="Inline"
+    selectionMode="Single"
+    viewMode="Month"
+    transitionMode="Stack"
+    locale="en-US"
+    (dateSelected)="onDateSelected($event)"
+    (dateDeselected)="onDateDeselected($event)"
+    (navigatedToDate)="onNavigatedToDate($event)"
+    (navigatingToDateStarted)="onNavigatingToDateStarted($event)"
+    (viewModeChanged)="onViewModeChanged($event)"
+></RadCalendar>
