@@ -1,6 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Pipe, PipeTransform } from "@angular/core";
-import { device } from "tns-core-modules/platform";
+import { Pipe, PipeTransform, Inject, LOCALE_ID } from "@angular/core";
 
 import * as isToday from "date-fns/is_today";
 import * as isYesterday from "date-fns/is_yesterday";
@@ -11,12 +10,10 @@ import * as parse from "date-fns/parse";
     pure: true
 })
 export class ShortWhenPipe implements PipeTransform {
+    constructor(@Inject(LOCALE_ID) private _locale: string) {}
+
     transform(value: number | string | Date): string {
-        let language = device.language;
-        if (device.region) {
-            language += `-${device.region}`;
-        }
-        const datePipe = new DatePipe(language);
+        const datePipe = new DatePipe("de-DE");
         const parsedDate = parse(value);
 
         if (isToday(parsedDate)) {

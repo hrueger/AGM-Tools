@@ -1,4 +1,9 @@
-import { NgModule, NO_ERRORS_SCHEMA, PlatformRef } from "@angular/core";
+import {
+    NgModule,
+    NO_ERRORS_SCHEMA,
+    PlatformRef,
+    LOCALE_ID
+} from "@angular/core";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
@@ -85,6 +90,10 @@ registerLocaleData(localeDe);
         ChatsDataService,
         PlatformRef,
         { provide: "platform", useValue: platform },
+        {
+            provide: LOCALE_ID,
+            useValue: "de-DE"
+        },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
     ],

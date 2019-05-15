@@ -1,5 +1,5 @@
 <?php
-
+use YoHang88\LetterAvatar\LetterAvatar;
 require_once("db.inc.php");
 require_once("library.php");
 
@@ -247,14 +247,13 @@ function chatGetContacts() {
 
     //log_to_file(print_r($res, true));
     require_once("./vendor/autoload.php");
-    
+   
 	foreach ($res as $line) {
-
+        $avatar = new LetterAvatar($line["name"], 'circle', 64);
 		//echo "<br>Receivers.members: ".$line[ "members" ];
 		//echo "<br>Messages.sender: ".$line[ "sender" ];
 
         $members = explode("-", $line["members"]);
-        $colorpair = ColorGenerator::generatePair();
 		if ($line["type"] == "private") {
 
 			if (!in_array($userid, $members)) {
@@ -266,7 +265,7 @@ function chatGetContacts() {
 				$result[] = array(
                     "contact" => array(
                         /*"avatar" => 'https://randomuser.me/api/portraits/med/men/'.random_int(0, 100).'.jpg',*/
-                          "avatar" => new LetterAvatar($line["name"]),
+                          "avatar" => $avatar->__toString(),
                         "name" => htmlspecialchars($line["name"])
                     ),
                     "type" => "DIRECT",
@@ -285,7 +284,7 @@ function chatGetContacts() {
 				$latestmessage = explode(" ", $line["sendername"])[0] . ": " . trim_text($line["message"], 40);
 				$result[] = array(
                     "contact" => array(
-                        "avatar" => new LetterAvatar($line["name"]),
+                        "avatar" => $avatar->__toString(),
                         "name" => htmlspecialchars($line["name"])
                     ),
                     "type" => "DIRECT",

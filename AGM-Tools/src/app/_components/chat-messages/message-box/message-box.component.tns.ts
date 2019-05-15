@@ -7,5 +7,5 @@ import { Component, Inject, Input } from "@angular/core";
     styleUrls: ["./message-box.component.scss"]
 })
 export class MessageBoxComponent {
-    constructor() {}
+    constructor(@Inject("platform") public platform) {}
 }

@@ -1,5 +1,3 @@
-$fa-font-path: "~font-awesome/fonts";
-
 $primary: darken(#428bca, 6.5%) !default; // #337ab7
 $success: #5cb85c !default;
 $info: #5bc0de !default;
@@ -7,7 +5,9 @@ $warning: #f0ad4e !default;
 $danger: #d9534f !default;
 
 @import "~bootstrap/scss/bootstrap.scss";
-@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+//@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+
+@import url("https://use.fontawesome.com/releases/v5.8.2/css/all.css");
 
 .sidebar {
     position: fixed;

@@ -14,14 +14,19 @@
             row="0"
             col="0"
             rowSpan="2"
-            [src]="chat.contact.avatar"
+            [src]="currentContact.avatar"
             class="thumb"
         ></Image>
-        <Label row="0" col="1" [text]="chat.contact.name" class="title"></Label>
+        <Label
+            row="0"
+            col="1"
+            [text]="currentContact.name"
+            class="title"
+        ></Label>
         <Label
             row="1"
             col="1"
-            text="last seen 10:00 AM"
+            [text]="currentContact.onlineStatus"
             class="subtitle"
         ></Label>
     </GridLayout>

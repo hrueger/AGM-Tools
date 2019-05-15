@@ -1,4 +1,5 @@
 import { NgModule, LOCALE_ID } from "@angular/core";
+import { Location } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AppRoutingModule } from "./app-routing.module";
@@ -26,6 +27,14 @@ import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { AvatarModule } from "ngx-avatar";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
+import { MessagesAreaComponent } from "./_components/chat-messages/messages-area/messages-area.component";
+import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
+import { NavbarService } from "./_services/navbar.service";
+import { ChatsDataService } from "./_services/chat.data.service";
+import { ShortWhenPipe } from "./_pipes/short-when.pipe";
+import localeDe from "@angular/common/locales/de";
+import { registerLocaleData } from "@angular/common";
+registerLocaleData(localeDe);
 
 @NgModule({
     declarations: [
@@ -46,7 +55,10 @@ import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages
         NavbarComponent,
         AlertComponent,
         SidebarComponent,
-        ChatMessagesComponent
+        ChatMessagesComponent,
+        ShortWhenPipe,
+        MessagesAreaComponent,
+        MessageBoxComponent
     ],
     imports: [
         BrowserModule,
@@ -61,9 +73,12 @@ import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages
         AvatarModule
     ],
     providers: [
+        Location,
+        NavbarService,
+        ChatsDataService,
         {
             provide: LOCALE_ID,
-            useValue: "de"
+            useValue: "de-DE"
         },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

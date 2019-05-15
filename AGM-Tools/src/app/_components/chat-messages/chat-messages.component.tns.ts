@@ -31,7 +31,7 @@ export class ChatMessagesComponent implements OnInit {
         text: null,
         rid: null
     };
-
+    currentContact = new Contact();
     unread: number;
     messages: Message[];
     //chats: Chat[];
@@ -40,7 +40,8 @@ export class ChatMessagesComponent implements OnInit {
         private route: ActivatedRoute,
         private chatsService: ChatsDataService,
         private router: Router,
-        private _location: Location
+        private _location: Location,
+        @Inject("platform") public platform
     ) {}
 
     ngOnInit() {

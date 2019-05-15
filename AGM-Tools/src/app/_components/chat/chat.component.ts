@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { NavigationExtras } from "@angular/router";
-import { RouterExtensions } from "nativescript-angular/router";
-import { ChatsDataService } from "~/app/_services/chat.data.service";
+import { NavigationExtras, Router } from "@angular/router";
+import { ChatsDataService } from "../../_services/chat.data.service";
 
 @Component({
     selector: "app-chat",
@@ -12,7 +11,7 @@ export class ChatComponent {
     chats = [];
     constructor(
         private chatsService: ChatsDataService,
-        private routerExtensions: RouterExtensions
+        private router: Router
     ) {
         this.chats = [];
     }
@@ -29,6 +28,6 @@ export class ChatComponent {
                 unread: 2
             }
         };
-        this.routerExtensions.navigate(["chat-messages", rid], extras);
+        this.router.navigate(["chat-messages", rid], extras);
     }
 }

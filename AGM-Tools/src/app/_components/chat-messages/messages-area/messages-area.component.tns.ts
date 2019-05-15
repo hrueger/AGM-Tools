@@ -18,7 +18,7 @@ import { SentStatus } from "../../../_models/sent-status.model";
 export class MessagesAreaComponent implements OnInit {
     @Input() messages: Message[];
 
-    constructor() {}
+    constructor(@Inject("platform") public platform) {}
 
     ngOnInit() {
         this.messages = this.messages.slice(0, 50);
@@ -38,15 +38,15 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     getIcon(message: Message) {
-        switch (message.sent) {
+        /*switch (message.sent) {
             case SentStatus.NOT_SENT:
                 return "&#xf017;";
             case SentStatus.SENT:
                 return "&#xf00c;";
             default:
                 return "&#xf560;";
-        }
-        //return "T";
+        }*/
+        return "T";
     }
 
     isViewed(message: Message) {

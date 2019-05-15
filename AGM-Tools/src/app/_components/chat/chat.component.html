@@ -1,3 +1,30 @@
-<p>
-  chat works!
-</p>
+<div *ngFor="let chat of chats" id="chats" class="col-md-2 col-list-group">
+    <div
+        (click)="goToChat(chat.rid)"
+        rows="auto, auto"
+        columns="auto, *, auto"
+        class="list-group-item"
+    >
+        <img
+            row="0"
+            col="0"
+            rowSpan="2"
+            [src]="chat.contact.avatar"
+            class="thumb"
+        />
+        <p row="0" col="1">{{ chat.contact.name }}</p>
+        <p row="1" col="1" class="body">{{ chat.text }}</p>
+        <p
+            row="0"
+            col="2"
+            class="body time"
+            [class.time-unread]="chat.unread > 0"
+        >
+            {{ chat.when | shortWhen | uppercase }}
+        </p>
+        <div row="1" col="2" orientation="horizontal" class="m-x-auto">
+            <p *ngIf="chat.muted" text="&#xf026;" class="mdi muted"></p>
+            <p *ngIf="chat.unread > 0" class="body unread">{{ chat.unread }}</p>
+        </div>
+    </div>
+</div>
