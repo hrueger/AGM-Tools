@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { NavbarService } from "../../_services/navbar.service";
 import { DashboardDataService } from "../../_services/dashboard.data.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-dashboard",
@@ -16,6 +17,7 @@ export class DashboardComponent implements OnInit {
 
     constructor(
         private dashboardDataService: DashboardDataService,
+        private remoteService: RemoteService,
         private NavbarService: NavbarService
     ) {}
 
@@ -23,7 +25,9 @@ export class DashboardComponent implements OnInit {
         this.initChart();
     }
     initChart() {
-        this.dashboardDataService.getSpaceChartData().subscribe(data => {
+        this.remoteService.get("dashboardGetSpaceChartData").subscribe(data => {
+            console.log("Bekommene Daten");
+            console.log(data);
             this.spaceChartData = [
                 { name: "Verfügbar", amount: data[0] },
                 { name: "Vom System belegt", amount: data[1] },
