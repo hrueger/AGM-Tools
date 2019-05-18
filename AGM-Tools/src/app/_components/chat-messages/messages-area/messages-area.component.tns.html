@@ -6,7 +6,7 @@
             *ngFor="let message of messages; let idx = index"
             class="message-bubble"
             [class.continuation]="isContinuation(idx)"
-            [class.myself]="!message.sender"
+            [class.myself]="!message.fromMe"
         >
             <FlexboxLayout class="message-bubble-content">
                 <Label

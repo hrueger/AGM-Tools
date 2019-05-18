@@ -35,7 +35,8 @@ export class ChatsDataService {
                         "motivation, subcultures, and management"
                 ][Math.floor(Math.random() * 10)],
                 chat: null,
-                sender: null,
+                fromMe: null,
+                sendername: "Test",
                 created: Date.now() - (idx + 1) * 40 * 60 * 1000,
                 sent: Math.floor(4 * Math.random())
             }));

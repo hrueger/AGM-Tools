@@ -21,10 +21,19 @@ file_put_contents("log.txt", "------------------------------\n------------------
 
 $data = file_get_contents('php://input');
 @$data = json_decode($data);
-log_to_file(print_r($data, true));
+//log_to_file(print_r($data, true));
 if ($data) {
     if (isset($data->action)) {
-        switch ($data->action) {
+        $action = $data->action;
+        $args = array();
+        foreach ($data->args as $arg) {
+            $vars = get_object_vars($arg);
+            foreach ($vars as $key => $value) {
+                $args[$key] = $value;
+            }
+        }
+        
+        switch ($action) {
             case "authenticate":
                 authenticate($data);
                 break;
@@ -37,9 +46,24 @@ if ($data) {
             case "dashboardGetDates":
                 dashboardGetDates();
                 break;
-             case "chatGetContacts":
+            case "dashboardGetVersion":
+                dashboardGetVersion();
+                break;
+            case "usersGetUsers":
+                usersGetUsers();
+                break;
+            case "projectsGetProjects":
+                projectsGetProjects();
+                break;
+            case "notificationsGetNotifications":
+                notificationsGetNotifications();
+                break;
+            case "chatGetContacts":
                 chatGetContacts();
                 break;
+            case "chatGetMessages":
+                chatGetMessages($args);
+                break;    
             default: 
                 break;
         }
@@ -151,6 +175,10 @@ function dashboardGetWhatsnew() {
     die(json_encode($ret));
 }
 
+function dashboardGetVersion() {
+    die(json_encode(getVersion()));
+}
+
 function dashboardGetDates() {
     $db = connect();
     $ret = array();
@@ -200,6 +228,71 @@ function dashboardGetDates() {
         dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
     }
     dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
+}
+
+function usersGetUsers() {
+    $db = connect();
+    $res = $db->query("SELECT users.id, users.username, users.email, usergroups.name as groupname FROM users JOIN usergroups ON users.usergroup = usergroups.id");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    die(json_encode($res));
+}
+
+function projectsGetProjects() {
+    $db = connect();
+    $res = $db->query("SELECT `name`, members FROM projects");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    $usersIDs = getUserIdArray($db);
+    foreach ($res as &$line) {
+        $members = explode("-", $line["members"]);
+        $users = array();
+        foreach ($members as $member) {
+            $users[] = $usersIDs[$member];
+        }
+        $line["members"] = $users;
+    }
+    
+    die(json_encode($res));
+}
+
+function notificationsGetNotifications() {
+    $db = connect();
+    $usernames = getUserIdArray($db);
+    $myID = getCurrentuserId();
+    $res = $db->query("SELECT * FROM notifications WHERE sender=".$myID);
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    $ret = array();
+    foreach ($res as $line) {
+        $receivers = explode("-", $line["receivers"]);
+        $names =  [];
+        foreach ($receivers as $receiverid) {
+            $names[] = $usernames[$receiverid];
+        }
+        $receivernames = $names;
+        $users = explode("-", $line["seen"]);
+        $names =  [];
+        foreach ($users as $user) {
+            if ($user) {
+                $names[] = $usernames[$user];
+            }
+        }
+        $seens = $names;
+        $users = array_diff($receivers, $users);
+        $notseens =  [];
+        foreach ($users as $user) {
+            if ($user) {
+                $notseens[] = $usernames[$user];
+            }
+        }
+        $ret[] = array(
+            "seen" => $seens,
+            "notseen" => $notseens,
+            "recievers" => $receivernames,
+            "headline" => $line["headline"],
+            "content" => $line["content"],
+            "id" => $line["id"]
+        );
+    }
+    die(json_encode($ret));
 }
 
 function chatGetContacts() {
@@ -300,5 +393,166 @@ function chatGetContacts() {
 
 	die(json_encode($result));
     dieWithMessage("Es wurden keine Kontakte gefunden!".$db->error);
+}
+
+function chatGetMessages($data) {
+
+    $db = connect();
+	$chatID = $data["rid"];
+    $m = "";
+    //var_dump($data);
+    //die();
+    $myID = getCurrentUserId();
+    $ret = array();
+	
+	$allusers = explode("-", $db->query("SELECT members FROM receivers WHERE id=" . $chatID)->fetch_all(MYSQLI_ASSOC)[0]["members"]);
+	
+	$type = $db->query("SELECT type FROM receivers WHERE id=" . $chatID)->fetch_all(MYSQLI_ASSOC)[0]["type"];
+
+	if ($type == "private") {
+		
+		$myreceiverid = $db->query("SELECT * FROM receivers WHERE members='" . $myID . "'")->fetch_all(MYSQLI_ASSOC)[0]["id"];
+		$otherSenderId = $db->query("SELECT * FROM receivers WHERE id='" . $chatID . "'")->fetch_all(MYSQLI_ASSOC)[0]["members"];
+		$res = $db->query("SELECT * FROM messages WHERE (receiver='" . $chatID . "' AND sender='" . $myID . "') OR  (receiver='" . $myreceiverid . "' AND sender='" . $otherSenderId . "')");
+
+	} else if ($type == "group") {
+		
+		$res = $db->query("SELECT * FROM messages WHERE receiver='" . $chatID . "'");
+	}
+
+	
+	if (!isset($res) || !$res) {
+		die(json_encode(array()));
+	}
+
+
+	$contacts = getContactIDArray($db);
+	$res = $res->fetch_all(MYSQLI_ASSOC);
+	//$ret["message"] = var_dump($res);
+	//$ret["message"] .= var_dump($contacts);
+	$previousSender = null;
+	//$counter = $id;
+	$number = 0;
+	$lastDay = 0;
+	foreach ($res as $line) {
+
+		/*$nowDay = date('d.m.Y', strtotime($line["timestamp"]));
+		if ($lastDay != $nowDay) {
+            $m
+             .= "<div class='msg-wrapper center'><p class='system-msg new-day'>$nowDay</p></div>";
+		}*/
+
+		$alt = ($line["sender"] == $myID) ? true : false;
+		if ($previousSender != $line["sender"]) {
+			$name = $contacts[intval($line["sender"])];
+		} else {
+			$name = false;
+		}
+		$message = $line["message"];
+		$status = $line["status"];
+		if ($type == "group" && $line["sender"] == $myID) {
+
+			$status = $line["status"];
+			if (!$status) {
+				$status = [];
+				$status["received"] = [];
+				$status["seen"] = [];
+			} else if (!empty($status)) {
+				//var_dump($status);
+				//file_put_contents('log.txt', print_r($status).PHP_EOL , FILE_APPEND | LOCK_EX);
+				try {
+					$status = @unserialize($status);
+					if (!$status) {
+						$status = [];
+						$status["received"] = [];
+						$status["seen"] = [];
+					}
+				} catch (Exception $e) {
+					$status = [];
+				}
+			}
+
+			$allreceived = true;
+			foreach ($allusers as $user) {
+				if ($user != $myID && !in_array($user, $status["received"])) {
+					$allreceived = false;
+					//echo "User: $user, Status: " . print_r( $status[ "received" ] ) . "\n";
+				}
+			}
+			if ($allreceived) {
+				$allseen = true;
+				foreach ($allusers as $user) {
+					if (!in_array($user, $status["seen"])) {
+						$allseen = false;
+					}
+				}
+				if ($allseen) {
+					$status = 2;
+				} else {
+					$status = 1;
+				}
+			} else {
+				$status = 0;
+			}
+			//echo $status;
+		}
+
+		$time = $line["timestamp"];
+		
+		$ret[] = array("fromMe" => $alt, "sendername" => $name, "text" => $message, "sent" => $status+1, "created" => $time);
+
+
+
+
+		$counter = $line["id"];
+		$previousSender = $line["sender"];
+		$lastDay = date('d.m.Y', strtotime($line["timestamp"]));
+		$number++;
+
+
+		/// make messages received, jetzt abver wirklich!
+
+		if ($type == "group") {
+			$status = $line["status"];
+			if (!$status) {
+				$status = [];
+				$status["seen"] = [];
+				$status["received"] = [];
+			} else if (!empty($status)) {
+				//var_dump($status);
+				@$status = unserialize($status);
+				if (!$status) {
+					$status = [];
+					$status["received"] = [];
+					$status["seen"] = [];
+				}
+			}
+			if (!in_array($myID, $status["seen"])) {
+				$status["seen"][] = $myID;
+			}
+			$status = $db->real_escape_string(serialize($status));
+			$mID = $db->real_escape_string($line["id"]);
+			$db->query("UPDATE `messages` SET `status` = '$status' WHERE `messages`.`id` = $mID;");
+			//$existing = false;
+			//foreach (explode("-", $receiverIdArray[$line["receiver"]]["members"]) as $member) {
+			//	if ($member == $myID) $existing = true;
+			//}
+			//echo $existing ."\n";
+			//echo "das war eine gruppe";
+		} else {
+			$mID = $db->real_escape_string($line["id"]);
+			$db->query("UPDATE `messages` SET `status` = '2' WHERE `messages`.`id` = $mID;");
+			//echo $db->affected_rows."   -   ".$db->error."\n";
+			//echo "das war ein privater chat von ".$line["receiver"]."\n";
+		}
+	}
+
+	if ($number == 0) {
+
+        die(json_encode(array()));
+        
+	}
+	//$i["lastid"] = $counter;
+	die(json_encode($ret));
 }
 ?>

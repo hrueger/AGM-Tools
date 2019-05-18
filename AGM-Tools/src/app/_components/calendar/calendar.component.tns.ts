@@ -9,6 +9,9 @@ import { Color } from "tns-core-modules/color";
 })
 export class CalendarComponent implements OnInit {
     calendarEvents = [];
+    viewMode: string = "MonthNames";
+    currentViewIndex = -1;
+    viewModes = ["Year", "Month", "Week", "Day"];
 
     constructor() {
         let events: calendarModule.CalendarEvent[] = [];
@@ -49,23 +52,32 @@ export class CalendarComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    onDateSelected(args) {
-        console.log("onDateSelected: " + args.date);
-    }
-
-    onDateDeselected(args) {
-        console.log("onDateDeselected: " + args.date);
-    }
-
     onNavigatedToDate(args) {
         console.log("onNavigatedToDate: " + args.date);
     }
 
-    onNavigatingToDateStarted(args) {
-        console.log("onNavigatingToDateStarted: " + args.date);
-    }
+    up() {
+        if (this.currentViewIndex == -1) {
+            this.currentViewIndex = 1;
+        } else {
+            this.currentViewIndex -= 1;
+        }
 
-    onViewModeChanged(args) {
-        console.log("onViewModeChanged: " + args.newValue);
+        if (this.currentViewIndex < 0) {
+            this.currentViewIndex = this.viewModes.length - 1;
+        }
+        this.viewMode = this.viewModes[this.currentViewIndex];
+    }
+    down() {
+        if (this.currentViewIndex == -1) {
+            this.currentViewIndex = 2;
+        } else {
+            this.currentViewIndex += 1;
+        }
+
+        if (this.currentViewIndex > this.viewModes.length - 1) {
+            this.currentViewIndex = 0;
+        }
+        this.viewMode = this.viewModes[this.currentViewIndex];
     }
 }

@@ -28,12 +28,12 @@ export class MessagesAreaComponent implements OnInit {
 
     isContinuation(idx: number) {
         return (
-            (!this.messages[idx].sender &&
+            (!this.messages[idx].fromMe &&
                 this.messages[idx - 1] &&
-                !this.messages[idx - 1].sender) ||
-            (this.messages[idx].sender &&
+                !this.messages[idx - 1].fromMe) ||
+            (this.messages[idx].fromMe &&
                 this.messages[idx - 1] &&
-                this.messages[idx - 1].sender)
+                this.messages[idx - 1].fromMe)
         );
     }
 

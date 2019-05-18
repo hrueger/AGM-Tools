@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { NavigationExtras, Router } from "@angular/router";
 import { ChatsDataService } from "../../_services/chat.data.service";
+import { RemoteService } from "~/app/_services/remote.service";
 
 @Component({
     selector: "app-chat",
@@ -9,15 +10,12 @@ import { ChatsDataService } from "../../_services/chat.data.service";
 })
 export class ChatComponent {
     chats = [];
-    constructor(
-        private chatsService: ChatsDataService,
-        private router: Router
-    ) {
+    constructor(private remoteService: RemoteService, private router: Router) {
         this.chats = [];
     }
 
     ngOnInit() {
-        this.chatsService.getChats().subscribe(chats => {
+        this.remoteService.get("chatGetContacts").subscribe(chats => {
             this.chats = chats;
         });
     }
@@ -25,7 +23,7 @@ export class ChatComponent {
     goToChat(rid) {
         const extras: NavigationExtras = {
             queryParams: {
-                unread: 2
+                unread: 3
             }
         };
         this.router.navigate(["chat-messages", rid], extras);

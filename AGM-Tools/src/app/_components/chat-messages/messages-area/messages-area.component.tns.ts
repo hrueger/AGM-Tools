@@ -20,20 +20,16 @@ export class MessagesAreaComponent implements OnInit {
 
     constructor(@Inject("platform") public platform) {}
 
-    ngOnInit() {
-        this.messages = this.messages.slice(0, 50);
-        console.log("Messages");
-        console.log(this.messages);
-    }
+    ngOnInit() {}
 
     isContinuation(idx: number) {
         return (
-            (!this.messages[idx].sender &&
+            (!this.messages[idx].fromMe &&
                 this.messages[idx - 1] &&
-                !this.messages[idx - 1].sender) ||
-            (this.messages[idx].sender &&
+                !this.messages[idx - 1].fromMe) ||
+            (this.messages[idx].fromMe &&
                 this.messages[idx - 1] &&
-                this.messages[idx - 1].sender)
+                this.messages[idx - 1].fromMe)
         );
     }
 

@@ -10,6 +10,7 @@ import { Location } from "@angular/common";
 import { Chat } from "../../_models/chat.model";
 import { ChatsDataService } from "../../_services/chat.data.service";
 import { Message } from "../../_models/message.model";
+import { RemoteService } from "../../_services/remote.service";
 import { from } from "rxjs";
 import { filter } from "rxjs/operators";
 import { Contact } from "../../_models/contact.model";
@@ -39,6 +40,7 @@ export class ChatMessagesComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private chatsService: ChatsDataService,
+        private remoteService: RemoteService,
         private router: Router,
         private _location: Location,
         @Inject("platform") public platform
@@ -47,11 +49,18 @@ export class ChatMessagesComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             this.receiverId = +params.index;
-            this.chatsService.getChats().subscribe(chats => {
+            this.remoteService.get("chatGetChats").subscribe(chats => {
                 //this.chats = chats;
                 from(chats)
-                    .pipe(filter(chat => chat.rid == this.receiverId))
-                    .subscribe(chat => (this.chat = chat));
+                    .pipe(
+                        //@ts-ignore
+                        filter(chat => chat.rid == this.receiverId)
+                    )
+                    .subscribe(
+                        chat =>
+                            //@ts-ignore
+                            (this.chat = chat)
+                    );
             });
             this.getMessages(this.receiverId);
         });
@@ -61,7 +70,9 @@ export class ChatMessagesComponent implements OnInit {
     }
 
     getMessages(receiverId) {
-        this.messages = this.chatsService.getMessages(receiverId);
+        this.remoteService
+            .get("chatGetMessages", { rid: receiverId })
+            .subscribe(data => (this.messages = data));
     }
 
     goBack() {

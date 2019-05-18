@@ -1,2 +1,116 @@
-<navbar></navbar>
-<Label textWrap="true" text="Notifications Page" class="h2 description-label"></Label>
+<navbar *ngIf="!itemsSelected"></navbar>
+
+<ActionBar *ngIf="itemsSelected" title="Chat" class="action-bar link">
+    <NavigationButton
+        text="unread"
+        icon="res://ic_arrow_back"
+        (tap)="goBack()"
+    ></NavigationButton>
+    <GridLayout
+        rows="auto, auto"
+        columns="auto, auto, *"
+        class="action-bar-title"
+        [class.h1]="platform.isIOS"
+    >
+        <Image
+            row="0"
+            col="0"
+            rowSpan="2"
+            [src]="currentContact.avatar"
+            class="thumb"
+        ></Image>
+        <Label
+            row="0"
+            col="1"
+            [text]="currentContact.name"
+            class="title"
+        ></Label>
+        <Label
+            row="1"
+            col="1"
+            [text]="currentContact.onlineStatus"
+            class="subtitle"
+        ></Label>
+    </GridLayout>
+
+    <ActionItem
+        ios.position="right"
+        class="action-item mdi"
+        ios:icon="res://video-call"
+    >
+        <Label *ngIf="platform.isAndroid" text="&#xf03d;" class="icon"></Label>
+    </ActionItem>
+    <ActionItem
+        ios.position="right"
+        class="action-item mdi"
+        ios:icon="res://tabs/calls"
+    >
+        <Label
+            *ngIf="platform.isAndroid"
+            text="&#xf095;"
+            class="icon phone"
+        ></Label>
+    </ActionItem>
+    <ng-container *ngIf="platform.isAndroid">
+        <ActionItem android.position="popup" text="View contact"> </ActionItem>
+        <ActionItem android.position="popup" text="Media"> </ActionItem>
+        <ActionItem android.position="popup" text="Search"> </ActionItem>
+        <ActionItem android.position="popup" text="Mute"> </ActionItem>
+        <ActionItem android.position="popup" text="Wallpaper"> </ActionItem>
+        <ActionItem android.position="popup" text="Block"> </ActionItem>
+        <ActionItem android.position="popup" text="Clear chat"> </ActionItem>
+        <ActionItem android.position="popup" text="Email chat"> </ActionItem>
+        <ActionItem android.position="popup" text="Add shortcut"> </ActionItem>
+    </ng-container>
+</ActionBar>
+
+<StackLayout>
+    <StackLayout orientation="horizontal" height="50">
+        <Button text="Neue Benachrichtigung"></Button>
+    </StackLayout>
+
+    <RadListView
+        [items]="notifications"
+        class="list-group"
+        multipleSelection="true"
+        height="3000"
+        selectionBehavior="Press"
+        (itemSelected)="itemSelected($event)"
+        (itemDeselected)="itemDeselected($event)"
+    >
+        <ng-template
+            let-notification="item"
+            let-i="index"
+            let-odd="odd"
+            let-even="even"
+        >
+            <GridLayout
+                [class.selected]="notification.selected"
+                (tap)="onNotificationTap(notification)"
+                rows="auto, auto"
+                columns="*, *"
+                class="list-group-item"
+            >
+                <Label
+                    row="0"
+                    col="0"
+                    textWrap="true"
+                    [text]="notification.headline"
+                ></Label>
+
+                <StackLayout row="0" col="1">
+                    <Label
+                        class="body notification seen"
+                        *ngFor="let seen of notification.seen"
+                        [text]="seen"
+                    ></Label>
+                    <Label
+                        class="body notification notseen"
+                        *ngFor="let notseen of notification.notseen"
+                        [text]="notseen"
+                    ></Label>
+                </StackLayout>
+            </GridLayout>
+        </ng-template>
+    </RadListView>
+</StackLayout>

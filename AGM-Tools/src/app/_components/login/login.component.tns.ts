@@ -3,14 +3,13 @@ import { alert, prompt } from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page";
 import { RouterExtensions } from "nativescript-angular/router";
 
-import { User } from "../../_models/user";
 import { AuthenticationService } from "../../_services/authentication.service";
 
 @Component({
     selector: "app-login",
-    
+
     templateUrl: "./login.component.html",
-    styleUrls: ['./login.component.css']
+    styleUrls: ["./login.component.css"]
 })
 export class LoginComponent {
     isLoggingIn = true;
@@ -21,9 +20,13 @@ export class LoginComponent {
     @ViewChild("passwordField") passwordField: ElementRef;
     @ViewChild("confirmPassword") confirmPassword: ElementRef;
 
-    constructor(private page: Page, private authService: AuthenticationService, private routerExtensions: RouterExtensions) {
+    constructor(
+        private page: Page,
+        private authService: AuthenticationService,
+        private routerExtensions: RouterExtensions
+    ) {
         this.page.actionBarHidden = true;
-        
+
         this.username = "";
         this.password = "";
     }
@@ -47,18 +50,22 @@ export class LoginComponent {
     }
 
     login() {
-      
-        this.authService.login(this.username, this.password)
-            .subscribe((data) => {
-                
+        this.authService.login(this.username, this.password).subscribe(
+            data => {
                 this.processing = false;
-                this.routerExtensions.navigate(["/dashboard"], { clearHistory: true });
-            }, error => {
-              console.log(error);
-              this.processing = false;
-              this.alert(error.error.message || "Dein Account wurde leider nicht gefunden. Bitte überprüfe deinen Benutzernamen nochmals!");
-            })
-            
+                this.routerExtensions.navigate(["/dashboard"], {
+                    clearHistory: true
+                });
+            },
+            error => {
+                console.log(error);
+                this.processing = false;
+                this.alert(
+                    error.error.message ||
+                        "Dein Account wurde leider nicht gefunden. Bitte überprüfe deinen Benutzernamen nochmals!"
+                );
+            }
+        );
     }
 
     register() {
@@ -81,12 +88,13 @@ export class LoginComponent {
     forgotPassword() {
         prompt({
             title: "Passwort zurücksetzen",
-            message: "Gib deine username-Adresse ein, sodass wir dir ein neues Passwort zuschicken können.",
+            message:
+                "Gib deine username-Adresse ein, sodass wir dir ein neues Passwort zuschicken können.",
             inputType: "username",
             defaultText: "",
             okButtonText: "Weiter",
             cancelButtonText: "Zurück"
-        }).then((data) => {
+        }).then(data => {
             /*if (data.result) {
                 this.authService.resetPassword(data.text.trim())
                     .then(() => {

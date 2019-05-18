@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AlertService } from "./alert.service";
-import { Observable, Subject, of } from "rxjs";
+import { Observable, BehaviorSubject, of } from "rxjs";
 import config from "../_config/config";
 import { tap, catchError, first } from "rxjs/operators";
 import { CacheService } from "./cache.service";
@@ -16,47 +16,45 @@ export class RemoteService {
         private cacheService: CacheService
     ) {}
 
-    get(action: string, ...args: any[]): Observable<any> {
+    get(action: string, ...args: any): Observable<any> {
         //var action = "dashboardGetSpaceChartData";
-        let subject = new Subject();
+        let subject = new BehaviorSubject(null);
         let cacheData = null;
         let echtDaten = false;
+        //console.log("hole internetdaten");
         this.http
             .post<any>(`${config.apiUrl}`, {
                 action,
-                ...args
+                args
             })
             .pipe(
                 tap(_ => this.log("fetched " + action)),
                 catchError(this.handleError<any>(action, false))
             )
-            .pipe(first())
             .subscribe(data => {
-                console.log("internetdaten bekommen");
-                if (cacheData == 0 || !this.isEquivalent(cacheData, data)) {
-                    console.log("Cache Daten: " + cacheData);
-                    console.log("Echte Daten: " + data);
-                    console.log(this.isEquivalent(cacheData, data));
-                    console.log(typeof cacheData);
-                    console.log(typeof data);
+                //console.log("internetdaten bekommen");
+                if (cacheData == null || !this.isEquivalent(cacheData, data)) {
+                    //console.log("Cache Daten: " + cacheData);
+                    //console.log("Echte Daten: " + data);
                     subject.next(data);
-                    this.cacheService.put(data, action, ...args);
-                    console.log("cache updated and new data served");
+                    this.cacheService.put(data, action, args);
+                    //console.log("cache updated and new data served: " + data);
                 } else {
-                    console.log("cache the same as internet");
+                    //console.log("cache the same as internet");
                 }
                 echtDaten = true;
                 subject.complete();
             });
+        //console.log("hole cachedaten");
         this.cacheService
-            .get(action, ...args)
-            .pipe(first())
+            .get(action, args)
+
             .subscribe(d => {
-                console.log("cacheDaten bekommen");
+                //console.log("cacheDaten bekommen");
                 if (echtDaten == false) {
                     subject.next(d);
                     cacheData = d;
-                    console.log("served from cache");
+                    //console.log("served from cache:" + cacheData);
                 }
             });
         return subject.asObservable();
@@ -66,6 +64,7 @@ export class RemoteService {
             console.error(error);
 
             this.log(`${operation} failed: ${error.message}`);
+            console.log(result);
 
             this.alertService.error(error);
 
@@ -74,9 +73,13 @@ export class RemoteService {
     }
 
     private log(message: string) {
-        console.log(`DashboardDataService Log: ${message}`);
+        console.log(`RemoteService Log: ${message}`);
     }
     private isEquivalent(a, b) {
+        //console.log("a");
+        //console.log(a);
+        //console.log("b");
+        //console.log(b);
         // Create arrays of property names
         var aProps = Object.getOwnPropertyNames(a);
         var bProps = Object.getOwnPropertyNames(b);

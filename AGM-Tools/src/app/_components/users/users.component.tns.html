@@ -1,2 +1,36 @@
 <navbar></navbar>
-<Label textWrap="true" text="Users Page" class="h2 description-label"></Label>
+<StackLayout>
+    <StackLayout orientation="horizontal" height="50">
+        <Button text="Neuer Benutzer"></Button>
+        <Button text="Eigene Daten ändern"></Button>
+    </StackLayout>
+
+    <ListView
+        height="3000"
+        [items]="users"
+        (itemTap)="onItemTap($event)"
+        class="list-group"
+    >
+        <ng-template
+            let-user="item"
+            let-i="index"
+            let-odd="odd"
+            let-even="even"
+        >
+            <GridLayout
+                rows="auto, auto"
+                columns="auto, *, auto"
+                class="list-group-item"
+            >
+                <Label crow="0" col="1" [text]="user.username"></Label>
+                <Label row="1" col="1" class="body" [text]="user.email"></Label>
+                <Label
+                    row="0"
+                    col="2"
+                    class="body"
+                    [text]="user.groupname"
+                ></Label>
+            </GridLayout>
+        </ng-template>
+    </ListView>
+</StackLayout>
