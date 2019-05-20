@@ -10,8 +10,6 @@ import { tap, catchError } from "rxjs/operators";
 import { Observable } from "rxjs/internal/Observable";
 import { of } from "rxjs";
 
-var cache = require("nativescript-cache");
-
 @Injectable()
 export class ChatsDataService {
     constructor(private http: HttpClient) {}
