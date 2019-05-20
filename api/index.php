@@ -25,11 +25,13 @@ $data = file_get_contents('php://input');
 if ($data) {
     if (isset($data->action)) {
         $action = $data->action;
-        $args = array();
-        foreach ($data->args as $arg) {
-            $vars = get_object_vars($arg);
-            foreach ($vars as $key => $value) {
-                $args[$key] = $value;
+        if (isset($data->args)) {
+            $args = array();
+            foreach ($data->args as $arg) {
+                $vars = get_object_vars($arg);
+                foreach ($vars as $key => $value) {
+                    $args[$key] = $value;
+                }
             }
         }
         
