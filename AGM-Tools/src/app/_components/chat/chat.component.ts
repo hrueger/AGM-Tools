@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { NavigationExtras, Router } from "@angular/router";
 import { ChatsDataService } from "../../_services/chat.data.service";
-import { RemoteService } from "~/app/_services/remote.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-chat",
