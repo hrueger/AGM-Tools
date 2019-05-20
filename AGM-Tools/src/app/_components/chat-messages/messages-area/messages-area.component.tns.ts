@@ -34,15 +34,31 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     getIcon(message: Message) {
-        /*switch (message.sent) {
+        switch (message.sent) {
             case SentStatus.NOT_SENT:
-                return "&#xf017;";
+                return "not_sent";
             case SentStatus.SENT:
-                return "&#xf00c;";
+                return "sent";
             default:
-                return "&#xf560;";
-        }*/
-        return "T";
+                return "default";
+        }
+        //return "T";
+    }
+
+    isSent(message: Message) {
+        if (message.sent == SentStatus.SENT) {
+            return true;
+        }
+    }
+    isNotSent(message: Message) {
+        if (message.sent == SentStatus.NOT_SENT) {
+            return true;
+        }
+    }
+    isDefault(message: Message) {
+        if (message.sent == SentStatus.RECEIVED) {
+            return true;
+        }
     }
 
     isViewed(message: Message) {
