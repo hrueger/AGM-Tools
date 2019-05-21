@@ -28,7 +28,14 @@ export class RemoteService {
                 args
             })
             .pipe(
-                tap(_ => this.log("fetched " + action)),
+                tap(_ =>
+                    this.log(
+                        "fetched " +
+                            action +
+                            " with data " +
+                            JSON.stringify(args)
+                    )
+                ),
                 catchError(this.handleError<any>(action, false))
             )
             .subscribe(data => {
