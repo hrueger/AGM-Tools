@@ -32,6 +32,7 @@ import { MessageBoxComponent } from "./_components/chat-messages/message-box/mes
 import { NavbarService } from "./_services/navbar.service";
 import { ChatsDataService } from "./_services/chat.data.service";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
+import { FullCalendarModule } from "@fullcalendar/angular";
 import localeDe from "@angular/common/locales/de";
 import { registerLocaleData } from "@angular/common";
 registerLocaleData(localeDe);
@@ -70,7 +71,8 @@ registerLocaleData(localeDe);
         HttpClientModule,
         AppRoutingModule,
         ChartsModule,
-        AvatarModule
+        AvatarModule,
+        FullCalendarModule
     ],
     providers: [
         Location,

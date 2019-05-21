@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import * as calendarModule from "nativescript-ui-calendar";
 import { Color } from "tns-core-modules/color";
+import { RadSideDrawer } from "nativescript-ui-sidedrawer";
+
+import * as app from "tns-core-modules/application";
 
 @Component({
     selector: "app-calendar",
@@ -79,5 +82,9 @@ export class CalendarComponent implements OnInit {
             this.currentViewIndex = 0;
         }
         this.viewMode = this.viewModes[this.currentViewIndex];
+    }
+    onDrawerButtonTap(): void {
+        const sideDrawer = <RadSideDrawer>app.getRootView();
+        sideDrawer.showDrawer();
     }
 }

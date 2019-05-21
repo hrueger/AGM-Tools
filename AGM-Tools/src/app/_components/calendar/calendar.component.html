@@ -1,3 +1,9 @@
-<p>
-  calendar works!
-</p>
+<full-calendar
+    defaultView="dayGridMonth"
+    [plugins]="calendarPlugins"
+    [weekends]="false"
+    [events]="[
+        { title: 'event 1', date: '2019-05-01' },
+        { title: 'event 2', date: '2019-05-02' }
+    ]"
+></full-calendar>
