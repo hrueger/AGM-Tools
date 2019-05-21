@@ -12,7 +12,9 @@ export class CacheService {
         return;
     }
     get(action, ...args): Observable<any> {
-        console.log("Todo cache");
-        return null;
+        return new Observable(observer => {
+            observer.next(null);
+            observer.complete();
+        });
     }
 }
