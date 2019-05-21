@@ -11,8 +11,8 @@ function log_to_file($log_msg) {
     
     file_put_contents($log_filename, $log_msg . "\n", FILE_APPEND);
 }
-
-/*file_put_contents("log.txt", $_POST, FILE_APPEND);
+/*
+file_put_contents("log.txt", $_POST, FILE_APPEND);
 file_put_contents("log.txt", "------------------------------\n", FILE_APPEND);
 file_put_contents("log.txt", file_get_contents('php://input'), FILE_APPEND);
 file_put_contents("log.txt", "------------------------------\n", FILE_APPEND);
@@ -65,7 +65,13 @@ if ($data) {
                 break;
             case "chatGetMessages":
                 chatGetMessages($args);
-                break;    
+                break;  
+             case "filesGetFolder":
+                filesGetFolder($args);
+                break;
+             case "filesGetFiles":
+                filesGetFolder($args);
+                break;  
             default: 
                 break;
         }
@@ -241,7 +247,7 @@ function usersGetUsers() {
 
 function projectsGetProjects() {
     $db = connect();
-    $res = $db->query("SELECT `name`, members FROM projects");
+    $res = $db->query("SELECT id, `name`, members, `description` FROM projects");
     $res = $res->fetch_all(MYSQLI_ASSOC);
     $usersIDs = getUserIdArray($db);
     foreach ($res as &$line) {
@@ -557,4 +563,30 @@ function chatGetMessages($data) {
 	//$i["lastid"] = $counter;
 	die(json_encode($ret));
 }
+
+function filesGetFolder($data) {
+    $db = connect();
+	$fid = $db->real_escape_string($data["fid"]);
+	$pid = $db->real_escape_string($data["pid"]);
+    
+    $res1 = $db->query("SELECT * FROM files WHERE folder='$fid' AND project='$pid'");
+    
+    $res1 = $res1->fetch_all(MYSQLI_ASSOC);
+    $res2 = $db->query("SELECT * FROM folders WHERE folder='$fid' AND project='$pid'")->fetch_all(MYSQLI_ASSOC);
+    
+    $files = [];
+    $folders = [];
+    foreach ($res1 as $file) {
+        $file["type"] = "file";
+        $files[] = $file;
+    }
+    foreach ($res2 as $folder) {
+        $folder["type"] = "folder";
+        $folders[] = $folder;
+    }
+    //log_to_file(print_r("hi", true));
+    //log_to_file(print_r(array_merge($folders, $files), true));
+	die(json_encode(array_merge($folders, $files)));
+}
+
 ?>

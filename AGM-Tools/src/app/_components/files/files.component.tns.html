@@ -1,2 +1,94 @@
-<navbar></navbar>
-<Label textWrap="true" text="Files" class="h2 description-label"></Label>
+<ActionBar class="action-bar">
+    <NavigationButton
+        ios:visibility="collapsed"
+        icon="res://menu"
+        (tap)="onDrawerButtonTap()"
+    ></NavigationButton>
+    <ActionItem
+        icon="res://navigation/menu"
+        android:visibility="collapsed"
+        (tap)="onDrawerButtonTap()"
+        ios.position="left"
+    >
+    </ActionItem>
+
+    <Label class="action-bar-title" text="Dateien"></Label>
+    <ActionItem
+        *ngIf="!selectProject"
+        ios:visibility="collapsed"
+        icon="res://ic_back"
+        (tap)="up()"
+    ></ActionItem>
+</ActionBar>
+
+<ListView
+    [items]="projects"
+    id="projects"
+    *ngIf="selectProject && !viewFile"
+    class="list-group"
+>
+    <ng-template let-project="item" let-index="index">
+        <GridLayout
+            (tap)="goToProject(project)"
+            rows="auto, auto"
+            columns="auto, *, auto"
+            class="list-group-item"
+        >
+            <Label row="0" col="1" [text]="project.name"></Label>
+            <Label
+                row="1"
+                col="1"
+                [text]="project.description"
+                class="body"
+            ></Label>
+        </GridLayout>
+    </ng-template>
+</ListView>
+
+<ListView
+    [items]="items"
+    *ngIf="!selectProject && !viewFile"
+    id="items"
+    class="list-group"
+>
+    <ng-template let-item="item" let-index="index">
+        <GridLayout
+            (tap)="goTo(item)"
+            rows="auto, auto"
+            columns="auto, *, auto"
+            class="list-group-item"
+        >
+            <Image
+                row="0"
+                col="0"
+                rowSpan="2"
+                [src]="getIcon(item)"
+                class="thumb"
+            ></Image>
+            <Label row="0" col="1" [text]="item.name"></Label>
+            <Label row="1" col="1" text="x MB" class="body"></Label>
+            <Label
+                row="0"
+                col="2"
+                [text]="item.modificationDate | date"
+                class="body time"
+            ></Label>
+            <StackLayout
+                row="1"
+                col="2"
+                orientation="horizontal"
+                class="m-x-auto"
+            >
+                <Label
+                    *ngIf="item.tags"
+                    text="&#xf026;"
+                    class="mdi muted"
+                ></Label>
+            </StackLayout>
+        </GridLayout>
+    </ng-template>
+</ListView>
+
+<StackLayout *ngIf="viewFile">
+    <Image [src]="imageSource"></Image>
+</StackLayout>
