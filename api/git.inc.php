@@ -1,15 +1,9 @@
-<pre><?php
-define("REPO_DIRECTORY", "/home/hannes/gitrepotest/");
+<?php
+define("REPO_DIRECTORY", "/agmtoolsdata/webstorage");
+define("BARE_REPO_DIRECTORY", "/agmtoolsdata/storage/");
 define("REPO_SUFFIX", "/.git/");
-define("GIT_DATE_FORMAT", "d.m.Y (H:i)");
 define("CACHE", "/tmp");
 define("GIT_BINARY", "git");
-define("GIT_CSS", true);
-define("REPO_HTTP_RELPATH", "");
-define("HTTP_SERVER_NAME", "http://localhost/");
-define("HTTP_METHOD_PREFIX", "{".HTTP_SERVER_NAME."}{".REPO_HTTP_RELPATH."}");
-define("HELP_LINK", "http://example.com");
-
 
 class Git {
 
@@ -330,5 +324,40 @@ class Git {
         }
         return $results;
     }
+
+    // meine Funktionen //
+    public static function initRepo($name) {
+        $barePath = BARE_REPO_DIRECTORY . $name . ".git";
+        $webStoragePath = REPO_DIRECTORY . "/" . $name;
+
+        mkdir($barePath, 0777, true);
+        $gitBinary = GIT_BINARY;
+        $out = array();
+        $cmd = "GIT_DIR=" . BARE_REPO_DIRECTORY . $name . ".git/" . " {$gitBinary} init --bare";
+        
+        exec($cmd, $out);
+        $q = "Initialized empty Git repository";
+        
+        if (!substr($out[0], 0, strlen($q)) === $q) {
+            dieWithMessage("Fehler beim Initialisieren des Git Repositories: ".$out[0]);
+        }
+
+
+        mkdir($webStoragePath, 0777, true);
+        $gitBinary = GIT_BINARY;
+        $out = array();
+        $cmd = "GIT_DIR=" . $webStoragePath . " {$gitBinary} clone $barePath";
+        
+        exec($cmd, $out);
+        $q = "Initialized empty Git repository";
+        
+        if (isset($out[0]) && substr($out[0], 0, strlen($q)) === $q) {
+            die(json_encode(true));
+        } else {
+            dieWithMessage("Fehler beim Initialisieren des Git Repositories: ".(isset($out[0])?$out[0]:"kein Rückgabewert"));
+        }
+        
+    }
+
 
 }

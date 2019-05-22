@@ -32,9 +32,14 @@ import { MessageBoxComponent } from "./_components/chat-messages/message-box/mes
 import { NavbarService } from "./_services/navbar.service";
 import { ChatsDataService } from "./_services/chat.data.service";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
-import { FullCalendarModule } from "@fullcalendar/angular";
+import { CommonModule } from "@angular/common";
+import { CalendarModule, DateAdapter } from "angular-calendar";
+import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
+import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule } from "@angular/forms";
 import localeDe from "@angular/common/locales/de";
 import { registerLocaleData } from "@angular/common";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -62,6 +67,7 @@ registerLocaleData(localeDe);
         MessageBoxComponent
     ],
     imports: [
+        BrowserAnimationsModule,
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
@@ -72,7 +78,16 @@ registerLocaleData(localeDe);
         AppRoutingModule,
         ChartsModule,
         AvatarModule,
-        FullCalendarModule
+        CommonModule,
+        FormsModule,
+        NgbModalModule,
+
+        CalendarModule.forRoot({
+            provide: DateAdapter,
+            useFactory: adapterFactory
+        }),
+        FormsModule,
+        ReactiveFormsModule
     ],
     providers: [
         Location,

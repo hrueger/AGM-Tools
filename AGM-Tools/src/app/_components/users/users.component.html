@@ -1,3 +1,113 @@
-<p>
-  users works!
-</p>
+<button
+    id="newBtn"
+    type="button"
+    (click)="openNewModal(content)"
+    class="btn btn-primary"
+>
+    Neuer Benutzer
+</button>
+&nbsp;
+<button
+    id="editBtn"
+    type="button"
+    (click)="openEditModal(content)"
+    class="btn btn-primary"
+>
+    Eigene Daten ändern
+</button>
+<br /><br />
+<div class="table-responsive">
+    <table id="users" class="table  table-hover table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Benutzergruppe</th>
+                <th>Löschen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.groupname }}</td>
+
+                <td>
+                    <button class="btn btn-link" (click)="delete(user)">
+                        Löschen
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Neues Projekt</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="invalidMessage" class="alert alert-danger">
+            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+        </div>
+        <form [formGroup]="newProjectForm">
+            <div class="form-group">
+                <label for="name">Name: </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    formControlName="name"
+                    placeholder="Name des Projekts"
+                />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="description">Beschreibung: </label>
+                <textarea
+                    class="form-control"
+                    formControlName="description"
+                    id="description"
+                    placeholder="Beschreibung des Projekts"
+                ></textarea>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="members" class="">Mitglieder:</label>
+                <select
+                    multiple
+                    class="custom-select"
+                    formControlName="members"
+                >
+                    <option
+                        *ngFor="let user of allusers"
+                        value="{{ user.id }}"
+                        >{{ user.username }}</option
+                    >
+                </select>
+            </div>
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-success"
+            (click)="
+                !newProjectForm.invalid
+                    ? modal.close('Save click')
+                    : (invalidMessage = true)
+            "
+        >
+            Erstellen
+        </button>
+    </div>
+</ng-template>

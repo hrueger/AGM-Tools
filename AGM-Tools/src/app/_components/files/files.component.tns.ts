@@ -1,6 +1,8 @@
 import { RemoteService } from "../../_services/remote.service";
 import { Project } from "../../_models/project.model";
 import { Component, OnInit } from "@angular/core";
+import { RadSideDrawer } from "nativescript-ui-sidedrawer";
+import * as app from "tns-core-modules/application";
 
 @Component({
     selector: "app-files",
@@ -52,7 +54,10 @@ export class FilesComponent implements OnInit {
         this.currentFolder = -1;
         this.navigate();
     }
-
+    onDrawerButtonTap(): void {
+        const sideDrawer = <RadSideDrawer>app.getRootView();
+        sideDrawer.showDrawer();
+    }
     up() {
         if (this.viewFile) {
             this.viewFile = false;

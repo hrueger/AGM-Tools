@@ -2,6 +2,7 @@
 use YoHang88\LetterAvatar\LetterAvatar;
 require_once("db.inc.php");
 require_once("library.php");
+require_once("git.inc.php");
 
 
 
@@ -54,8 +55,14 @@ if ($data) {
             case "usersGetUsers":
                 usersGetUsers();
                 break;
+            case "calendarGetDates":
+                calendarGetDates();
+                break;    
             case "projectsGetProjects":
                 projectsGetProjects();
+                break;
+            case "projectsNewProject":
+                projectsNewProject($args);
                 break;
             case "notificationsGetNotifications":
                 notificationsGetNotifications();
@@ -262,6 +269,23 @@ function projectsGetProjects() {
     die(json_encode($res));
 }
 
+function calendarGetDates() {
+    $db = connect();
+    $res = $db->query("SELECT * FROM dates");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    /*$usersIDs = getUserIdArray($db);
+    foreach ($res as &$line) {
+        $members = explode("-", $line["members"]);
+        $users = array();
+        foreach ($members as $member) {
+            $users[] = $usersIDs[$member];
+        }
+        $line["members"] = $users;
+    }*/
+    
+    die(json_encode($res));
+}
+
 function notificationsGetNotifications() {
     $db = connect();
     $usernames = getUserIdArray($db);
@@ -294,7 +318,7 @@ function notificationsGetNotifications() {
         $ret[] = array(
             "seen" => $seens,
             "notseen" => $notseens,
-            "recievers" => $receivernames,
+            "receivers" => $receivernames,
             "headline" => $line["headline"],
             "content" => $line["content"],
             "id" => $line["id"]
@@ -587,6 +611,10 @@ function filesGetFolder($data) {
     //log_to_file(print_r("hi", true));
     //log_to_file(print_r(array_merge($folders, $files), true));
 	die(json_encode(array_merge($folders, $files)));
+}
+
+function projectsNewProject($data) {
+    echo Git::initRepo("test");
 }
 
 ?>
