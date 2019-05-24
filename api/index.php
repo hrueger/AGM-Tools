@@ -34,6 +34,8 @@ if ($data) {
                     $args[$key] = $value;
                 }
             }
+        } else {
+            $args = [];
         }
         
         switch ($action) {
@@ -614,7 +616,32 @@ function filesGetFolder($data) {
 }
 
 function projectsNewProject($data) {
-    echo Git::initRepo("test");
+    $db = connect();
+    $ret = Git::initRepo($data["name"]);
+
+    $members_array = $data["members"];
+    $members = implode("-", $members_array);
+    
+    $name = $db->real_escape_string($data["name"]);
+    
+    $description = $db->real_escape_string($data["description"]);
+    
+    
+
+    $result = $db->query("INSERT INTO projects (name, description, members, type) VALUES ('$name', '$description', '$members', null)");
+    $pid = $db->insert_id;
+    echo $db->error;
+    
+    $result2 = $db->query("INSERT INTO `receivers` (`id`, `name`, `type`, `members`) VALUES (NULL, '$name', 'group', '$members')");
+    echo $db->error;
+    
+    if($result and $result2  and $ret) {
+        die(json_encode(array("status" => true, "commitMessage" => $ret)));
+        
+    } else {
+        dieWithMessage("Fehler".$db->error);
+    }
+    die();
 }
 
 ?>

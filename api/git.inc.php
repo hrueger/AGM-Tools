@@ -1,6 +1,5 @@
 <?php
-define("REPO_DIRECTORY", "/agmtoolsdata/webstorage");
-define("BARE_REPO_DIRECTORY", "/agmtoolsdata/storage/");
+define("REPO_DIRECTORY", "/agmtoolsdata/storage/");
 define("REPO_SUFFIX", "/.git/");
 define("CACHE", "/tmp");
 define("GIT_BINARY", "git");
@@ -327,37 +326,96 @@ class Git {
 
     // meine Funktionen //
     public static function initRepo($name) {
-        $barePath = BARE_REPO_DIRECTORY . $name . ".git";
-        $webStoragePath = REPO_DIRECTORY . "/" . $name;
+        
+        $repoPath = REPO_DIRECTORY . $name . "";
+        
 
-        mkdir($barePath, 0777, true);
+        if (is_dir($repoPath)) {
+            dieWithMessage("Fehler, ein Projekt dieses Namens existiert bereits!");
+        }
+
+        mkdir($repoPath, 0777, true);
         $gitBinary = GIT_BINARY;
-        $out = array();
-        $cmd = "GIT_DIR=" . BARE_REPO_DIRECTORY . $name . ".git/" . " {$gitBinary} init --bare";
+
         
-        exec($cmd, $out);
+        chdir($repoPath);
+        $cmd = "$gitBinary init";
+        $out = shell_exec($cmd.' 2>&1');
         $q = "Initialized empty Git repository";
-        
         if (!substr($out[0], 0, strlen($q)) === $q) {
-            dieWithMessage("Fehler beim Initialisieren des Git Repositories: ".$out[0]);
+            dieWithMessage("Fehler beim Initialisieren des Git Repositories: ".$out);
         }
 
+        chdir($repoPath);
 
-        mkdir($webStoragePath, 0777, true);
-        $gitBinary = GIT_BINARY;
-        $out = array();
-        $cmd = "GIT_DIR=" . $webStoragePath . " {$gitBinary} clone $barePath";
-        
-        exec($cmd, $out);
-        $q = "Initialized empty Git repository";
-        
-        if (isset($out[0]) && substr($out[0], 0, strlen($q)) === $q) {
-            die(json_encode(true));
-        } else {
-            dieWithMessage("Fehler beim Initialisieren des Git Repositories: ".(isset($out[0])?$out[0]:"kein Rückgabewert"));
+        $out = "";
+        $cmd = "git config receive.denyCurrentBranch updateInstead";
+        $out = shell_exec($cmd.' 2>&1');
+
+        $q = "error";
+        if (substr($out, 0, strlen($q)) === $q) {
+            dieWithMessage("Fehler beim Initialisieren des Git Repositories: ".$out);
         }
+        echo $out;
+
+
+        file_put_contents($repoPath."/info.txt", "Dies ist ein neues Projekt erstellt dur AGM-Tools.\n\nViel Spaß beim Verwenden!");
+        file_put_contents($repoPath."/hier_eure_dateien.txt", "Hier könnt Ihr alle Eure Dateien und Ordner hinlegen. Sie werden automatisch synchronisiert!");
+        file_put_contents($repoPath."/.gitignore", "# In diese Datei können alle Ordner und Dateien eingetragen werden, die nicht hochgeladen werden sollen.\n
+        # Das geht aber auch automatisch über einen Rechtsklick im Windows Explorer.\n\n
+        # Beispiel:\n
+        # renders/\n
+        # privat.txt\n\n
+        # Viel Spaß!");
+        self::setUser($name, "System", "system@agmtools.allgaeu-gymnasium.de");
+        self::addUntracked($name);
+        $ret = explode("\n", self::doCommit($name, "Neues Projekt"));
+        self::loadRepositories();
+        return $ret;
+
+        
         
     }
 
+    public static function addUntracked($repo) {
+        chdir(REPO_DIRECTORY.$repo);
+        $out = "";
+        $cmd = "git add *";
+        $out = shell_exec($cmd.' 2>&1');
+
+        $q = "error";
+        if (substr($out, 0, strlen($q)) === $q) {
+            dieWithMessage("Fehler beim Hinzufügen den ungetrackten Dateien und Ordner: ".$out);
+        }
+        echo $out;
+    }
+
+    public static function doCommit($repo, $message) {
+        chdir(REPO_DIRECTORY.$repo);
+        $out = "";
+        $cmd = "git commit -m '$message'";
+        $out = shell_exec($cmd.' 2>&1');
+        return $out;
+    }
+
+    public static function setUser($repo, $name, $mail) {
+        chdir(REPO_DIRECTORY.$repo);
+        $out = "";
+        $cmd = "git config user.name '$name'";
+        $out = shell_exec($cmd.' 2>&1');
+
+        $q = "error";
+        if (substr($out, 0, strlen($q)) === $q) {
+            dieWithMessage("Fehler beim Setzen des Benutzers: ".$out);
+        }
+        $cmd = "git config user.email '$mail'";
+        $out = shell_exec($cmd.' 2>&1');
+
+        $q = "error";
+        if (substr($out, 0, strlen($q)) === $q) {
+            dieWithMessage("Fehler beim Setzen des Benutzers: ".$out);
+        }
+        echo $out;
+    }
 
 }
