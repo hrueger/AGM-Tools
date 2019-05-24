@@ -66,6 +66,24 @@ export class RemoteService {
             });
         return subject.asObservable();
     }
+    getNoCache(action: string, ...args: any): Observable<any> {
+        return this.http
+            .post<any>(`${config.apiUrl}`, {
+                action,
+                args
+            })
+            .pipe(
+                tap(_ =>
+                    this.log(
+                        "fetched " +
+                            action +
+                            " with data " +
+                            JSON.stringify(args)
+                    )
+                ),
+                catchError(this.handleError<any>(action, false))
+            );
+    }
     private handleError<T>(operation = "operation", result?: T) {
         return (error: any): Observable<T> => {
             console.error(error);

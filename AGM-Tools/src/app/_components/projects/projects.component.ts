@@ -9,6 +9,7 @@ import {
     FormControl,
     Validators
 } from "@angular/forms";
+import { AlertService } from "../../_services/alert.service";
 
 @Component({
     selector: "app-projects",
@@ -26,7 +27,8 @@ export class ProjectsComponent implements OnInit {
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private alertService: AlertService
     ) {}
 
     ngOnInit() {
@@ -50,14 +52,19 @@ export class ProjectsComponent implements OnInit {
                     this.invalidMessage = false;
 
                     this.remoteService
-                        .get("projectsNewProject", {
+                        .getNoCache("projectsNewProject", {
                             name: this.newProjectForm.get("name").value,
                             description: this.newProjectForm.get("description")
                                 .value,
                             members: this.newProjectForm.get("members").value
                         })
                         .subscribe(data => {
-                            console.log(data);
+                            if (data && data.status == true) {
+                                this.alertService.success(
+                                    "Projekt erfolgreich erstellt, folgende Dateien wurden hinzugefügt:<br><br>" +
+                                        data.commitMessage.join("<br>")
+                                );
+                            }
                         });
                 },
                 reason => {}
