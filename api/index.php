@@ -4,7 +4,9 @@ require_once("db.inc.php");
 require_once("library.php");
 require_once("git.inc.php");
 
-
+$locale='de_DE.UTF-8';
+setlocale(LC_ALL,$locale);
+putenv('LC_ALL='.$locale);
 
 function log_to_file($log_msg) {
     $log_filename = "log.txt";
@@ -80,6 +82,18 @@ if ($data) {
                 break;
              case "filesGetFiles":
                 filesGetFolder($args);
+                break;  
+            case "clientsoftwareGetMobile":
+                clientsoftwareGetMobile();
+                break;  
+            case "clientsoftwareGetDesktop":
+                clientsoftwareGetDesktop();
+                break; 
+            case "bugsGetBugs":
+                bugsGetBugs();
+                break;
+            case "templatesGetTemplates":
+                templatesGetTemplates();
                 break;  
             default: 
                 break;
@@ -602,6 +616,7 @@ function filesGetFolder($data) {
     
     $files = [];
     $folders = [];
+
     foreach ($res1 as $file) {
         $file["type"] = "file";
         $files[] = $file;
@@ -612,7 +627,40 @@ function filesGetFolder($data) {
     }
     //log_to_file(print_r("hi", true));
     //log_to_file(print_r(array_merge($folders, $files), true));
-	die(json_encode(array_merge($folders, $files)));
+    die(json_encode(array_merge($folders, $files)));
+    /*$path = $data["path"];
+    $project = $data["project"];
+    Git::loadRepositories();
+    $res = Git::lsTree($project, $path);
+    $res = array_map("utf8_encode", $res );
+    $files = [];
+    $folders = [];
+    foreach ($res as $file) {
+        //if (!substr($file["file"], 0, 1) == ".") {
+            $item = array(
+                "name" => (isset($file["file"])?$file["file"]:""),
+                "commitMessage" => (isset($file["message"])?$file["message"]:""),
+                "author" => (isset($file["author"])?$file["author"]:""),
+                "hash" => (isset($file["hash"])?$file["hash"]:""),
+                "date" => (isset($file["date"])?$file["date"]:""),
+                "type" => ($file["type"]=="tree"?"folder":"file"),
+            );
+            if ($file["type"]=="tree") {
+                $folders[] = $item;
+            } else {
+                $files[] = $item;
+            }
+        //} 
+        
+        
+    }
+    usort($files, function ($a, $b) {
+        return $a["name"] <=> $b["name"];
+    });
+    usort($folders, function ($a, $b) {
+        return $a["name"] <=> $b["name"];
+    });
+    die(json_encode(array_merge($folders, $files)));*/
 }
 
 function projectsNewProject($data) {
@@ -644,4 +692,73 @@ function projectsNewProject($data) {
     die();
 }
 
+function clientsoftwareGetMobile() {
+    $ret = [];
+    if ($handle = opendir('/var/www/html/AGM-Tools/releases/mobile/')) {
+        while (false !== ($entry = readdir($handle))) {
+            if ($entry != "." && $entry != "..") {
+                $ret[] = array("title" => $entry, "url" => "/AGM-Tools/releases/mobile/$entry");
+            }
+        }
+        closedir($handle);
+    }
+    die(json_encode($ret));
+}
+
+function clientsoftwareGetDesktop() {
+    $ret = [];
+    if ($handle = opendir('/var/www/html/AGM-Tools/releases/desktop/')) {
+        while (false !== ($entry = readdir($handle))) {
+            if ($entry != "." && $entry != "..") {
+                $ret[] = array("title" => $entry, "url" => "/AGM-Tools/releases/desktop/$entry");
+            }
+        }
+        closedir($handle);
+    }
+    die(json_encode($ret));
+}
+
+function bugsGetBugs() {
+    $db = connect();
+    $bugs = [];
+    $usernames = getUserIdArray($db);
+    $res = $db->query("SELECT * FROM bugs");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    foreach ($res as $line) {
+        $bug = [];
+        if ($line["type"] == "bug") {
+            $bug["type"] = "Bug";
+        } else {
+            $bug["type"] = "Verbesserungsvorschlag";
+        }
+        $bug["location"] = $line["place"];
+        $bug["title"] = $line["headline"];
+        $bug["description"] = $line["description"];
+        
+        if (isset($usernames[$line["creator"]])) {
+            
+            $bug["author"] = $usernames[$line["creator"]];
+        } else {
+            $bug["author"] = "Unbekannt";
+        }
+        $bugs[] = $bug;
+    }
+    die(json_encode($bugs));
+}
+
+function templatesGetTemplates() {
+    $db = connect();
+    $res = $db->query("SELECT * FROM templates");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    $templates = [];
+    foreach ($res as $line) {
+        $template = [];
+        $template["id"] = $line["id"];
+        $template["type"] = $line["group"];
+        $template["name"] = $line["name"];
+        $template["description"] = $line["description"];
+        $templates[] = $template;
+    }
+    die(json_encode($templates));
+}
 ?>
