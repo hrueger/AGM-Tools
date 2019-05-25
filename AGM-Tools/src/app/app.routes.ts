@@ -15,17 +15,25 @@ import { SettingsComponent } from "./_components/settings/settings.component";
 import { AboutComponent } from "./_components/about/about.component";
 import { LoginComponent } from "./_components/login/login.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
+import { DoneComponent } from "./_components/done/done.component";
 
 export const routes: Routes = [
-    { path: "", redirectTo: "/dashboard", pathMatch: "full" },
     {
         path: "dashboard",
         component: DashboardComponent,
         canActivate: [AuthGuard]
     },
 
-    { path: "users", component: UsersComponent, canActivate: [AuthGuard] },
-    { path: "chat", component: ChatComponent, canActivate: [AuthGuard] },
+    {
+        path: "users",
+        component: UsersComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "chat",
+        component: ChatComponent,
+        canActivate: [AuthGuard]
+    },
     {
         path: "chat-messages/:index",
         component: ChatMessagesComponent,
@@ -46,16 +54,29 @@ export const routes: Routes = [
         component: ProjectsComponent,
         canActivate: [AuthGuard]
     },
-    { path: "files", component: FilesComponent, canActivate: [AuthGuard] },
+    {
+        path: "files",
+        component: FilesComponent,
+        canActivate: [AuthGuard]
+    },
     {
         path: "templates",
         component: TemplatesComponent,
         canActivate: [AuthGuard]
     },
-    { path: "bugs", component: BugsComponent, canActivate: [AuthGuard] },
+    {
+        path: "bugs",
+        component: BugsComponent,
+        canActivate: [AuthGuard]
+    },
     {
         path: "clientsoftware",
         component: ClientsoftwareComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "done",
+        component: DoneComponent,
         canActivate: [AuthGuard]
     },
     {
@@ -63,7 +84,11 @@ export const routes: Routes = [
         component: SettingsComponent,
         canActivate: [AuthGuard]
     },
-    { path: "about", component: AboutComponent, canActivate: [AuthGuard] },
+    {
+        path: "about",
+        component: AboutComponent,
+        canActivate: [AuthGuard]
+    },
 
     /* Authentication paths*/
     { path: "login", component: LoginComponent },
