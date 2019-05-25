@@ -1,3 +1,145 @@
+<button
+    id="newBtn"
+    type="button"
+    class="btn btn-primary"
+    data-toggle="modal"
+    data-target="#nT"
+>
+    Neue Vorlage
+</button>
+<br /><br />
+<div class="table-responsive">
+    <table id="notifications" class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Typ</th>
+                <th>Name</th>
+                <th>Beschreibung</th>
+                <th>Löschen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr
+                *ngFor="let template of templates"
+                (click)="show(template, showModal)"
+            >
+                <td>{{ template.type }}</td>
+                <td>{{ template.name }}</td>
+                <td>{{ template.description }}</td>
+                <td>
+                    <button class="btn btn-link" (click)="delete(template)">
+                        Löschen
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<br />
+<br />
 <p>
-  templates works!
+    <small
+        ><b>Wichtig:</b> bitte nur die Vorlagen löschen, die auch von Ihnen
+        erstellt und veraltet sind.</small
+    >
 </p>
+
+<ng-template #showModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <h3>{{ imgTitle }}</h3>
+        <img [src]="imgUrl" />
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close('Save click')"
+        >
+            Save
+        </button>
+    </div>
+</ng-template>
+
+<div id="nT" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    ×
+                </button>
+                <h4 class="modal-title">Neue Vorlage</h4>
+            </div>
+            <div class="modal-body">
+                <div id="inputs">
+                    <form enctype="multipart/form-data">
+                        <div class="form-inline">
+                            <label for="type">Typ: </label>
+                            <input
+                                name="type"
+                                type="text"
+                                class="form-control"
+                                id="type"
+                                placeholder="Typ"
+                            />
+                        </div>
+                        <br />
+                        <div class="form-inline">
+                            <label for="name">Name:</label>
+                            <input
+                                name="name"
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                placeholder="Name"
+                            />
+                        </div>
+                        <br />
+                        <div class="form-inline">
+                            <label for="description">Beschreibung</label>
+                            <textarea
+                                name="description"
+                                type="text"
+                                class="form-control"
+                                id="description"
+                                placeholder="Beschreibung"
+                            ></textarea>
+                        </div>
+                        <br />
+                        <div class="form-inline">
+                            <label for="file" class="">
+                                Datei auswählen
+                                <input id="file" name="file" type="file" />
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <br />
+
+                <button id="submit" class="btn btn-primary">Senden</button>
+            </div>
+
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
