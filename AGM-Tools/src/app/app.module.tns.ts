@@ -45,6 +45,7 @@ import { MessagesAreaComponent } from "./_components/chat-messages/messages-area
 import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
+import { DoneComponent } from './_components/done/done.component';
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -69,7 +70,8 @@ registerLocaleData(localeDe);
         ShortWhenPipe,
         ChatMessagesComponent,
         MessagesAreaComponent,
-        MessageBoxComponent
+        MessageBoxComponent,
+        DoneComponent
     ],
     imports: [
         NativeScriptModule,

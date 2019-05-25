@@ -40,6 +40,7 @@ import { FormsModule } from "@angular/forms";
 import localeDe from "@angular/common/locales/de";
 import { registerLocaleData } from "@angular/common";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { DoneComponent } from './_components/done/done.component';
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -64,7 +65,8 @@ registerLocaleData(localeDe);
         ChatMessagesComponent,
         ShortWhenPipe,
         MessagesAreaComponent,
-        MessageBoxComponent
+        MessageBoxComponent,
+        DoneComponent
     ],
     imports: [
         BrowserAnimationsModule,
