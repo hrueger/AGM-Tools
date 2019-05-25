@@ -11,6 +11,13 @@ $danger: #d9534f !default;
 
 @import url("https://use.fontawesome.com/releases/v5.8.2/css/all.css");
 
+body {
+    font-family: "Open Sans", sans-serif !important;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+}
+
 .sidebar {
     position: fixed;
     top: 0;
