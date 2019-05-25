@@ -1,8 +1,60 @@
-<div id="projects" *ngIf="selectProject && !viewFile">
-    <table
-        id="projectChooser"
-        class="table table-responsive table-hover table-striped"
+<div class="navigation">
+    <button class="btn btn-success" (click)="up()" [disabled]="selectProject">
+        Zurück
+    </button>
+    &nbsp;
+    <button
+        type="button"
+        [disabled]="selectProject"
+        id="BtnUpload"
+        class="btn btn-primary"
     >
+        Hochladen<input
+            type="file"
+            style="display: none;"
+            multiple="multiple"
+        /></button
+    >&nbsp;
+    <button
+        [disabled]="selectProject"
+        id="newFolderBtn"
+        type="button"
+        (click)="openNewFolderModal(newFolder)"
+        class="btn btn-primary"
+    >
+        Neuer Ordner
+    </button>
+    <div class="btn-group float-right">
+        <button type="button" id="btnList" class="btn btn-default">
+            <span class="fa fa-list"></span>
+        </button>
+        <button type="button" id="btnNormal" class="btn btn-default">
+            <span class="fa fa-th"></span>
+        </button>
+    </div>
+    <br /><br />
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" [class.active]="currentPath.length == 0">
+            <a
+                [class.link]="currentPath.length != 0"
+                (click)="currentPath.length != 0 && goToFiles()"
+                >Dateien</a
+            >
+        </li>
+        <li
+            *ngFor="let path of currentPath; let last = last"
+            [class.active]="last"
+            class="breadcrumb-item"
+        >
+            <a class="link" *ngIf="!last" (click)="upTo(path.id)">
+                {{ path.name }}
+            </a>
+            <span *ngIf="last">{{ path.name }}</span>
+        </li>
+    </ol>
+</div>
+<div id="projects" class="table-responsive" *ngIf="selectProject && !viewFile">
+    <table id="projectChooser" class="table table-hover">
         <thead>
             <tr>
                 <th>Name</th>
@@ -17,3 +69,97 @@
         </tbody>
     </table>
 </div>
+
+<div *ngIf="!selectProject && !viewFile">
+    <div id="files" class="table-responsive">
+        <div class="clear"></div>
+        <table class="table  table-hover">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Name</td>
+                    <td>Tags</td>
+                    <td>Autor</td>
+                    <td>Änderungsdatum</td>
+                    <td>Erstelldatum</td>
+                    <td>Größe</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of items" (click)="goTo(item)">
+                    <td>
+                        <img [src]="getIcon(item)" class="fileIcon" />
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div *ngIf="viewFile">
+    <img
+        *ngIf="getType() == 'image'"
+        class="previewFile img-fluid"
+        alt="irgendein schönes Bild"
+        [src]="getSrc()"
+    />
+    <video class="previewFile" controls *ngIf="getType() == 'video'">
+        <source [src]="getSrc()" type="video/mp4" />
+        Bitte verwende einen neueren Browser ;-)
+    </video>
+    <div *ngIf="getType() == 'other'" class="alert alert-warning">
+        Diese Datei wird leider nicht unterstützt. Wenn das gewünscht ist, gerne
+        mich kontaktieren!
+    </div>
+</div>
+
+<ng-template #newFolder let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Neuer Ordner</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="newFolderModalInvalidMessage" class="alert alert-danger">
+            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+        </div>
+        <form [formGroup]="newFolderForm">
+            <div class="form-group">
+                <label for="name">Name: </label>
+                <div class="input-group">
+                    <input
+                        class="form-control"
+                        type="text"
+                        placeholder="Name des neuen Ordners"
+                        formControlName="newFolderName"
+                    />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-primary"
+            (click)="
+                !newFolderForm.invalid
+                    ? modal.close('Save click')
+                    : (newFolderModalInvalidMessage = true)
+            "
+        >
+            Erstellen
+        </button>
+    </div>
+</ng-template>
