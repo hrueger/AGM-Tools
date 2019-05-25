@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { getString, setString } from "tns-core-modules/application-settings";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -9,11 +8,19 @@ export class CacheService {
     constructor() {}
     put(data, action, ...args): void {
         //console.log("set");
-        return;
+        return localStorage.setItem(
+            JSON.stringify({ action, ...args }),
+            JSON.stringify(data)
+        );
     }
     get(action, ...args): Observable<any> {
         return new Observable(observer => {
-            observer.next(null);
+            observer.next(
+                JSON.parse(
+                    localStorage.getItem(JSON.stringify({ action, ...args })) ||
+                        null
+                ) || null
+            );
             observer.complete();
         });
     }
