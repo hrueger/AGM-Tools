@@ -158,12 +158,13 @@ export class FilesComponent implements OnInit {
                         .getNoCache("filesNewFolder", {
                             name: this.newFolderForm.get("newFolderName").value,
                             pid: this.pid,
-                            fid: this.currentPath[this.currentPath.length-1].id
+                            fid: this.currentPath[this.currentPath.length - 1]
+                                .id
                         })
                         .subscribe(data => {
                             if (data && data.status == true) {
                                 this.alertService.success(
-                                    "Ordner erfolgreich erstellt")
+                                    "Ordner erfolgreich erstellt"
                                 );
                             }
                         });
