@@ -7,9 +7,15 @@ $danger: #d9534f !default;
 @import "~bootstrap/scss/bootstrap.scss";
 
 @import "~angular-calendar/css/angular-calendar.css";
-//@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/css/all.css";
 
-@import url("https://use.fontawesome.com/releases/v5.8.2/css/all.css");
+.table-sm td {
+    vertical-align: middle;
+}
+
+.bg-light {
+    background-color: #fff !important;
+}
 
 body {
     font-family: "Open Sans", sans-serif !important;
