@@ -1,30 +1,49 @@
-<div *ngFor="let chat of chats" id="chats" class="col-md-2 col-list-group">
-    <div
-        (click)="goToChat(chat.rid)"
-        rows="auto, auto"
-        columns="auto, *, auto"
-        class="list-group-item"
-    >
-        <img
-            row="0"
-            col="0"
-            rowSpan="2"
-            [src]="chat.contact.avatar"
-            class="thumb"
-        />
-        <p row="0" col="1">{{ chat.contact.name }}</p>
-        <p row="1" col="1" class="body">{{ chat.text }}</p>
-        <p
-            row="0"
-            col="2"
-            class="body time"
-            [class.time-unread]="chat.unread > 0"
-        >
-            {{ chat.when | shortWhen | uppercase }}
-        </p>
-        <div row="1" col="2" orientation="horizontal" class="m-x-auto">
-            <p *ngIf="chat.muted" text="&#xf026;" class="mdi muted"></p>
-            <p *ngIf="chat.unread > 0" class="body unread">{{ chat.unread }}</p>
+<div class="browser">
+    <nav class="sidebar-space col-md-2 d-none d-md-block  bg-light sidebar">
+        <div class="sidebar-sticky">
+            <ul class="nav" id="contacts">
+                <li
+                    [class.active]="currentRid == chat.rid"
+                    class="contact nav-item"
+                    *ngFor="let chat of chats"
+                    (click)="goToChat(chat.rid)"
+                >
+                    <a
+                        ><img
+                            class="avatar float-left"
+                            [src]="chat.contact.avatar"
+                        />
+                        <div class="contactinfo">
+                            <p
+                                *ngIf="chat.when"
+                                class="date float-right"
+                                [class.time-unread]="chat.unread > 0"
+                            >
+                                {{
+                                    chat.when
+                                        | date: "yyyy-MM-dd"
+                                        | shortWhen
+                                        | uppercase
+                                }}
+                            </p>
+
+                            {{ chat.contact.name }}
+                            <p class="latestmessage">{{ chat.text }}</p>
+                            <span
+                                class="badge badge-newMes"
+                                *ngIf="chat.unread > 0"
+                                >{{ chat.unread }}</span
+                            >
+                        </div>
+                    </a>
+                </li>
+            </ul>
         </div>
+    </nav>
+    <div class="main-messages">
+        <chat-messages
+            [inputReceiverId]="currentRid"
+            class="bgimg"
+        ></chat-messages>
     </div>
 </div>

@@ -1,11 +1,34 @@
 <div class="message-box">
-    <p class="mdi icon">&#xf067;</p>
+    <!--<button class="fa icon"></button>
     <div class="text-area">
-        <p class="mdi icon emojis">&#xf580;</p>
+        <button class="fa icon emojis"></button>
         <input [placeholder]="'Type a message'" class="text-view" />
-        <p class="mdi icon attach">&#xf0c6;</p>
-        <p class="mdi icon camera">&#xf030;</p>
+        <button class="fa icon attach"></button>
+        <button class="fa icon camera"></button>
     </div>
-    <p text="&#xf142;" class="mdi separator"></p>
-    <p class="mdi icon send">&#xf130;</p>
+    <button class="fa separator"></button>
+    <button class="fa icon send"></button>-->
+
+    <div class="input-group">
+        <div class="input-group-prepend" id="button-addon3">
+            <button class="far btn btn-outline-secondary" type="button">
+                &#xf580;
+            </button>
+        </div>
+        <input
+            type="text"
+            class="form-control"
+            placeholder=""
+            aria-label="Example text with two button addons"
+            aria-describedby="button-addon3"
+        />
+        <div class="input-group-append" id="button-addon4">
+            <button class="btn btn-outline-secondary" type="button">
+                +
+            </button>
+            <button class="fas btn btn-outline-secondary" type="button">
+                &#xf1d8;
+            </button>
+        </div>
+    </div>
 </div>

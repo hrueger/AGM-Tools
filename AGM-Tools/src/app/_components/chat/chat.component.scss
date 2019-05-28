@@ -37,3 +37,109 @@ $lightgreen: #25d366;
     color: rgb(143, 143, 143);
     font-size: 12;
 }
+
+/* Browser */
+.browser .sidebar-space {
+    margin-left: 320px;
+}
+.browser #contacts li {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-top: 4px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.browser .latestmessage {
+    margin: 0 0 10px 29px;
+    color: #6b6969;
+    font-size: 0.8em;
+}
+
+.browser .contact {
+    border-bottom: 1px solid lightgrey;
+}
+
+.browser .main-messages {
+    margin-left: 320px;
+}
+
+.browser .active {
+    background-color: rgba(237, 237, 237, 0.8) !important;
+    cursor: default !important;
+}
+
+.browser .avatar {
+    width: 40px !important;
+    margin-right: 12px;
+}
+
+.browser .contactHeader {
+    margin-top: 48px;
+    background-color: #368e22;
+}
+
+.browser .altcontact {
+    cursor: pointer;
+    height: 4em;
+    background: rgba(237, 237, 237, 0.5);
+    border-radius: 5px;
+    vertical-align: middle;
+    margin: 0px;
+    margin-right: 20px;
+}
+
+.browser .contact:hover {
+    background-color: rgba(237, 237, 237, 0.7);
+}
+
+.browser .avatar {
+    width: 30px;
+    padding-right: 4px;
+}
+
+.browser .avatar {
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.browser .bgimg {
+    background-image: url(https://agmtools.allgaeu-gymnasium.de/AGM-Tools/images/backgrounds/12.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    height: 100%;
+}
+
+.browser #messages {
+    height: 100%;
+    margin-bottom: 20px;
+    overflow-y: hidden; // Only add scroll to vertical column
+}
+
+.browser .main {
+    padding-left: 5px;
+}
+
+.browser .addon {
+    height: 15px;
+    width: 15px;
+    background-size: 15px 15px;
+    margin-left: 4px;
+}
+
+.contact > .badge {
+    margin-top: 20px;
+    right: 50px !important;
+}
+
+.browser .contact > .badge-newMes {
+    background-color: #3ece3b;
+}
+
+.browser .chooseContact {
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 5px;
+    display: inline;
+}

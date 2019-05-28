@@ -1,51 +1,23 @@
-<div title="Chat" class="action-bar link">
-    <button text="unread" icon="res://ic_arrow_back" (tap)="goBack()"></button>
-    <div rows="auto, auto" columns="auto, auto, *" class="action-bar-title">
-        <img
-            row="0"
-            col="0"
-            rowSpan="2"
-            [src]="chat.contact.avatar"
-            class="thumb"
-        />
-        <p row="0" col="1" class="title">{{ chat.contact.name }}</p>
-        <p row="1" col="1" text="last seen 10:00 AM" class="subtitle"></p>
+<div *ngIf="chat && messages">
+    <div class="messages-header col-md-8">
+        <img [src]="chat.contact.avatar" class="messages-header thumb" />
+        <span class="messages-header title">{{ chat.contact.name }}</span
+        ><br />
+        <span class="messages-header subtitle">last seen 10:00 AM</span>
     </div>
 
-    <div
-        ios.position="right"
-        class="action-item mdi"
-        ios:icon="res://video-call"
-    >
-        <p text="&#xf03d;" class="icon"></p>
-    </div>
-    <div
-        ios.position="right"
-        class="action-item mdi"
-        ios:icon="res://tabs/calls"
-    >
-        <p text="&#xf095;" class="icon phone"></p>
-    </div>
-    <div>
-        <p android.position="popup" text="View contact"></p>
-        <p android.position="popup" text="Media"></p>
-        <p android.position="popup" text="Search"></p>
-        <p android.position="popup" text="Mute"></p>
-        <p android.position="popup" text="Wallpaper"></p>
-        <p android.position="popup" text="Block"></p>
-        <p android.position="popup" text="Clear chat"></p>
-        <p android.position="popup" text="Email chat"></p>
-        <p android.position="popup" text="Add shortcut"></p>
+    <div class="bgimg messages" #messagesConatiner>
+        <div>
+            <ns-messages-area
+                [messages]="messages"
+                class="messages-area"
+            ></ns-messages-area>
+        </div>
+        <div>
+            <ns-message-box class="col-md-8 message-box"></ns-message-box>
+        </div>
     </div>
 </div>
-<div rows="*, auto" columns="auto" class="wallpaper">
-    <div row="0" column="0" width="100%">
-        <ns-messages-area
-            [messages]="messages"
-            class="messages-area"
-        ></ns-messages-area>
-    </div>
-    <div row="1" column="0" width="100%">
-        <ns-message-box class="message-box"></ns-message-box>
-    </div>
+<div *ngIf="!chat || !messages">
+    <h2>Bitte einen Chat auswählen</h2>
 </div>

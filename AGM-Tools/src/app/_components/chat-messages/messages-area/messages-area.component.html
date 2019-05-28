@@ -1,25 +1,31 @@
 <div class="messages-area">
-    <div class="messages">
+    <div class="speech-wrapper">
         <div
             *ngFor="let message of messages; let idx = index"
-            class="message-bubble"
-            [class.continuation]="isContinuation(idx)"
-            [class.myself]="!message.sender"
+            class="msg-wrapper"
+            [class.continuation]="!isContinuation(idx)"
         >
-            <div class="message-bubble-content">
-                <p class="message-text" textWrap="true">{{ message.text }}</p>
-                <div class="meta">
-                    <p class="time">
-                        {{ message.created | date: "shortTime" }}
-                    </p>
-                    <p
-                        *ngIf="!message.sender"
-                        class="mdi check"
-                        [class.blue]="isViewed(message)"
-                    >
-                        {{ getIcon(message) }}
-                    </p>
-                </div>
+            <div *ngIf="message.system" class="msg-wrapper center">
+                <p class="system-msg new-day">{{ message.text }}</p>
+            </div>
+            <div
+                class="bubble"
+                [class.alt]="message.fromMe"
+                *ngIf="!message.system"
+            >
+                <p *ngIf="!isContinuation(idx)" class="name alt">
+                    {{ message.sendername }}
+                </p>
+                <p class="message">{{ message.text }}</p>
+                <div
+                    *ngIf="!message.sender"
+                    class="addon fa"
+                    [innerHtml]="getIcon(message)"
+                    [class.blue]="isViewed(message)"
+                ></div>
+                <span class="timestamp">
+                    {{ message.created | date: "shortTime" }}
+                </span>
             </div>
         </div>
     </div>
