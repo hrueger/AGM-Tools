@@ -350,7 +350,7 @@ function chatGetContacts() {
     $result = array();
     $userid = $db->real_escape_string(getSession("userid"));
 	//var_dump( $db->query("(SELECT id FROM receivers WHERE members=$userid)")->fetch_all());
-	$res = $db->query("SELECT r.name, r.id as rid, r.members, r.type, messages.message, users.username as sendername FROM receivers as r LEFT JOIN messages ON messages.id = (
+	$res = $db->query("SELECT r.name, r.id as rid, r.members, r.type, messages.message, users.username as sendername, `timestamp` FROM receivers as r LEFT JOIN messages ON messages.id = (
         SELECT id FROM messages
         
 		WHERE 
@@ -402,7 +402,8 @@ function chatGetContacts() {
 				//$name = htmlentities(mb_convert_encoding($line["name"], 'UTF-8', 'ASCII'), ENT_SUBSTITUTE, "UTF-8"); //encoding auf UTF 8
 				$name = $line["name"];
 
-				$latestmessage = trim_text($line["message"], 40);
+                $latestmessage = trim_text($line["message"], 40);
+               
 				$result[] = array(
                     "contact" => array(
                         /*"avatar" => 'https://randomuser.me/api/portraits/med/men/'.random_int(0, 100).'.jpg',*/
@@ -410,7 +411,7 @@ function chatGetContacts() {
                         "name" => htmlspecialchars($line["name"])
                     ),
                     "type" => "DIRECT",
-                    "when" => time(),
+                    "when" => $line["timestamp"],
                     "muted" => false,
                     "unread" => 0,
                     "text" => [htmlspecialchars($latestmessage)],
@@ -422,14 +423,17 @@ function chatGetContacts() {
 				//echo "hi<br>";
 				//$name = htmlentities(mb_convert_encoding($line["name"], 'UTF-8', 'ASCII'), ENT_SUBSTITUTE, "UTF-8"); //encoding auf UTF 8
 				$name = $line["name"];
-				$latestmessage = explode(" ", $line["sendername"])[0] . ": " . trim_text($line["message"], 40);
+                $latestmessage = explode(" ", $line["sendername"])[0] . ": " . trim_text($line["message"], 40);
+                if ($latestmessage == ": ") {
+                    $latestmessage = "";
+                }
 				$result[] = array(
                     "contact" => array(
                         "avatar" => $avatar->__toString(),
                         "name" => htmlspecialchars($line["name"])
                     ),
                     "type" => "DIRECT",
-                    "when" => time(),
+                    "when" => $line["timestamp"],
                     "muted" => false,
                     "unread" => 0,
                     "text" => [htmlspecialchars($latestmessage)],
@@ -478,24 +482,25 @@ function chatGetMessages($data) {
 	$res = $res->fetch_all(MYSQLI_ASSOC);
 	//$ret["message"] = var_dump($res);
 	//$ret["message"] .= var_dump($contacts);
-	$previousSender = null;
+	//$previousSender = null;
 	//$counter = $id;
 	$number = 0;
 	$lastDay = 0;
 	foreach ($res as $line) {
 
-		/*$nowDay = date('d.m.Y', strtotime($line["timestamp"]));
+		$nowDay = date('d.m.Y', strtotime($line["timestamp"]));
 		if ($lastDay != $nowDay) {
-            $m
-             .= "<div class='msg-wrapper center'><p class='system-msg new-day'>$nowDay</p></div>";
-		}*/
+            
+             $ret[] = array("system" => "true", "text" => $nowDay);
+        }
+        
 
 		$alt = ($line["sender"] == $myID) ? true : false;
-		if ($previousSender != $line["sender"]) {
+		//if ($previousSender != $line["sender"]) {
 			$name = $contacts[intval($line["sender"])];
-		} else {
-			$name = false;
-		}
+		//} else {
+		//	$name = false;
+		//}
 		$message = $line["message"];
 		$status = $line["status"];
 		if ($type == "group" && $line["sender"] == $myID) {
@@ -553,7 +558,7 @@ function chatGetMessages($data) {
 
 
 		$counter = $line["id"];
-		$previousSender = $line["sender"];
+		//$previousSender = $line["sender"];
 		$lastDay = date('d.m.Y', strtotime($line["timestamp"]));
 		$number++;
 
