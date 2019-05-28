@@ -1,16 +1,16 @@
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-  <div class="sidebar-sticky">
-    <ul class="nav flex-column">
-      <li class="nav-item" *ngFor="let navLink of navLinks">
-        <a
-          class="nav-link"
-          routerLinkActive="active"
-          routerLink="{{ navLink.target }}"
-        >
-          <i class="fa fa-{{ navLink.icon }}"></i>
-          {{ navLink.name }}
-        </a>
-      </li>
-    </ul>
-  </div>
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item" *ngFor="let navLink of navLinks">
+                <a
+                    class="nav-link"
+                    routerLinkActive="active"
+                    routerLink="{{ navLink.target }}"
+                >
+                    <i class="fa fa-{{ navLink.icon }}"></i>
+                    {{ navLink.name }}
+                </a>
+            </li>
+        </ul>
+    </div>
 </nav>
