@@ -4,5 +4,10 @@
   },
   "main": "main.ns.js",
   "name": "migration-ng",
-  "version": "4.1.0"
+  "version": "4.1.0",
+  "dependencies": {
+    "ftp": "^0.3.10",
+    "ssh2": "^0.8.4",
+    "ssh2-sftp-client": "^2.5.0"
+  }
 }
