@@ -1,53 +1,52 @@
 .page {
     align-items: center;
     flex-direction: column;
-  }
-  .form {
+}
+.form {
     margin-left: 30;
     margin-right: 30;
     flex-grow: 2;
     vertical-align: middle;
-  }
-  
-  .logo {
+}
+
+.logo {
     margin-bottom: 12;
     height: 90;
     font-weight: bold;
-  }
-  .header {
+}
+.header {
     horizontal-align: center;
     font-size: 25;
     font-weight: 600;
     margin-bottom: 70;
     text-align: center;
-    color: #D51A1A;
-  }
-  
-  .input-field {
+    color: #d51a1a;
+}
+
+.input-field {
     margin-bottom: 25;
-  }
-  .input {
+}
+.input {
     font-size: 18;
-    placeholder-color: #A8A8A8;
-  }
-  .input:disabled {
+    placeholder-color: #a8a8a8;
+}
+.input:disabled {
     background-color: white;
     opacity: 0.5;
-  }
-  
-  .btn-primary {
+}
+
+.btn-primary {
     margin: 30 5 15 5;
-  }
-  
-  .login-label {
+}
+
+.login-label {
     horizontal-align: center;
-    color: #A8A8A8;
+    color: #a8a8a8;
     font-size: 16;
-  }
-  .sign-up-label {
+}
+.sign-up-label {
     margin-bottom: 20;
-  }
-  .bold {
-    color: #000000; 
-  }
-  
+}
+.bold {
+    color: #000000;
+}

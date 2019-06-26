@@ -4,13 +4,18 @@ $info: #5bc0de !default;
 $warning: #f0ad4e !default;
 $danger: #d9534f !default;
 
+$enable-rounded: false;
+
 @import "~bootstrap/scss/bootstrap.scss";
 
 @import "~angular-calendar/css/angular-calendar.css";
 @import "~@fortawesome/fontawesome-free/css/all.css";
 
-.table-sm td {
+.table-sm td,
+.table-sm th {
     vertical-align: middle;
+    padding: 0.2rem;
+    padding-left: 1rem;
 }
 
 .bg-light {

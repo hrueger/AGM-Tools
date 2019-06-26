@@ -104,14 +104,6 @@ $lightgreen: #25d366;
     border-radius: 50%;
 }
 
-.browser .bgimg {
-    background-image: url(https://agmtools.allgaeu-gymnasium.de/AGM-Tools/images/backgrounds/12.jpg);
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    height: 100%;
-}
-
 .browser #messages {
     height: 100%;
     margin-bottom: 20px;
@@ -142,4 +134,14 @@ $lightgreen: #25d366;
     background-color: rgba(255, 255, 255, 0.75);
     border-radius: 5px;
     display: inline;
+}
+
+.bgimg {
+    background-image: url(../../assets/backgrounds/11.jpg);
+    background-size: cover;
+    background-position: center;
+
+    background-repeat: no-repeat;
+    background-origin: border-box;
+    background-attachment: fixed;
 }

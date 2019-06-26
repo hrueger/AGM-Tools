@@ -43,6 +43,12 @@ export class ChatMessagesComponent
     messages: Message[];
     //chats: Chat[];
 
+    public messageGotToSend: Event;
+
+    messageSentFromChild(event: Event) {
+        this.messageGotToSend = event;
+    }
+
     constructor(
         private remoteService: RemoteService,
         private _location: Location

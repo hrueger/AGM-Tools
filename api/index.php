@@ -76,7 +76,10 @@ if ($data) {
                 break;
             case "chatGetMessages":
                 chatGetMessages($args);
-                break;  
+                break;
+            case "chatSendMessage":
+                chatSendMessage($args);
+                break; 
              case "filesGetFolder":
                 filesGetFolder($args);
                 break;
@@ -410,6 +413,7 @@ function chatGetContacts() {
                           "avatar" => $avatar->__toString(),
                         "name" => htmlspecialchars($line["name"])
                     ),
+                    "lastseen" => "noch unbekannt",
                     "type" => "DIRECT",
                     "when" => $line["timestamp"],
                     "muted" => false,
@@ -432,6 +436,7 @@ function chatGetContacts() {
                         "avatar" => $avatar->__toString(),
                         "name" => htmlspecialchars($line["name"])
                     ),
+                    "lastseen" => "noch unbekannt",
                     "type" => "DIRECT",
                     "when" => $line["timestamp"],
                     "muted" => false,
@@ -491,7 +496,7 @@ function chatGetMessages($data) {
 		$nowDay = date('d.m.Y', strtotime($line["timestamp"]));
 		if ($lastDay != $nowDay) {
             
-             $ret[] = array("system" => "true", "text" => $nowDay);
+             $ret[] = array("id"=> uniqid(), "system" => "true", "text" => $nowDay);
         }
         
 
@@ -552,7 +557,7 @@ function chatGetMessages($data) {
 
 		$time = $line["timestamp"];
 		
-		$ret[] = array("fromMe" => $alt, "sendername" => $name, "text" => $message, "sent" => $status+1, "created" => $time);
+		$ret[] = array("id"=> uniqid(), "fromMe" => $alt, "sendername" => $name, "text" => $message, "sent" => $status+1, "created" => $time);
 
 
 
@@ -607,6 +612,49 @@ function chatGetMessages($data) {
 	}
 	//$i["lastid"] = $counter;
 	die(json_encode($ret));
+}
+
+function chatSendMessage($data) {
+    $db = connect();
+    $res = $db->query("INSERT INTO messages (message, sender, timestamp, receiver, status) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 0)");
+	if (!$res) {
+		dieWithMessage($db->error);
+    }
+    $name = getCurrentUserName();
+    $id = $db->real_escape_string($data["rid"]);
+	$res = $db->query("SELECT type, members FROM receivers WHERE id=$id")->fetch_all(MYSQLI_ASSOC)[0];
+	$receivers = explode("-", $res["members"]);
+
+	if ($res["type"] == "private") {
+		//$m = buildMessage(false, $name, $data["message"], false, date("H:i"));
+		$senderid = $db->real_escape_string(getCurrentUserId());
+		$senderid = $db->query("SELECT `id` FROM `receivers` WHERE `members` = '$senderid'")->fetch_all(MYSQLI_ASSOC)[0]["id"];
+
+		$retdata = [];
+		$retdata["chatID"] = $senderid;
+		$retdata['action'] = 'newMessage';
+		$retdata["sender"] = $name;
+
+
+		sendPushMessage("$name hat geschrieben: " . $data["message"], false, $retdata, $receivers[0]);
+	} else {
+		//$m = buildMessage(false, $name, $data["message"], false, date("H:i"));
+		$senderid = $db->real_escape_string(getCurrentUserId());
+		$senderid = $db->query("SELECT `id` FROM `receivers` WHERE `members` = '$senderid'")->fetch_all(MYSQLI_ASSOC)[0]["id"];
+
+		$retdata = [];
+		$retdata["chatID"] = $_POST["chatID"];
+		$retdata['action'] = 'newMessage';
+		$retdata["sender"] = $name;
+
+
+		foreach ($receivers as $receiver) {
+			if ($receiver != getCurrentUserId()) {
+				sendPushMessage("$name hat geschrieben: " . $data["message"], false, $retdata, $receiver);
+			}
+		}
+	}
+	return;
 }
 
 function filesGetFolder($data) {
@@ -765,5 +813,63 @@ function templatesGetTemplates() {
         $templates[] = $template;
     }
     die(json_encode($templates));
+}
+
+function sendPushMessage($text, $all, $data, $receiverID = null)
+{
+	$content = array(
+		"en" => $text
+	);
+	if ($all) {
+		$fields = array(
+			'app_id' => "69044d74-01cc-49f8-a32f-91ca715cbba3",
+			'included_segments' => array(
+				'All'
+			),
+			'data' => $data,
+			'contents' => $content
+		);
+	} else {
+		$fields = array(
+			'app_id' => "69044d74-01cc-49f8-a32f-91ca715cbba3",
+			'filters' => array(
+				array(
+					"field" => "tag",
+					"key" => "userId",
+					"relation" => "=",
+					"value" => $receiverID
+				)
+
+			),
+			'data' => $data,
+			'contents' => $content
+		);
+	}
+
+
+	$fields = json_encode($fields);
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Content-Type: application/json; charset=utf-8',
+		'Authorization: Basic ZDVjN2RlYmYtNWZiZC00MWViLThhMjMtYjI1OTk4YzlmNzJi'
+	));
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_HEADER, false);
+	curl_setopt($ch, CURLOPT_POST, true);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+	$response = curl_exec($ch);
+	curl_close($ch);
+	$log = time() . "          Send message no all: $all with receiverID: $receiverID             ";
+	//file_put_contents('./log_push.html', $log . $response . "<br><br>", FILE_APPEND);
+	//echo get_current_user();
+}
+
+function getCurrentUserName() {
+    $db = connect();
+    
+    return @$db->query("SELECT username FROM users WHERE id=".@$db->real_escape_string(getCurrentUserId()))->fetch_all(MYSQLI_ASSOC)[0]["username"] || "Unbekannt";
 }
 ?>

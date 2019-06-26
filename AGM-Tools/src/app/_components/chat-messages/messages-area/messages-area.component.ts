@@ -3,10 +3,12 @@ import {
     Component,
     Inject,
     Input,
-    OnInit
+    OnInit,
+    SimpleChanges
 } from "@angular/core";
 import { Message } from "../../../_models/message.model";
 import { SentStatus } from "../../../_models/sent-status.model";
+import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
     moduleId: module.id,
@@ -17,13 +19,51 @@ import { SentStatus } from "../../../_models/sent-status.model";
 })
 export class MessagesAreaComponent implements OnInit {
     @Input() messages: Message[];
+    @Input() messageSent: Event;
+    @Input() receiverId: number;
 
-    constructor() {}
+    constructor(private remoteService: RemoteService) {}
 
     ngOnInit() {
         this.messages = this.messages.slice(0, 50);
         console.log("Messages");
         console.log(this.messages);
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (
+            changes.messageSent &&
+            changes.messageSent.currentValue != "" &&
+            changes.messageSent.currentValue != null
+        ) {
+            /*if (this.messages[-1]) {
+                let chat = this.messages[-1].chat
+            }*/
+            let message = {
+                text: changes.messageSent.currentValue,
+                chat: null,
+                fromMe: true,
+                created: Date.now(),
+                sent: SentStatus.NOT_SENT,
+                sendername: ""
+            };
+            this.messages.push(message);
+            this.remoteService
+                .getNoCache("chatSendMessage", {
+                    rid: this.receiverId,
+                    message: changes.messageSent.currentValue
+                })
+                .subscribe(data => {
+                    message = this.messages.pop();
+                    message.sent = SentStatus.SENT;
+                    //this.messages.push(message);
+                    console.log(this.messages);
+                });
+        }
+    }
+
+    trackByFn(index, item) {
+        return item.id;
     }
 
     isContinuation(idx: number) {

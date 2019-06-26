@@ -1,7 +1,18 @@
 <div class="messages-area">
     <div class="speech-wrapper">
+        <div class="message-wrapper" *ngIf="messages.length == 0">
+            <div class="msg-wrapper center">
+                <p class="system-msg">
+                    Noch keine Nachrichten. Beginne jetzt!
+                </p>
+            </div>
+        </div>
         <div
-            *ngFor="let message of messages; let idx = index"
+            *ngFor="
+                let message of messages;
+                let idx = index;
+                trackBy: trackByFn
+            "
             class="msg-wrapper"
             [class.continuation]="!isContinuation(idx)"
         >
@@ -28,5 +39,6 @@
                 </span>
             </div>
         </div>
+        <br /><br /><br /><br />
     </div>
 </div>

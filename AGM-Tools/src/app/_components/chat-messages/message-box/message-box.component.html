@@ -17,16 +17,19 @@
         </div>
         <input
             type="text"
+            [(ngModel)]="messageContent"
             class="form-control"
-            placeholder=""
-            aria-label="Example text with two button addons"
-            aria-describedby="button-addon3"
+            placeholder="Nachricht"
         />
         <div class="input-group-append" id="button-addon4">
             <button class="btn btn-outline-secondary" type="button">
                 +
             </button>
-            <button class="fas btn btn-outline-secondary" type="button">
+            <button
+                (click)="sendMessage()"
+                class="fas btn btn-outline-secondary"
+                type="button"
+            >
                 &#xf1d8;
             </button>
         </div>

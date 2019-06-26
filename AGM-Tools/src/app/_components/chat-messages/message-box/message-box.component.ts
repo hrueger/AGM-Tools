@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from "@angular/core";
+import { Component, Output, EventEmitter } from "@angular/core";
 
 @Component({
     moduleId: module.id,
@@ -7,5 +7,11 @@ import { Component, Inject, Input } from "@angular/core";
     styleUrls: ["./message-box.component.scss"]
 })
 export class MessageBoxComponent {
+    messageContent: string;
+    @Output() messageSent = new EventEmitter<string>();
     constructor() {}
+    sendMessage() {
+        this.messageSent.emit(this.messageContent);
+        this.messageContent = "";
+    }
 }
