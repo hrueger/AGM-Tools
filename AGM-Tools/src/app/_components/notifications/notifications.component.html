@@ -2,8 +2,7 @@
     id="newBtn"
     type="button"
     class="btn btn-primary"
-    data-toggle="modal"
-    data-target="#nN"
+    (click)="openNewModal(newNotificationModal)"
 >
     Neue Benachrichtigung
 </button>
@@ -42,9 +41,12 @@
                     /></span>
                 </td>
                 <td>
-                    <a onclick="javascript:deleteNotification(49);" href="#"
-                        >Löschen</a
+                    <button
+                        class="btn btn-link"
+                        (click)="deleteNotification(notification)"
                     >
+                        Löschen
+                    </button>
                 </td>
             </tr>
         </tbody>
@@ -60,171 +62,88 @@
     >
 </p>
 
-<div id="nN" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    ×
-                </button>
-                <h4 class="modal-title">Neue Benachrichtigung</h4>
-            </div>
-            <div class="modal-body">
-                <div id="inputs">
-                    <form>
-                        <div class="form-inline">
-                            <label for="headline">Thema: </label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="headline"
-                                aria-describedby="date"
-                                placeholder="Thema"
-                            />
-                        </div>
-                        <br />
-                        <div class="form-inline">
-                            <label for="content">Nachricht</label>
-                            <textarea
-                                class="form-control"
-                                id="content"
-                                placeholder="Nachricht"
-                            ></textarea>
-                        </div>
-                        <br />
-                        <div class="form-inline">
-                            <label for="receivers">Empfänger</label>
-                            <select
-                                multiple=""
-                                class="form-control"
-                                id="receivers"
-                            >
-                                <option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="22"
-                                    >Kai Fraas</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="27"
-                                    >Hannes Rüger</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="28"
-                                    >Andreas Herz</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="29"
-                                    >Ulrike Lantenhammer</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="30"
-                                    >Philipp Müller</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="31"
-                                    >Gordian Hunecke</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="33"
-                                    >Senta Müller</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="34"
-                                    >Lukas Zahnleiter</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="35"
-                                    >lxschall</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="36"
-                                    >Alexander Rießbeck</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="37"
-                                    >Sebastian Bisle</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="38"
-                                    >Verena Born</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="39"
-                                    >Wilfried Hanslmeier</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="40"
-                                    >Tobias Rohrer</option
-                                ><option
-                                    class="member"
-                                    type="checkbox"
-                                    name="members"
-                                    value="42"
-                                    >Andreas Farca</option
-                                >
-                            </select>
-                            <button
-                                id="selectAll"
-                                class="form-control btn btn-success"
-                            >
-                                Alle auswählen
-                            </button>
-                        </div>
-                        <br />
-                        <div class="form-inline">
-                            <label for="type">Wichtigkeit:</label>
-                            <select class="form-control" id="type">
-                                <option value="1">Erfolg</option>
-                                <option value="2">Information</option>
-                                <option value="3">Warnung</option>
-                                <option value="4">Gefahr</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <br />
-
-                <button id="submit" class="btn btn-primary">Senden</button>
-            </div>
-
-            <div class="modal-footer">
-                <button
-                    type="button"
-                    class="btn btn-default"
-                    data-dismiss="modal"
-                >
-                    Close
-                </button>
-            </div>
-        </div>
+<ng-template #newNotificationModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+            Neue Benachrichtigung
+        </h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-</div>
+    <div class="modal-body">
+        <div *ngIf="invalidMessage" class="alert alert-danger">
+            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+        </div>
+        <form [formGroup]="newNotificationForm">
+            <div class="form-group">
+                <label for="headline">Thema: </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="headline"
+                    formControlName="headline"
+                    placeholder="Thema"
+                />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="content">Nachricht: </label>
+                <textarea
+                    class="form-control"
+                    formControlName="content"
+                    id="content"
+                    placeholder="Nachricht"
+                ></textarea>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="receivers" class="">Empfänger:</label>
+                <select
+                    multiple
+                    class="custom-select"
+                    formControlName="receivers"
+                >
+                    <option
+                        *ngFor="let user of allusers"
+                        value="{{ user.id }}"
+                        >{{ user.username }}</option
+                    >
+                </select>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="importance">Thema: </label>
+                <select
+                    class="form-control"
+                    id="type"
+                    formControlName="importance"
+                >
+                    <option value="1">Erfolg</option>
+                    <option value="2">Information</option>
+                    <option value="3">Warnung</option>
+                    <option value="4">Gefahr</option>
+                </select>
+            </div>
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-success"
+            (click)="
+                !newNotificationForm.invalid
+                    ? modal.close('Save click')
+                    : (invalidMessage = true)
+            "
+        >
+            Senden
+        </button>
+    </div>
+</ng-template>
