@@ -59,6 +59,15 @@ if ($data) {
             case "usersGetUsers":
                 usersGetUsers();
                 break;
+            case "usersNewUser":
+                usersNewUser($args);
+                break;
+            case "usersDeleteUser":
+                usersDeleteUser($args);
+                break;
+            case "usersEditCurrentUser":
+                usersEditCurrentUser($args);
+                break;
             case "calendarGetDates":
                 calendarGetDates();
                 break;    
@@ -70,6 +79,12 @@ if ($data) {
                 break;
             case "notificationsGetNotifications":
                 notificationsGetNotifications();
+                break;
+            case "notificationsNewNotification":
+                notificationsNewNotification($args);
+                break;
+            case "notificationsDeleteNotification":
+                notificationsDeleteNotification($args);
                 break;
             case "chatGetContacts":
                 chatGetContacts();
@@ -114,7 +129,7 @@ function authenticate($data) {
         
         $username = $db->real_escape_string($data->username);
         
-        $res = $db->query("SELECT id, `username`, `password`  FROM users WHERE `username`='$username'");
+        $res = $db->query("SELECT id, `username`, `password`, `email`  FROM users WHERE `username`='$username'");
         
         if (!$res) {
             
@@ -153,6 +168,7 @@ function authenticate($data) {
                             "username" => $res["username"],
                             "firstName" => explode(" ", $res["username"])[0],
                             "lastName" => explode(" ", $res["username"])[1],
+                            "email" => $res["email"],
                             "token" => $token
                             
                         );
@@ -271,6 +287,143 @@ function usersGetUsers() {
     die(json_encode($res));
 }
 
+function usersNewUser($data) {
+    $db = connect();
+    if (!isAllowedTo("CREATE_USER")) {
+		dieWithMessage("Du hast leider keine Berechtigung, einen Benutzer zu erstellen.");
+		die();
+	}
+	if (isset($data["username"]) &&
+		isset($data["email"]) &&
+		isset($data["pw"]) &&
+		isset($data["pw2"]) &&
+		!empty(trim($data["username"])) &&
+		!empty(trim($data["email"])) &&
+		!empty(trim($data["pw"])) &&
+		!empty(trim($data["pw2"]))) {
+			/////////////////////////
+
+			
+			
+			$username = $db->real_escape_string($data["username"]);
+			$email = $db->real_escape_string($data["email"]);
+			$pw = $db->real_escape_string($data["pw"]);
+			$pw2 = $db->real_escape_string($data["pw2"]);
+			
+			if ($pw != $pw2) {
+				dieWithMessage("Die beiden neuen Passw&ouml;rter stimmen nicht &uuml;berein!");
+				
+			}
+			
+			$pwhash = $db->real_escape_string(password_hash($pw, PASSWORD_DEFAULT));
+			
+			$result = $db->query("INSERT INTO `users` (username, email, password, usergroup) VALUES ('$username', '$email', '$pwhash', 1)");
+			//$lid = $db->insert_id;
+			//$result2 = $db->query("INSERT INTO `receivers` (name, type, members) VALUES ('$username', 'private', '$lid')");
+			updateReceivers();
+			if($result) {
+				$res = array("status" => true);
+				die(json_encode($res));
+			} else {
+				dieWithMessage("Fehler: ".$db->error);
+				
+		}
+	} else {
+		dieWithMessage("Nicht alle Daten wurden korrekt eingegeben!");
+		
+	}
+}
+
+function usersDeleteUser($data) {
+    
+    $db = connect();
+    if (!isAllowedTo("REMOVE_USER")) {
+		dieWithMessage("Du hast leider keine Berechtigung, einen Benutzer zu löschen.");
+		die();
+	}
+	if (is_numeric(intval(trim($data["id"])))) {
+			/////////////////////////
+			$id = intval(trim($data["id"]));
+			
+			$result = $db->query("DELETE FROM users WHERE id=$id");
+			
+			
+			if($result) {
+				
+				die(json_encode(array("status" => true)));
+			} else {
+				dieWithMessage("Fehler: ".$db->error);
+				
+		}
+	} else {
+		dieWithMessage("Ein interner Fehler ist aufgetreten!");
+		die();
+	}
+}
+
+function usersEditCurrentUser($data) {
+    $db = connect();
+    if (isset($data["id"]) &&
+		isset($data["username"]) &&
+		isset($data["email"]) &&
+		isset($data["pw-old"]) &&
+		isset($data["pw-new"]) &&
+		isset($data["pw-new2"]) &&
+		is_numeric(intval(trim($data["id"]))) &&
+		!empty(trim($data["username"])) &&
+		!empty(trim($data["email"])) &&
+		!empty(trim($data["pw-old"]))) {
+			/////////////////////////
+
+			$id = $db->real_escape_string($data["id"]);
+			
+			$username = $db->real_escape_string($data["username"]);
+			
+			$email = $db->real_escape_string($data["email"]);;
+			
+			$pwOld = $data["pw-old"];
+			$pwNew = $data["pw-new"];
+			$pwNew2 = $data["pw-new2"];
+			//echo $id;
+			if ($pwNew != $pwNew2) {
+				dieWithMessage("Die beiden neuen Passw&ouml;rter stimmen nicht &uuml;berein!");
+				die();
+			}
+			
+			$res = $db->query("SELECT * FROM users WHERE id=$id");
+			$res = $res->fetch_all(MYSQLI_ASSOC)[0];
+			
+			if (!password_verify($pwOld, $res["password"])) {
+				dieWithMessage("Ein falsches Password wurde eingegeben!");
+				die();
+			}
+
+			if (trim($pwNew) == "") {
+				$result = $db->query("UPDATE `users` SET 
+										`username` = '$username',
+										`email` = '$email'
+										WHERE `id` = ".$id);
+			} else {
+				$pwhash = $db->real_escape_string(password_hash($pwNew, PASSWORD_DEFAULT));
+				$result = $db->query("UPDATE `users` SET 
+										`username` = '$username',
+										`email` = '$email',
+										`password` = '$pwhash'
+									WHERE `users`.`id` = $id ");
+			}
+			
+			if($result) {
+				die(json_encode(array("status" => true)));
+			} else {
+				dieWithMessage("Fehler: ".$db->error);
+				die();
+		}
+	} else {
+		dieWithMessage("Nicht alle Daten wurden korrekt eingegeben!");
+		die();
+	}
+}
+
 function projectsGetProjects() {
     $db = connect();
     $res = $db->query("SELECT id, `name`, members, `description` FROM projects");
@@ -344,6 +497,55 @@ function notificationsGetNotifications() {
         );
     }
     die(json_encode($ret));
+}
+
+function notificationsNewNotification($data) {
+    $db = connect();
+    if (isset($data["headline"]) &&
+		isset($data["content"]) &&
+		isset($data["type"]) &&
+		isset($data["receivers"]) &&
+		!empty(trim($data["headline"])) &&
+		!empty(trim($data["content"])) &&
+		!empty(trim($data["type"])) &&
+		!empty($data["receivers"]) ) {
+			/////////////////////////
+
+			$receivers_array = $data["receivers"];
+			$receivers = implode("-", $receivers_array);
+			
+			$headline = $db->real_escape_string($data["headline"]);
+			
+			$content = $db->real_escape_string($data["content"]);
+			
+			$sender = getCurrentUserId();
+			
+			$type = $db->real_escape_string($data["type"]);
+
+			$result = $db->query("INSERT INTO `notifications` (`id`, `receivers`, `sender`, `headline`, `content`, `type`, `seen`, `date`) VALUES
+								(NULL, '$receivers', '$sender', '$headline', '$content', '$type', '0', NOW())");
+			if($result) {
+				die(json_encode(array("status" => true)));
+			} else {
+				dieWithMessage("Fehler: ".$db->error);
+				
+		}
+	} else {
+		dieWithMessage("danger", "Error!");
+		
+	}
+}
+
+function notificationsDeleteNotification($data) {
+    $db = connect();
+    $id = $db->real_escape_string(trim($data["id"]));
+	$result = $db->query("DELETE FROM `notifications` WHERE `notifications`.`id` = $id");
+	if($result) {
+		die(json_encode(array("status" => true)));
+	} else {
+		dieWithMessage("Fehler: ".$db->error);
+		
+	}
 }
 
 function chatGetContacts() {
