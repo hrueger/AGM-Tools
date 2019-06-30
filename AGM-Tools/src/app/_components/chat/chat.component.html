@@ -1,6 +1,8 @@
-<div class="browser bgimg">
-    <nav class="sidebar-space col-md-2 d-none d-md-block  bg-light sidebar">
-        <div class="sidebar-sticky">
+<div class="browser">
+    <nav
+        class="sidebar-space col-md-2 d-none d-md-block contactsidebar sidebar"
+    >
+        <div class="sidebar-sticky notoppadding">
             <ul class="nav" id="contacts">
                 <li
                     [class.active]="currentRid == chat.rid"
@@ -44,3 +46,4 @@
         <chat-messages [inputReceiverId]="currentRid" class=""></chat-messages>
     </div>
 </div>
+<div class="bgimg"></div>

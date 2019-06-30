@@ -59,6 +59,15 @@ $lightgreen: #25d366;
 
 .browser .contact {
     border-bottom: 1px solid lightgrey;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.notoppadding {
+    padding-top: 0;
+}
+
+.contactsidebar {
+    padding-top: 44px;
 }
 
 .browser .main-messages {
@@ -66,7 +75,7 @@ $lightgreen: #25d366;
 }
 
 .browser .active {
-    background-color: rgba(237, 237, 237, 0.8) !important;
+    background-color: rgb(255, 255, 255) !important;
     cursor: default !important;
 }
 
@@ -83,7 +92,7 @@ $lightgreen: #25d366;
 .browser .altcontact {
     cursor: pointer;
     height: 4em;
-    background: rgba(237, 237, 237, 0.5);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 5px;
     vertical-align: middle;
     margin: 0px;
@@ -91,7 +100,7 @@ $lightgreen: #25d366;
 }
 
 .browser .contact:hover {
-    background-color: rgba(237, 237, 237, 0.7);
+    background-color: rgba(255, 255, 255, 0.95);
 }
 
 .browser .avatar {
@@ -144,4 +153,10 @@ $lightgreen: #25d366;
     background-repeat: no-repeat;
     background-origin: border-box;
     background-attachment: fixed;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: -10;
 }
