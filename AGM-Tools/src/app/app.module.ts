@@ -40,7 +40,9 @@ import { FormsModule } from "@angular/forms";
 import localeDe from "@angular/common/locales/de";
 import { registerLocaleData } from "@angular/common";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { DoneComponent } from './_components/done/done.component';
+import { DoneComponent } from "./_components/done/done.component";
+import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
+import { DialogModule } from "@syncfusion/ej2-angular-popups";
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -83,7 +85,8 @@ registerLocaleData(localeDe);
         CommonModule,
         FormsModule,
         NgbModalModule,
-
+        ScheduleModule,
+        DialogModule,
         CalendarModule.forRoot({
             provide: DateAdapter,
             useFactory: adapterFactory

@@ -1,200 +1,85 @@
-import { Component, OnInit } from "@angular/core";
-import { ChangeDetectionStrategy, ViewChild, TemplateRef } from "@angular/core";
-import {
-    startOfDay,
-    endOfDay,
-    subDays,
-    addDays,
-    endOfMonth,
-    isSameDay,
-    isSameMonth,
-    addHours
-} from "date-fns";
-import { Subject } from "rxjs";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import {
-    CalendarEvent,
-    CalendarEventAction,
-    CalendarEventTimesChangedEvent,
-    CalendarView
-} from "angular-calendar";
 import { RemoteService } from "../../_services/remote.service";
-
-const colors: any = {
-    red: {
-        primary: "#ad2121",
-        secondary: "#FAE3E3"
-    },
-    blue: {
-        primary: "#1e90ff",
-        secondary: "#D1E8FF"
-    },
-    yellow: {
-        primary: "#e3bc08",
-        secondary: "#FDF1BA"
-    }
-};
+import {
+    EventSettingsModel,
+    DayService,
+    WeekService,
+    WorkWeekService,
+    MonthService,
+    AgendaService,
+    MonthAgendaService
+} from "@syncfusion/ej2-angular-schedule";
+import { fifaEventsData } from "./datasource";
+import { extend } from "@syncfusion/ej2-base";
 
 @Component({
     selector: "app-calendar",
-    templateUrl: "./calendar.component.html",
-    styleUrls: ["./calendar.component.scss"]
+    //templateUrl: "./calendar.component.html",
+    template: `
+        <ejs-schedule
+            width="100%"
+            height="550px"
+            [selectedDate]="selectedDate"
+            [eventSettings]="eventSettings"
+        ></ejs-schedule>
+    `,
+
+    styleUrls: [
+        "./calendar.component.scss",
+        "../../../../node_modules/@syncfusion/ej2-base/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-buttons/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-calendars/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-dropdowns/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-inputs/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-icons/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-lists/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-popups/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-navigations/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-angular-schedule/styles/bootstrap.css",
+        "../../../../node_modules/@syncfusion/ej2-popups/styles/bootstrap.css"
+    ],
+    encapsulation: ViewEncapsulation.ShadowDom,
+    providers: [
+        DayService,
+        WeekService,
+        WorkWeekService,
+        MonthService,
+        AgendaService,
+        MonthAgendaService
+    ]
 })
 export class CalendarComponent {
-    @ViewChild("modalContent") modalContent: TemplateRef<any>;
-
-    view: CalendarView = CalendarView.Month;
-
-    CalendarView = CalendarView;
-
-    viewDate: Date = new Date();
-
-    modalData: {
-        action: string;
-        event: CalendarEvent;
+    public data: object[] = [
+        {
+            Id: 2,
+            Subject: "Paris",
+            StartTime: new Date(2018, 1, 15, 10, 0),
+            EndTime: new Date(2018, 1, 15, 12, 30),
+            IsAllDay: false,
+            RecurrenceID: 10,
+            RecurrenceRule: "FREQ=DAILY;INTERVAL=1;COUNT=5",
+            Location: "London",
+            Description: "Summer vacation planned for outstation.",
+            StartTimezone: "Asia/Yekaterinburg",
+            EndTimezone: "Asia/Yekaterinburg"
+        }
+    ];
+    public selectedDate: Date = new Date(2018, 1, 15);
+    public eventSettings: EventSettingsModel = {
+        dataSource: this.data,
+        fields: {
+            id: "Id",
+            subject: { name: "Subject" },
+            isAllDay: { name: "IsAllDay" },
+            location: { name: "Location" },
+            description: { name: "Description" },
+            startTime: { name: "StartTime" },
+            endTime: { name: "EndTime" },
+            startTimezone: { name: "StartTimezone" },
+            endTimezone: { name: "EndTimezone" },
+            recurrenceRule: { name: "RecurrenceRule" },
+            recurrenceID: { name: "RecurrenceID" }
+        }
     };
-
-    actions: CalendarEventAction[] = [
-        {
-            label: '<i class="fa fa-fw fa-pencil"></i>',
-            onClick: ({ event }: { event: CalendarEvent }): void => {
-                this.handleEvent("Edited", event);
-            }
-        },
-        {
-            label: '<i class="fa fa-fw fa-times"></i>',
-            onClick: ({ event }: { event: CalendarEvent }): void => {
-                this.events = this.events.filter(iEvent => iEvent !== event);
-                this.handleEvent("Deleted", event);
-            }
-        }
-    ];
-
-    refresh: Subject<any> = new Subject();
-
-    events: CalendarEvent[] = [
-        {
-            start: subDays(startOfDay(new Date()), 1),
-            end: addDays(new Date(), 1),
-            title: "A 3 day event",
-            color: colors.red,
-            actions: this.actions,
-            allDay: true,
-            resizable: {
-                beforeStart: true,
-                afterEnd: true
-            },
-            draggable: true
-        },
-        {
-            start: startOfDay(new Date()),
-            title: "An event with no end date",
-            color: colors.yellow,
-            actions: this.actions
-        },
-        {
-            start: subDays(endOfMonth(new Date()), 3),
-            end: addDays(endOfMonth(new Date()), 3),
-            title: "A long event that spans 2 months",
-            color: colors.blue,
-            allDay: true
-        },
-        {
-            start: addHours(startOfDay(new Date()), 2),
-            end: new Date(),
-            title: "A draggable and resizable event",
-            color: colors.yellow,
-            actions: this.actions,
-            resizable: {
-                beforeStart: true,
-                afterEnd: true
-            },
-            draggable: true
-        }
-    ];
-
-    activeDayIsOpen: boolean = true;
-
-    constructor(
-        private modal: NgbModal,
-        private remoteService: RemoteService
-    ) {}
-
-    ngOnInit() {
-        this.remoteService.get("calendarGetDates").subscribe(data => {
-            if (!data) return;
-            data.forEach(ev => {
-                this.events.push({
-                    start: new Date(ev.startDate),
-                    end: new Date(ev.endDate),
-                    title:
-                        ev.headline +
-                        "(" +
-                        ev.description +
-                        ")" +
-                        ", Ort:" +
-                        ev.location,
-                    color: colors.yellow,
-                    actions: this.actions,
-                    resizable: {
-                        beforeStart: true,
-                        afterEnd: true
-                    },
-                    draggable: true
-                });
-            });
-        });
-    }
-
-    dayClicked({
-        date,
-        events
-    }: {
-        date: Date;
-        events: CalendarEvent[];
-    }): void {
-        if (isSameMonth(date, this.viewDate)) {
-            this.viewDate = date;
-            if (
-                (isSameDay(this.viewDate, date) &&
-                    this.activeDayIsOpen === true) ||
-                events.length === 0
-            ) {
-                this.activeDayIsOpen = false;
-            } else {
-                this.activeDayIsOpen = true;
-            }
-        }
-    }
-
-    eventTimesChanged({
-        event,
-        newStart,
-        newEnd
-    }: CalendarEventTimesChangedEvent): void {
-        this.events = this.events.map(iEvent => {
-            if (iEvent === event) {
-                return {
-                    ...event,
-                    start: newStart,
-                    end: newEnd
-                };
-            }
-            return iEvent;
-        });
-        this.handleEvent("Dropped or resized", event);
-    }
-
-    handleEvent(action: string, event: CalendarEvent): void {
-        this.modalData = { event, action };
-        console.log(this.modalData);
-    }
-
-    setView(view: CalendarView) {
-        this.view = view;
-    }
-
-    closeOpenMonthViewDay() {
-        this.activeDayIsOpen = false;
-    }
 }
