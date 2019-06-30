@@ -1,7 +1,7 @@
 <button
     id="newBtn"
     type="button"
-    (click)="openNewModal(content)"
+    (click)="openNewModal(newUserModal)"
     class="btn btn-primary"
 >
     Neuer Benutzer
@@ -10,7 +10,7 @@
 <button
     id="editBtn"
     type="button"
-    (click)="openEditModal(content)"
+    (click)="openEditModal(editUserModal)"
     class="btn btn-primary"
 >
     Eigene Daten ändern
@@ -33,7 +33,7 @@
                 <td>{{ user.groupname }}</td>
 
                 <td>
-                    <button class="btn btn-link" (click)="delete(user)">
+                    <button class="btn btn-link" (click)="deleteUser(user)">
                         Löschen
                     </button>
                 </td>
@@ -42,9 +42,9 @@
     </table>
 </div>
 
-<ng-template #content let-modal>
+<ng-template #newUserModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Neues Projekt</h4>
+        <h4 class="modal-title" id="modal-basic-title">Neuer Benutzer</h4>
         <button
             type="button"
             class="close"
@@ -58,42 +58,51 @@
         <div *ngIf="invalidMessage" class="alert alert-danger">
             <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
         </div>
-        <form [formGroup]="newProjectForm">
+        <form [formGroup]="newUserForm">
             <div class="form-group">
-                <label for="name">Name: </label>
+                <label for="name">Benutzername: </label>
                 <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
-                    placeholder="Name des Projekts"
+                    placeholder="Benutzername"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="description">Beschreibung: </label>
-                <textarea
+                <label for="email">Email: </label>
+                <input
+                    type="email"
                     class="form-control"
-                    formControlName="description"
-                    id="description"
-                    placeholder="Beschreibung des Projekts"
-                ></textarea>
+                    id="email"
+                    formControlName="email"
+                    placeholder="E-Mail Adresse"
+                />
             </div>
             <br />
             <div class="form-group">
-                <label for="members" class="">Mitglieder:</label>
-                <select
-                    multiple
-                    class="custom-select"
-                    formControlName="members"
-                >
-                    <option
-                        *ngFor="let user of allusers"
-                        value="{{ user.id }}"
-                        >{{ user.username }}</option
-                    >
-                </select>
+                <label for="password1">Passwort: </label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password1"
+                    formControlName="password1"
+                    placeholder="Passwort"
+                />
             </div>
+            <br />
+            <div class="form-group">
+                <label for="password2">Passwort wiederholen: </label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password2"
+                    formControlName="password2"
+                    placeholder="Passwort erneut eingeben"
+                />
+            </div>
+            <br />
             <br />
         </form>
     </div>
@@ -102,12 +111,108 @@
             type="button"
             class="btn btn-success"
             (click)="
-                !newProjectForm.invalid
+                !newUserForm.invalid
                     ? modal.close('Save click')
                     : (invalidMessage = true)
             "
         >
             Erstellen
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #editUserModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Eigene Daten ändern</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="invalidMessage" class="alert alert-danger">
+            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+        </div>
+        <form [formGroup]="editUserForm">
+            <div class="form-group">
+                <label for="name">Benutzername: </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    formControlName="editUserName"
+                    placeholder="Benutzername"
+                />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="email">Email: </label>
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    formControlName="editUserEmail"
+                    placeholder="E-Mail Adresse"
+                />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="password">Altes Passwort: </label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    formControlName="editUserPasswordOld"
+                    placeholder="Altes Passwort"
+                />
+            </div>
+            <div class="alert alert-info alert-dismissible">
+                <button class="close" data-dismiss="alert" aria-label="close">
+                    ×</button
+                >Bitte bei Änderungen immer das alte Passwort zusätzlich
+                angeben!
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="password1">Neues Passwort: </label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password1"
+                    formControlName="editUserPassword1"
+                    placeholder="Neues Passwort"
+                />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="password2">Neues Passwort wiederholen: </label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password2"
+                    formControlName="editUserPassword2"
+                    placeholder="Neues Passwort erneut eingeben"
+                />
+            </div>
+            <br />
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-success"
+            (click)="
+                !editUserForm.invalid
+                    ? modal.close('Save click')
+                    : (invalidMessage = true)
+            "
+        >
+            Übernehmen
         </button>
     </div>
 </ng-template>
