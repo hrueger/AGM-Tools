@@ -6,9 +6,19 @@ $danger: #d9534f !default;
 
 $enable-rounded: false;
 
+@import "../node_modules/@syncfusion/ej2-base/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-calendars/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-dropdowns/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-lists/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-angular-schedule/styles/bootstrap.css";
+@import "../node_modules/@syncfusion/ej2-angular-inputs/styles/bootstrap.css";
+
 @import "~bootstrap/scss/bootstrap.scss";
 
-@import "~angular-calendar/css/angular-calendar.css";
 @import "~@fortawesome/fontawesome-free/css/all.css";
 
 .table-sm td,

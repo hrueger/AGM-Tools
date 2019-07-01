@@ -71,6 +71,15 @@
 </div>
 
 <div *ngIf="!selectProject && !viewFile">
+    <div id="dropArea">
+        <ejs-uploader
+            maxFileSize="21474836480"
+            #uploader
+            [asyncSettings]="path"
+            (uploading)="onFileUpload($event)"
+        >
+        </ejs-uploader>
+    </div>
     <div id="files" class="table-responsive">
         <div class="clear"></div>
         <table class="table  table-hover">

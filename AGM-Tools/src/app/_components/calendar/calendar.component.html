@@ -1,1 +1,12 @@
-<ejs-schedule [eventSettings]="eventSettings"> </ejs-schedule>
+<div class="alert alert-info">
+    <b>Achtung:</b><br />Bis jetzt funktioniert das Speichern neuer Elemente im
+    Kalender noch nicht. Bei Bedarf bitte melden!
+</div>
+<ejs-schedule
+    width="100%"
+    height="calc( 100vh - 200px)"
+    [selectedDate]="selectedDate"
+    [eventSettings]="eventSettings"
+    locale="de"
+    [firstDayOfWeek]="weekFirstDay"
+></ejs-schedule>

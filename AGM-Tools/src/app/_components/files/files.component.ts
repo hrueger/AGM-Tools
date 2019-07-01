@@ -4,13 +4,10 @@ import { Component, OnInit } from "@angular/core";
 import config from "../../_config/config";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import {
-    FormGroup,
-    FormBuilder,
-    FormControl,
-    Validators
-} from "@angular/forms";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertService } from "../../_services/alert.service";
+import { L10n, EmitType } from "@syncfusion/ej2-base";
+import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
 
 @Component({
     selector: "app-files",
@@ -36,7 +33,53 @@ export class FilesComponent implements OnInit {
     items: any[];
     newFolderName: string;
     newFolderForm: FormGroup;
+
+    public path: Object = {
+        saveUrl: config.apiUrl + "resumableUploadHandler.php",
+
+        chunkSize: 1024 * 1024
+    };
+    public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
+        // add addition data as key-value pair.
+
+        args.customFormData = [
+            {
+                pid: this.pid,
+                fid: this.currentPath[this.currentPath.length - 1].id.toString()
+            }
+        ];
+    };
     ngOnInit() {
+        L10n.load({
+            de: {
+                uploader: {
+                    invalidMinFileSize:
+                        "Diese Datei ist zu klein, um hochgeladen zu werden.",
+                    invalidMaxFileSize:
+                        "Diese Datei ist größer als die erlaubte Dateigröße.",
+                    invalidFileType:
+                        "Diese Datei besitzt keinen der erlabubten Dateitypen.",
+                    Browse: "Auswählen",
+                    Clear: "Leeren",
+                    Upload: "Hochladen",
+                    dropFilesHint: "Dateien hier fallen lassen",
+                    uploadFailedMessage:
+                        "Der Upload konnte nicht erfolgreich beendet werden.",
+                    uploadSuccessMessage:
+                        "Die Datei(en) wurde(n) erfolgreich hochgeladen.",
+                    removedSuccessMessage:
+                        "Die Datei wurde erfolgreich gerlöscht.",
+                    removedFailedMessage:
+                        "Die Datei konnte nicht gelöscht werden.",
+                    inProgress: "in Bearbeitung",
+                    readyToUploadMessage: "Klicke zum Hochladen",
+                    remove: "Entfernen",
+                    cancel: "Abbrechen",
+                    delete: "Löschen"
+                }
+            }
+        });
+
         //console.log("Headline change requested");
         this.remoteService.get("projectsGetProjects").subscribe(data => {
             this.projects = data;
@@ -188,6 +231,8 @@ export class FilesComponent implements OnInit {
         }
         return "other";
     }
+
+    /////////////////
 }
 
 /*

@@ -43,6 +43,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DoneComponent } from "./_components/done/done.component";
 import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
+import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -87,6 +88,7 @@ registerLocaleData(localeDe);
         NgbModalModule,
         ScheduleModule,
         DialogModule,
+        UploaderModule,
         CalendarModule.forRoot({
             provide: DateAdapter,
             useFactory: adapterFactory
