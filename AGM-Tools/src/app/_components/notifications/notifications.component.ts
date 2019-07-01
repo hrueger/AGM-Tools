@@ -5,6 +5,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertService } from "../../_services/alert.service";
 import { User } from "../../_models/user.model";
+import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
     selector: "app-notifications",
@@ -24,10 +25,12 @@ export class NotificationsComponent implements OnInit {
         private remoteService: RemoteService,
         private modalService: NgbModal,
         private fb: FormBuilder,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private NavbarService: NavbarService
     ) {}
 
     ngOnInit() {
+        this.NavbarService.setHeadline("Benachrichtigungen");
         this.remoteService
             .get("notificationsGetNotifications")
             .subscribe(data => {

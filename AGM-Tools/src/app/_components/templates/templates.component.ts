@@ -3,6 +3,7 @@ import { RemoteService } from "../../_services/remote.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import config from "../../_config/config";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
     selector: "app-templates",
@@ -13,11 +14,13 @@ export class TemplatesComponent implements OnInit {
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private NavbarService: NavbarService
     ) {}
     imgUrl: string;
     templates: any;
     ngOnInit() {
+        this.NavbarService.setHeadline("Vorlagen");
         this.remoteService.get("templatesGetTemplates").subscribe(data => {
             this.templates = data;
         });

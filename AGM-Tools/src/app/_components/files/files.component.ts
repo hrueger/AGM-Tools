@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertService } from "../../_services/alert.service";
 import { L10n, EmitType } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
+import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
     selector: "app-files",
@@ -20,7 +21,8 @@ export class FilesComponent implements OnInit {
         private authenticationService: AuthenticationService,
         private modalService: NgbModal,
         private fb: FormBuilder,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private NavbarService: NavbarService
     ) {}
     newFolderModalInvalidMessage: boolean = false;
     selectProject: boolean = true;
@@ -50,6 +52,7 @@ export class FilesComponent implements OnInit {
         ];
     };
     ngOnInit() {
+        this.NavbarService.setHeadline("Dateien");
         L10n.load({
             de: {
                 uploader: {

@@ -10,6 +10,7 @@ import {
     MonthAgendaService
 } from "@syncfusion/ej2-angular-schedule";
 import { loadCldr, L10n } from "@syncfusion/ej2-base";
+import { NavbarService } from "../../_services/navbar.service";
 
 L10n.load({
     de: {
@@ -163,7 +164,10 @@ loadCldr(
 })
 export class CalendarComponent {
     requesting: boolean = false;
-    constructor(private remoteService: RemoteService) {}
+    constructor(
+        private remoteService: RemoteService,
+        private NavbarService: NavbarService
+    ) {}
     public data: object[] = [];
     public weekFirstDay: number = 1;
     public selectedDate: Date = new Date();
@@ -185,6 +189,7 @@ export class CalendarComponent {
     };
 
     ngOnInit() {
+        this.NavbarService.setHeadline("Kalender");
         this.remoteService.get("calendarGetDates").subscribe(dates => {
             if (this.requesting == false) {
                 this.requesting = true;

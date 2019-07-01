@@ -3,6 +3,7 @@ import { RemoteService } from "../../_services/remote.service";
 import { Project } from "../../_models/project.model";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { User } from "../../_models/user.model";
+import { NavbarService } from "../../_services/navbar.service";
 import {
     FormGroup,
     FormBuilder,
@@ -28,10 +29,12 @@ export class ProjectsComponent implements OnInit {
         private remoteService: RemoteService,
         private modalService: NgbModal,
         private fb: FormBuilder,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private NavbarService: NavbarService
     ) {}
 
     ngOnInit() {
+        this.NavbarService.setHeadline("Projekte");
         this.remoteService.get("projectsGetProjects").subscribe(data => {
             this.projects = data;
         });

@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
     selector: "app-users",
@@ -34,10 +35,12 @@ export class UsersComponent implements OnInit {
         private modalService: NgbModal,
         private fb: FormBuilder,
         private alertService: AlertService,
-        private authService: AuthenticationService
+        private authService: AuthenticationService,
+        private NavbarService: NavbarService
     ) {}
 
     ngOnInit() {
+        this.NavbarService.setHeadline("Benutzer");
         this.remoteService.get("usersGetUsers").subscribe(data => {
             this.users = data;
         });

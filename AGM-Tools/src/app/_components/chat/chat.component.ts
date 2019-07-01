@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { RemoteService } from "../../_services/remote.service";
+import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
     selector: "app-chat",
@@ -9,11 +10,15 @@ import { RemoteService } from "../../_services/remote.service";
 export class ChatComponent {
     chats = [];
     currentRid: number;
-    constructor(private remoteService: RemoteService) {
+    constructor(
+        private remoteService: RemoteService,
+        private NavbarService: NavbarService
+    ) {
         this.chats = [];
     }
 
     ngOnInit() {
+        this.NavbarService.setHeadline("Chat");
         this.remoteService.get("chatGetContacts").subscribe(chats => {
             this.chats = chats;
         });

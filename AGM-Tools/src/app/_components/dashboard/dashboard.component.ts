@@ -1,8 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { Label, MultiDataSet } from "ng2-charts";
 import { ChartType, ChartOptions } from "chart.js";
 import * as pluginDataLabels from "../../../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js";
-import { RemoteService } from "../../_services/remote.service.js";
+import { RemoteService } from "../../_services/remote.service";
+import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
     selector: "app-dashboard",
@@ -39,11 +40,16 @@ export class DashboardComponent implements OnInit {
     public whatsnew: any;
     public dates: any;
     version: string;
-    constructor(private remoteService: RemoteService) {}
+    constructor(
+        private remoteService: RemoteService,
+        private NavbarService: NavbarService
+    ) {}
 
     ngOnInit() {
+        this.NavbarService.setHeadline("Dashboard");
         this.initChart();
     }
+
     initChart() {
         this.remoteService.get("dashboardGetSpaceChartData").subscribe(data => {
             this.spaceChartData = [data];
