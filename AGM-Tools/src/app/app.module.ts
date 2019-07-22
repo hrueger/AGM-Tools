@@ -44,6 +44,7 @@ import { DoneComponent } from "./_components/done/done.component";
 import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
+import { ContextMenuModule } from "@syncfusion/ej2-angular-navigations";
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -72,6 +73,7 @@ registerLocaleData(localeDe);
         DoneComponent
     ],
     imports: [
+        ContextMenuModule,
         BrowserAnimationsModule,
         BrowserModule,
         AppRoutingModule,

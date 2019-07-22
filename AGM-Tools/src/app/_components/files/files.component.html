@@ -75,14 +75,22 @@
         <ejs-uploader
             maxFileSize="21474836480"
             #uploader
-            [asyncSettings]="path"
+            locale="de"
+            [asyncSettings]="settings"
             (uploading)="onFileUpload($event)"
         >
         </ejs-uploader>
     </div>
+    <ejs-contextmenu
+        target="#files"
+        [items]="contextMenuItems"
+        (select)="itemSelect($event)"
+        (onOpen)="opened($event)"
+    ></ejs-contextmenu
+    >`
     <div id="files" class="table-responsive">
         <div class="clear"></div>
-        <table class="table  table-hover">
+        <table #files class="table  table-hover">
             <thead>
                 <tr>
                     <td></td>
@@ -115,7 +123,7 @@
     <img
         *ngIf="getType() == 'image'"
         class="previewFile img-fluid"
-        alt="irgendein schönes Bild"
+        alt="Irgendein schönes Bild, das aber leider nicht angezeigt werden kann..."
         [src]="getSrc()"
     />
     <video class="previewFile" controls *ngIf="getType() == 'video'">

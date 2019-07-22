@@ -6,7 +6,8 @@ import {
     OnChanges,
     ViewChild,
     ElementRef,
-    AfterViewChecked
+    AfterViewChecked,
+    ChangeDetectorRef
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Location } from "@angular/common";
@@ -51,7 +52,8 @@ export class ChatMessagesComponent
 
     constructor(
         private remoteService: RemoteService,
-        private _location: Location
+        private _location: Location,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -108,7 +110,8 @@ export class ChatMessagesComponent
             .subscribe(data => {
                 if (data != null) {
                     this.messages = data;
-                    console.warn(data);
+                    //console.warn(data);
+                    this.cdr.detectChanges();
                 } else {
                     this.messages = [];
                 }

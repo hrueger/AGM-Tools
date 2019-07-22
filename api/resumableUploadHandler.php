@@ -7,9 +7,12 @@ require_once("db.inc.php");
 
 echo "___________________________________________\n";
 var_dump($_POST);
+echo "\n";
 var_dump($_GET);
+echo "\n";
 var_dump($_FILES);
-echo "___________________________________________";
+echo "\n";
+echo "___________________________________________\n\n\n";
 
 
 function _log($str) {
@@ -133,20 +136,23 @@ if (!empty($_FILES)) foreach ($_FILES as $file) {
     // the file is stored in a temporary directory
     if(isset($_FILES["chunkFile"]['name']) && trim($_FILES["chunkFile"]['name'])!=''){
         $temp_dir = 'tmp/'.$_FILES["chunkFile"]['name'];
+         _log("Temp Verzeichnis: ".$temp_dir);
     } else {
         $temp_dir = 'tmp/'."unbenannt".uniqid();
+        _log("unbenanntes Temp Verzeichnis");
     }
     $dest_file = $temp_dir.'/'.$_FILES["chunkFile"]['name'].'.part'.$_POST['chunkIndex'];
 
     // create the temporary directory
     if (!is_dir($temp_dir)) {
-        mkdir($temp_dir, 0777, true);
+        var_dump(mkdir($temp_dir, 0777, true));
     }
 
     // move the temporary file
     if (!move_uploaded_file($file['tmp_name'], $dest_file)) {
         _log('Error saving (move_uploaded_file) chunk '.$_POST['chunkIndex'].' for file '.$_FILES["chunkFile"]['name']);
     } else {
+        _log('writing chnunk successfully');
         // check if all the parts present, and create the final destination file
         createFileFromChunks($temp_dir, $_FILES["chunkFile"]['name'],1048576, $_FILES["chunkFile"]['size'],$_POST['totalChunk']);
 		

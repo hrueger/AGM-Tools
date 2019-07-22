@@ -10,6 +10,8 @@ import { L10n, EmitType } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
 import { NavbarService } from "../../_services/navbar.service";
 
+import { MenuItemModel, MenuEventArgs } from "@syncfusion/ej2-navigations";
+
 @Component({
     selector: "app-files",
     templateUrl: "./files.component.html",
@@ -30,17 +32,67 @@ export class FilesComponent implements OnInit {
     projects: Project[];
     imageSource: string;
     pid: number;
+    public settings = { chunkSize: 1024 * 1024, saveUrl: "" };
     currentPath: any = [];
     lastFolder: any;
     items: any[];
     newFolderName: string;
     newFolderForm: FormGroup;
+    public contextMenuItems: MenuItemModel[] = [
+        {
+            text: "Öffnen",
+            iconCss: "far fa-circle"
+        },
+        {
+            text: "Tags",
+            iconCss: "fas fa-tags",
+            items: [
+                {
+                    text: "Fertig"
+                },
+                {
+                    text: "Zu verbessern"
+                },
+                {
+                    text: "In Bearbeitung"
+                },
+                {
+                    text: "Wichtig"
+                }
+            ]
+        },
+        {
+            separator: true
+        },
+        {
+            text: "Herunterladen",
+            iconCss: "fas fa-cloud-download-alt"
+        },
+        {
+            text: "Freigeben",
+            iconCss: "far fa-share-square"
+        },
+        {
+            separator: true
+        },
+        {
+            text: "Umbenennen",
+            iconCss: "fas fa-pen"
+        },
+        {
+            text: "Kopieren",
+            iconCss: "far fa-copy"
+        },
+        {
+            text: "Verschieben",
+            iconCss: "fas fa-arrows-alt"
+        },
+        {
+            text: "Löschen",
+            iconCss: "fas fa-trash"
+        }
+    ];
 
-    public path: Object = {
-        saveUrl: config.apiUrl + "resumableUploadHandler.php",
-
-        chunkSize: 1024 * 1024
-    };
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
         // add addition data as key-value pair.
 
@@ -65,7 +117,7 @@ export class FilesComponent implements OnInit {
                     Browse: "Auswählen",
                     Clear: "Leeren",
                     Upload: "Hochladen",
-                    dropFilesHint: "Dateien hier fallen lassen",
+                    dropFilesHint: "Dateien hierher ziehen",
                     uploadFailedMessage:
                         "Der Upload konnte nicht erfolgreich beendet werden.",
                     uploadSuccessMessage:
@@ -107,7 +159,7 @@ export class FilesComponent implements OnInit {
     }
     getIcon(item: any) {
         let basepath = "/assets/icons/";
-        let iconPath = basepath + "large/";
+        let iconPath = basepath + "extralarge/";
         if (item.type == "folder") {
             return basepath + "folder.png";
         } else {
@@ -127,6 +179,7 @@ export class FilesComponent implements OnInit {
         this.currentPath = [];
         //console.warn(this.currentPath);
         //console.warn("Pushed project");
+
         this.navigate({ id: -1, name: project.name });
     }
     goToFiles() {
@@ -168,7 +221,7 @@ export class FilesComponent implements OnInit {
         }
     }
     navigate(item) {
-        console.log(this.currentPath);
+        //console.log(this.currentPath);
         this.remoteService
             .get("filesGetFolder", {
                 pid: this.pid,
@@ -183,6 +236,14 @@ export class FilesComponent implements OnInit {
                     this.currentPath.push(item);
                 }
                 this.items = data;
+                this.settings.saveUrl =
+                    config.apiUrl +
+                    "resumableUploadHandler.php?fid=" +
+                    item.id +
+                    "&pid=" +
+                    this.pid +
+                    "&token=" +
+                    this.authenticationService.currentUserValue.token;
             });
     }
     getSrc() {
@@ -219,7 +280,9 @@ export class FilesComponent implements OnInit {
             );
     }
     getType() {
-        let filename = this.currentPath[this.currentPath.length - 1].name;
+        let filename = this.currentPath[
+            this.currentPath.length - 1
+        ].name.toLowerCase();
         var videoFileExtensions = ["mp4", "mov", "avi"];
         var imageFileExtensions = ["jpg", "jpeg", "gif", "png"];
         for (let ext of videoFileExtensions) {
@@ -235,88 +298,24 @@ export class FilesComponent implements OnInit {
         return "other";
     }
 
-    /////////////////
-}
-
-/*
-
-import { RemoteService } from "../../_services/remote.service";
-import { Project } from "../../_models/project.model";
-import { Component, OnInit } from "@angular/core";
-
-@Component({
-    selector: "app-files",
-    templateUrl: "./files.component.html",
-    styleUrls: ["./files.component.scss"]
-})
-export class FilesComponent implements OnInit {
-    constructor(private remoteService: RemoteService) {}
-    selectProject: boolean = true;
-    viewFile: boolean = false;
-    projects: Project[];
-    imageSource: string;
-    //pid: number;
-    //currentFolder: any;
-    //lastFolder: any;
-    path: string = "";
-    project: string;
-    items: any[];
-    ngOnInit() {
-        //console.log("Headline change requested");
-        this.remoteService.get("projectsGetProjects").subscribe(data => {
-            this.projects = data;
-        });
-    }
-    goTo(item: any) {
-        //this.lastFolder = this.currentFolder;
-        //this.currentFolder = item.id;
-        if (item.type == "folder") {
-            this.navigate();
+    public itemSelect(args: MenuEventArgs): void {
+        console.log(args);
+        if (args.item.text === "Öffnen") {
+        } else if (args.item.text === "Fertig") {
+        } else if (args.item.text === "Zu verbessern") {
+        } else if (args.item.text === "In Bearbeitung") {
+        } else if (args.item.text === "Herunterladen") {
+        } else if (args.item.text === "Freigeben") {
+        } else if (args.item.text === "Umbenennen") {
+        } else if (args.item.text === "Kopieren") {
+        } else if (args.item.text === "Verschieben") {
+        } else if (args.item.text === "Löschen") {
         } else {
-            this.viewFile = true;
-            this.imageSource =
-                "https://agmtools.allgaeu-gymnasium.de/AGM-Tools/getFile.php?fid=" +
-                item.id;
-            //this.currentFolder.re;
-            
+            console.log("Fehler: Kontextmenü-Item nicht registriert!");
         }
     }
-    getIcon(item: any) {
-        let basepath = "/assets/icons/";
-        let iconPath = basepath + "large/";
-        if (item.type == "folder") {
-            return basepath + "folder.png";
-        } else {
-            return iconPath + item.name.split(".").pop() + ".png";
-        }
-    }
-    goToProject(project: Project) {
-        this.selectProject = false;
-       
-        this.project = project.name;
-        this.path = "";
-        this.navigate();
-    }
 
-    up() {
-        if (this.viewFile) {
-            this.viewFile = false;
-        } else {
-            
-            this.selectProject = true;
-            
-        }
-    }
-    navigate() {
-        this.remoteService
-            .get("filesGetFolder", {
-                project: this.project,
-                path: this.path
-            })
-            .subscribe(data => {
-                this.items = data;
-            });
+    public opened($event) {
+        console.log($event);
     }
 }
-
-*/

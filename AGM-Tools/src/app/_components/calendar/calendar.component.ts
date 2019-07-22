@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation, ChangeDetectorRef } from "@angular/core";
 import { RemoteService } from "../../_services/remote.service";
 import {
     EventSettingsModel,
@@ -138,21 +138,8 @@ loadCldr(
     selector: "app-calendar",
     templateUrl: "./calendar.component.html",
 
-    styleUrls: [
-        "./calendar.component.scss"
-        /*"../../../../node_modules/@syncfusion/ej2-base/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-buttons/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-calendars/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-dropdowns/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-inputs/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-icons/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-lists/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-popups/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-navigations/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-angular-schedule/styles/bootstrap.css",
-        "../../../../node_modules/@syncfusion/ej2-popups/styles/bootstrap.css"*/
-    ],
-    //encapsulation: ViewEncapsulation.ShadowDom,
+    styleUrls: ["./calendar.component.scss"],
+
     providers: [
         DayService,
         WeekService,
@@ -166,13 +153,14 @@ export class CalendarComponent {
     requesting: boolean = false;
     constructor(
         private remoteService: RemoteService,
-        private NavbarService: NavbarService
+        private NavbarService: NavbarService,
+        private cdr: ChangeDetectorRef
     ) {}
-    public data: object[] = [];
+    //public data: object[] = [];
     public weekFirstDay: number = 1;
     public selectedDate: Date = new Date();
     public eventSettings: EventSettingsModel = {
-        dataSource: this.data,
+        dataSource: [],
         fields: {
             id: "Id",
             subject: { name: "Subject" },
@@ -194,7 +182,8 @@ export class CalendarComponent {
             if (this.requesting == false) {
                 this.requesting = true;
                 for (let date of dates) {
-                    this.data.push({
+                    //@ts-ignore
+                    this.eventSettings.dataSource.push({
                         Id: date.id,
                         Subject: date.headline,
                         StartTime: new Date(date.startDate),
@@ -210,8 +199,8 @@ export class CalendarComponent {
                     });
                 }
             }
-
-            // console.log(this.data);
+            this.cdr.detectChanges();
+            //console.log(this.data);
         });
     }
 }

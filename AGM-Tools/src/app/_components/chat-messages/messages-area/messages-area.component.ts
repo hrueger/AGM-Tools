@@ -4,7 +4,8 @@ import {
     Inject,
     Input,
     OnInit,
-    SimpleChanges
+    SimpleChanges,
+    ChangeDetectorRef
 } from "@angular/core";
 import { Message } from "../../../_models/message.model";
 import { SentStatus } from "../../../_models/sent-status.model";
@@ -22,7 +23,10 @@ export class MessagesAreaComponent implements OnInit {
     @Input() messageSent: Event;
     @Input() receiverId: number;
 
-    constructor(private remoteService: RemoteService) {}
+    constructor(
+        private remoteService: RemoteService,
+        private cdr: ChangeDetectorRef
+    ) {}
 
     ngOnInit() {
         this.messages = this.messages.slice(0, 50);
@@ -57,7 +61,8 @@ export class MessagesAreaComponent implements OnInit {
                     message = this.messages.pop();
                     message.sent = SentStatus.SENT;
                     //this.messages.push(message);
-                    console.log(this.messages);
+                    // console.log(this.messages);
+                    this.cdr.detectChanges();
                 });
         }
     }
