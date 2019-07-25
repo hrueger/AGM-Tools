@@ -1,9 +1,9 @@
 <FlexboxLayout class="page">
     <StackLayout class="form">
-        <Image class="logo" src="~/images/logo.png"></Image>
+        
         <Label class="header" text="AGM-Tools v2"></Label>
 
-        <PreviousNextView>
+        <PreviousNextView class="pnv">
             <GridLayout rows="auto, auto, auto">
                 <StackLayout row="0" class="input-field">
                     <TextField class="input" hint="Benutzername" [isEnabled]="!processing"
@@ -29,8 +29,9 @@
 
         <Button [text]="'Login'" [isEnabled]="!processing"
             (tap)="submit()" class="btn btn-primary m-t-20"></Button>
-        <Label *ngIf="isLoggingIn" text="Passwort vergessen?" class="login-label"
+        <Label *ngIf="isLoggingIn" text="Passwort vergessen?" class="password-reset-label"
             (tap)="forgotPassword()"></Label>
+            <!--<Image class="logo" src="~/assets/logo/logo.png"></Image>-->
     </StackLayout>
 
     

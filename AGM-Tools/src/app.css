@@ -14,13 +14,7 @@ StackLayout.content {
     padding: 8;
 }
 
-.card {
-    border-width: 1;
-    border-color: #cfcfcf;
-    border-radius: 10;
-    padding: 5;
-    margin: 5;
-}
+
 
 .headline {
     font-size: 22;

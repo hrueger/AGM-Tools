@@ -18,7 +18,7 @@ import {
 })
 export class AppComponent {
     private _sideDrawerTransition: DrawerTransitionBase;
-    @ViewChild("rsd") rSideDrawer: ElementRef;
+    @ViewChild("rsd", {static: false}) rSideDrawer: ElementRef;
     currentUser: User;
     username = "";
     useremail = "";

@@ -1,94 +1,50 @@
 <ActionBar class="action-bar">
-    <NavigationButton
-        ios:visibility="collapsed"
-        icon="res://menu"
-        (tap)="onDrawerButtonTap()"
-    ></NavigationButton>
-    <ActionItem
-        icon="res://navigation/menu"
-        android:visibility="collapsed"
-        (tap)="onDrawerButtonTap()"
-        ios.position="left"
-    >
+    <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
+    <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
     </ActionItem>
 
     <Label class="action-bar-title" text="Dateien"></Label>
-    <ActionItem
-        *ngIf="!selectProject"
-        ios:visibility="collapsed"
-        icon="res://ic_back"
-        (tap)="up()"
-    ></ActionItem>
+    <ActionItem *ngIf="!selectProject" ios:visibility="collapsed" icon="res://ic_back" (tap)="up()"></ActionItem>
 </ActionBar>
 
-<ListView
-    [items]="projects"
-    id="projects"
-    *ngIf="selectProject && !viewFile"
-    class="list-group"
->
+<Label class="breadcrumbs">
+    <FormattedString textWarp="true">
+        <Span textWarp="true" text="{{ currentProject }}"></Span>
+        <Span
+            *ngFor="let folder of currentPath"
+            textWarp="true"
+            text=" -> {{ folder.name }}"
+        ></Span>
+    </FormattedString>
+</Label>
+
+<ListView [items]="projects" id="projects" *ngIf="selectProject && !viewFile" class="list-group">
     <ng-template let-project="item" let-index="index">
-        <GridLayout
-            (tap)="goToProject(project)"
-            rows="auto, auto"
-            columns="auto, *, auto"
-            class="list-group-item"
-        >
+        <GridLayout (tap)="goToProject(project)" rows="auto, auto" columns="auto, *, auto" class="list-group-item">
             <Label row="0" col="1" [text]="project.name"></Label>
-            <Label
-                row="1"
-                col="1"
-                [text]="project.description"
-                class="body"
-            ></Label>
+            <Label row="1" col="1" [text]="project.description" class="body"></Label>
         </GridLayout>
     </ng-template>
 </ListView>
 
-<ListView
-    [items]="items"
-    *ngIf="!selectProject && !viewFile"
-    id="items"
-    class="list-group"
->
+<ListView [items]="items" *ngIf="!selectProject && !viewFile" id="items" class="list-group">
     <ng-template let-item="item" let-index="index">
-        <GridLayout
-            (tap)="goTo(item)"
-            rows="auto, auto"
-            columns="auto, *, auto"
-            class="list-group-item"
-        >
-            <Image
-                row="0"
-                col="0"
-                rowSpan="2"
-                [src]="getIcon(item)"
-                class="thumb"
-            ></Image>
+        <GridLayout (tap)="goTo(item)" rows="auto, auto" columns="auto, *, auto" class="list-group-item">
+            <Image row="0" col="0" rowSpan="2" [src]="getIcon(item)" class="thumb"></Image>
             <Label row="0" col="1" [text]="item.name"></Label>
             <Label row="1" col="1" text="x MB" class="body"></Label>
-            <Label
-                row="0"
-                col="2"
-                [text]="item.modificationDate | date"
-                class="body time"
-            ></Label>
-            <StackLayout
-                row="1"
-                col="2"
-                orientation="horizontal"
-                class="m-x-auto"
-            >
-                <Label
-                    *ngIf="item.tags"
-                    text="&#xf026;"
-                    class="mdi muted"
-                ></Label>
+            <Label row="0" col="2" [text]="item.modificationDate | date" class="body time"></Label>
+            <StackLayout row="1" col="2" orientation="horizontal" class="m-x-auto">
+                <Label *ngIf="item.tags" text="&#xf026;" class="mdi muted"></Label>
             </StackLayout>
         </GridLayout>
     </ng-template>
 </ListView>
 
 <StackLayout *ngIf="viewFile">
-    <Image [src]="imageSource"></Image>
+    <Label text="Laden... Bitte warten..."></Label>
+    <Image *ngIf="getType() == 'image'" [src]="fileSourceUrl"></Image>
+    <VideoPlayer *ngIf="getType() == 'video'" [src]="fileSourceUrl" autoplay="true"></VideoPlayer>
+    <PDFView *ngIf="getType() == 'pdf'" [src]="fileSourceUrl"></PDFView>
+    <Label *ngIf="getType() == 'other'" text="Dieser Dateityp wird nicht unterstüzt."></Label>
 </StackLayout>

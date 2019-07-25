@@ -53,6 +53,9 @@ if ($data) {
             case "dashboardGetDates":
                 dashboardGetDates();
                 break;
+            case "dashboardGetNotifications":
+                dashboardGetNotifications();
+                break;
             case "dashboardGetVersion":
                 dashboardGetVersion();
                 break;

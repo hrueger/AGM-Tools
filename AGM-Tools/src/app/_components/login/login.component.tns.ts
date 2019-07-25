@@ -17,8 +17,8 @@ export class LoginComponent {
     processing = false;
     username: string;
     password: string;
-    @ViewChild("passwordField") passwordField: ElementRef;
-    @ViewChild("confirmPassword") confirmPassword: ElementRef;
+    @ViewChild("passwordField", {static: false}) passwordField: ElementRef;
+    @ViewChild("confirmPassword", {static: false}) confirmPassword: ElementRef;
 
     constructor(
         private page: Page,
@@ -89,8 +89,8 @@ export class LoginComponent {
         prompt({
             title: "Passwort zurücksetzen",
             message:
-                "Gib deine username-Adresse ein, sodass wir dir ein neues Passwort zuschicken können.",
-            inputType: "username",
+                "Gib deine Email-Adresse ein, sodass wir dir ein neues Passwort zuschicken können.",
+            inputType: "email",
             defaultText: "",
             okButtonText: "Weiter",
             cancelButtonText: "Zurück"

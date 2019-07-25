@@ -1,4 +1,1 @@
-.messages-area {
-    background-image: url("~/assets/backgrounds/1.png");
-    background-repeat: no-repeat;
-}
+div.messages-header{position:fixed;margin-top:-28px;margin-left:-26px;background:#f2f2f2;padding:5px;z-index:4}.messages-header.thumb{float:left;height:60px;padding:8px}.messages-header.title{color:#000;font-size:1.6rem;font-weight:bold}.messages{padding-top:72px;padding-bottom:72px}.message-box{padding:2px;position:fixed;bottom:0px;margin-left:-24px;background-color:#f2f2f2}

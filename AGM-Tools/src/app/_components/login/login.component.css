@@ -1,52 +1,26 @@
 .page {
-    align-items: center;
-    flex-direction: column;
-}
-.form {
-    margin-left: 30;
-    margin-right: 30;
-    flex-grow: 2;
-    vertical-align: middle;
+	background-image: url("~/assets/loginbg.jpg");
+	/*height: 100vh;*/
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 
-.logo {
-    margin-bottom: 12;
-    height: 90;
-    font-weight: bold;
+.form {
+    margin-top: 20%;
+    
 }
 .header {
-    horizontal-align: center;
-    font-size: 25;
-    font-weight: 600;
-    margin-bottom: 70;
+    font-size: 50;
     text-align: center;
-    color: #d51a1a;
+    color: #FFFFFF;
 }
 
-.input-field {
-    margin-bottom: 25;
-}
-.input {
-    font-size: 18;
-    placeholder-color: #a8a8a8;
-}
-.input:disabled {
-    background-color: white;
-    opacity: 0.5;
-}
+.password-reset-label {
+    color: #0390fc;
+    text-align: right;
+    font-size: 20;
+    
+    padding: 10px;
 
-.btn-primary {
-    margin: 30 5 15 5;
-}
-
-.login-label {
-    horizontal-align: center;
-    color: #a8a8a8;
-    font-size: 16;
-}
-.sign-up-label {
-    margin-bottom: 20;
-}
-.bold {
-    color: #000000;
 }

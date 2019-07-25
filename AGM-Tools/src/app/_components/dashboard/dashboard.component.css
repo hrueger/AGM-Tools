@@ -1,1 +1,7 @@
-.fullscreenoverlay{position:absolute;background:white;left:0;right:0;top:0;bottom:0;z-index:45628;display:table;height:100%;width:100%}.accordion>.card,.accordion>.card:first-of-type{border-bottom:1px solid rgba(0,0,0,0.125) !important;border-radius:0.25rem !important;overflow:unset !important}.contentholder{margin:50px;height:100%}.fullscreenoverlay .header{background:#7db9e8;background:-moz-linear-gradient(45deg, #7db9e8 0%, #2989d8 36%, #1ebf84 71%, #179343 96%, #25ba79 100%);background:-webkit-linear-gradient(45deg, #7db9e8 0%, #2989d8 36%, #1ebf84 71%, #179343 96%, #25ba79 100%);background:linear-gradient(45deg, #7db9e8 0%, #2989d8 36%, #1ebf84 71%, #179343 96%, #25ba79 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7db9e8', endColorstr='#25ba79', GradientType=1);padding:50px;padding-top:100px;padding-bottom:40px;color:white;display:table-row}.fullscreenoverlay .header p{font-size:4em;padding-left:50px}.fullscreenoverlay .header small{font-size:1.3em;padding-left:50px;margin-bottom:15px}
+.card {
+    border-width: 1;
+    border-color: #cfcfcf;
+    border-radius: 10;
+    padding: 5;
+    margin: 5;
+}

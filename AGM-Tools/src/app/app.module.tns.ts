@@ -45,9 +45,13 @@ import { MessagesAreaComponent } from "./_components/chat-messages/messages-area
 import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
-import { DoneComponent } from './_components/done/done.component';
+import { DoneComponent } from "./_components/done/done.component";
 registerLocaleData(localeDe);
-
+import { registerElement } from "nativescript-angular/element-registry";
+import { Video } from "nativescript-videoplayer";
+registerElement("VideoPlayer", () => Video);
+import { PDFView } from "nativescript-pdf-view";
+registerElement("PDFView", () => PDFView);
 @NgModule({
     declarations: [
         AppComponent,
