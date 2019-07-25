@@ -60,7 +60,7 @@ export class MessagesAreaComponent implements OnInit {
                 .subscribe(data => {
                     message = this.messages.pop();
                     message.sent = SentStatus.SENT;
-                    //this.messages.push(message);
+                    this.messages.push(message);
                     // console.log(this.messages);
                     this.cdr.detectChanges();
                 });

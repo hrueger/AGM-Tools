@@ -1,59 +1,73 @@
+<div *ngFor="let notification of notifications" [class]="notification.type + ' alert alert-dismissible'">
+    <button (click)="makeNotificationSeen(notification)" type="button" class="seen btn btn-primary  float-right btn-lg">
+        Gelesen
+    </button>
+    <strong>{{ notification.headline }}</strong> {{ notification.content }}
+    <br /><br /><small><b>{{ notification.sender }}</b> am {{ notification.date }} um
+        {{ notification.time }} Uhr</small
+    >
+</div>
+<div *ngIf="notifications"><br /><br /></div>
 <div class="card-columns">
-  <div class="card">
-    <div class="card-header">
-      Verfügbarer Speicherplatz
+    <div class="card">
+        <div class="card-header">
+            Verfügbarer Speicherplatz
+        </div>
+        <div class="card-body">
+            <div style="display: block">
+                <canvas
+                    baseChart
+                    [data]="spaceChartData"
+                    [labels]="spaceChartLabels"
+                    [chartType]="spaceChartType"
+                    [colors]="spaceChartColors"
+                    [options]="spaceChartOptions"
+                >
+                </canvas>
+            </div>
+            <button class="btn btn-primary" (click)="updateChart()">
+                Aktualisieren
+            </button>
+        </div>
     </div>
-    <div class="card-body">
-      <div style="display: block">
-        <canvas
-          baseChart
-          [data]="spaceChartData"
-          [labels]="spaceChartLabels"
-          [chartType]="spaceChartType"
-          [colors]="spaceChartColors"
-          [options]="spaceChartOptions"
-        >
-        </canvas>
-      </div>
-      <button class="btn btn-primary" (click)="updateChart()">
-        Aktualisieren
-      </button>
+    <div class="card">
+        <div class="card-header">
+            What's new
+        </div>
+        <div class="card-body">
+            <ngb-accordion [closeOthers]="true" activeIds="content-0">
+                <ngb-panel
+                    id="content-{{ version.id }}"
+                    title="{{ version.version }}"
+                    *ngFor="let version of whatsnew"
+                >
+                    <ng-template ngbPanelContent>
+                        <ul>
+                            <li *ngFor="let news of version.news">
+                                {{ news }}
+                            </li>
+                        </ul>
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
+        </div>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      What's new
+    <div class="card">
+        <div class="card-header">
+            Nächste Termine
+        </div>
+        <div class="card-body">
+            <ol>
+                <li *ngFor="let date of dates">
+                    am {{ date.weekday }}, {{ date.date }} um
+                    {{ date.starttime }} Uhr<br /><b>
+                        noch {{ date.countdown }}</b
+                    >
+                    <br /><span class="headline">Filmen der zu Ehrenden</span>
+                </li>
+            </ol>
+        </div>
     </div>
-    <div class="card-body">
-      <ngb-accordion [closeOthers]="true" activeIds="content-0">
-        <ngb-panel
-          id="content-{{ version.id }}"
-          title="{{ version.version }}"
-          *ngFor="let version of whatsnew"
-        >
-          <ng-template ngbPanelContent>
-            <ul>
-              <li *ngFor="let news of version.news">{{ news }}</li>
-            </ul>
-          </ng-template>
-        </ngb-panel>
-      </ngb-accordion>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      Nächste Termine
-    </div>
-    <div class="card-body">
-      <ol>
-        <li *ngFor="let date of dates">
-          am {{ date.weekday }}, {{ date.date }} um
-          {{ date.starttime }} Uhr<br /><b> noch {{ date.countdown }}</b>
-          <br /><span class="headline">Filmen der zu Ehrenden</span>
-        </li>
-      </ol>
-    </div>
-  </div>
 </div>
 
 <!--<h4>Verfügbarer Speicherplatz</h4>

@@ -59,6 +59,9 @@ if ($data) {
             case "dashboardGetVersion":
                 dashboardGetVersion();
                 break;
+            case "dashboardMakeNotificationSeen":
+                dashboardMakeNotificationSeen($args);
+                break;    
             case "usersGetUsers":
                 usersGetUsers();
                 break;
@@ -274,13 +277,86 @@ function dashboardGetDates() {
                 $ret[] = array("name" => $termin["headline"], "weekday" => $weekday, "date"=> $date, "starttime"=>$starttime, "countdown" => $countdown);
             }
             die(json_encode($ret));
-        } else {
-            dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
-        }
-    } else {
-        dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
+        } 
+        
     }
-    dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
+    if ($db->error) {
+        dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
+    } else {
+        die(json_encode(array()));
+    }
+    
+}
+
+function dashboardMakeNotificationSeen($data) {
+    $db = connect();
+    if (isset($data["id"]) &&
+		!empty(trim($data["id"])) &&
+		is_numeric(trim($data["id"])) ) {
+			$id = $db->real_escape_string(trim($data["id"]));
+			$seen = explode("-", $db->query("SELECT `seen` FROM `notifications` WHERE `notifications`.`id` = $id")->fetch_all(MYSQLI_ASSOC)[0]["seen"]);
+			//var_dump($seen);
+			array_push($seen, getCurrentUserId());
+			//var_dump(getCurrentUserId());
+			
+			//var_dump($seen);
+			
+			$seen = $db->real_escape_string(implode("-", $seen));
+		//var_dump($seen);
+			$result = $db->query("UPDATE `notifications` SET `seen` = '$seen' WHERE `notifications`.`id` = $id");
+			
+			if($result) {
+				
+				die(json_encode(array("status"=>true)));
+			} else {
+				dieWithMessage("Fehler: ".$db->error);
+				
+		}
+	} else {
+		dieWithMessage("Fehler: nicht alle Parameter übergeben");
+	}
+}
+
+function dashboardGetNotifications() {
+    $db = connect();
+    $ret = array();
+    $currentUserId = getCurrentUserId();
+	$usernames = getUserIdArray($db);
+	//echo "USERID: ". $currentUserId;
+	
+    $res = $db->query("SELECT * FROM notifications");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+
+    foreach ($res as $line) {
+        $receivers = explode("-", $line["receivers"]);
+        $seenby = explode("-", $line["seen"]);
+        if (in_array($currentUserId, $receivers) and !in_array($currentUserId, $seenby)) {
+            switch ($line["type"]) {
+                case 1:
+                    $type = "alert-success";
+                    break;
+                case 2:
+                    $type = "alert-info";
+                    break;
+                case 3:
+                    $type = "alert-warning";
+                    break;
+                case 4:
+                    $type = "alert-danger";
+                    break;
+                default:
+                    break;
+            }
+            $day = date("d.m.Y", strtotime($line["date"]));
+            $time = date("H:i", strtotime($line["date"]));
+
+            $id = $line["id"];
+            $ret[] = array("type"=>$type, "id"=>$id, "headline"=>$line["headline"], "content"=>$line["content"], "sender"=>$usernames[$line["sender"]], "date"=>$day, "time"=>$time);
+        }
+	}
+    die(json_encode(array("status"=>true, "notifications"=>$ret)));
+           
+    //dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
 }
 
 function usersGetUsers() {
@@ -821,6 +897,8 @@ function chatGetMessages($data) {
 
 function chatSendMessage($data) {
     $db = connect();
+    $data["message"] = $db->real_escape_string($data["message"]);
+    $data["rid"] = $db->real_escape_string($data["rid"]);
     $res = $db->query("INSERT INTO messages (message, sender, timestamp, receiver, status) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 0)");
 	if (!$res) {
 		dieWithMessage($db->error);

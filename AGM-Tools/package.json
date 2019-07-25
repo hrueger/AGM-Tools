@@ -32,6 +32,7 @@
         "@angular/platform-browser": "8.0.0",
         "@angular/platform-browser-dynamic": "8.0.0",
         "@angular/router": "8.0.0",
+        "@ctrl/ngx-emoji-mart": "^0.17.0",
         "@fortawesome/fontawesome-free": "^5.8.2",
         "@fullcalendar/angular": "^4.1.1",
         "@fullcalendar/core": "^4.1.0",

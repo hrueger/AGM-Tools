@@ -11,25 +11,18 @@
 
     <div class="input-group">
         <div class="input-group-prepend" id="button-addon3">
-            <button class="far btn btn-outline-secondary" type="button">
+            <button class="far btn btn-outline-secondary" (click)="toggleEmojiPicker()" type="button">
                 &#xf580;
             </button>
+
+            <emoji-mart showPreview="false" set="apple" class="emoji-picker" (emojiClick)="addEmoji($event)" *ngIf="showEmojiPicker" title="Pick your emoji…" [i18n]="emojiI18n"></emoji-mart>
         </div>
-        <input
-            type="text"
-            [(ngModel)]="messageContent"
-            class="form-control"
-            placeholder="Nachricht"
-        />
+        <input type="text" [(ngModel)]="messageContent" class="form-control" placeholder="Nachricht" />
         <div class="input-group-append" id="button-addon4">
             <button class="btn btn-outline-secondary" type="button">
                 +
             </button>
-            <button
-                (click)="sendMessage()"
-                class="fas btn btn-outline-secondary"
-                type="button"
-            >
+            <button (click)="sendMessage()" class="fas btn btn-outline-secondary" type="button">
                 &#xf1d8;
             </button>
         </div>

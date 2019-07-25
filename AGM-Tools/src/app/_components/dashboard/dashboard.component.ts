@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit {
     public whatsnew: any;
     public dates: any;
     version: string;
+    notifications: any[] = [];
     constructor(
         private remoteService: RemoteService,
         private NavbarService: NavbarService
@@ -63,5 +64,25 @@ export class DashboardComponent implements OnInit {
         this.remoteService.get("dashboardGetVersion").subscribe(data => {
             this.version = data;
         });
+        this.remoteService
+            .getNoCache("dashboardGetNotifications")
+            .subscribe(data => {
+                this.notifications = data.notifications;
+            });
+    }
+
+    makeNotificationSeen(notification) {
+        this.remoteService
+            .getNoCache("dashboardMakeNotificationSeen", {
+                id: notification.id
+            })
+            .subscribe(data => {
+                if (data.status == true) {
+                    //console.log(true);
+                    this.notifications = this.notifications.filter(
+                        obj => obj.id !== notification.id
+                    );
+                }
+            });
     }
 }
