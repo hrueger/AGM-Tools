@@ -27,10 +27,16 @@ export class NavbarComponent {
         this.router.navigate(["/login"]);
     }
     ngAfterViewChecked() {
-        this.NavbarService.change.subscribe(headline => {
-            this.headline = headline;
-            console.log("Changed Headline to " + this.headline);
-            this.cdr.detectChanges();
-        });
+        try {
+            this.NavbarService.change.subscribe(headline => {
+                try {
+                    this.headline = headline;
+                    console.log("Changed Headline to " + this.headline);
+                    this.cdr.detectChanges();
+                } finally {
+                }
+            });
+        } finally {
+        }
     }
 }

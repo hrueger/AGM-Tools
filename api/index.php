@@ -116,9 +116,18 @@ if ($data) {
             case "bugsGetBugs":
                 bugsGetBugs();
                 break;
+            case "bugsNewBug":
+                bugsNewBug($args);
+                break;
+            case "bugsDeleteBug":
+                bugsDeleteBug($args);
+                break;
             case "templatesGetTemplates":
                 templatesGetTemplates();
-                break;  
+                break;
+            case "templatesNewTemplate":
+                templatesNewTemplate($args);
+                break;      
             default: 
                 break;
         }
@@ -879,8 +888,10 @@ function chatGetMessages($data) {
 			//echo $existing ."\n";
 			//echo "das war eine gruppe";
 		} else {
-			$mID = $db->real_escape_string($line["id"]);
-			$db->query("UPDATE `messages` SET `status` = '2' WHERE `messages`.`id` = $mID;");
+            if ($alt==false) {
+                $mID = $db->real_escape_string($line["id"]);
+			    $db->query("UPDATE `messages` SET `status` = '2' WHERE `messages`.`id` = $mID;");
+            }
 			//echo $db->affected_rows."   -   ".$db->error."\n";
 			//echo "das war ein privater chat von ".$line["receiver"]."\n";
 		}
@@ -1070,6 +1081,7 @@ function bugsGetBugs() {
         $bug["location"] = $line["place"];
         $bug["title"] = $line["headline"];
         $bug["description"] = $line["description"];
+        $bug["id"] = $line["id"];
         
         if (isset($usernames[$line["creator"]])) {
             
@@ -1080,6 +1092,46 @@ function bugsGetBugs() {
         $bugs[] = $bug;
     }
     die(json_encode($bugs));
+}
+
+function bugsNewBug($data) {
+    $db = connect();
+    if (isset($data["type"]) &&
+    isset($data["description"]) &&
+    isset($data["headline"]) &&
+    isset($data["place"]) &&
+    !empty(trim($data["type"])) &&
+    !empty(trim($data["description"])) &&
+    !empty(trim($data["place"])) &&
+    !empty(trim($data["headline"])) ) {
+			
+        $headline = $db->real_escape_string($data["headline"]);
+        $description = $db->real_escape_string($data["description"]);
+        $sender = getCurrentUserId();
+        $type = $db->real_escape_string($data["type"]);
+        $place = $db->real_escape_string($data["place"]);
+
+        $result = $db->query("INSERT INTO `bugs` (`id`, `headline`, `type`, `place`, `description`, `creator`) VALUES (NULL, '$headline', '$type', '$place', '$description', '$sender');");
+        if($result) {
+            die(json_encode(array("status" => true)));
+        } else {
+            dieWithMessage("Fehler: ".$db->error);
+        }
+	} else {
+		dieWithMessage("Fehler: nicht alle Daten angegeben!");
+    }
+}
+
+function bugsDeleteBug($data) {
+    $db = connect();
+    $id = $db->real_escape_string(trim($data["id"]));
+	$result = $db->query("DELETE FROM `bugs` WHERE `id` = $id");
+	if($result) {
+		die(json_encode(array("status"=>true)));
+	} else {
+		dieWithMessage("Unbekannter Fehler");
+		
+	}
 }
 
 function templatesGetTemplates() {
@@ -1096,6 +1148,25 @@ function templatesGetTemplates() {
         $templates[] = $template;
     }
     die(json_encode($templates));
+}
+function templatesNewTemplate($data) {
+if (isset($data["type"]) &&
+	isset($data["description"]) &&
+	isset($data["name"]) &&
+	isset($_FILES["file"]) &&
+	!empty(trim($data["name"])) &&
+	!empty(trim($data["description"])) &&
+	!empty(trim($data["type"])) &&
+	is_uploaded_file($_FILES['file']['tmp_name']) ) {
+		/////////////////////////
+
+		// connect and login to FTP server
+		$fc = new FileController($db);
+		$fc->createTemplate($_FILES['file'], $_POST["name"], $_POST["description"], $_POST["type"]);
+		die(json_encode(array("status"=>true)));
+	} else {
+		dieWithMessage("Fehler: Nicht alle Daten angegeben!");
+	}
 }
 
 function sendPushMessage($text, $all, $data, $receiverID = null)

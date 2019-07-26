@@ -1,47 +1,38 @@
 .messages-area {
     width: 100%;
-
     .messages {
         flex-direction: column;
         align-items: flex-start;
         padding: 0 10 5 10;
-
         .message-bubble {
             margin: 10 15 2 0;
             padding: 0;
-
             &.myself {
                 align-self: flex-end;
                 margin-right: 0;
                 margin-left: 15;
-
                 .message-bubble-content {
                     background-color: #dcf8c6;
                 }
             }
-
             &.continuation {
                 margin-top: 1;
             }
-
             .message-bubble-content {
                 align-items: flex-start;
                 flex-wrap: wrap;
                 justify-content: flex-end;
                 border-radius: 8;
                 background-color: white;
-
                 .message-text {
                     color: #8d1b1b;
                     font-size: 15;
                     margin: 5;
                 }
-
                 .meta {
                     align-self: flex-end;
                     justify-content: flex-end;
                     margin: 0 5 5 5;
-
                     .time {
                         font-size: 13;
                         opacity: 0.7;
@@ -51,16 +42,13 @@
                             opacity: 0.4;
                         }
                     }
-
                     .check {
                         font-size: 14;
                         padding-top: 2;
                         margin-left: -4;
-
                         &.ios {
                             opacity: 0.6;
                         }
-
                         &.blue {
                             color: #52c5f7;
                             &.ios {
@@ -103,7 +91,6 @@
 .system-msg {
     padding: 5px;
     display: inline;
-
     position: relative;
     background: #ffdd59;
     border-radius: 4px;
@@ -119,27 +106,33 @@
     float: right;
     background-color: #c6edad;
 }
+
 .speech-wrapper .bubble {
     padding: 8px;
 }
+
 .speech-wrapper .bubble .name {
     font-weight: 600;
     font-size: 12px;
     margin: 0 0 4px;
     color: #3498db;
 }
+
 .speech-wrapper .bubble .name span {
     font-weight: normal;
     color: #b3b3b3;
 }
+
 .speech-wrapper .bubble .name.alt {
     color: #2ecc71;
 }
+
 .speech-wrapper .bubble .message {
     font-size: 12px;
     margin: 0;
     color: #2b2b2b;
 }
+
 .speech-wrapper .bubble .addon,
 .speech-wrapper .bubble .timestamp {
     font-size: 11px;
@@ -150,6 +143,7 @@
     text-transform: uppercase;
     color: #999;
 }
+
 .speech-wrapper .bubble .bubble-arrow {
     position: relative;
     width: 0;
@@ -157,6 +151,7 @@
     left: 2px;
     height: 0;
 }
+
 .speech-wrapper .bubble .bubble-arrow.alt {
     right: -2px;
     bottom: 40px;
@@ -165,4 +160,9 @@
 
 .blue {
     color: #3498db !important;
+}
+
+.addon {
+    margin-left: 5px;
+    margin-top: 3px;
 }

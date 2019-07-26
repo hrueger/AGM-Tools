@@ -1,9 +1,0 @@
-<div
-    [innerHTML]="message.text"
-    *ngIf="message"
-    [ngClass]="{
-        alert: message,
-        'alert-success': message.type === 'success',
-        'alert-danger': message.type === 'error'
-    }"
-></div>

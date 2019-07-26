@@ -7,7 +7,7 @@
         {{ notification.time }} Uhr</small
     >
 </div>
-<div *ngIf="notifications"><br /><br /></div>
+<div *ngIf="notificationslength > 0"></div>
 <div class="card-columns">
     <div class="card">
         <div class="card-header">
@@ -35,21 +35,22 @@
             What's new
         </div>
         <div class="card-body">
-            <ngb-accordion [closeOthers]="true" activeIds="content-0">
-                <ngb-panel
-                    id="content-{{ version.id }}"
-                    title="{{ version.version }}"
-                    *ngFor="let version of whatsnew"
-                >
-                    <ng-template ngbPanelContent>
-                        <ul>
-                            <li *ngFor="let news of version.news">
-                                {{ news }}
-                            </li>
-                        </ul>
-                    </ng-template>
-                </ngb-panel>
-            </ngb-accordion>
+            <ejs-accordion expandMode="Single" *ngFor="let version of whatsnew">
+                <div>
+                    <div>
+                        <div>{{ version.version }}</div>
+                    </div>
+                    <div>
+                        <div>
+                            <ul>
+                                <li *ngFor="let news of version.news">
+                                    {{ news }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </ejs-accordion>
         </div>
     </div>
     <div class="card">

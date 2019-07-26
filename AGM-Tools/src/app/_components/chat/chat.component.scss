@@ -1,6 +1,5 @@
 @import "~nativescript-theme-core/scss/forest";
 @import "~nativescript-theme-core/scss/index";
-
 #chats {
     background-color: white;
 }
@@ -21,8 +20,8 @@
     min-height: 20;
     color: white;
 }
-$lightgreen: #25d366;
 
+$lightgreen: #25d366;
 .unread {
     font-size: 11;
     padding-top: 2;
@@ -38,10 +37,13 @@ $lightgreen: #25d366;
     font-size: 12;
 }
 
+
 /* Browser */
+
 .browser .sidebar-space {
-    margin-left: 320px;
+    margin-left: 317px;
 }
+
 .browser #contacts li {
     position: relative;
     display: block;
@@ -71,7 +73,7 @@ $lightgreen: #25d366;
 }
 
 .browser .main-messages {
-    margin-left: 320px;
+    margin-left: 317px;
 }
 
 .browser .active {
@@ -130,12 +132,12 @@ $lightgreen: #25d366;
     margin-left: 4px;
 }
 
-.contact > .badge {
+.contact>.badge {
     margin-top: 20px;
     right: 50px !important;
 }
 
-.browser .contact > .badge-newMes {
+.browser .contact>.badge-newMes {
     background-color: #3ece3b;
 }
 
@@ -149,7 +151,6 @@ $lightgreen: #25d366;
     background-image: url(../../assets/backgrounds/11.jpg);
     background-size: cover;
     background-position: center;
-
     background-repeat: no-repeat;
     background-origin: border-box;
     background-attachment: fixed;

@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { User } from "./_models/user.model";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "./_services/authentication.service";
+import { OneSignalService } from "./_services/onesignal.service";
 
 @Component({
     selector: "app-root",
@@ -13,7 +14,8 @@ export class AppComponent {
 
     constructor(
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private oneSignalService: OneSignalService
     ) {
         this.authenticationService.currentUser.subscribe(
             x => (this.currentUser = x)
@@ -24,5 +26,7 @@ export class AppComponent {
         this.authenticationService.logout();
         this.router.navigate(["/login"]);
     }
-    ngOnInit() {}
+    ngOnInit() {
+        //this.oneSignalService.init();
+    }
 }

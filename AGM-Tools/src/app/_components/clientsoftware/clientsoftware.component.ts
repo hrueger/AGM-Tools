@@ -17,7 +17,7 @@ export class ClientsoftwareComponent implements OnInit {
     ngOnInit() {
         this.NavbarService.setHeadline("Client-Software");
         this.remoteService.get("clientsoftwareGetMobile").subscribe(data => {
-            this.apps = data;
+            //this.apps = data;
         });
     }
 }

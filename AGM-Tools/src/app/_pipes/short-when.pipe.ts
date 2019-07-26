@@ -17,13 +17,13 @@ export class ShortWhenPipe implements PipeTransform {
         const parsedDate = parse(value);
 
         if (isToday(parsedDate)) {
-            return datePipe.transform(parsedDate, "shortTime");
+            return datePipe.transform(parsedDate, "HH:mm");
         }
 
         if (isYesterday(parsedDate)) {
-            return "yesterday";
+            return "Gestern";
         }
 
-        return datePipe.transform(parsedDate, "shortDate");
+        return datePipe.transform(parsedDate, "dd.MM.yyyy");
     }
 }

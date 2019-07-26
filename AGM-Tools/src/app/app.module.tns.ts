@@ -51,6 +51,7 @@ import { registerElement } from "nativescript-angular/element-registry";
 import { Video } from "nativescript-videoplayer";
 registerElement("VideoPlayer", () => Video);
 import { PDFView } from "nativescript-pdf-view";
+import { FileUploadComponent } from './_components/file-upload/file-upload.component';
 registerElement("PDFView", () => PDFView);
 @NgModule({
     declarations: [
@@ -75,7 +76,8 @@ registerElement("PDFView", () => PDFView);
         ChatMessagesComponent,
         MessagesAreaComponent,
         MessageBoxComponent,
-        DoneComponent
+        DoneComponent,
+        FileUploadComponent
     ],
     imports: [
         NativeScriptModule,

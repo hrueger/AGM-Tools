@@ -18,7 +18,6 @@ import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoft
 import { SettingsComponent } from "./_components/settings/settings.component";
 import { AboutComponent } from "./_components/about/about.component";
 import { NavbarComponent } from "./_components/navbar/navbar.component";
-import { AlertComponent } from "./_components/alert/alert.component";
 import { SidebarComponent } from "./_components/sidebar/sidebar.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ChartsModule } from "ng2-charts";
@@ -42,8 +41,14 @@ import { DoneComponent } from "./_components/done/done.component";
 import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
-import { ContextMenuModule } from "@syncfusion/ej2-angular-navigations";
+import {
+    ContextMenuModule,
+    AccordionModule
+} from "@syncfusion/ej2-angular-navigations";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
+import { OneSignalService } from "./_services/onesignal.service";
+import { FileUploadComponent } from "./_components/file-upload/file-upload.component";
+import { ToastrModule } from "ngx-toastr";
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -63,13 +68,13 @@ registerLocaleData(localeDe);
         SettingsComponent,
         AboutComponent,
         NavbarComponent,
-        AlertComponent,
         SidebarComponent,
         ChatMessagesComponent,
         ShortWhenPipe,
         MessagesAreaComponent,
         MessageBoxComponent,
-        DoneComponent
+        DoneComponent,
+        FileUploadComponent
     ],
     imports: [
         ContextMenuModule,
@@ -92,11 +97,15 @@ registerLocaleData(localeDe);
         UploaderModule,
         FormsModule,
         ReactiveFormsModule,
-        PickerModule
+        PickerModule,
+        BrowserAnimationsModule,
+        AccordionModule,
+        ToastrModule.forRoot()
     ],
     providers: [
         Location,
         NavbarService,
+        OneSignalService,
         ChatsDataService,
         {
             provide: LOCALE_ID,

@@ -1,11 +1,17 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { RemoteService } from "../../_services/remote.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import config from "../../_config/config";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NavbarService } from "../../_services/navbar.service";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+    FormBuilder,
+    FormGroup,
+    Validators,
+    FormControl
+} from "@angular/forms";
 import { AlertService } from "../../_services/alert.service";
+import { HttpClient, HttpEventType } from "@angular/common/http";
 
 @Component({
     selector: "app-templates",
@@ -18,7 +24,7 @@ export class TemplatesComponent implements OnInit {
         private modalService: NgbModal,
         private authenticationService: AuthenticationService,
         private NavbarService: NavbarService,
-        private fb: FormBuilder,
+        private httpClient: HttpClient,
         private alertService: AlertService
     ) {}
     imgUrl: string;
@@ -33,10 +39,11 @@ export class TemplatesComponent implements OnInit {
         this.remoteService.get("templatesGetTemplates").subscribe(data => {
             this.templates = data;
         });
-        this.newTemplateForm = this.fb.group({
-            name: [this.name, [Validators.required]],
-            description: [this.description, [Validators.required]],
-            type: [this.type, [Validators.required]]
+        this.newTemplateForm = new FormGroup({
+            name: new FormControl(null, Validators.required),
+            description: new FormControl(null, Validators.required),
+            type: new FormControl(null, Validators.required),
+            file: new FormControl(null, [Validators.required])
         });
     }
     show(template, content) {
@@ -57,7 +64,7 @@ export class TemplatesComponent implements OnInit {
                 result => {
                     this.invalidMessage = false;
 
-                    this.remoteService
+                    /*this.remoteService
                         .getNoCache("templateNewTemplate", {
                             name: this.newTemplateForm.get("name").value,
                             description: this.newTemplateForm.get("description")
@@ -70,9 +77,37 @@ export class TemplatesComponent implements OnInit {
                                     "Vorlage erfolgreich hochgeladen"
                                 );
                             }
+                        });*/
+                    this.alertService.success(
+                        "Hochladen gestartet, bitte warten!"
+                    );
+                    this.httpClient
+                        .post(
+                            config.apiUrl,
+
+                            this.toFormData(this.newTemplateForm.value)
+                        )
+                        .subscribe(data => {
+                            //@ts-ignore
+                            if (data && data.status == true) {
+                                this.alertService.success(
+                                    "Vorlage erfolgreich hochgeladen"
+                                );
+                            }
                         });
                 },
                 reason => {}
             );
+    }
+    toFormData<T>(formValue: T) {
+        const formData = new FormData();
+
+        for (const key of Object.keys(formValue)) {
+            const value = formValue[key];
+            formData.append(key, value);
+        }
+        formData.append("action", "templatesNewTemplate");
+
+        return formData;
     }
 }

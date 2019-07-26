@@ -1,15 +1,14 @@
 import { Injectable } from "@angular/core";
-import { Router, NavigationStart } from "@angular/router";
-import { Observable, Subject } from "rxjs";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({ providedIn: "root" })
 export class AlertService {
-  private subject = new Subject<any>();
-  private keepAfterNavigationChange = false;
+    //private subject = new Subject<any>();
+    //private keepAfterNavigationChange = false;
 
-  constructor(private router: Router) {
-    // clear alert message on route change
-    router.events.subscribe(event => {
+    constructor(private toastr: ToastrService) {
+        // clear alert message on route change
+        /*router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         if (this.keepAfterNavigationChange) {
           // only keep for a single location change
@@ -19,20 +18,22 @@ export class AlertService {
           this.subject.next();
         }
       }
-    });
-  }
+    });*/
+    }
 
-  success(message: string, keepAfterNavigationChange = false) {
-    this.keepAfterNavigationChange = keepAfterNavigationChange;
-    this.subject.next({ type: "success", text: message });
-  }
+    success(message: string) {
+        this.toastr.success(message, "Erfolg!", { timeOut: 999999999 });
+        //this.keepAfterNavigationChange = keepAfterNavigationChange;
+        //this.subject.next({ type: "success", text: message });
+    }
 
-  error(message: string, keepAfterNavigationChange = false) {
-    this.keepAfterNavigationChange = keepAfterNavigationChange;
-    this.subject.next({ type: "error", text: message });
-  }
+    error(message: string) {
+        this.toastr.error(message, "Fehler!", { timeOut: 999999999 });
+        //this.keepAfterNavigationChange = keepAfterNavigationChange;
+        //this.subject.next({ type: "error", text: message });
+    }
 
-  getMessage(): Observable<any> {
-    return this.subject.asObservable();
-  }
+    //getMessage(): Observable<any> {
+    //return this.subject.asObservable();
+    //}
 }

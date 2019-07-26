@@ -1,9 +1,4 @@
-<button
-    id="newBtn"
-    type="button"
-    class="btn btn-primary"
-    (click)="openNewModal(newTemplateModal)"
->
+<button id="newBtn" type="button" class="btn btn-primary" (click)="openNewModal(newTemplateModal)">
     Neue Vorlage
 </button>
 <br /><br />
@@ -18,10 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr
-                *ngFor="let template of templates"
-                (click)="show(template, showModal)"
-            >
+            <tr *ngFor="let template of templates" (click)="show(template, showModal)">
                 <td>{{ template.type }}</td>
                 <td>{{ template.name }}</td>
                 <td>{{ template.description }}</td>
@@ -38,8 +30,7 @@
 <br />
 <br />
 <p>
-    <small
-        ><b>Wichtig:</b> bitte nur die Vorlagen löschen, die auch von Ihnen
+    <small><b>Wichtig:</b> bitte nur die Vorlagen löschen, die auch von Ihnen
         erstellt und veraltet sind.</small
     >
 </p>
@@ -115,10 +106,14 @@
                     type="text"
                     class="form-control"
                     id="type"
-                    formControlName="natypeme"
+                    formControlName="type"
                     placeholder="Typ der Vorlage (Logo, Hintergrund, etc.)"
                 />
             </div>
+            <app-file-upload
+                formControlName="file"
+                [progress]="progress"
+            ></app-file-upload>
             <br />
         </form>
     </div>

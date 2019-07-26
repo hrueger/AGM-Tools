@@ -18,6 +18,7 @@ $enable-rounded: false;
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~@ctrl/ngx-emoji-mart/picker";
 @import "~@fortawesome/fontawesome-free/css/all.css";
+@import '~ngx-toastr/toastr-bs4-alert';
 .table-sm td,
 .table-sm th {
     vertical-align: middle;
