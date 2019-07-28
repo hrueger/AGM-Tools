@@ -2,7 +2,6 @@ import { NgModule, LOCALE_ID } from "@angular/core";
 import { Location } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./_components/login/login.component";
 import { DashboardComponent } from "./_components/dashboard/dashboard.component";
@@ -41,14 +40,15 @@ import { DoneComponent } from "./_components/done/done.component";
 import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
-import {
-    ContextMenuModule,
-    AccordionModule
-} from "@syncfusion/ej2-angular-navigations";
+import { AccordionModule } from "@syncfusion/ej2-angular-navigations";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { OneSignalService } from "./_services/onesignal.service";
 import { FileUploadComponent } from "./_components/file-upload/file-upload.component";
 import { ToastrModule } from "ngx-toastr";
+import { ContextMenuModule } from "ngx-contextmenu";
+import { RouterModule } from "@angular/router";
+import { routes } from "./app.routes";
+import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 registerLocaleData(localeDe);
 
 @NgModule({
@@ -77,16 +77,18 @@ registerLocaleData(localeDe);
         FileUploadComponent
     ],
     imports: [
-        ContextMenuModule,
+        RouterModule.forRoot(routes),
+
+        ContextMenuModule.forRoot({
+            useBootstrap4: true
+        }),
         BrowserAnimationsModule,
         BrowserModule,
-        AppRoutingModule,
         HttpClientModule,
         NgbModule,
         BrowserModule,
         ReactiveFormsModule,
         HttpClientModule,
-        AppRoutingModule,
         ChartsModule,
         AvatarModule,
         CommonModule,
@@ -100,6 +102,7 @@ registerLocaleData(localeDe);
         PickerModule,
         BrowserAnimationsModule,
         AccordionModule,
+        PdfJsViewerModule,
         ToastrModule.forRoot()
     ],
     providers: [

@@ -8,7 +8,6 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
-import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { DashboardComponent } from "./_components/dashboard/dashboard.component";
 import { LoginComponent } from "./_components/login/login.component";
@@ -24,7 +23,6 @@ import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoft
 import { SettingsComponent } from "./_components/settings/settings.component";
 import { AboutComponent } from "./_components/about/about.component";
 import { NavbarComponent } from "./_components/navbar/navbar.component";
-import { AlertComponent } from "./_components/alert/alert.component";
 import { SidebarComponent } from "./_components/sidebar/sidebar.component";
 import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
 import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
@@ -51,7 +49,7 @@ import { registerElement } from "nativescript-angular/element-registry";
 import { Video } from "nativescript-videoplayer";
 registerElement("VideoPlayer", () => Video);
 import { PDFView } from "nativescript-pdf-view";
-import { FileUploadComponent } from './_components/file-upload/file-upload.component';
+import { FileUploadComponent } from "./_components/file-upload/file-upload.component";
 registerElement("PDFView", () => PDFView);
 @NgModule({
     declarations: [
@@ -70,7 +68,6 @@ registerElement("PDFView", () => PDFView);
         SettingsComponent,
         AboutComponent,
         NavbarComponent,
-        AlertComponent,
         SidebarComponent,
         ShortWhenPipe,
         ChatMessagesComponent,
@@ -81,7 +78,7 @@ registerElement("PDFView", () => PDFView);
     ],
     imports: [
         NativeScriptModule,
-        AppRoutingModule,
+        NativeScriptRouterModule.forRoot(routes),
         NativeScriptHttpClientModule,
         NativeScriptFormsModule,
         NativeScriptUISideDrawerModule,
