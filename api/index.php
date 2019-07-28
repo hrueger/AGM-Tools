@@ -101,11 +101,14 @@ if ($data) {
             case "chatSendMessage":
                 chatSendMessage($args);
                 break; 
-             case "filesGetFolder":
+            case "filesGetFolder":
                 filesGetFolder($args);
                 break;
-             case "filesGetFiles":
+            case "filesGetFiles":
                 filesGetFolder($args);
+                break;
+            case "filesToggleTag":
+                filesToggleTag($args);
                 break;  
             case "clientsoftwareGetMobile":
                 clientsoftwareGetMobile();
@@ -964,12 +967,52 @@ function filesGetFolder($data) {
     $files = [];
     $folders = [];
 
+    $tres = $db->query("SELECT * FROM tags");
+    $tres = $tres->fetch_all(MYSQLI_ASSOC);
+    $tags = [];
+    foreach ($tres as $tag) {
+        $tags[$tag["id"]] = [];
+        $tags[$tag["id"]]["name"] = $tag["name"];
+        $tags[$tag["id"]]["backgroundColor"] = $tag["color"];
+        $tags[$tag["id"]]["color"] = $tag["text-color"];
+    }
+
+
+    $fc = new FileController($db);
     foreach ($res1 as $file) {
         $file["type"] = "file";
+        $ftags = array_filter(explode("-", $file["tags"]));
+        $file["tags"] = array();
+        foreach ($ftags as $ftag) {
+            $file["tags"][] = array("name" => $tags[$ftag]["name"],
+			"color" =>$tags[$ftag]["color"],
+			"backgroundColor" => $tags[$ftag]["backgroundColor"],);
+        }
+        $file["size"] = @filesize($fc->getLocalFilePath($file["id"]));
+        if ($file["size"]) {
+            $file["size"] = human_filesize($file["size"]);
+        } else {
+            $file["size"] = "-";
+        }
         $files[] = $file;
     }
     foreach ($res2 as $folder) {
         $folder["type"] = "folder";
+        
+        $ftags = array_filter(explode("-", $folder["tags"]));
+        $folder["tags"] = array();
+        foreach ($ftags as $ftag) {
+            $folder["tags"][] = array("name" => $tags[$ftag]["name"],
+			"color" =>$tags[$ftag]["color"],
+			"backgroundColor" => $tags[$ftag]["backgroundColor"],);
+        }
+        $folder["size"] = getDirectorySize($fc->getCompleteFolderPath($folder["id"]));
+        
+        if ($folder["size"]) {
+            $folder["size"] = human_filesize($folder["size"]);
+        } else {
+            $folder["size"] = "-";
+        }
         $folders[] = $folder;
     }
     //log_to_file(print_r("hi", true));
@@ -1008,6 +1051,16 @@ function filesGetFolder($data) {
         return $a["name"] <=> $b["name"];
     });
     die(json_encode(array_merge($folders, $files)));*/
+}
+
+function filesToggleTag($data) {
+    $fc = new FileController(connect());
+	if ($data["type"] == "file") {
+		$fc->editFileTag($data["fid"], $data["tagid"]);
+	} else {
+        $fc->editFolderTag($data["fid"], $data["tagid"]);
+	}
+
 }
 
 function projectsNewProject($data) {

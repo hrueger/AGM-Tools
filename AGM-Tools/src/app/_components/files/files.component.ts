@@ -1,6 +1,6 @@
 import { RemoteService } from "../../_services/remote.service";
 import { Project } from "../../_models/project.model";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import config from "../../_config/config";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -9,8 +9,9 @@ import { AlertService } from "../../_services/alert.service";
 import { L10n, EmitType } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
 import { NavbarService } from "../../_services/navbar.service";
+import { ContextMenuComponent } from "ngx-contextmenu";
 
-import { MenuItemModel, MenuEventArgs } from "@syncfusion/ej2-navigations";
+//import { MenuItemModel, MenuEventArgs } from "@syncfusion/ej2-navigations";
 
 @Component({
     selector: "app-files",
@@ -24,8 +25,10 @@ export class FilesComponent implements OnInit {
         private modalService: NgbModal,
         private fb: FormBuilder,
         private alertService: AlertService,
-        private NavbarService: NavbarService
+        private NavbarService: NavbarService,
+        private cdr: ChangeDetectorRef
     ) {}
+
     newFolderModalInvalidMessage: boolean = false;
     selectProject: boolean = true;
     viewFile: boolean = false;
@@ -35,63 +38,10 @@ export class FilesComponent implements OnInit {
     public settings = { chunkSize: 1024 * 1024, saveUrl: "" };
     currentPath: any = [];
     lastFolder: any;
+    lastItem: any;
     items: any[];
     newFolderName: string;
     newFolderForm: FormGroup;
-    public contextMenuItems: MenuItemModel[] = [
-        {
-            text: "Öffnen",
-            iconCss: "far fa-circle"
-        },
-        {
-            text: "Tags",
-            iconCss: "fas fa-tags",
-            items: [
-                {
-                    text: "Fertig"
-                },
-                {
-                    text: "Zu verbessern"
-                },
-                {
-                    text: "In Bearbeitung"
-                },
-                {
-                    text: "Wichtig"
-                }
-            ]
-        },
-        {
-            separator: true
-        },
-        {
-            text: "Herunterladen",
-            iconCss: "fas fa-cloud-download-alt"
-        },
-        {
-            text: "Freigeben",
-            iconCss: "far fa-share-square"
-        },
-        {
-            separator: true
-        },
-        {
-            text: "Umbenennen",
-            iconCss: "fas fa-pen"
-        },
-        {
-            text: "Kopieren",
-            iconCss: "far fa-copy"
-        },
-        {
-            text: "Verschieben",
-            iconCss: "fas fa-arrows-alt"
-        },
-        {
-            text: "Löschen",
-            iconCss: "fas fa-trash"
-        }
-    ];
 
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
         // add addition data as key-value pair.
@@ -117,7 +67,7 @@ export class FilesComponent implements OnInit {
                     Browse: "Auswählen",
                     Clear: "Leeren",
                     Upload: "Hochladen",
-                    dropFilesHint: "Dateien hierher ziehen",
+                    dropFilesHint: "oder Dateien hierher ziehen",
                     uploadFailedMessage:
                         "Der Upload konnte nicht erfolgreich beendet werden.",
                     uploadSuccessMessage:
@@ -142,9 +92,13 @@ export class FilesComponent implements OnInit {
         this.newFolderForm = this.fb.group({
             newFolderName: [this.newFolderName, [Validators.required]]
         });
+        //this.cdr.detectChanges();
     }
-    goTo(item: any) {
-        this.currentPath.push(item);
+    goTo(item: any, reload = false) {
+        if (!reload) {
+            this.currentPath.push(item);
+        }
+
         //console.warn("Pushed folder");
         if (item.type == "folder") {
             this.navigate(item);
@@ -199,7 +153,7 @@ export class FilesComponent implements OnInit {
         } while (item.id != id);
         this.navigate(item);
     }
-    up() {
+    /*up() {
         if (this.viewFile) {
             this.viewFile = false;
         } else {
@@ -219,7 +173,7 @@ export class FilesComponent implements OnInit {
                     });
             }
         }
-    }
+    }*/
     navigate(item) {
         //console.log(this.currentPath);
         this.remoteService
@@ -244,6 +198,7 @@ export class FilesComponent implements OnInit {
                     this.pid +
                     "&token=" +
                     this.authenticationService.currentUserValue.token;
+                this.lastItem = item;
             });
     }
     getSrc() {
@@ -285,9 +240,15 @@ export class FilesComponent implements OnInit {
         ].name.toLowerCase();
         var videoFileExtensions = ["mp4", "mov", "avi"];
         var imageFileExtensions = ["jpg", "jpeg", "gif", "png"];
+        var pdfFileExtensions = ["pdf"];
         for (let ext of videoFileExtensions) {
             if (filename.endsWith(ext)) {
                 return "video";
+            }
+        }
+        for (let ext of pdfFileExtensions) {
+            if (filename.endsWith(ext)) {
+                return "pdf";
             }
         }
         for (let ext of imageFileExtensions) {
@@ -297,25 +258,25 @@ export class FilesComponent implements OnInit {
         }
         return "other";
     }
-
-    public itemSelect(args: MenuEventArgs): void {
-        console.log(args);
-        if (args.item.text === "Öffnen") {
-        } else if (args.item.text === "Fertig") {
-        } else if (args.item.text === "Zu verbessern") {
-        } else if (args.item.text === "In Bearbeitung") {
-        } else if (args.item.text === "Herunterladen") {
-        } else if (args.item.text === "Freigeben") {
-        } else if (args.item.text === "Umbenennen") {
-        } else if (args.item.text === "Kopieren") {
-        } else if (args.item.text === "Verschieben") {
-        } else if (args.item.text === "Löschen") {
-        } else {
-            console.log("Fehler: Kontextmenü-Item nicht registriert!");
-        }
+    toggleTag(tagid, item) {
+        this.remoteService
+            .getNoCache("filesToggleTag", {
+                type: item.type,
+                fid: item.id,
+                tagid: tagid
+            })
+            .subscribe(data => {
+                if (data.status == true) {
+                    //this.goTo(this.lastItem);
+                    this.reloadHere();
+                }
+            });
     }
-
-    public opened($event) {
-        console.log($event);
+    reloadHere() {
+        if (this.lastItem.id == -1) {
+            this.navigate({ id: -1 });
+        } else {
+            this.goTo(this.lastItem, true);
+        }
     }
 }

@@ -1,14 +1,12 @@
 <div class="navigation">
-    <button class="btn btn-success" (click)="up()" [disabled]="selectProject">
+    <button class="btn btn-success" (click)="
+            currentPath.length - 2 > -1
+                ? upTo(currentPath[currentPath.length - 2].id)
+                : goToFiles()
+        " [disabled]="selectProject">
         Zurück
-    </button>
-    &nbsp;
-    <button
-        type="button"
-        [disabled]="selectProject"
-        id="BtnUpload"
-        class="btn btn-primary"
-    >
+    </button> &nbsp;
+    <button type="button" [disabled]="selectProject" id="BtnUpload" class="btn btn-primary">
         Hochladen<input
             type="file"
             style="display: none;"
@@ -35,10 +33,7 @@
     <br /><br />
     <ol class="breadcrumb">
         <li class="breadcrumb-item" [class.active]="currentPath.length == 0">
-            <a
-                [class.link]="currentPath.length != 0"
-                (click)="currentPath.length != 0 && goToFiles()"
-                >Dateien</a
+            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goToFiles()">Dateien</a
             >
         </li>
         <li
@@ -72,22 +67,62 @@
 
 <div *ngIf="!selectProject && !viewFile">
     <div id="dropArea">
-        <ejs-uploader
-            maxFileSize="21474836480"
-            #uploader
-            locale="de"
-            [asyncSettings]="settings"
-            (uploading)="onFileUpload($event)"
-        >
+        <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (uploading)="onFileUpload($event)">
         </ejs-uploader>
     </div>
-    <ejs-contextmenu
-        target="#files"
-        [items]="contextMenuItems"
-        (select)="itemSelect($event)"
-        (onOpen)="opened($event)"
-    ></ejs-contextmenu
-    >`
+
+    <context-menu #contextMenu>
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item)">
+            <i class="far fa-circle"></i> Öffnen
+        </ng-template>
+        <ng-template contextMenuItem [subMenu]="tagsSubMenu">
+            <i class="fas fa-tags"></i> Tags
+        </ng-template>
+        <context-menu #tagsSubMenu>
+            <ng-template contextMenuItem (execute)="toggleTag(1, $event.item)">
+                Fertig
+            </ng-template>
+            <ng-template contextMenuItem (execute)="toggleTag(4, $event.item)">
+                Zu verbessern
+            </ng-template>
+            <ng-template contextMenuItem (execute)="toggleTag(2, $event.item)">
+                In Arbeit
+            </ng-template>
+            <ng-template contextMenuItem (execute)="toggleTag(3, $event.item)">
+                Wichtig
+            </ng-template>
+        </context-menu>
+        <ng-template contextMenuItem divider="true"></ng-template>
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item)">
+            <i class="fas fa-cloud-download-alt"></i> Herunterladen
+        </ng-template>
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+            <i class="far fa-share-square"></i> Freigeben
+        </ng-template>
+        <ng-template contextMenuItem divider="true"></ng-template>
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+            <i class="fas fa-pen"></i> Umbenennen
+        </ng-template>
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+            <i class="far fa-copy"></i> Verschieben
+        </ng-template>
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+            <i class="fas fa-arrows-alt"></i> Kopieren
+        </ng-template>
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+            <i class="fas fa-trash"></i> Löschen
+        </ng-template>
+        <!--<ng-template contextMenuItem let-item (execute)="
+                showMessage(
+                    $event.item.name + ' said: ' + $event.item.otherProperty
+                )
+            ">
+            Bye, {{ item?.name }}
+        </ng-template><ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event.item.name)">
+            Say hi!
+        </ng-template>-->
+    </context-menu>
+
     <div id="files" class="table-responsive">
         <div class="clear"></div>
         <table #files class="table  table-hover">
@@ -96,23 +131,33 @@
                     <td></td>
                     <td>Name</td>
                     <td>Tags</td>
-                    <td>Autor</td>
+
                     <td>Änderungsdatum</td>
                     <td>Erstelldatum</td>
                     <td>Größe</td>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items" (click)="goTo(item)">
+                <tr *ngFor="let item of items" (click)="goTo(item)" [contextMenu]="contextMenu" [contextMenuSubject]="item">
                     <td>
                         <img [src]="getIcon(item)" class="fileIcon" />
                     </td>
                     <td>{{ item.name }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        <div *ngIf="item.tags.length">
+                            <div class="d-inline" *ngFor="let tag of item.tags">
+                                <span [style.color]="tag.color" [style.background-color]="
+                                        tag.backgroundColor
+                                    " class="badge">{{ tag.name }}</span
+                                >
+                                &nbsp;
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>{{ item.modificationDate }}</td>
+                    <td>{{ item.creationDate }}</td>
+                    <td>{{ item.size }}</td>
                 </tr>
             </tbody>
         </table>
@@ -130,6 +175,12 @@
         <source [src]="getSrc()" type="video/mp4" />
         Bitte verwende einen neueren Browser ;-)
     </video>
+    <pdf-viewer
+        [src]="getSrc()"
+        [render-text]="true"
+        style="display: block;"
+        *ngIf="getType() == 'pdf'"
+    ></pdf-viewer>
     <div *ngIf="getType() == 'other'" class="alert alert-warning">
         Diese Datei wird leider nicht unterstützt. Wenn das gewünscht ist, gerne
         mich kontaktieren!
@@ -146,37 +197,28 @@
             (click)="modal.dismiss('Cross click')"
         >
             <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <div *ngIf="newFolderModalInvalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
-        </div>
-        <form [formGroup]="newFolderForm">
-            <div class="form-group">
-                <label for="name">Name: </label>
-                <div class="input-group">
-                    <input
-                        class="form-control"
-                        type="text"
-                        placeholder="Name des neuen Ordners"
-                        formControlName="newFolderName"
-                    />
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button
-            type="button"
-            class="btn btn-primary"
-            (click)="
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div *ngIf="newFolderModalInvalidMessage" class="alert alert-danger">
+                                    <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+                                </div>
+                                <form [formGroup]="newFolderForm">
+                                    <div class="form-group">
+                                        <label for="name">Name: </label>
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" placeholder="Name des neuen Ordners" formControlName="newFolderName" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" (click)="
                 !newFolderForm.invalid
                     ? modal.close('Save click')
                     : (newFolderModalInvalidMessage = true)
-            "
-        >
+            ">
             Erstellen
         </button>
-    </div>
-</ng-template>
+                            </div>
+                            </ng-template>
