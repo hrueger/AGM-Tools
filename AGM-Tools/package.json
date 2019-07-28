@@ -65,6 +65,7 @@
         "nativescript-ui-sidedrawer": "7.0.0",
         "nativescript-videoplayer": "^4.2.1",
         "ng2-charts": "^2.2.3",
+        "ng2-pdfjs-viewer": "^4.0.5",
         "ngx-avatar": "^3.5.0",
         "ngx-contextmenu": "^5.2.0",
         "ngx-toastr": "^10.0.4",
