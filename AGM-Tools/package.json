@@ -36,6 +36,7 @@
         "@fortawesome/fontawesome-free": "^5.8.2",
         "@ng-bootstrap/ng-bootstrap": "^4.1.3",
         "@syncfusion/ej2-angular-inputs": "^17.1.50",
+        "@syncfusion/ej2-angular-layouts": "^17.2.36",
         "@syncfusion/ej2-angular-navigations": "^17.2.36",
         "@syncfusion/ej2-angular-popups": "^17.1.50",
         "@syncfusion/ej2-angular-schedule": "^17.1.51",

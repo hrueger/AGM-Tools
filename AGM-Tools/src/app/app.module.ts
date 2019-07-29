@@ -48,6 +48,7 @@ import { ToastrModule } from "ngx-toastr";
 import { ContextMenuModule } from "ngx-contextmenu";
 import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
+import { DashboardLayoutModule } from '@syncfusion/ej2-angular-layouts';
 import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 registerLocaleData(localeDe);
 
@@ -83,6 +84,7 @@ registerLocaleData(localeDe);
             useBootstrap4: true
         }),
         BrowserAnimationsModule,
+        DashboardLayoutModule,
         BrowserModule,
         HttpClientModule,
         NgbModule,
@@ -119,4 +121,4 @@ registerLocaleData(localeDe);
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
