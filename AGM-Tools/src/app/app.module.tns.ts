@@ -51,6 +51,9 @@ registerElement("VideoPlayer", () => Video);
 import { PDFView } from "nativescript-pdf-view";
 import { FileUploadComponent } from "./_components/file-upload/file-upload.component";
 registerElement("PDFView", () => PDFView);
+import { NativeScriptRouterModule } from "nativescript-angular/router";
+import { routes } from "./app.routes";
+import { FormBuilder } from "@angular/forms";
 @NgModule({
     declarations: [
         AppComponent,
@@ -73,8 +76,7 @@ registerElement("PDFView", () => PDFView);
         ChatMessagesComponent,
         MessagesAreaComponent,
         MessageBoxComponent,
-        DoneComponent,
-        FileUploadComponent
+        DoneComponent
     ],
     imports: [
         NativeScriptModule,
@@ -91,6 +93,7 @@ registerElement("PDFView", () => PDFView);
         AccordionModule
     ],
     providers: [
+        FormBuilder,
         NavbarService,
         ChatsDataService,
         PlatformRef,
@@ -105,4 +108,4 @@ registerElement("PDFView", () => PDFView);
     bootstrap: [AppComponent],
     schemas: [NO_ERRORS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }
