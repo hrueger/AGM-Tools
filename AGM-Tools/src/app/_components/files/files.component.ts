@@ -19,6 +19,8 @@ import { ContextMenuComponent } from "ngx-contextmenu";
     styleUrls: ["./files.component.scss"]
 })
 export class FilesComponent implements OnInit {
+    renameItemName: string;
+    renameItemForm: FormGroup;
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
@@ -27,21 +29,28 @@ export class FilesComponent implements OnInit {
         private alertService: AlertService,
         private NavbarService: NavbarService,
         private cdr: ChangeDetectorRef
-    ) {}
+    ) { }
 
     newFolderModalInvalidMessage: boolean = false;
+    renameItemFormInvalidMessage: boolean = false;
     selectProject: boolean = true;
     viewFile: boolean = false;
     projects: Project[];
     imageSource: string;
     pid: number;
-    public settings = { chunkSize: 1024 * 1024, saveUrl: "" };
+    public settings = {
+        chunkSize: 1024 * 1024, saveUrl: config.apiUrl +
+            "resumableUploadHandler.php"
+    };
+
+
     currentPath: any = [];
     lastFolder: any;
     lastItem: any;
     items: any[];
     newFolderName: string;
     newFolderForm: FormGroup;
+    shareLink: string = "";
 
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
         // add addition data as key-value pair.
@@ -49,10 +58,19 @@ export class FilesComponent implements OnInit {
         args.customFormData = [
             {
                 pid: this.pid,
-                fid: this.currentPath[this.currentPath.length - 1].id.toString()
-            }
+            },
+            { fid: this.currentPath[this.currentPath.length - 1].id.toString() },
+            { token: this.authenticationService.currentUserValue.token }
+
         ];
     };
+    public onUploadSuccess(args: any): void {
+        if (args.operation === 'upload') {
+            this.reloadHere();
+            this.alertService.success("Die Datei wurde erfolgreich hochgeladen.");
+        }
+    }
+
     ngOnInit() {
         this.NavbarService.setHeadline("Dateien");
         L10n.load({
@@ -91,6 +109,9 @@ export class FilesComponent implements OnInit {
         });
         this.newFolderForm = this.fb.group({
             newFolderName: [this.newFolderName, [Validators.required]]
+        });
+        this.renameItemForm = this.fb.group({
+            renameItemName: [this.renameItemName, [Validators.required]]
         });
         //this.cdr.detectChanges();
     }
@@ -153,27 +174,6 @@ export class FilesComponent implements OnInit {
         } while (item.id != id);
         this.navigate(item);
     }
-    /*up() {
-        if (this.viewFile) {
-            this.viewFile = false;
-        } else {
-            if (this.currentPath.length == 1) {
-                this.selectProject = true;
-            } else {
-                this.currentPath.pop();
-                this.remoteService
-                    .get("filesGetFolder", {
-                        pid: this.pid,
-                        fid: this.currentPath[this.currentPath.length - 1].id
-                    })
-                    .subscribe(data => {
-                        this.items = data;
-                        this.lastFolder = this.items[0].folder;
-                        //console.log(this.items[0]);
-                    });
-            }
-        }
-    }*/
     navigate(item) {
         //console.log(this.currentPath);
         this.remoteService
@@ -190,14 +190,9 @@ export class FilesComponent implements OnInit {
                     this.currentPath.push(item);
                 }
                 this.items = data;
-                this.settings.saveUrl =
-                    config.apiUrl +
-                    "resumableUploadHandler.php?fid=" +
-                    item.id +
-                    "&pid=" +
-                    this.pid +
-                    "&token=" +
-                    this.authenticationService.currentUserValue.token;
+
+
+
                 this.lastItem = item;
             });
     }
@@ -205,8 +200,9 @@ export class FilesComponent implements OnInit {
         let file = this.currentPath[this.currentPath.length - 1];
         return (
             config.apiUrl +
-            "getFile.php?fid=" +
+            "?get=" +
             file.id +
+            "&type=file" +
             "&token=" +
             this.authenticationService.currentUserValue.token
         );
@@ -225,13 +221,12 @@ export class FilesComponent implements OnInit {
                         })
                         .subscribe(data => {
                             if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Ordner erfolgreich erstellt"
-                                );
+                                this.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
+                                this.reloadHere();
                             }
                         });
                 },
-                reason => {}
+                reason => { }
             );
     }
     getType() {
@@ -271,6 +266,74 @@ export class FilesComponent implements OnInit {
                     this.reloadHere();
                 }
             });
+    }
+    download(item) {
+        window.open(
+            config.apiUrl +
+            "?get=" +
+            item.id +
+            "&type=" +
+            item.type +
+            "&token=" +
+            this.authenticationService.currentUserValue.token +
+            "&download"
+        );
+    }
+    share(item, shareModal) {
+        this.shareLink = "";
+        this.modalService
+            .open(shareModal)
+            .result.then(result => { }, reason => { });
+        this.remoteService
+            .getNoCache("filesCreateShare", { type: item.type, fid: item.id })
+            .subscribe(data => {
+                if (data.status == true) {
+                    this.shareLink = config.apiUrl + "share/?l=" + data.link
+                }
+            });
+    }
+    rename(item, renameModal) {
+        this.renameItemForm.get("renameItemName").setValue(item.name);
+        this.modalService
+            .open(renameModal)
+            .result.then(result => {
+                this.remoteService
+                    .getNoCache("filesRename", { type: item.type, fid: item.id, name: this.renameItemForm.get("renameItemName").value })
+                    .subscribe(data => {
+                        if (data.status == true) {
+                            this.alertService.success("Das Element wurde erfolgreich umbenannt.");
+                            this.reloadHere();
+                        }
+                    });
+            }, reason => { });
+
+    }
+    delete(item) {
+        if (confirm("Soll dieses Element wirklich gelöscht werden?")) {
+            this.remoteService.getNoCache("filesDelete", { type: item.type, fid: item.id }).subscribe(data => {
+                if (data.status == true) {
+                    this.alertService.success("Das Element wurde erfolgreich gelöscht.");
+                    this.reloadHere();
+                }
+            });
+        }
+    }
+    move(item) {
+        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt. Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+    }
+    copy(item) {
+        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt. Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+    }
+
+    copyShareLink(inputField) {
+        inputField.select();
+        document.execCommand('copy');
+        inputField.setSelectionRange(0, 0);
+        this.alertService.success("Link in die Zwischenablage kopiert!");
+    }
+    openShareLinkInNewTab() {
+        var win = window.open(this.shareLink, '_blank');
+        win.focus();
     }
     reloadHere() {
         if (this.lastItem.id == -1) {

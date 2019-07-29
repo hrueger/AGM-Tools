@@ -1,25 +1,13 @@
-<div class="navigation">
+<div class="navigation" *ngIf="!selectProject">
     <button class="btn btn-success" (click)="
             currentPath.length - 2 > -1
                 ? upTo(currentPath[currentPath.length - 2].id)
                 : goToFiles()
-        " [disabled]="selectProject">
+        ">
         Zurück
     </button> &nbsp;
-    <button type="button" [disabled]="selectProject" id="BtnUpload" class="btn btn-primary">
-        Hochladen<input
-            type="file"
-            style="display: none;"
-            multiple="multiple"
-        /></button
-    >&nbsp;
-    <button
-        [disabled]="selectProject"
-        id="newFolderBtn"
-        type="button"
-        (click)="openNewFolderModal(newFolder)"
-        class="btn btn-primary"
-    >
+
+    <button id="newFolderBtn" type="button" (click)="openNewFolderModal(newFolder)" class="btn btn-primary">
         Neuer Ordner
     </button>
     <div class="btn-group float-right">
@@ -33,14 +21,9 @@
     <br /><br />
     <ol class="breadcrumb">
         <li class="breadcrumb-item" [class.active]="currentPath.length == 0">
-            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goToFiles()">Dateien</a
-            >
+            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goToFiles()">Dateien</a>
         </li>
-        <li
-            *ngFor="let path of currentPath; let last = last"
-            [class.active]="last"
-            class="breadcrumb-item"
-        >
+        <li *ngFor="let path of currentPath; let last = last" [class.active]="last" class="breadcrumb-item">
             <a class="link" *ngIf="!last" (click)="upTo(path.id)">
                 {{ path.name }}
             </a>
@@ -67,7 +50,7 @@
 
 <div *ngIf="!selectProject && !viewFile">
     <div id="dropArea">
-        <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (uploading)="onFileUpload($event)">
+        <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (uploading)="onFileUpload($event)">
         </ejs-uploader>
     </div>
 
@@ -93,23 +76,23 @@
             </ng-template>
         </context-menu>
         <ng-template contextMenuItem divider="true"></ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item)">
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="download($event.item)">
             <i class="fas fa-cloud-download-alt"></i> Herunterladen
         </ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="share($event.item, shareModal)">
             <i class="far fa-share-square"></i> Freigeben
         </ng-template>
         <ng-template contextMenuItem divider="true"></ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="rename($event.item, renameModal)">
             <i class="fas fa-pen"></i> Umbenennen
         </ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="move($event.item)">
             <i class="far fa-copy"></i> Verschieben
         </ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="copy($event.item)">
             <i class="fas fa-arrows-alt"></i> Kopieren
         </ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="console.log('Hi, ' + $event.item.name)">
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="delete($event.item)">
             <i class="fas fa-trash"></i> Löschen
         </ng-template>
         <!--<ng-template contextMenuItem let-item (execute)="
@@ -148,9 +131,7 @@
                             <div class="d-inline" *ngFor="let tag of item.tags">
                                 <span [style.color]="tag.color" [style.background-color]="
                                         tag.backgroundColor
-                                    " class="badge">{{ tag.name }}</span
-                                >
-                                &nbsp;
+                                    " class="badge">{{ tag.name }}</span> &nbsp;
                             </div>
                         </div>
                     </td>
@@ -165,60 +146,92 @@
 </div>
 
 <div *ngIf="viewFile">
-    <img
-        *ngIf="getType() == 'image'"
-        class="previewFile img-fluid"
-        alt="Irgendein schönes Bild, das aber leider nicht angezeigt werden kann..."
-        [src]="getSrc()"
-    />
+    <img *ngIf="getType() == 'image'" class="previewFile img-fluid" alt="Irgendein schönes Bild, das aber leider nicht angezeigt werden kann..." [src]="getSrc()" />
     <video class="previewFile" controls *ngIf="getType() == 'video'">
         <source [src]="getSrc()" type="video/mp4" />
         Bitte verwende einen neueren Browser ;-)
     </video>
-    <pdf-viewer
-        [src]="getSrc()"
-        [render-text]="true"
-        style="display: block;"
-        *ngIf="getType() == 'pdf'"
-    ></pdf-viewer>
+    <ng2-pdfjs-viewer [pdfSrc]="getSrc()" *ngIf="getType() == 'pdf'"></ng2-pdfjs-viewer>
     <div *ngIf="getType() == 'other'" class="alert alert-warning">
-        Diese Datei wird leider nicht unterstützt. Wenn das gewünscht ist, gerne
-        mich kontaktieren!
+        Diese Datei wird leider nicht unterstützt. Wenn das gewünscht ist, gerne mich kontaktieren!
     </div>
 </div>
 
 <ng-template #newFolder let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Neuer Ordner</h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div *ngIf="newFolderModalInvalidMessage" class="alert alert-danger">
-                                    <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
-                                </div>
-                                <form [formGroup]="newFolderForm">
-                                    <div class="form-group">
-                                        <label for="name">Name: </label>
-                                        <div class="input-group">
-                                            <input class="form-control" type="text" placeholder="Name des neuen Ordners" formControlName="newFolderName" />
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" (click)="
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="newFolderModalInvalidMessage" class="alert alert-danger">
+            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+        </div>
+        <form [formGroup]="newFolderForm">
+            <div class="form-group">
+                <label for="name">Name: </label>
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Name des neuen Ordners" formControlName="newFolderName" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="
                 !newFolderForm.invalid
                     ? modal.close('Save click')
                     : (newFolderModalInvalidMessage = true)
             ">
             Erstellen
         </button>
-                            </div>
-                            </ng-template>
+    </div>
+</ng-template>
+
+<ng-template #renameModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Element umbenennen</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="renameItemFormInvalidMessage" class="alert alert-danger">
+            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+        </div>
+        <form [formGroup]="renameItemForm">
+            <div class="form-group">
+                <label for="name">Name: </label>
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Name des Elements" formControlName="renameItemName" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="
+                !renameItemForm.invalid
+                    ? modal.close('Save click')
+                    : (renameItemFormInvalidMessage = true)
+            ">
+            Umbenennen
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #shareModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Freigeben</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <input class="form-control" type="text" #shareLinkField value="{{shareLink}}" placeholder="Link wird generiert..." readonly>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" (click)="copyShareLink(shareLinkField)">Link in die Zwischenablage
+            kopieren</button>
+        <button class="btn btn-primary" (click)="openShareLinkInNewTab()">In neuem Tab öffnen</button>
+    </div>
+</ng-template>

@@ -1,6 +1,5 @@
-
 <?php
-
+session_start();
 require_once("library.php");
 require_once("db.inc.php");
 
@@ -13,6 +12,14 @@ echo "\n";
 var_dump($_FILES);
 echo "\n";
 echo "___________________________________________\n\n\n";
+
+
+if (isset($_POST["fid"])) {
+    $_SESSION["fid"] = $_POST["fid"];
+}
+if (isset($_POST["pid"])) {
+    $_SESSION["pid"] = $_POST["pid"];
+}
 
 
 function _log($str) {
@@ -45,32 +52,28 @@ function rrmdir($dir) {
     }
 }
 
-function createFileFromChunks($temp_dir, $fileName, $chunkSize, $totalSize,$total_files) {
-
-    // count all the parts of this file
-    $total_files_on_server_size = 0;
-    $temp_total = 0;
-    foreach(scandir($temp_dir) as $file) {
-        $temp_total = $total_files_on_server_size;
-        $tempfilesize = filesize($temp_dir.'/'.$file);
-        $total_files_on_server_size = $temp_total + $tempfilesize;
-    }
-    // check that all the parts are present
-    // If the Size of all the chunks on the server is equal to the size of the file uploaded.
-    if ($total_files_on_server_size >= $totalSize) {
+function createFileFromChunks($temp_dir) {
+    
+    
+    if (($_POST["totalChunk"]-$_POST["chunkIndex"])==1) {
     // create the final destination file 
 		
 		$db = connect();
-		$pid = $_GET[ "pid" ];
-		$fid = $_GET[ "fid" ];
+        
+        $pid = $_SESSION["pid"];
+        $fid = $_SESSION["fid"];
+        $_SESSION["pid"] = "";
+        $_SESSION["fid"] = "";
 
 		$fpath = getFolderPath( $db, $fid );
-		$prepath = substr(getSetting( $db, "SETTING_FILES_DIRECT_PATH" ), 1);
+        $prepath = getSetting( $db, "SETTING_FILES_DIRECT_PATH" , true);
+        $fileName = $_FILES["chunkFile"]["name"];
 		$filePath = $prepath . "/$pid/" . $fpath . "/" . $fileName;
 		
 		
         if (($fp = fopen($filePath, 'w')) !== false) {
-            for ($i=1; $i<=$total_files; $i++) {
+            for ($i=0; $i<=($_POST["totalChunk"]-1); $i++) {
+                
                 fwrite($fp, file_get_contents($temp_dir.'/'.$fileName.'.part'.$i));
                 _log('writing chunk '.$i);
             }
@@ -99,29 +102,6 @@ function createFileFromChunks($temp_dir, $fileName, $chunkSize, $totalSize,$tota
 	
 
 }
-
-//check if request is GET and the requested chunk exists or not. this makes testChunks work
-/*if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-
-    if(!(isset($_GET['resumableIdentifier']) && trim($_GET['resumableIdentifier'])!='')){
-        $_GET['resumableIdentifier']='';
-    }
-    $temp_dir = 'tmp/'.$_GET['resumableIdentifier'];
-    if(!(isset($_GET['resumableFilename']) && trim($_GET['resumableFilename'])!='')){
-        $_GET['resumableFilename']='';
-    }
-    if(!(isset($_GET['chunkIndex']) && trim($_GET['chunkIndex'])!='')){
-        $_GET['chunkIndex']='';
-    }
-    $chunk_file = $temp_dir.'/'.$_GET['resumableFilename'].'.part'.$_GET['chunkIndex'];
-    if (file_exists($chunk_file)) {
-        file_put_contents("/var/www/html/AGM-Tools/fileuploaderlog.txt", "Chunk ".$_GET['chunkIndex']." mit dem Pfad $chunk_file existierte schon\n", FILE_APPEND);
-         header("HTTP/1.0 200 Ok");
-       } else {
-           file_put_contents("/var/www/html/AGM-Tools/fileuploaderlog.txt", "Chunk ".$_GET['chunkIndex']." mit dem Pfad $chunk_file existierte noch nicht\n", FILE_APPEND);
-         header("HTTP/1.0 404 Not Found");
-       }
-}*/
 
 // loop through files and move the chunks to a temporarily created directory
 if (!empty($_FILES)) foreach ($_FILES as $file) {
@@ -154,7 +134,7 @@ if (!empty($_FILES)) foreach ($_FILES as $file) {
     } else {
         _log('writing chnunk successfully');
         // check if all the parts present, and create the final destination file
-        createFileFromChunks($temp_dir, $_FILES["chunkFile"]['name'],1048576, $_FILES["chunkFile"]['size'],$_POST['totalChunk']);
+        createFileFromChunks($temp_dir);
 		
     }
 }

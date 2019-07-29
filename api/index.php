@@ -2,7 +2,6 @@
 use YoHang88\LetterAvatar\LetterAvatar;
 require_once("db.inc.php");
 require_once("library.php");
-require_once("git.inc.php");
 
 $locale='de_DE.UTF-8';
 setlocale(LC_ALL,$locale);
@@ -14,13 +13,183 @@ function log_to_file($log_msg) {
     
     file_put_contents($log_filename, $log_msg . "\n", FILE_APPEND);
 }
-/*
-file_put_contents("log.txt", $_POST, FILE_APPEND);
-file_put_contents("log.txt", "------------------------------\n", FILE_APPEND);
-file_put_contents("log.txt", file_get_contents('php://input'), FILE_APPEND);
-file_put_contents("log.txt", "------------------------------\n", FILE_APPEND);
-file_put_contents("log.txt", $_GET, FILE_APPEND);
-file_put_contents("log.txt", "------------------------------\n------------------------------\n------------------------------\n\n\n", FILE_APPEND);*/
+
+
+
+if (isset($_GET["get"]) && isset($_GET["type"]) && (isset($_GET["token"])||isset($_GET["shareLink"]))) {
+    $skipSessionCheck = false;
+    if (isset($_GET["shareLink"]) || !isset($_GET["token"])) {
+        $db = connect();
+        $shareLink = $db->real_escape_string($_GET["shareLink"]);
+        $item = $db->query("SELECT * FROM shares WHERE link='$shareLink'");
+        if (!$item) {
+            
+        } else {
+            $item = $item->fetch_all(MYSQLI_ASSOC);
+            
+            if (empty($item)) {
+                
+            } else {
+                if ($_GET["type"]==$item[0]["type"] && $_GET["get"]==$item[0]["targetID"]) {
+                    $skipSessionCheck = true;
+                } else {
+                   
+                }
+            }
+        }
+    }
+
+    if ($_GET["type"] == "file") {
+        $db = connect();
+        $fid = $db->real_escape_string($_GET["get"]);
+        $res = $db->QUERY("SELECT members FROM projects JOIN files ON files.project = projects.id WHERE files.id = $fid");
+        if ($res) {
+            $res = $res->fetch_all(MYSQLI_ASSOC);
+            if (($res && isset($res[0]) && isset($res[0]["members"])) || $skipSessionCheck) {
+                $members = explode("-", $res[0]["members"]);
+                if ($skipSessionCheck || in_array(getCurrentUserId(), $members)) {
+                    $fc = new FileController($db, true);
+                    $path = $fc->getLocalFilePath($fid, true);
+
+
+
+                    $file_size  = filesize($path);
+                    $file_name = pathinfo($path, PATHINFO_FILENAME);
+                    $file = @fopen($path,"rb");
+                    $mime = getMime($path);
+                    header('Content-type: ' . $mime);
+                    if (isset($_GET["download"])) {
+                        header('Content-Disposition: attachment; filename="' . basename($path) . '"');
+                    } else {
+                        header('Content-Disposition: inline; filename="' . basename($path) . '"');
+                    }
+                    
+                    header('Content-length: '.filesize($path));
+                    
+                    if(isset($_SERVER['HTTP_RANGE'])){
+                        list($size_unit, $range_orig) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+                        if ($size_unit == 'bytes')
+                        {
+                            list($range, $extra_ranges) = explode(',', $range_orig, 2);
+                        }
+                        else
+                        {
+                            $range = '';
+                            header('HTTP/1.1 416 Requested Range Not Satisfiable');
+                            exit;
+                        }
+                    }
+                    else
+                    {
+                        $range = '';
+                    }
+                    list($seek_start, $seek_end) = explode('-', $range, 2);
+                    $seek_end   = (empty($seek_end)) ? ($file_size - 1) : min(abs(intval($seek_end)),($file_size - 1));
+                    $seek_start = (empty($seek_start) || $seek_end < abs(intval($seek_start))) ? 0 : max(abs(intval($seek_start)),0);
+                    if ($seek_start > 0 || $seek_end < ($file_size - 1))
+                    {
+                        header('HTTP/1.1 206 Partial Content');
+                        header('Content-Range: bytes '.$seek_start.'-'.$seek_end.'/'.$file_size);
+                        header('Content-Length: '.($seek_end - $seek_start + 1));
+                    }
+                    else
+                    header("Content-Length: $file_size");
+                    header('Accept-Ranges: bytes');
+                    set_time_limit(0);
+                    fseek($file, $seek_start);
+                    
+                    header("Content-Length: $file_size");
+                    ob_clean();
+                    while(!feof($file))  {
+                        print(@fread($file, 1024*8));
+                        ob_flush();
+                        flush();
+                        if (connection_status()!=0) 
+                        {
+                            @fclose($file);
+                            exit;
+                        }	
+                        
+                    }
+                    
+                
+                    @fclose($file);
+                    exit;
+
+
+
+
+
+                    //echo $mime;
+
+                    die();
+                } else {
+                    die("Verweigert");
+                }
+            }
+        }
+    } else if ($_GET["type"] == "folder") {
+        $db = connect();
+        $fid = $db->real_escape_string($_GET["get"]);
+        $res = $db->query("SELECT members FROM projects JOIN folders ON folders.project = projects.id WHERE folders.id = $fid");
+        if ($res) {
+            $res = $res->fetch_all(MYSQLI_ASSOC);
+            
+            if (($res && isset($res[0]) && isset($res[0]["members"])) || $skipSessionCheck) {
+                $members = explode("-", $res[0]["members"]);
+                if ($skipSessionCheck || in_array(getCurrentUserId(true), $members)) {
+                    
+                    $fc = new FileController($db, true);
+                    $path = $fc->getCompleteFolderPath($fid, true);
+                    
+                    $filename = uniqid();
+                    $zip = new ZipArchive();
+                    $rootPath = realpath($path);
+                    $zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+                    $files = new RecursiveIteratorIterator(
+                        new RecursiveDirectoryIterator($rootPath),
+                        RecursiveIteratorIterator::LEAVES_ONLY
+                    );
+
+                    foreach ($files as $name => $file) {
+                        if (!$file->isDir())
+                        {
+                            // Get real and relative path for current file
+                            $filePath = $file->getRealPath();
+                            $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+                            // Add current file to archive
+                            $zip->addFile($filePath, $relativePath);
+                        }
+                    }
+                    $zip->close();
+                    header('Content-Type: application/zip');
+                    $foldername = $db->query("SELECT * FROM folders WHERE id='$fid'")->fetch_all(MYSQLI_ASSOC)[0]["name"];
+                    header('Content-Disposition: attachment; filename="'.$foldername.'.zip"');
+                    header('Content-Length: ' . filesize($filename));
+                    readfile($filename);
+                    unlink($filename); 
+                    die();
+                } else {
+                    die("Verweigert");
+                }
+            } else {
+                die("Verweigert");
+            }
+        } else {
+            die("Verweigert");
+        }
+        die("Verweigert");
+    } else {
+        die("Verweigert");
+    }
+    
+
+
+}
+    
+    
+
 
 $data = file_get_contents('php://input');
 @$data = json_decode($data);
@@ -110,6 +279,18 @@ if ($data) {
             case "filesToggleTag":
                 filesToggleTag($args);
                 break;  
+            case "filesCreateShare":
+                filesCreateShare($args);
+                break;
+            case "filesNewFolder":
+                filesNewFolder($args);
+                break;
+            case "filesRename":
+                filesRename($args);
+                break;
+            case "filesDelete":
+                filesDelete($args);
+                break;
             case "clientsoftwareGetMobile":
                 clientsoftwareGetMobile();
                 break;  
@@ -1061,6 +1242,63 @@ function filesToggleTag($data) {
         $fc->editFolderTag($data["fid"], $data["tagid"]);
 	}
 
+}
+
+function filesCreateShare($data) {
+    $fc = new FileController(connect());
+    $fc->createShare($data["fid"], $data["type"]);
+}
+
+function filesNewFolder($data) {
+    $db = connect();
+    $pid = $db->real_escape_string($data["pid"]);
+	$fid = $db->real_escape_string($data["fid"]);
+	$foldername = $db->real_escape_string($data["name"]);
+
+	$res = $db->query("INSERT INTO `folders` (`id`, `project`, `folder`, `name`, `tags`) VALUES (NULL, '$pid', '$fid', '$foldername', '')");
+	$id = $db->insert_id;
+	if (!$res) {
+		dieWithMessage("Fehler" . $db->error);
+		die();
+	}
+
+
+	$fpath = getFolderPath($db, $fid);
+	$prepath = getSetting($db, "SETTING_FILES_DIRECT_PATH");
+	$path = $prepath . "/$pid/" . $fpath . $foldername;
+	mkdir($path);
+
+	if (!$res) {
+		dieWithMessage("Fehler: der Ordner konnte nicht erstellt werden!");
+	}
+	
+	die(json_encode(array("status"=>true)));
+}
+
+function filesRename($data) {
+    $fc = new FileController(connect());
+    if ($data["type"] == "file") {
+		$fc->renameFile($data["fid"], $data["name"]);
+		die(json_encode(array("status"=>true)));
+	} else {
+		$fc->renameFolder($data["fid"], $data["name"]);
+		die(json_encode(array("status"=>true)));
+	}
+}
+
+function filesDelete($data) {
+    $fc = new FileController(connect());
+    if (!isAllowedTo("REMOVE_FILE")) {
+		dieWithMessage("Du hast leider keine Berechtigung, eine Datei oder einen Ordner zu löschen.");
+		
+	}
+	if ($data["type"] == "file") {
+		$fc->deleteFile($data["fid"]);
+		die();
+	} else {
+		$fc->deleteFolder($data["fid"]);
+		die();
+	}
 }
 
 function projectsNewProject($data) {
