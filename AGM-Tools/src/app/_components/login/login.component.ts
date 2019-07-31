@@ -5,6 +5,7 @@ import { first } from "rxjs/operators";
 import { Title } from "@angular/platform-browser";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { AlertService } from "../../_services/alert.service";
+import { DashboardComponent } from "../dashboard/dashboard.component";
 
 @Component({
     templateUrl: "login.component.html",
@@ -38,7 +39,7 @@ export class LoginComponent implements OnInit {
         });
 
         // get return url from route parameters or default to '/'
-        this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
+        //this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
     }
 
     // convenience getter for easy access to form fields
@@ -60,7 +61,9 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-                    this.router.navigate([this.returnUrl]);
+                    //this.router.navigate([this.returnUrl]);
+                    //this.router.navigate(['dashboard'], { skipLocationChange: false });
+                    location.reload();
                 },
                 error => {
                     this.alertService.error(error);

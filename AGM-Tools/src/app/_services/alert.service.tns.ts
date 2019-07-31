@@ -1,24 +1,43 @@
 import { Injectable } from "@angular/core";
+import { Feedback, FeedbackType, FeedbackPosition } from "nativescript-feedback";
 
 @Injectable({ providedIn: "root" })
 export class AlertService {
+  private feedback: Feedback;
   constructor() {
+    this.feedback = new Feedback();
   }
 
   success(message: string) {
-    console.log(message, "Erfolg!", { timeOut: 999999 });
+    this.feedback.success({
+      title: "Erfolg!",
+      message: message,
+      duration: 2000
+    });
   }
 
   error(message: string) {
-    console.log(message, "Fehler!", { timeOut: 999999 });
+    this.feedback.error({
+      title: "Fehler!",
+      message: message,
+      duration: 2000
+    });
   }
 
   info(message: string) {
-    console.log(message, "Information:", { timeOut: 999999 });
+    this.feedback.info({
+      title: "Information:",
+      message: message,
+      duration: 2000
+    });
   }
 
   warning(message: string) {
-    console.log(message, "Warnung!", { timeOut: 999999 });
+    this.feedback.warning({
+      title: "Warnung!",
+      message: message,
+      duration: 2000
+    });
   }
 
 

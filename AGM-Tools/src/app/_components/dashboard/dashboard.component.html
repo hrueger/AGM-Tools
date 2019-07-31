@@ -1,12 +1,12 @@
 <div *ngFor="let notification of notifications" [class]="notification.type + ' alert alert-dismissible'">
     <button (click)="makeNotificationSeen(notification)" type="button" class="seen btn btn-primary  float-right btn-lg">
-    Gelesen
-  </button>
+        Gelesen
+    </button>
     <strong>{{ notification.headline }}</strong> {{ notification.content }}
     <br /><br /><small><b>{{ notification.sender }}</b> am {{ notification.date }} um
-    {{ notification.time }} Uhr</small>
+        {{ notification.time }} Uhr</small>
 </div>
-<div *ngIf="notificationslength > 0"></div>
+<div *ngIf="notifications.length > 0"><br><br><br></div>
 
 
 <div class="control-section">
@@ -19,11 +19,12 @@
                 <div class="card-body">
                     <div style="display: block">
                         <canvas baseChart [data]="spaceChartData" [labels]="spaceChartLabels" [chartType]="spaceChartType" [colors]="spaceChartColors" [options]="spaceChartOptions">
-            </canvas>
+                        </canvas>
                     </div>
-                    <button class="btn btn-primary" (click)="updateChart()">
-            Aktualisieren
-          </button>
+                    <!--<button class="btn btn-primary" (click)="updateChart()">-->
+                    <button class="btn btn-primary">
+                        Aktualisieren
+                    </button>
                 </div>
             </div>
         </div>
@@ -61,7 +62,7 @@
                     <ol>
                         <li *ngFor="let date of dates">
                             am {{ date.weekday }}, {{ date.date }} um {{ date.starttime }} Uhr<br /><b>
-                noch {{ date.countdown }}</b>
+                                noch {{ date.countdown }}</b>
                             <br /><span class="headline">Filmen der zu Ehrenden</span>
                         </li>
                     </ol>

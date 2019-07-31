@@ -49,11 +49,13 @@ import { registerElement } from "nativescript-angular/element-registry";
 import { Video } from "nativescript-videoplayer";
 registerElement("VideoPlayer", () => Video);
 import { PDFView } from "nativescript-pdf-view";
-import { FileUploadComponent } from "./_components/file-upload/file-upload.component";
 registerElement("PDFView", () => PDFView);
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { routes } from "./app.routes";
 import { FormBuilder } from "@angular/forms";
+import { ModalDialogService } from "nativescript-angular/modal-dialog";
+import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns";
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -76,7 +78,8 @@ import { FormBuilder } from "@angular/forms";
         ChatMessagesComponent,
         MessagesAreaComponent,
         MessageBoxComponent,
-        DoneComponent
+        DoneComponent,
+        NewUserModalComponent
     ],
     imports: [
         NativeScriptModule,
@@ -96,6 +99,7 @@ import { FormBuilder } from "@angular/forms";
         FormBuilder,
         NavbarService,
         ChatsDataService,
+        ModalDialogService,
         PlatformRef,
         { provide: "platform", useValue: platform },
         {
@@ -106,6 +110,7 @@ import { FormBuilder } from "@angular/forms";
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
     ],
     bootstrap: [AppComponent],
-    schemas: [NO_ERRORS_SCHEMA]
+    schemas: [NO_ERRORS_SCHEMA],
+    entryComponents: [NewUserModalComponent],
 })
 export class AppModule { }

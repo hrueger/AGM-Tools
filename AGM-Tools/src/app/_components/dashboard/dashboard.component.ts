@@ -39,12 +39,13 @@ export class DashboardComponent implements OnInit {
     public spaceChartPlugins = [pluginDataLabels];
     public whatsnew: any;
     public dates: any;
+    cellSpacing: any;
     version: string;
     notifications: any[] = [];
     constructor(
         private remoteService: RemoteService,
         private NavbarService: NavbarService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.NavbarService.setHeadline("Dashboard");

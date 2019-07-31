@@ -1,15 +1,15 @@
 .page {
-	background-image: url("~/assets/loginbg.jpg");
-	/*height: 100vh;*/
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
+    background-image: url("~/assets/loginbg.jpg");
+    /*height: 100vh;*/
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .form {
     margin-top: 20%;
-    
 }
+
 .header {
     font-size: 50;
     text-align: center;
@@ -17,10 +17,13 @@
 }
 
 .password-reset-label {
-    color: #0390fc;
+    color: #ffffff;
     text-align: right;
     font-size: 20;
-    
     padding: 10px;
+}
 
+.login-field {
+    background-color: transparent;
+    color: white;
 }

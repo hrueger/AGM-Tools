@@ -21,10 +21,21 @@
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "src/tsconfig.app.json",
-                        "assets": [
-                            { "glob": "**/*", "input": "src/assets/", "output": "/assets/" },
-                            { "glob": "favicon.ico", "input": "src/", "output": "/" },
-                            { "glob": "**/*", "input": "node_modules/ng2-pdfjs-viewer/pdfjs", "output": "/assets/pdfjs" }
+                        "assets": [{
+                                "glob": "**/*",
+                                "input": "src/assets/",
+                                "output": "/assets/"
+                            },
+                            {
+                                "glob": "favicon.ico",
+                                "input": "src/",
+                                "output": "/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/ng2-pdfjs-viewer/pdfjs",
+                                "output": "/assets/pdfjs"
+                            }
                         ],
                         "styles": [
                             "src/styles.scss"
@@ -77,10 +88,21 @@
                             "src/styles.css"
                         ],
                         "scripts": [],
-                        "assets": [
-                            { "glob": "**/*", "input": "src/assets/", "output": "/assets/" },
-                            { "glob": "favicon.ico", "input": "src/", "output": "/" },
-                            { "glob": "**/*", "input": "node_modules/ng2-pdfjs-viewer/pdfjs", "output": "/assets/pdfjs" }
+                        "assets": [{
+                                "glob": "**/*",
+                                "input": "src/assets/",
+                                "output": "/assets/"
+                            },
+                            {
+                                "glob": "favicon.ico",
+                                "input": "src/",
+                                "output": "/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/ng2-pdfjs-viewer/pdfjs",
+                                "output": "/assets/pdfjs"
+                            }
                         ]
                     }
                 },

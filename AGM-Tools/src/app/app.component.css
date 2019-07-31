@@ -1,1 +1,54 @@
-asdf
+.sidedrawer {
+    margin-bottom: -100;
+}
+
+.sidedrawer-button {}
+
+.sidedrawer.sidedrawer-left .sidedrawer-header-image {
+    color: #f8f8f8;
+    background-color: rgb(6, 219, 138);
+    height: 60;
+    width: 60;
+    font-size: 60;
+    padding: 0;
+    margin-bottom: 5;
+    margin-top: 20;
+}
+
+.sidedrawer .sidedrawer-header {
+    background-color: #646464;
+    border-bottom: 4px solid #f5f5f5;
+    margin-bottom: 4px;
+}
+
+.sidedrawer .sidedrawer-header .sidedrawer-header-brand {
+    color: #fff;
+}
+
+.sidedrawer .sidedrawer-content,
+.sidedrawer-button {
+    background-color: #f5f5f5;
+}
+
+.sidedrawer .sidedrawer-content .sidedrawer-list-item {
+    font-size: 15;
+}
+
+.sidedrawer-button {
+    color: #428bca;
+    text-align: left;
+    border-color: transparent;
+    border-width: 1;
+}
+
+.sidedrawer-button:highlighted,
+.sidedrawer-button:highlighted FormattedText,
+.sidedrawer-button:highlighted Span {
+    background-color: #d4d4d4;
+}
+
+.sidedrawer .sidedrawer-content .sidedrawer-list-item.active,
+.active .sidedrawer-button {
+    background-color: #428bca;
+    color: #fff;
+}

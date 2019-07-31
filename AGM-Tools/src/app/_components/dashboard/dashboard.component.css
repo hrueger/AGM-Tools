@@ -1,7 +1,8 @@
 .card {
-    border-width: 1;
+    /*border-width: 1;
     border-color: #cfcfcf;
-    border-radius: 10;
+    border-radius: 10;*/
     padding: 5;
     margin: 5;
+    margin-bottom: 20;
 }

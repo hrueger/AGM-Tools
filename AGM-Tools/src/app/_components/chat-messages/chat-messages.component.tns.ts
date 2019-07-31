@@ -5,7 +5,7 @@ import {
     OnInit
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Location } from "@angular/common";
+import { Location, NgSwitchDefault } from "@angular/common";
 
 import { Chat } from "../../_models/chat.model";
 import { ChatsDataService } from "../../_services/chat.data.service";
@@ -34,7 +34,7 @@ export class ChatMessagesComponent implements OnInit {
     };
     currentContact = new Contact();
     unread: number;
-    messages: Message[];
+    messages: Message[] = [];
     //chats: Chat[];
 
     constructor(
@@ -44,23 +44,26 @@ export class ChatMessagesComponent implements OnInit {
         private router: Router,
         private _location: Location,
         @Inject("platform") public platform
-    ) {}
+    ) { }
 
     ngOnInit() {
+
         this.route.params.subscribe(params => {
             this.receiverId = +params.index;
             this.remoteService.get("chatGetChats").subscribe(chats => {
-                //this.chats = chats;
-                from(chats)
-                    .pipe(
-                        //@ts-ignore
-                        filter(chat => chat.rid == this.receiverId)
-                    )
-                    .subscribe(
-                        chat =>
+                if (chats) {
+                    from(chats)
+                        .pipe(
                             //@ts-ignore
-                            (this.chat = chat)
-                    );
+                            filter(chat => chat.rid == this.receiverId)
+                        )
+                        .subscribe(
+                            chat =>
+                                //@ts-ignore
+                                (this.chat = chat)
+                        );
+                }
+
             });
             this.getMessages(this.receiverId);
         });
@@ -72,7 +75,7 @@ export class ChatMessagesComponent implements OnInit {
     getMessages(receiverId) {
         this.remoteService
             .get("chatGetMessages", { rid: receiverId })
-            .subscribe(data => (this.messages = data));
+            .subscribe(data => { this.messages = data });
     }
 
     goBack() {

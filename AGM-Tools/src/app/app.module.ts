@@ -78,7 +78,7 @@ registerLocaleData(localeDe);
         FileUploadComponent
     ],
     imports: [
-        RouterModule.forRoot(routes),
+        RouterModule.forRoot(routes, { useHash: true, enableTracing: true }),
 
         ContextMenuModule.forRoot({
             useBootstrap4: true

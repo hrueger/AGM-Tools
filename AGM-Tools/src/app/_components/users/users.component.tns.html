@@ -1,36 +1,33 @@
-<navbar></navbar>
-<StackLayout>
-    <StackLayout orientation="horizontal" height="50">
-        <Button text="Neuer Benutzer"></Button>
-        <Button text="Eigene Daten ändern"></Button>
-    </StackLayout>
+<navbar headline="Benutzer"></navbar>
 
-    <ListView
-        height="3000"
-        [items]="users"
-        (itemTap)="onItemTap($event)"
-        class="list-group"
-    >
-        <ng-template
-            let-user="item"
-            let-i="index"
-            let-odd="odd"
-            let-even="even"
-        >
-            <GridLayout
-                rows="auto, auto"
-                columns="auto, *, auto"
-                class="list-group-item"
-            >
-                <Label crow="0" col="1" [text]="user.username"></Label>
-                <Label row="1" col="1" class="body" [text]="user.email"></Label>
-                <Label
-                    row="0"
-                    col="2"
-                    class="body"
-                    [text]="user.groupname"
-                ></Label>
-            </GridLayout>
+<StackLayout>
+    <Button class="btn btn-primary" text="Eigene Daten ändern"></Button>
+    <RadListView #usersListView height="3000" [items]="users" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
+        <ng-template let-user="item" let-i="index" let-odd="odd" let-even="even">
+            <StackLayout>
+                <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item">
+                    <Label class="list-group-heading" row="0" col="1" [text]="user.username"></Label>
+                    <Label row="1" col="1" class="body" [text]="user.email"></Label>
+                    <Label row="0" col="2" class="body" [text]="user.groupname"></Label>
+                </GridLayout>
+
+                <StackLayout height="1" class="list-group-seperator">
+                </StackLayout>
+            </StackLayout>
         </ng-template>
-    </ListView>
+        <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
+
+            <StackLayout id="delete-view" col="2" class="deleteSwipeContainer" (tap)="onRightSwipeClick($event)">
+                <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+            </StackLayout>
+        </GridLayout>
+    </RadListView>
 </StackLayout>
+
+
+
+
+
+<AbsoluteLayout class="fab-button-container">
+    <Button (tap)="openNewModal()" text="+" class="fab-button"></Button>
+</AbsoluteLayout>

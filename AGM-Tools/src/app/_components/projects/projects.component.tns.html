@@ -1,34 +1,16 @@
-<navbar></navbar>
+<navbar headline="Projekte"></navbar>
 <StackLayout>
     <StackLayout orientation="horizontal" height="50">
         <Button text="Neues Projekt"></Button>
     </StackLayout>
 
-    <ListView
-        height="3000"
-        [items]="projects"
-        (itemTap)="onItemTap($event)"
-        class="list-group"
-    >
-        <ng-template
-            let-project="item"
-            let-i="index"
-            let-odd="odd"
-            let-even="even"
-        >
-            <GridLayout
-                rows="auto, auto"
-                columns="auto, *, auto"
-                class="list-group-item"
-            >
+    <ListView height="3000" [items]="projects" (itemTap)="onItemTap($event)" class="list-group">
+        <ng-template let-project="item" let-i="index" let-odd="odd" let-even="even">
+            <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item">
                 <Label row="0" col="1" [text]="project.name"></Label>
 
                 <StackLayout row="0" col="2">
-                    <Label
-                        class="body"
-                        *ngFor="let member of project.members"
-                        [text]="member"
-                    ></Label>
+                    <Label class="body" *ngFor="let member of project.members" [text]="member"></Label>
                 </StackLayout>
             </GridLayout>
         </ng-template>

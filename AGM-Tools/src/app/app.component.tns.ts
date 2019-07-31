@@ -18,11 +18,22 @@ import {
 })
 export class AppComponent {
     private _sideDrawerTransition: DrawerTransitionBase;
-    @ViewChild("rsd", {static: false}) rSideDrawer: ElementRef;
+    @ViewChild("rsd", { static: false }) rSideDrawer: ElementRef;
     currentUser: User;
     username = "";
     useremail = "";
     initials = "";
+    navItems = [{
+        link: "['/dashboard']", icon: "&#xf3fd;", text: "Dashboard"
+    }, {
+        link: "/dashboard", icon: "&#xf3fd;", text: "Dashboard"
+    }, {
+        link: "/dashboard", icon: "&#xf3fd;", text: "Dashboard"
+    }, {
+        link: "/dashboard", icon: "&#xf3fd;", text: "Dashboard"
+    }, {
+        link: "/dashboard", icon: "&#xf3fd;", text: "Dashboard"
+    }];
 
     constructor(
         private router: Router,

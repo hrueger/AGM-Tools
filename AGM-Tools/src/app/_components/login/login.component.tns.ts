@@ -4,6 +4,7 @@ import { Page } from "tns-core-modules/ui/page";
 import { RouterExtensions } from "nativescript-angular/router";
 
 import { AuthenticationService } from "../../_services/authentication.service";
+import { AlertService } from "../../_services/alert.service";
 
 @Component({
     selector: "app-login",
@@ -17,13 +18,14 @@ export class LoginComponent {
     processing = false;
     username: string;
     password: string;
-    @ViewChild("passwordField", {static: false}) passwordField: ElementRef;
-    @ViewChild("confirmPassword", {static: false}) confirmPassword: ElementRef;
+    @ViewChild("passwordField", { static: false }) passwordField: ElementRef;
+    @ViewChild("confirmPassword", { static: false }) confirmPassword: ElementRef;
 
     constructor(
         private page: Page,
         private authService: AuthenticationService,
-        private routerExtensions: RouterExtensions
+        private routerExtensions: RouterExtensions,
+        private alertService: AlertService
     ) {
         this.page.actionBarHidden = true;
 
@@ -37,7 +39,7 @@ export class LoginComponent {
 
     submit() {
         if (!this.username || !this.password) {
-            this.alert("Bitte gib ein Passwort und einen Benutzernamen an!");
+            this.alertService.error("Bitte gib ein Passwort und einen Benutzernamen an!");
             return;
         }
 
@@ -45,7 +47,7 @@ export class LoginComponent {
         if (this.isLoggingIn) {
             this.login();
         } else {
-            this.register();
+
         }
     }
 
@@ -58,32 +60,15 @@ export class LoginComponent {
                 });
             },
             error => {
-                console.log(error);
                 this.processing = false;
-                this.alert(
-                    error.error.message ||
-                        "Dein Account wurde leider nicht gefunden. Bitte überprüfe deinen Benutzernamen nochmals!"
+                this.alertService.error(
+                    error ||
+                    "Dein Account wurde leider nicht gefunden. Bitte überprüfe deinen Benutzernamen nochmals!"
                 );
             }
         );
     }
 
-    register() {
-        /*if (this.user.password != this.user.confirmPassword) {
-            this.alert("Your passwords do not match.");
-            return;
-        }
-        this.authService.register(this.user)
-            .then(() => {
-                this.processing = false;
-                this.alert("Your account was successfully created.");
-                this.isLoggingIn = true;
-            })
-            .catch(() => {
-                this.processing = false;
-                this.alert("Unfortunately we were unable to create your account.");
-            });*/
-    }
 
     forgotPassword() {
         prompt({
@@ -113,13 +98,5 @@ export class LoginComponent {
         if (!this.isLoggingIn) {
             this.confirmPassword.nativeElement.focus();
         }
-    }
-
-    alert(message: string) {
-        return alert({
-            title: "AGM-Tools",
-            okButtonText: "OK",
-            message: message
-        });
     }
 }

@@ -7,7 +7,7 @@
 }
 
 .action-bar {
-    background-color: #000000;
+    background-color: #2b669a;
     color: white;
 }
 
@@ -31,73 +31,31 @@ StackLayout.content {
     font-family: "Font Awesome 5 Free", "fa-solid-900";
 }
 
-.sidedrawer {
-    margin-bottom: -100;
-}
-
-.sidedrawer-list-item-icon,
-.sidedrawer-list-item {
-    color: #022734;
-}
-
-.sidedrawer-list-item:highlighted {
-    background-color: #646464;
-}
-
-.sidedrawer.sidedrawer-left {
-    background-color: #f5f5f5;
-}
-
-.sidedrawer.sidedrawer-left .sidedrawer-header-image {
-    color: #f8f8f8;
-    background-color: rgb(6, 219, 138);
-    height: 60;
-    width: 60;
-    font-size: 60;
-    padding: 0;
-    margin-bottom: 5;
-    margin-top: 20;
-}
-
-.sidedrawer.sidedrawer-left .footnote {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.sidedrawer .sidedrawer-header {
-    background-color: #646464;
-    border-bottom: 4px solid #f5f5f5;
-    margin-bottom: 4px;
-}
-
-.sidedrawer .sidedrawer-header .sidedrawer-header-brand {
-    color: #fff;
-}
-
-.sidedrawer .sidedrawer-content {
-    background-color: #f5f5f5;
-}
-
-.sidedrawer .sidedrawer-content .sidedrawer-list-item {
-    padding-left: 15;
-    font-size: 15;
-}
-
-.sidedrawer .sidedrawer-content .sidedrawer-list-item label {
+.fab-button {
+    color: #ffffff;
+    font-size: 36;
+    padding-top: 5;
+    padding-left: 12;
+    background-color: transparent;
+    background-color: #30bcff;
+    border-radius: 28;
+    width: 56;
+    height: 56;
+    text-align: center;
     vertical-align: center;
-    color: #428bca;
 }
 
-.sidedrawer .sidedrawer-content .sidedrawer-list-item .fas,
-.sidedrawer .sidedrawer-content .sidedrawer-list-item .fa {
-    width: 20;
-    margin-right: 10;
-    margin-left: 5;
+.fab-button-container {
+    margin-top: 80%;
+    margin-left: 80%;
 }
 
-.sidedrawer .sidedrawer-content .sidedrawer-list-item.active {
-    background-color: #428bca;
+.nav-button-back {
+    background-color: transparent;
+    border-color: transparent;
+    border-width: 1;
 }
 
-.sidedrawer .sidedrawer-content .sidedrawer-list-item.active label {
-    color: white;
+.dataform {
+    margin-top: 20;
 }

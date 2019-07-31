@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { RemoteService } from "../../_services/remote.service";
 import { User } from "../../_models/user.model";
-import { SetupItemViewArgs } from "nativescript-angular/directives";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AlertService } from "../../_services/alert.service";
@@ -37,7 +36,7 @@ export class UsersComponent implements OnInit {
         private alertService: AlertService,
         private authService: AuthenticationService,
         private NavbarService: NavbarService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.NavbarService.setHeadline("Benutzer");
@@ -65,18 +64,14 @@ export class UsersComponent implements OnInit {
             .get("editUserName")
             .setValue(
                 this.authService.currentUserValue.firstName +
-                    " " +
-                    this.authService.currentUserValue.lastName
+                " " +
+                this.authService.currentUserValue.lastName
             );
         this.editUserForm
             .get("editUserEmail")
             .setValue(this.authService.currentUserValue.email);
     }
-    onSetupItemView(args: SetupItemViewArgs) {
-        args.view.context.third = args.index % 3 === 0;
-        args.view.context.header = (args.index + 1) % this.users.length === 1;
-        args.view.context.footer = args.index + 1 === this.users.length;
-    }
+
     openNewModal(content) {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
@@ -104,7 +99,7 @@ export class UsersComponent implements OnInit {
                             }
                         });
                 },
-                reason => {}
+                reason => { }
             );
     }
     openEditModal(content) {
@@ -148,7 +143,7 @@ export class UsersComponent implements OnInit {
                             }
                         });
                 },
-                reason => {}
+                reason => { }
             );
     }
 
