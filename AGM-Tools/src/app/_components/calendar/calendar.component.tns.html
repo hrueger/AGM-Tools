@@ -1,34 +1,15 @@
 <ActionBar class="action-bar">
-    <NavigationButton
-        ios:visibility="collapsed"
-        icon="res://menu"
-        (tap)="onDrawerButtonTap()"
-    ></NavigationButton>
-    <ActionItem
-        icon="res://navigation/menu"
-        android:visibility="collapsed"
-        (tap)="onDrawerButtonTap()"
-        ios.position="left"
-    >
+    <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
+    <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
     </ActionItem>
 
     <Label class="action-bar-title" text="Kalender"></Label>
-    <ActionItem
-        ios:visibility="collapsed"
-        icon="res://ic_back"
-        (tap)="up()"
-    ></ActionItem>
-    <ActionItem
-        ios:visibility="collapsed"
-        icon="res://ic_next"
-        (tap)="down()"
-    ></ActionItem>
+    <ActionItem ios:visibility="collapsed" icon="res://ic_back" (tap)="up()"></ActionItem>
+    <ActionItem ios:visibility="collapsed" icon="res://ic_next" (tap)="down()"></ActionItem>
 </ActionBar>
-<RadCalendar
-    [eventSource]="calendarEvents"
-    eventsViewMode="Inline"
-    selectionMode="Single"
-    [viewMode]="viewMode"
-    transitionMode="Slide"
-    locale="de-DE"
-></RadCalendar>
+<RadCalendar [eventSource]="calendarEvents" eventsViewMode="Inline" selectionMode="None" [viewMode]="viewMode" transitionMode="Slide" locale="de-DE">
+</RadCalendar>
+
+<AbsoluteLayout class="fab-button-container">
+    <Button (tap)="openNewModal()" text="+" class="fab-button"></Button>
+</AbsoluteLayout>

@@ -1,7 +1,16 @@
-<navbar headline="Benutzer"></navbar>
+<ActionBar class="action-bar">
+    <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
+    <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
+    </ActionItem>
+
+    <Label class="action-bar-title" text="Benutzer"></Label>
+
+    <ActionItem icon="~/assets/user-edit.png" ios.position="right" (tap)="openEditModal()"></ActionItem>
+</ActionBar>
+
 
 <StackLayout>
-    <Button class="btn btn-primary" text="Eigene Daten ändern"></Button>
+
     <RadListView #usersListView height="3000" [items]="users" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
         <ng-template let-user="item" let-i="index" let-odd="odd" let-even="even">
             <StackLayout>
@@ -16,16 +25,12 @@
             </StackLayout>
         </ng-template>
         <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
-
             <StackLayout id="delete-view" col="2" class="deleteSwipeContainer" (tap)="onRightSwipeClick($event)">
                 <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </StackLayout>
         </GridLayout>
     </RadListView>
 </StackLayout>
-
-
-
 
 
 <AbsoluteLayout class="fab-button-container">

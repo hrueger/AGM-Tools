@@ -803,7 +803,7 @@ function notificationsNewNotification($data) {
 				
 		}
 	} else {
-		dieWithMessage("danger", "Error!");
+		dieWithMessage("Nicht alle Daten angebenen!");
 		
 	}
 }

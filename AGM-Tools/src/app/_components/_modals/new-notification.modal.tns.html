@@ -1,0 +1,13 @@
+<StackLayout>
+    <GridLayout rows="auto" columns="75,*,75" class="action-bar p-10">
+        <Button text="&#xf060;" class="fas nav-button-back" row="0" col="0" (tap)="goBack()">
+        </Button>
+        <Label text="Neue Benachrichtigung erstellen" class="text-center action-bar-title" row="0" col="1"></Label>
+    </GridLayout>
+    <RadDataForm class="dataform" #dataform [metadata]="dataFormConfig" [source]="notification"></RadDataForm>
+    <Label class="form-error-message" text="Keine Wichtigkeit gewählt!" *ngIf="noTypeSelectedErrorMessage"></Label>
+    <Button class="btn btn-primary" text="Empfänger auswählen" (tap)="openReceiversSelectMenu()"></Button>
+    <Label class="form-error-message" text="Keine Empfänger gewählt!" *ngIf="noReceiversSelectedErrorMessage"></Label>
+
+    <Button class="btn btn-primary" text="Senden" (tap)="close()"></Button>
+</StackLayout>

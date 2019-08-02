@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Feedback, FeedbackType, FeedbackPosition } from "nativescript-feedback";
+import { Feedback } from "nativescript-feedback";
+import { SnackBar, SnackBarOptions } from "@nstudio/nativescript-snackbar";
 
 @Injectable({ providedIn: "root" })
 export class AlertService {
@@ -38,6 +39,21 @@ export class AlertService {
       message: message,
       duration: 2000
     });
+  }
+
+  snackbar(message: string) {
+    const snackbar = new SnackBar();
+
+    const options: SnackBarOptions = {
+      actionText: "Ok",
+      actionTextColor: '#104b7d',
+      snackText: message,
+      textColor: '#ffffff',
+      hideDelay: 3500,
+      backgroundColor: '#428bca',
+    };
+
+    snackbar.action(options);
   }
 
 

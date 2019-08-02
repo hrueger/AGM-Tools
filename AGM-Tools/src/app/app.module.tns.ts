@@ -55,6 +55,10 @@ import { routes } from "./app.routes";
 import { FormBuilder } from "@angular/forms";
 import { ModalDialogService } from "nativescript-angular/modal-dialog";
 import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns";
+import { EditUserModalComponent } from "./_components/_modals/edit-user.modal.tns";
+import { NewNotificationModalComponent } from "./_components/_modals/new-notification.modal.tns";
+import { TruncatePipe } from "./_pipes/truncate.pipe";
+import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
 
 @NgModule({
     declarations: [
@@ -79,7 +83,10 @@ import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns"
         MessagesAreaComponent,
         MessageBoxComponent,
         DoneComponent,
-        NewUserModalComponent
+        NewUserModalComponent,
+        EditUserModalComponent,
+        NewNotificationModalComponent,
+        TruncatePipe
     ],
     imports: [
         NativeScriptModule,
@@ -101,6 +108,7 @@ import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns"
         ChatsDataService,
         ModalDialogService,
         PlatformRef,
+        ModalDatetimepicker,
         { provide: "platform", useValue: platform },
         {
             provide: LOCALE_ID,
@@ -111,6 +119,6 @@ import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns"
     ],
     bootstrap: [AppComponent],
     schemas: [NO_ERRORS_SCHEMA],
-    entryComponents: [NewUserModalComponent],
+    entryComponents: [NewUserModalComponent, EditUserModalComponent, NewNotificationModalComponent],
 })
 export class AppModule { }

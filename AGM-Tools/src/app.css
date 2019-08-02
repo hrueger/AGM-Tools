@@ -53,9 +53,38 @@ StackLayout.content {
 .nav-button-back {
     background-color: transparent;
     border-color: transparent;
-    border-width: 1;
+    border-width: 0;
 }
 
 .dataform {
     margin-top: 20;
+}
+
+.form-error-message {
+    color: #b10303;
+    margin-left: 20;
+    margin-bottom: 20;
+}
+
+.deleteSwipeContainer {
+    background-color: #e74c3c;
+    padding: 16;
+}
+
+.swipeLabel {
+    size: 50;
+    color: #ffffff;
+}
+
+.list-group-item {
+    padding: 10;
+    background-color: #ffffff;
+}
+
+.list-group-item .list-group-heading {
+    font-size: 20;
+}
+
+.list-group-seperator {
+    background-color: #cfcfcf;
 }

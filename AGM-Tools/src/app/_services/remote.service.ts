@@ -14,7 +14,7 @@ export class RemoteService {
         private http: HttpClient,
         private alertService: AlertService,
         private cacheService: CacheService
-    ) {}
+    ) { }
 
     get(action: string, ...args: any): Observable<any> {
         //var action = "dashboardGetSpaceChartData";
@@ -31,9 +31,9 @@ export class RemoteService {
                 tap(_ =>
                     this.log(
                         "fetched " +
-                            action +
-                            " with data " +
-                            JSON.stringify(args)
+                        action +
+                        " with data " +
+                        JSON.stringify(args)
                     )
                 ),
                 catchError(this.handleError<any>(action, false))
@@ -43,8 +43,13 @@ export class RemoteService {
                 if (cacheData == null || !this.isEquivalent(cacheData, data)) {
                     //console.log("Cache Daten: " + cacheData);
                     //console.log("Echte Daten: " + data);
-                    subject.next(data);
-                    this.cacheService.put(data, action, args);
+                    if (data) {
+                        subject.next(data);
+                        this.cacheService.put(data, action, args);
+                    } else {
+                        this.alertService.snackbar("Offline-Modus (Daten können veraltet sein)");
+                    }
+
                     //console.log("cache updated and new data served: " + data);
                 } else {
                     //console.log("cache the same as internet");
@@ -76,9 +81,9 @@ export class RemoteService {
                 tap(_ =>
                     this.log(
                         "fetched " +
-                            action +
-                            " with data " +
-                            JSON.stringify(args)
+                        action +
+                        " with data " +
+                        JSON.stringify(args)
                     )
                 ),
                 catchError(this.handleError<any>(action, false))
@@ -88,10 +93,13 @@ export class RemoteService {
         return (error: any): Observable<T> => {
             console.error(error);
 
-            this.log(`${operation} failed: ${error.message}`);
-            console.log(result);
+            if (!error.startsWith("java.net.UnknownHostException")) {
+                this.log(`${operation} failed: ${error.message}`);
+                console.log(result);
 
-            this.alertService.error(error);
+                this.alertService.error(error);
+            }
+
 
             return of(result as T);
         };

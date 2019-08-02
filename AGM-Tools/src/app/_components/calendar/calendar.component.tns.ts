@@ -6,6 +6,10 @@ import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { RemoteService } from "../../_services/remote.service";
 import { CalendarEvent } from "nativescript-ui-calendar";
+import { ViewContainerRef, ViewChild } from "@angular/core";
+import { ModalDialogService } from "nativescript-angular/directives/dialogs";
+import { AlertService } from "../../_services/alert.service";
+import { NewCalendarEventModalComponent } from "../_modals/new-calendar-event.modal.tns"
 
 export class CustomEvent extends CalendarEvent {
     id: number;
@@ -16,8 +20,6 @@ export class CustomEvent extends CalendarEvent {
         super(title, startDate, endDate, isAllDay, eventColor);
         this.id = id;
         this.location = location;
-        const hours = startDate.getHours();
-        const minutes = startDate.getMinutes();
         this.description = description;
     }
 }
@@ -30,12 +32,13 @@ export class CustomEvent extends CalendarEvent {
 })
 export class CalendarComponent implements OnInit {
     calendarEvents: Array<CustomEvent> = new Array<CustomEvent>();
-    viewMode: string = "MonthNames";
+    viewMode: string = "Day";
     currentViewIndex = -1;
-    viewModes = ["Year", "Month", "Week", "Day"];
+    viewModes = ["Year", "Month", "Day"];
 
-    constructor(private remoteService: RemoteService) {
-    }
+    constructor(private remoteService: RemoteService, private modal: ModalDialogService,
+        private vcRef: ViewContainerRef, private alertService: AlertService) { }
+
 
 
 
@@ -44,27 +47,61 @@ export class CalendarComponent implements OnInit {
 
             var color = new Color(255, 255, 54, 3)
             console.log(data);
-            data.forEach(event => {
-                console.log(event);
-                var startDate = new Date(event.startDate);
-                var endDate = new Date(event.endDate);
-                this.calendarEvents.push(new CustomEvent(
-                    event.id,
-                    event.headline,
-                    event.description,
-                    event.location,
-                    startDate,
-                    endDate,
-                    false,
-                    color
-                ));
-            });
+            if (data) {
+                data.forEach(event => {
+                    console.log(event);
+                    var startDate = new Date(event.startDate);
+                    var endDate = new Date(event.endDate);
+                    this.calendarEvents.push(new CustomEvent(
+                        event.id,
+                        event.headline,
+                        event.description,
+                        event.location,
+                        startDate,
+                        endDate,
+                        false,
+                        color
+                    ));
+                });
+            }
+
         }
         );
     }
 
     onNavigatedToDate(args) {
         console.log("onNavigatedToDate: " + args.date);
+    }
+
+    public openNewModal() {
+        let options = {
+            context: {},
+            fullscreen: true,
+            viewContainerRef: this.vcRef
+        };
+        this.modal.showModal(NewCalendarEventModalComponent, options).then(newCalendarEvent => {
+            if (newCalendarEvent) {
+                this.remoteService
+                    .getNoCache("calendarNewEvent", {
+                        headline: newCalendarEvent.headline,
+                        content: newCalendarEvent.content,
+                        receivers: newCalendarEvent.receivers,
+                        type: newCalendarEvent.importance
+                    })
+                    .subscribe(data => {
+                        if (data && data.status == true) {
+                            this.alertService.success(
+                                "Termin erfolgreich gesendet!"
+                            );
+                            this.remoteService
+                                .get("calendarGetEvents")
+                                .subscribe(data => {
+                                    this.calendarEvents = data;
+                                });
+                        }
+                    });
+            }
+        });
     }
 
     up() {

@@ -40,10 +40,18 @@ export class AppComponent {
         private authenticationService: AuthenticationService
     ) {
         this.authenticationService.currentUser.subscribe(x => {
-            this.currentUser = x;
-            this.useremail = "Email";
-            this.username = x.firstName + " " + x.lastName;
-            this.initials = x.firstName.charAt(0) + " " + x.lastName.charAt(0);
+            if (x) {
+                this.currentUser = x;
+                this.useremail = "Email";
+                this.username = x.firstName + " " + x.lastName;
+                this.initials = x.firstName.charAt(0) + " " + x.lastName.charAt(0);
+            } else {
+                this.currentUser = new User();
+                this.useremail = "Email";
+                this.username = "Benutzername";
+                this.initials = "XX";
+            }
+
         });
     }
 

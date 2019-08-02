@@ -80,6 +80,7 @@ export class LoginComponent {
             okButtonText: "Weiter",
             cancelButtonText: "Zurück"
         }).then(data => {
+            this.alertService.info("Diese Funktion gibt's noch nicht ;-), bitte melde dich direkt bei Hannes!")
             /*if (data.result) {
                 this.authService.resetPassword(data.text.trim())
                     .then(() => {

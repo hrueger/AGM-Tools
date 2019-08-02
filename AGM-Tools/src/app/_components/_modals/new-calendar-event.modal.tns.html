@@ -1,0 +1,10 @@
+<StackLayout>
+    <GridLayout rows="auto" columns="75,*,75" class="action-bar p-10">
+        <Button text="&#xf060;" class="fas nav-button-back" row="0" col="0" (tap)="goBack()">
+        </Button>
+        <Label text="Neuer Termin" class="text-center action-bar-title" row="0" col="1"></Label>
+    </GridLayout>
+    <RadDataForm class="dataform" #dataform [metadata]="dataFormConfig" [source]="notification"></RadDataForm>
+
+    <Button class="btn btn-primary" text="Senden" (tap)="close()"></Button>
+</StackLayout>

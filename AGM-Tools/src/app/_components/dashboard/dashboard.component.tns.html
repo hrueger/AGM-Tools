@@ -1,6 +1,24 @@
 <navbar headline="Dashboard"></navbar>
 <ScrollView>
     <StackLayout class="content">
+        <!--<StackLayout class="card" *ngIf="notifications.length">
+            <Label text="Neue Benachrichtigungen" class="headline"></Label>
+            <StackLayout *ngFor="let notification of notifications" [class]="'notification notification-' + notification.type">
+                <Button (tap)="makeNotificationSeen(notification)" class="btn btn-primary" text="Gelesen"></Button>
+                <Label>
+                    <FormattedText>
+                        <Span fontAttributes="Bold">{{ notification.headline }}</Span>
+                        <Span>{{ notification.content }}</Span>
+                        <Span fontSize="15" fontAttributes="Bold">{{ notification.sender }}</Span>
+                        <Span fontSize="15"> am {{ notification.date }} um
+                            {{ notification.time }} Uhr</Span>
+                    </FormattedText>
+                </Label>
+            </StackLayout>
+        </StackLayout>--->
+
+
+
         <StackLayout class="card">
             <Label text="Speicherplatz" class="headline"></Label>
             <RadPieChart height="200" allowAnimation="true">

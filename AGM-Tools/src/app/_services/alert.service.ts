@@ -23,5 +23,8 @@ export class AlertService {
   }
 
 
+  snackbar(message) {
+    this.info(message);
+  }
 
 }
