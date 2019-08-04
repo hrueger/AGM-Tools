@@ -63,7 +63,19 @@ StackLayout.content {
 .form-error-message {
     color: #b10303;
     margin-left: 20;
+    margin-right: 20;
     margin-bottom: 20;
+}
+
+.form-info-message {
+    margin-left: 20;
+    margin-right: 20;
+    margin-bottom: 20;
+}
+
+.form-input-field {
+    margin-left: 15;
+    margin-right: 15;
 }
 
 .deleteSwipeContainer {

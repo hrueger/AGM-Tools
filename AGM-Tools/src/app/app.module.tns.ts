@@ -59,6 +59,7 @@ import { EditUserModalComponent } from "./_components/_modals/edit-user.modal.tn
 import { NewNotificationModalComponent } from "./_components/_modals/new-notification.modal.tns";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
+import { NewCalendarEventModalComponent } from "./_components/_modals/new-calendar-event.modal.tns";
 
 @NgModule({
     declarations: [
@@ -86,6 +87,7 @@ import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
         NewUserModalComponent,
         EditUserModalComponent,
         NewNotificationModalComponent,
+        NewCalendarEventModalComponent,
         TruncatePipe
     ],
     imports: [
@@ -107,6 +109,7 @@ import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
         NavbarService,
         ChatsDataService,
         ModalDialogService,
+        ModalDatetimepicker,
         PlatformRef,
         ModalDatetimepicker,
         { provide: "platform", useValue: platform },
@@ -119,6 +122,6 @@ import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
     ],
     bootstrap: [AppComponent],
     schemas: [NO_ERRORS_SCHEMA],
-    entryComponents: [NewUserModalComponent, EditUserModalComponent, NewNotificationModalComponent],
+    entryComponents: [NewUserModalComponent, EditUserModalComponent, NewNotificationModalComponent, NewCalendarEventModalComponent],
 })
 export class AppModule { }

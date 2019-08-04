@@ -246,6 +246,9 @@ if ($data) {
             case "calendarGetDates":
                 calendarGetDates();
                 break;    
+            case "calendarNewEvent":
+                calendarNewEvent($args);
+                break;
             case "projectsGetProjects":
                 projectsGetProjects();
                 break;
@@ -728,6 +731,63 @@ function calendarGetDates() {
     }*/
     
     die(json_encode($res));
+}
+
+function calendarNewEvent($data) {
+    $db = connect();
+    if (
+			isset($data["startDate"]) &&
+			isset($data["endDate"]) &&
+			isset($data["headline"]) &&
+			isset($data["description"]) &&
+			isset($data["location"]) &&
+			!empty(trim($data["startDate"])) &&
+			!empty(trim($data["endDate"])) &&
+			!empty(trim($data["headline"])) &&
+			!empty(trim($data["location"])) &&
+			!empty(trim($data["description"]))
+		) {
+
+			////////////////////////
+			$important = $data["important"];
+
+			$startDate = date("Y-m-d H:i", strtotime($data["startDate"]));
+			$endDate = date("Y-m-d H:i", strtotime($data["endDate"]));
+			$headline = $db->real_escape_string($data["headline"]);
+			$location = $db->real_escape_string($data["location"]);
+			$description = $db->real_escape_string($data["description"]);
+			$author = getCurrentUserID();
+
+			$sql = "INSERT INTO `dates` (`id`, `startDate`, `endDate`, `headline`, `description`, `location`, `creator`) VALUES
+					(NULL, '$startDate', '$endDate', '$headline', '$description', '$location', '$author');";
+
+			$result = $db->query($sql);
+
+
+			if ($result) {
+				if ($important) {
+					$users = array_keys(getUserIdArray($db));
+					$receivers = implode("-", $users);
+					$result = $db->query("INSERT INTO `notifications` (`id`, `receivers`, `sender`, `headline`, `content`, `type`, `seen`, `date`) VALUES
+									(NULL, '$receivers', '$author', 'Neuer Termin: $headline', 'Es wurde ein neuer Termin hinzugefügt: $description <br>vom $startDate Uhr bis zum $endDate Uhr', '2', '0', NOW())");
+					if ($result) {
+						die(json_encode(array("status"=> true)));
+					} else {
+						dieWithMessage("Termin nicht gespeichert!" . $db->error);
+					}
+				} else {
+					die(json_encode(array("status"=> true)));
+				}
+			} else {
+				dieWithMessage("Termin nicht gespeichert!" . $db->error);
+			}
+
+
+
+			/////////////////////////
+		} else {
+			dieWithMessage("Termin nicht gespeichert, nicht alle Daten wurden angegeben!".print_r($data, true));
+		}
 }
 
 function notificationsGetNotifications() {

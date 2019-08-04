@@ -7,7 +7,7 @@
     <ActionItem ios:visibility="collapsed" icon="res://ic_back" (tap)="up()"></ActionItem>
     <ActionItem ios:visibility="collapsed" icon="res://ic_next" (tap)="down()"></ActionItem>
 </ActionBar>
-<RadCalendar [eventSource]="calendarEvents" eventsViewMode="Inline" selectionMode="None" [viewMode]="viewMode" transitionMode="Slide" locale="de-DE">
+<RadCalendar class="calendar" #calendar [eventSource]="calendarEvents" eventsViewMode="Inline" selectionMode="None" [viewMode]="viewMode" transitionMode="Slide" locale="de-DE">
 </RadCalendar>
 
 <AbsoluteLayout class="fab-button-container">

@@ -1,32 +1,41 @@
 import { Component, ViewChild, NgZone } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
-import { MultiSelect, MSOption, AShowType } from "nativescript-multi-select";
 import { RemoteService } from "../../_services/remote.service";
 import { AlertService } from "../../_services/alert.service";
+import * as ModalPicker from 'nativescript-modal-datetimepicker';
 
 export class CalendarEvent {
-    public headline: string;
-    public content: string;
-    public importance: string;
-    receivers: any[];
-    constructor(headline: string, content: string, importance: string) {
-        this.headline = headline;
-        this.content = content;
-        this.importance = importance;
+    id: number;
+    title: string;
+    description: string;
+    location: string;
+    startDate: Date;
+    endDate: Date;
+    isAllDay: boolean;
+    important: boolean;
+
+    constructor(title: string, description: string, location: string, isAllDay: boolean, important: boolean) {
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.isAllDay = isAllDay;
+        this.important = important;
     }
 }
 
 
 @Component({
-    selector: "new-notification-modal",
-    templateUrl: "new-notification.modal.tns.html",
+    selector: "new-calendar-event-modal",
+    templateUrl: "new-calendar-event.modal.tns.html",
 })
 export class NewCalendarEventModalComponent {
-    private notification: Notification;
-    private _MSelect: MultiSelect;
-    private users: Array<any> = [];
-    public receivers: Array<any> = [];
+    private event: CalendarEvent;
+    public startDate: string = "";
+    public endDate: string = "";
+    endDateInvalidMessage = false;
+    startDateInvalidMessage = false;
+    endDateBeforeStartDateInvalidMessage = false;
     @ViewChild('dataform', { static: false }) dataform: RadDataFormComponent;
     dataFormConfig = {
         "isReadOnly": false,
@@ -35,71 +44,108 @@ export class NewCalendarEventModalComponent {
         "propertyAnnotations":
             [
                 {
-                    "name": "headline",
-                    "displayName": "Thema",
+                    "name": "title",
+                    "displayName": "Titel",
                     "index": 0,
                     "validators": [
                         { "name": "NonEmpty" }
                     ]
                 },
                 {
-                    "name": "content",
-                    "displayName": "Nachricht",
+                    "name": "description",
+                    "displayName": "Beschreibung",
                     "index": 1,
                     "editor": "MultilineText",
                     "validators": [
                         { "name": "NonEmpty" }
                     ]
                 },
-
                 {
-                    "name": "importance",
-                    "displayName": "Wichtigkeit",
-                    "index": 3,
-                    "editor": "Picker",
+                    "name": "location",
+                    "displayName": "Ort",
+                    "index": 2,
                     "validators": [
                         { "name": "NonEmpty" }
-                    ],
-                    "valuesProvider": ["Bitte wählen", "Erfolg", "Information", "Warnung", "Gefahr"]
+                    ]
+                },
+                {
+                    "name": "isAllDay",
+                    "displayName": "Ganztägig",
+                    "index": 3,
+                    "validators": [
+                        { "name": "NonEmpty" }
+                    ]
+                },
+                {
+                    "name": "important",
+                    "displayName": "Wichtiger Termin",
+                    "index": 4,
+                    "validators": [
+                        { "name": "NonEmpty" }
+                    ]
                 }
             ]
     };
-    noReceiversSelectedErrorMessage: boolean = false;
-    noTypeSelectedErrorMessage: boolean = false;
 
-    public constructor(private params: ModalDialogParams, private remoteService: RemoteService, private zone: NgZone, private alertService: AlertService) {
-        this._MSelect = new MultiSelect();
-        this.remoteService.get("usersGetUsers").subscribe(data => {
-            data.forEach(user => {
-                this.users.push({ name: user.username, id: user.id });
+    public constructor(private params: ModalDialogParams, private remoteService: RemoteService, private alertService: AlertService) {
+
+    }
+
+    pick(what: string) {
+        const picker = new ModalPicker.ModalDatetimepicker();
+        picker.pickDate({
+            title: (what == "start" ? 'Startdatum auswählen' : "Enddatum auswählen"),
+        }).then((result) => {
+            var res = result.day + '.' + result.month + '.' + result.year;
+            if (what == "start") {
+                this.startDate = res;
+            } else {
+                this.endDate = res;
+            }
+            this.startDateInvalidMessage = false;
+            this.endDateBeforeStartDateInvalidMessage = false;
+            picker.pickTime({
+                title: (what == "start" ? 'Startzeit auswählen' : "Endzeit auswählen"),
+
+            }).then((result) => {
+                var res = result.hour + ':' + result.minute;
+                if (what == "start") {
+                    this.startDate += " " + res;
+                } else {
+                    this.endDate += " " + res;
+                }
+                this.endDateInvalidMessage = false;
+                this.endDateBeforeStartDateInvalidMessage = false;
+            }).catch((error) => {
+                console.log('Error: ' + error);
             });
+        }).catch((error) => {
+            console.log('Error: ' + error);
         });
     }
+
 
     public close() {
         this.dataform.dataForm.validateAll()
             .then(result => {
                 if (result == true) {
-                    if (this.receivers.length && this.receivers.length > 0) {
-                        if (this.notification.importance && this.notification.importance != "" && this.notification.importance != "Bitte wählen") {
-                            if (this.notification.importance == "Erfolg") {
-                                this.notification.importance = "1";
-                            } else if (this.notification.importance == "Information") {
-                                this.notification.importance = "2";
-                            } else if (this.notification.importance == "Warnung") {
-                                this.notification.importance = "3";
-                            } else if (this.notification.importance == "Gefahr") {
-                                this.notification.importance = "3";
+                    if (this.startDate && this.startDate != "") {
+                        if (this.endDate && this.endDate != "") {
+
+                            this.event.startDate = new Date(this.startDate);
+                            this.event.endDate = new Date(this.endDate);
+
+                            if (this.event.startDate >= this.event.endDate) {
+                                this.endDateBeforeStartDateInvalidMessage = true;
                             } else {
-                                this.notification.importance = "2";
+                                this.params.closeCallback(this.event);
                             }
-                            this.notification.receivers = this.receivers;
-                            this.params.closeCallback(this.notification);
+
                         } else {
-                            this.noTypeSelectedErrorMessage = true;
+                            this.endDateInvalidMessage = true;
                         }
                     } else {
-                        this.noReceiversSelectedErrorMessage = true;
+                        this.startDateInvalidMessage = true;
                     }
                 } else {
                     console.log("validation failed");
@@ -108,7 +154,7 @@ export class NewCalendarEventModalComponent {
     }
 
     ngOnInit() {
-        this.notification = new Notification("", "", "");
+        this.event = new CalendarEvent("", "", "", false, false);
 
     }
 
@@ -120,45 +166,5 @@ export class NewCalendarEventModalComponent {
 
 
 
-    public openReceiversSelectMenu(): void {
-        const options: MSOption = {
-            title: "Empfänger auswählen",
-            selectedItems: this.users,
-            items: this.users,
-            bindValue: 'id',
-            displayLabel: 'name',
-            confirmButtonText: "Ok",
-            cancelButtonText: "Abbrechen",
-            onConfirm: selectedItems => {
-                this.zone.run(() => {
-                    this.receivers = selectedItems;
-                    //this.users = selectedItems;
-                    //console.log("SELECTED ITEMS => ", selectedItems);
-                });
-            },
-            onItemSelected: selectedItem => {
-                //console.log("SELECTED ITEM => ", selectedItem);
-                this.zone.run(() => {
-                    this.noReceiversSelectedErrorMessage = false;
-                });
-            },
-            onCancel: () => {
-                //console.log('CANCEL');
-            },
-            android: {
-                titleSize: 25,
-                cancelButtonTextColor: "#252323",
-                confirmButtonTextColor: "#70798C",
-            },
-            ios: {
-                cancelButtonBgColor: "#252323",
-                confirmButtonBgColor: "#70798C",
-                cancelButtonTextColor: "#ffffff",
-                confirmButtonTextColor: "#ffffff",
-                showType: AShowType.TypeBounceIn
-            }
-        };
 
-        this._MSelect.show(options);
-    }
 }
