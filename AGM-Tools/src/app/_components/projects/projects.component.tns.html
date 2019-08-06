@@ -1,18 +1,30 @@
 <navbar headline="Projekte"></navbar>
-<StackLayout>
-    <StackLayout orientation="horizontal" height="50">
-        <Button text="Neues Projekt"></Button>
-    </StackLayout>
 
-    <ListView height="3000" [items]="projects" (itemTap)="onItemTap($event)" class="list-group">
-        <ng-template let-project="item" let-i="index" let-odd="odd" let-even="even">
+<RadListView #projectsListView [items]="projects" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
+    <ng-template let-project="item">
+        <StackLayout>
             <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item">
-                <Label row="0" col="1" [text]="project.name"></Label>
-
-                <StackLayout row="0" col="2">
+                <Label class="list-group-heading" row="0" col="1" [text]="project.name"></Label>
+                <Label row="1" col="1" class="body" textWrap="true" [text]="project.description"></Label>
+                <StackLayout row="0" col="2" rowspan="2">
                     <Label class="body" *ngFor="let member of project.members" [text]="member"></Label>
                 </StackLayout>
             </GridLayout>
-        </ng-template>
-    </ListView>
-</StackLayout>
+
+            <StackLayout height="1" class="list-group-seperator">
+            </StackLayout>
+        </StackLayout>
+    </ng-template>
+    <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
+        <StackLayout id="add-view" col="0" class="addSwipeContainer" (tap)="onLeftSwipeClick($event)">
+            <Label text="&#xf234;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+        </StackLayout>
+        <StackLayout id="delete-view" col="2" class="deleteSwipeContainer" (tap)="onRightSwipeClick($event)">
+            <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+        </StackLayout>
+    </GridLayout>
+</RadListView>
+
+<AbsoluteLayout class="fab-button-container">
+    <Button (tap)="openNewModal()" text="+" class="fab-button"></Button>
+</AbsoluteLayout>

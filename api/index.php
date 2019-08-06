@@ -213,6 +213,7 @@ if ($data) {
             case "authenticate":
                 authenticate($data);
                 break;
+
             case "dashboardGetSpaceChartData":
                 dashboardGetSpaceChartData();
                 break;
@@ -231,6 +232,7 @@ if ($data) {
             case "dashboardMakeNotificationSeen":
                 dashboardMakeNotificationSeen($args);
                 break;    
+
             case "usersGetUsers":
                 usersGetUsers();
                 break;
@@ -243,18 +245,27 @@ if ($data) {
             case "usersEditCurrentUser":
                 usersEditCurrentUser($args);
                 break;
+
             case "calendarGetDates":
                 calendarGetDates();
                 break;    
             case "calendarNewEvent":
                 calendarNewEvent($args);
                 break;
+
             case "projectsGetProjects":
                 projectsGetProjects();
                 break;
             case "projectsNewProject":
                 projectsNewProject($args);
                 break;
+            case "projectsDeleteProject":
+                projectsDeleteProject($args);
+                break;
+            case "projectsAddMembers":
+                projectsAddMembers($args);
+                break;
+
             case "notificationsGetNotifications":
                 notificationsGetNotifications();
                 break;
@@ -264,6 +275,7 @@ if ($data) {
             case "notificationsDeleteNotification":
                 notificationsDeleteNotification($args);
                 break;
+
             case "chatGetContacts":
                 chatGetContacts();
                 break;
@@ -273,6 +285,7 @@ if ($data) {
             case "chatSendMessage":
                 chatSendMessage($args);
                 break; 
+
             case "filesGetFolder":
                 filesGetFolder($args);
                 break;
@@ -294,12 +307,14 @@ if ($data) {
             case "filesDelete":
                 filesDelete($args);
                 break;
+
             case "clientsoftwareGetMobile":
                 clientsoftwareGetMobile();
                 break;  
             case "clientsoftwareGetDesktop":
                 clientsoftwareGetDesktop();
                 break; 
+
             case "bugsGetBugs":
                 bugsGetBugs();
                 break;
@@ -309,12 +324,14 @@ if ($data) {
             case "bugsDeleteBug":
                 bugsDeleteBug($args);
                 break;
+
             case "templatesGetTemplates":
                 templatesGetTemplates();
                 break;
             case "templatesNewTemplate":
                 templatesNewTemplate($args);
-                break;      
+                break;  
+
             default: 
                 break;
         }
@@ -502,8 +519,7 @@ function dashboardMakeNotificationSeen($data) {
 			$result = $db->query("UPDATE `notifications` SET `seen` = '$seen' WHERE `notifications`.`id` = $id");
 			
 			if($result) {
-				
-				die(json_encode(array("status"=>true)));
+				dieSuccessfully();
 			} else {
 				dieWithMessage("Fehler: ".$db->error);
 				
@@ -714,6 +730,91 @@ function projectsGetProjects() {
     }
     
     die(json_encode($res));
+}
+
+function projectsNewProject($data) {
+    $db = connect();
+    if (!isAllowedTo("CREATE_PROJECT")) {
+		dieWithMessage("Du hast leider keine Berechtigung, ein Projekt zu erstellen.");
+		die();
+	}
+	if (isset($data["name"]) &&
+		isset($data["description"]) &&
+		isset($data["members"]) &&
+		!empty(trim($data["name"])) &&
+		!empty(trim($data["description"])) &&
+		!empty($data["members"]) ) {
+			
+			$members = implode("-",  $data["members"]);
+			$name = $db->real_escape_string($data["name"]);
+			
+			$description = $db->real_escape_string($data["description"]);
+			
+			$result = $db->query("INSERT INTO projects (name, description, members, type) VALUES ('$name', '$description', '$members', null)");
+			$pid = $db->insert_id;
+            if ($db->error) {
+                dieWithMessage("Fehler: ".$db->error);
+            }
+			$result2 = $db->query("INSERT INTO `folders` (`id`, `project`, `folder`, `name`, `tags`) VALUES (NULL, '$pid', '-1', 'Planbilder', '')");
+			if ($db->error) {
+                dieWithMessage("Fehler: ".$db->error);
+            }
+			$result3 = $db->query("INSERT INTO `receivers` (`id`, `name`, `type`, `members`) VALUES (NULL, '$name', 'group', '$members')");
+			if ($db->error) {
+                dieWithMessage("Fehler: ".$db->error);
+            }
+			$fc = new FileController($db);
+			$fc->generateProjectDirs($pid);
+			//echo error_get_last();
+		
+			if($result and $result2 and $result3) {
+				dieSuccessfully();
+			} else {
+				dieWithMessage("Fehler".$db->error);
+			}
+			die();
+        } else {
+            dieWithMessage("Nicht alle Daten angegeben!");
+        }
+	
+}
+
+function projectsDeleteProject($data) {
+    $db = connect();
+    if (!isAllowedTo("REMOVE_PROJECT")) {
+			alert("danger", "Du hast leider keine Berechtigung, ein Projekt zu löschen.");
+			die();
+	}
+	$id = $db->real_escape_string($data["id"]);
+	$result = $db->query("DELETE FROM `projects` WHERE `projects`.`id` = $id");
+	if($result) {
+		dieSuccessfully();
+	} else {
+		dieWithMessage("Fehler: ".$db->error);
+	}
+}
+
+function projectsAddMembers($data) {
+    $db = connect();
+    if (!isAllowedTo("ADD_USER_TO_PROJECT")) {
+			diwWithMessage("Du hast leider keine Berechtigung, einen Benutzer zu einem Projekt hinzuzufügen.");
+		}
+		$pid = $data["project"];
+		
+		$members = implode("-", $data["members"]);
+		$res = $db->query("UPDATE projects SET members = CONCAT(members, '-$members') WHERE id=$pid");
+		$pname = $db->query("SELECT `name` FROM projects WHERE id=$pid")->fetch_all(MYSQLI_ASSOC)[0]["name"];
+		if ($pname) {
+			$res2 = $db->query("UPDATE receivers SET members = CONCAT(members, '-$members') WHERE `name`='$pname'");
+		} else {
+			$res2 = false;
+		}
+		
+		if (!$res || !$res2) {
+			dieWithMessage($db->error);
+		} else {
+			dieSuccessfully();
+		}
 }
 
 function calendarGetDates() {
@@ -1332,17 +1433,17 @@ function filesNewFolder($data) {
 		dieWithMessage("Fehler: der Ordner konnte nicht erstellt werden!");
 	}
 	
-	die(json_encode(array("status"=>true)));
+	dieSuccessfully();
 }
 
 function filesRename($data) {
     $fc = new FileController(connect());
     if ($data["type"] == "file") {
 		$fc->renameFile($data["fid"], $data["name"]);
-		die(json_encode(array("status"=>true)));
+		dieSuccessfully();
 	} else {
 		$fc->renameFolder($data["fid"], $data["name"]);
-		die(json_encode(array("status"=>true)));
+		dieSuccessfully();
 	}
 }
 
@@ -1361,34 +1462,7 @@ function filesDelete($data) {
 	}
 }
 
-function projectsNewProject($data) {
-    $db = connect();
-    $ret = Git::initRepo($data["name"]);
 
-    $members_array = $data["members"];
-    $members = implode("-", $members_array);
-    
-    $name = $db->real_escape_string($data["name"]);
-    
-    $description = $db->real_escape_string($data["description"]);
-    
-    
-
-    $result = $db->query("INSERT INTO projects (name, description, members, type) VALUES ('$name', '$description', '$members', null)");
-    $pid = $db->insert_id;
-    echo $db->error;
-    
-    $result2 = $db->query("INSERT INTO `receivers` (`id`, `name`, `type`, `members`) VALUES (NULL, '$name', 'group', '$members')");
-    echo $db->error;
-    
-    if($result and $result2  and $ret) {
-        die(json_encode(array("status" => true, "commitMessage" => $ret)));
-        
-    } else {
-        dieWithMessage("Fehler".$db->error);
-    }
-    die();
-}
 
 function clientsoftwareGetMobile() {
     $ret = [];
@@ -1478,7 +1552,7 @@ function bugsDeleteBug($data) {
     $id = $db->real_escape_string(trim($data["id"]));
 	$result = $db->query("DELETE FROM `bugs` WHERE `id` = $id");
 	if($result) {
-		die(json_encode(array("status"=>true)));
+        dieSuccessfully();
 	} else {
 		dieWithMessage("Unbekannter Fehler");
 		
@@ -1501,7 +1575,7 @@ function templatesGetTemplates() {
     die(json_encode($templates));
 }
 function templatesNewTemplate($data) {
-if (isset($data["type"]) &&
+    if (isset($data["type"]) &&
 	isset($data["description"]) &&
 	isset($data["name"]) &&
 	isset($_FILES["file"]) &&
@@ -1514,7 +1588,7 @@ if (isset($data["type"]) &&
 		// connect and login to FTP server
 		$fc = new FileController($db);
 		$fc->createTemplate($_FILES['file'], $_POST["name"], $_POST["description"], $_POST["type"]);
-		die(json_encode(array("status"=>true)));
+		dieSuccessfully();
 	} else {
 		dieWithMessage("Fehler: Nicht alle Daten angegeben!");
 	}
@@ -1576,5 +1650,9 @@ function getCurrentUserName() {
     $db = connect();
     
     return @$db->query("SELECT username FROM users WHERE id=".@$db->real_escape_string(getCurrentUserId()))->fetch_all(MYSQLI_ASSOC)[0]["username"] || "Unbekannt";
+}
+
+function dieSuccessfully() {
+    die(json_encode(array("status"=>true)));
 }
 ?>

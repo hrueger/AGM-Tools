@@ -83,8 +83,44 @@ StackLayout.content {
     padding: 16;
 }
 
+.addSwipeContainer {
+    background-color: #e7cd3c;
+    padding: 16;
+}
+
+.tagsSwipeContainer {
+    background-color: #f1c40f;
+    padding: 16;
+}
+
+.downloadSwipeContainer {
+    background-color: #3498db;
+    padding: 16;
+}
+
+.shareSwipeContainer {
+    background-color: #2ecc71;
+    padding: 16;
+}
+
+.renameSwipeContainer {
+    background-color: #e7cd3c;
+    padding: 16;
+}
+
+.moveSwipeContainer {
+    background-color: #3498db;
+    padding: 16;
+}
+
+.copySwipeContainer {
+    background-color: #2ecc71;
+    padding: 16;
+}
+
 .swipeLabel {
-    size: 50;
+    size: 60;
+    line-height: 40;
     color: #ffffff;
 }
 
@@ -99,4 +135,11 @@ StackLayout.content {
 
 .list-group-seperator {
     background-color: #cfcfcf;
+}
+
+.badge {
+    padding: 3;
+    border-radius: 3;
+    margin: 2;
+    text-align: center;
 }

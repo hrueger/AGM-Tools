@@ -10,8 +10,8 @@ export class CalendarEvent {
     title: string;
     description: string;
     location: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     isAllDay: boolean;
     important: boolean;
 
@@ -36,6 +36,8 @@ export class NewCalendarEventModalComponent {
     endDateInvalidMessage = false;
     startDateInvalidMessage = false;
     endDateBeforeStartDateInvalidMessage = false;
+    startDateToSend = "";
+    endDateToSend = "";
     @ViewChild('dataform', { static: false }) dataform: RadDataFormComponent;
     dataFormConfig = {
         "isReadOnly": false,
@@ -97,10 +99,13 @@ export class NewCalendarEventModalComponent {
             title: (what == "start" ? 'Startdatum auswählen' : "Enddatum auswählen"),
         }).then((result) => {
             var res = result.day + '.' + result.month + '.' + result.year;
+            var dateToSend = result.year + '-' + result.month + '-' + result.day;
             if (what == "start") {
                 this.startDate = res;
+                this.startDateToSend = dateToSend;
             } else {
                 this.endDate = res;
+                this.endDateToSend = dateToSend;
             }
             this.startDateInvalidMessage = false;
             this.endDateBeforeStartDateInvalidMessage = false;
@@ -111,8 +116,10 @@ export class NewCalendarEventModalComponent {
                 var res = result.hour + ':' + result.minute;
                 if (what == "start") {
                     this.startDate += " " + res;
+                    this.startDateToSend += " " + res;
                 } else {
                     this.endDate += " " + res;
+                    this.endDateToSend += " " + res;
                 }
                 this.endDateInvalidMessage = false;
                 this.endDateBeforeStartDateInvalidMessage = false;
@@ -132,12 +139,13 @@ export class NewCalendarEventModalComponent {
                     if (this.startDate && this.startDate != "") {
                         if (this.endDate && this.endDate != "") {
 
-                            this.event.startDate = new Date(this.startDate);
-                            this.event.endDate = new Date(this.endDate);
 
-                            if (this.event.startDate >= this.event.endDate) {
+
+                            if (new Date(this.startDate) >= new Date(this.endDate)) {
                                 this.endDateBeforeStartDateInvalidMessage = true;
                             } else {
+                                this.event.startDate = this.startDateToSend;
+                                this.event.endDate = this.endDateToSend;
                                 this.params.closeCallback(this.event);
                             }
 

@@ -9,7 +9,7 @@ import { AlertService } from "../../_services/alert.service";
 import { L10n, EmitType } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
 import { NavbarService } from "../../_services/navbar.service";
-import { ContextMenuComponent } from "ngx-contextmenu";
+
 
 //import { MenuItemModel, MenuEventArgs } from "@syncfusion/ej2-navigations";
 
@@ -30,7 +30,6 @@ export class FilesComponent implements OnInit {
         private NavbarService: NavbarService,
         private cdr: ChangeDetectorRef
     ) { }
-
     newFolderModalInvalidMessage: boolean = false;
     renameItemFormInvalidMessage: boolean = false;
     selectProject: boolean = true;
@@ -133,7 +132,7 @@ export class FilesComponent implements OnInit {
         }
     }
     getIcon(item: any) {
-        let basepath = "/assets/icons/";
+        var basepath = "assets/icons/";
         let iconPath = basepath + "extralarge/";
         if (item.type == "folder") {
             return basepath + "folder.png";

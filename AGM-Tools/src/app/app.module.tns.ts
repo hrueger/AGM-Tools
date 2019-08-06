@@ -60,6 +60,7 @@ import { NewNotificationModalComponent } from "./_components/_modals/new-notific
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
 import { NewCalendarEventModalComponent } from "./_components/_modals/new-calendar-event.modal.tns";
+import { NewProjectModalComponent } from "./_components/_modals/new-project.modal.tns";
 
 @NgModule({
     declarations: [
@@ -88,6 +89,7 @@ import { NewCalendarEventModalComponent } from "./_components/_modals/new-calend
         EditUserModalComponent,
         NewNotificationModalComponent,
         NewCalendarEventModalComponent,
+        NewProjectModalComponent,
         TruncatePipe
     ],
     imports: [
@@ -122,6 +124,6 @@ import { NewCalendarEventModalComponent } from "./_components/_modals/new-calend
     ],
     bootstrap: [AppComponent],
     schemas: [NO_ERRORS_SCHEMA],
-    entryComponents: [NewUserModalComponent, EditUserModalComponent, NewNotificationModalComponent, NewCalendarEventModalComponent],
+    entryComponents: [NewUserModalComponent, EditUserModalComponent, NewNotificationModalComponent, NewCalendarEventModalComponent, NewProjectModalComponent],
 })
 export class AppModule { }

@@ -72,6 +72,12 @@ export class RemoteService {
         return subject.asObservable();
     }
     getNoCache(action: string, ...args: any): Observable<any> {
+        this.log(
+            "fetching " +
+            action +
+            " with data " +
+            JSON.stringify(args)
+        );
         return this.http
             .post<any>(`${config.apiUrl}`, {
                 action,
