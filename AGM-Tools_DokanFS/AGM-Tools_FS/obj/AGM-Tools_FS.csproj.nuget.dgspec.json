@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\AGM-Tools_DokanFS\\AGM-Tools_FS\\AGM-Tools_FS.csproj": {}
+    "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\AGM-Tools_FS\\AGM-Tools_FS.csproj": {}
   },
   "projects": {
-    "E:\\AGM-Tools_DokanFS\\AGM-Tools_FS\\AGM-Tools_FS.csproj": {
+    "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\AGM-Tools_FS\\AGM-Tools_FS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\AGM-Tools_DokanFS\\AGM-Tools_FS\\AGM-Tools_FS.csproj",
+        "projectUniqueName": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\AGM-Tools_FS\\AGM-Tools_FS.csproj",
         "projectName": "AGM-Tools_FS",
-        "projectPath": "E:\\AGM-Tools_DokanFS\\AGM-Tools_FS\\AGM-Tools_FS.csproj",
+        "projectPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\AGM-Tools_FS\\AGM-Tools_FS.csproj",
         "packagesPath": "C:\\Users\\Hannes\\.nuget\\packages\\",
-        "outputPath": "E:\\AGM-Tools_DokanFS\\AGM-Tools_FS\\obj\\",
+        "outputPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\AGM-Tools_FS\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
@@ -30,15 +30,15 @@
         "frameworks": {
           "net40": {
             "projectReferences": {
-              "E:\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
-                "projectPath": "E:\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj"
+              "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
+                "projectPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj"
               }
             }
           },
           "net46": {
             "projectReferences": {
-              "E:\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
-                "projectPath": "E:\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj"
+              "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
+                "projectPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj"
               }
             }
           }
@@ -55,6 +55,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.2, )"
+            },
+            "System.ValueTuple": {
+              "target": "Package",
+              "version": "[4.5.0, )"
             }
           }
         },
@@ -63,6 +67,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.2, )"
+            },
+            "System.ValueTuple": {
+              "target": "Package",
+              "version": "[4.5.0, )"
             }
           }
         }
@@ -73,14 +81,14 @@
         }
       }
     },
-    "E:\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
+    "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
       "version": "1.1.2.1",
       "restore": {
-        "projectUniqueName": "E:\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj",
+        "projectUniqueName": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj",
         "projectName": "DokanNet",
-        "projectPath": "E:\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj",
+        "projectPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj",
         "packagesPath": "C:\\Users\\Hannes\\.nuget\\packages\\",
-        "outputPath": "E:\\AGM-Tools_DokanFS\\DokanNet\\obj\\",
+        "outputPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [

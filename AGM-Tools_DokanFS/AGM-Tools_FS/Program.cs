@@ -18,7 +18,9 @@ namespace AGMToolsFS
         private readonly string userToken = "Bearer 5cdfb84fa7227";
         private readonly WebClient client = new WebClient();
 
-        private Dictionary<string, int> projects = new Dictionary<string, int>();
+        private Dictionary<string, int> projectsCache = new Dictionary<string, int>();
+        private Dictionary<string, int> elementCache = new Dictionary<string, int>();
+        private Dictionary<string, (dynamic Items, DateTime timeStamp)> apiCache  = new Dictionary<string, (dynamic Items, DateTime timeStamp)>();
 
         public dynamic GetWebAPI(string action, string args = "")
         {
@@ -53,7 +55,8 @@ namespace AGMToolsFS
 
             foreach (dynamic project in projects )
             {
-                this.projects.Add((string)project.name, (int)project.id);
+                this.projectsCache.Add((string)project.name, (int)project.id);
+                this.elementCache.Add($"\\{project.name}", -1);
             }
             
         }
@@ -104,11 +107,12 @@ namespace AGMToolsFS
             out IList<FileInformation> files,
             DokanFileInfo info)
         {
-            files = new List<FileInformation>();
+            //var fileInfo = new FileInfo(filename);
+             files = new List<FileInformation>();
             
             if (filename == "\\") // Hauptverzeichnis
             {
-                foreach (var name in projects.Keys)
+                foreach (var name in this.projectsCache.Keys)
                 {
                     var finfo = new FileInformation
                     {
@@ -125,11 +129,27 @@ namespace AGMToolsFS
             else
             {
                 string[] path = filename.Split(new Char[] { '\\'});
-                var pid = projects[path[1]];
-                var fid = "-1";
+                var pid = this.projectsCache[path[1]];
+                var fid = -1;
                 Console.WriteLine(filename);
                 
-                var items = this.GetWebAPI("filesGetFolder", "\"pid\": \"" + pid + "\", \"fid\": \""+fid+"\"");
+                if (this.elementCache.ContainsKey(filename))
+                {
+                    fid = this.elementCache[filename];
+                }
+
+                dynamic items;
+                var apikey = $"\"pid\": \"{pid}\", \"fid\": \"{fid}\"";
+                if (this.apiCache.TryGetValue(apikey, out var x) && DateTime.UtcNow.Subtract(x.timeStamp).TotalSeconds < 1000)
+                {
+                    items = apiCache[apikey].Items;
+                }
+                else
+                {
+                    items = this.GetWebAPI("filesGetFolder", apikey);
+                    this.apiCache.Add(apikey, (items, DateTime.UtcNow));
+                }
+                              
 
                 /*if (String.IsNullOrEmpty(path[2]))
                 { // Haputprojektverzeichnis
@@ -143,14 +163,9 @@ namespace AGMToolsFS
                 {
                     long size = 0;
                     var rawsize = (string)item.rawsize;
-                    if (String.IsNullOrEmpty(rawsize))
-                    {
-                        size = 0;
-                    } else
-                    {
-                        size = Convert.ToInt64(rawsize);
-                        
-                    }
+
+                    size = string.IsNullOrEmpty(rawsize) ? 0 : Convert.ToInt64(rawsize);
+                    
                     if ((string)item.type == "file")
                     {
                         files.Add(new FileInformation
@@ -172,6 +187,12 @@ namespace AGMToolsFS
                             LastWriteTime = null,//Convert.ToDateTime((string)item.modificationDate),
                             CreationTime = null,//Convert.ToDateTime((string)item.creationDate)
                         });
+                    }
+
+                    var key = $"{filename}\\{item.name}";
+                    if (!this.elementCache.ContainsKey(key))
+                    {
+                        this.elementCache.Add(key, (int)item.id);
                     }
                     
                 }
