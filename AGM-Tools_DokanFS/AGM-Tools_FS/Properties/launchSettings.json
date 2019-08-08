@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "AGM-Tools_FS (net4.6)": {
+      "commandName": "Project"
+    },
+    "AGM-Tools_FS (net4.0)": {
+      "commandName": "Executable",
+      /*"executablePath": "$(ProjectDir)\\bin\\$(Configuration)\\net4.0\\win\\RegistryFS.exe"*/
+    }
+  }
+}

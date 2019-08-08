@@ -1,4 +1,9 @@
 <?php
+
+//$data = file_get_contents('php://input');
+//var_dump($data);
+//die();
+
 use YoHang88\LetterAvatar\LetterAvatar;
 require_once("db.inc.php");
 require_once("library.php");
@@ -193,6 +198,7 @@ if (isset($_GET["get"]) && isset($_GET["type"]) && (isset($_GET["token"])||isset
 
 $data = file_get_contents('php://input');
 @$data = json_decode($data);
+
 //log_to_file(print_r($data, true));
 if ($data) {
     if (isset($data->action)) {
@@ -1315,6 +1321,7 @@ function filesGetFolder($data) {
     foreach ($tres as $tag) {
         $tags[$tag["id"]] = [];
         $tags[$tag["id"]]["name"] = $tag["name"];
+        $tags[$tag["id"]]["id"] = $tag["id"];
         $tags[$tag["id"]]["backgroundColor"] = $tag["color"];
         $tags[$tag["id"]]["color"] = $tag["text-color"];
     }
@@ -1327,13 +1334,15 @@ function filesGetFolder($data) {
         $file["tags"] = array();
         foreach ($ftags as $ftag) {
             $file["tags"][] = array("name" => $tags[$ftag]["name"],
-			"color" =>$tags[$ftag]["color"],
+			"color" =>$tags[$ftag]["color"],"id" =>$tags[$ftag]["id"],
 			"backgroundColor" => $tags[$ftag]["backgroundColor"],);
         }
         $file["size"] = @filesize($fc->getLocalFilePath($file["id"]));
         if ($file["size"]) {
+            $file["rawsize"] = $file["size"];
             $file["size"] = human_filesize($file["size"]);
         } else {
+            $file["rawsize"] = null;
             $file["size"] = "-";
         }
         $files[] = $file;
@@ -1345,14 +1354,16 @@ function filesGetFolder($data) {
         $folder["tags"] = array();
         foreach ($ftags as $ftag) {
             $folder["tags"][] = array("name" => $tags[$ftag]["name"],
-			"color" =>$tags[$ftag]["color"],
+			"color" =>$tags[$ftag]["color"],"id" =>$tags[$ftag]["id"],
 			"backgroundColor" => $tags[$ftag]["backgroundColor"],);
         }
         $folder["size"] = getDirectorySize($fc->getCompleteFolderPath($folder["id"]));
         
         if ($folder["size"]) {
+            $folder["rawsize"] = $folder["size"];
             $folder["size"] = human_filesize($folder["size"]);
         } else {
+            $folder["rawsize"] = null;
             $folder["size"] = "-";
         }
         $folders[] = $folder;

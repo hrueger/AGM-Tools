@@ -14,8 +14,13 @@ import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { View, EventData } from "tns-core-modules/ui/core/view";
 import { layout } from "tns-core-modules/utils/utils";
 import { ListViewEventData } from "nativescript-ui-listview";
+import { Downloader, ProgressEventData, DownloadEventData } from 'nativescript-downloader';
+
 
 //import { MenuItemModel, MenuEventArgs } from "@syncfusion/ej2-navigations";
+
+
+
 
 @Component({
     selector: "app-files",
@@ -218,8 +223,6 @@ export class FilesComponent implements OnInit {
     }
     editTags($event) {
         var tags = $event.object.bindingContext.tags;
-        console.log(tags);
-        console.log(this.tags);
         const options: MSOption = {
             title: "Tags auswählen",
             selectedItems: tags,
@@ -231,7 +234,8 @@ export class FilesComponent implements OnInit {
                     console.log("SELECTED ITEMS => ", selectedItems);
                 })
             },
-
+            onCancel: () => { },
+            onItemSelected: () => { },
             android: {
                 titleSize: 25,
                 cancelButtonTextColor: "#252323",
@@ -247,9 +251,8 @@ export class FilesComponent implements OnInit {
         };
 
         this._MSelect.show(options);
-        console.log(tags);
         return;
-        this.remoteService
+        /*this.remoteService
             .getNoCache("filesToggleTag", {
                 type: item.type,
                 fid: item.id,
@@ -260,19 +263,56 @@ export class FilesComponent implements OnInit {
                     //this.goTo(this.lastItem);
                     this.reloadHere();
                 }
-            });
+            });*/
     }
     download(item) {
-        window.open(
-            config.apiUrl +
+
+        const url = config.apiUrl +
             "?get=" +
             item.id +
             "&type=" +
             item.type +
             "&token=" +
             this.authenticationService.currentUserValue.token +
-            "&download"
-        );
+            "&download";
+        /*let progressNotification = ProgressNotification.show({
+            id: 6, //required
+            title: "Herunterladen",
+            message: item.name,
+            ongoing: true,
+            indeterminate: false,
+            progressValue: 0
+        });
+        const downloader = new Downloader();
+        const imageDownloaderId = downloader.createDownload({ url: url })
+        downloader
+            .start(imageDownloaderId, (progressData: ProgressEventData) => {
+                console.log(`Progress : ${progressData.value}%`);
+                console.log(`Current Size : ${progressData.currentSize}%`);
+                console.log(`Total Size : ${progressData.totalSize}%`);
+                console.log(`Download Speed in bytes : ${progressData.speed}%`);
+            })
+            .then((completed: DownloadEventData) => {
+                console.log(`Image : ${completed.path}`);
+            })
+            .catch(error => {
+                console.log(error.message);
+            });
+
+
+
+        let updateProgressNotification = ProgressNotification.update(progressNotification, {
+            progressValue: 50
+        });
+
+        let finishProgressNotification = ProgressNotification.update(progressNotification, {
+            progressValue: 100,
+            message: "Process Completed",
+            hideProgressBar: true, //set true to hide progressbar otherwise it will be visible
+        });
+*/
+
+
     }
     share(item, shareModal) {
         this.shareLink = "";
