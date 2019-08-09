@@ -29,6 +29,9 @@
     </ng-template>
 </ListView>
 
+<GridLayout [columns]="progressColumns" class="progressbar" *ngIf="showProgressbar">
+    <StackLayout col="0" class="progressbar-value"></StackLayout>
+</GridLayout>
 
 <RadListView #itemsListView [items]="items" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true" *ngIf="!selectProject && !viewFile" id="items" class="list-group">
     <ng-template let-item="item" let-index="index">
@@ -52,7 +55,7 @@
             <GridLayout col="0" class="tagsSwipeContainer" (tap)="editTags($event)" id="swipeTags">
                 <Label text="&#xf02c;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
-            <GridLayout col="1" class="downloadSwipeContainer" (tap)="download($event)" id="swipeDownload">
+            <GridLayout col="1" class="downloadSwipeContainer" (tap)="download($event.object.bindingContext)" id="swipeDownload">
                 <Label text="&#xf381;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
             <GridLayout col="2" class="shareSwipeContainer" (tap)="share($event)" id="swipeShare">

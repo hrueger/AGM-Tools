@@ -9,16 +9,14 @@ import { AlertService } from "../../_services/alert.service";
 import { MultiSelect, AShowType } from 'nativescript-multi-select';
 import { MSOption } from 'nativescript-multi-select';
 import { NavbarService } from "../../_services/navbar.service";
-
+import * as fs from 'tns-core-modules/file-system';
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { View, EventData } from "tns-core-modules/ui/core/view";
 import { layout } from "tns-core-modules/utils/utils";
 import { ListViewEventData } from "nativescript-ui-listview";
-import { Downloader, ProgressEventData, DownloadEventData } from 'nativescript-downloader';
-
-
-//import { MenuItemModel, MenuEventArgs } from "@syncfusion/ej2-navigations";
-
+import { RadSideDrawer } from "nativescript-ui-sidedrawer";
+import { DownloadProgress } from "nativescript-download-progress"
+import * as app from "tns-core-modules/application";
 
 
 
@@ -30,6 +28,8 @@ import { Downloader, ProgressEventData, DownloadEventData } from 'nativescript-d
 export class FilesComponent implements OnInit {
     renameItemName: string;
     renameItemForm: FormGroup;
+    showProgressbar: boolean;
+    progressbarColumns: string;
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
@@ -80,7 +80,6 @@ export class FilesComponent implements OnInit {
         this.remoteService.get("projectsGetProjects").subscribe(data => {
             this.projects = data;
         });
-
     }
     goTo(item: any, reload = false) {
         if (!reload) {
@@ -267,7 +266,7 @@ export class FilesComponent implements OnInit {
     }
     download(item) {
 
-        const url = config.apiUrl +
+        var url = config.apiUrl +
             "?get=" +
             item.id +
             "&type=" +
@@ -275,45 +274,59 @@ export class FilesComponent implements OnInit {
             "&token=" +
             this.authenticationService.currentUserValue.token +
             "&download";
-        /*let progressNotification = ProgressNotification.show({
-            id: 6, //required
-            title: "Herunterladen",
-            message: item.name,
-            ongoing: true,
-            indeterminate: false,
-            progressValue: 0
+
+        console.log(url);
+        //this.toggleProgressbar(true);
+
+
+
+        const destPath = fs.knownFolders.documents().path + "/";
+        const download = new DownloadProgress();
+        download.addProgressCallback(progress => {
+            console.log('Progress:', progress);
+        })
+        download.downloadFile(url).then(f => {
+            console.log("Success", f);
+        }).catch(e => {
+            console.log("Error", e);
+        })
+
+        /*const downloader = new Downloader();
+        const imageDownloaderId = downloader.createDownload({
+            url: url,
+            fileName: item.name,
+            path: fs.knownFolders.documents().path + "/"
         });
-        const downloader = new Downloader();
-        const imageDownloaderId = downloader.createDownload({ url: url })
+        console.log("Starting...");
         downloader
             .start(imageDownloaderId, (progressData: ProgressEventData) => {
                 console.log(`Progress : ${progressData.value}%`);
-                console.log(`Current Size : ${progressData.currentSize}%`);
-                console.log(`Total Size : ${progressData.totalSize}%`);
-                console.log(`Download Speed in bytes : ${progressData.speed}%`);
+                console.log(`Current Size : ${progressData.currentSize}`);
+                console.log(`Total Size : ${progressData.totalSize}`);
+                console.log(`Download Speed in bytes : ${progressData.speed}`);
             })
             .then((completed: DownloadEventData) => {
                 console.log(`Image : ${completed.path}`);
             })
             .catch(error => {
                 console.log(error.message);
-            });
+            }).finally(() => {
+                console.log("end");
+            });*/
 
 
+        /*this.alertService.success("Datei erfolgreich heruntergeladen!");
+        console.log("SUCCESS", f);
 
-        let updateProgressNotification = ProgressNotification.update(progressNotification, {
-            progressValue: 50
-        });
+        this.alertService.error(e);
+        console.log("Error", e);
+        */
 
-        let finishProgressNotification = ProgressNotification.update(progressNotification, {
-            progressValue: 100,
-            message: "Process Completed",
-            hideProgressBar: true, //set true to hide progressbar otherwise it will be visible
-        });
-*/
+
 
 
     }
+
     share(item, shareModal) {
         this.shareLink = "";
         this.modalService
@@ -443,5 +456,17 @@ export class FilesComponent implements OnInit {
         let itemView = args.object as View;
         console.log("Button clicked: " + itemView.id + " for item with index: " + this.itemsListView.listView.items.indexOf(itemView.bindingContext));
         this.itemsListView.listView.notifySwipeToExecuteFinished();
+    }
+
+    onDrawerButtonTap(): void {
+        const sideDrawer = <RadSideDrawer>app.getRootView();
+        sideDrawer.showDrawer();
+    }
+
+    setProgressbarWidth(percent) {
+        this.progressbarColumns = percent + "*," + (100 - percent) + "*";
+    }
+    toggleProgressbar(show: boolean) {
+        this.showProgressbar = show;
     }
 }

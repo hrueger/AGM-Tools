@@ -19,3 +19,14 @@
     max-height: 100% !important;
     max-width: 100% !important;
 }
+
+.progressbar {
+    height: 30;
+    margin: 10;
+    border-radius: 10;
+    background: #ECEFF1;
+}
+
+.progressbar-value {
+    background: #51BC6B;
+}

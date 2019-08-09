@@ -50,6 +50,7 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
 import { DashboardLayoutModule } from '@syncfusion/ej2-angular-layouts';
 import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
+
 registerLocaleData(localeDe);
 
 @NgModule({

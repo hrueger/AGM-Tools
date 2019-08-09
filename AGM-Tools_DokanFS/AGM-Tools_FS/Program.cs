@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Security.AccessControl;
+using System.Text;
 using DokanNet;
 using Microsoft.Win32;
 using Newtonsoft.Json;
@@ -16,10 +17,11 @@ namespace AGMToolsFS
 
         private readonly string apiUrl = "https://agmtools.allgaeu-gymnasium.de/AGM-Tools_NEU_API/";
         private readonly string userToken = "Bearer 5cdfb84fa7227";
+        private readonly int maxCacheSeconds = 1000;
         private readonly WebClient client = new WebClient();
 
         private Dictionary<string, int> projectsCache = new Dictionary<string, int>();
-        private Dictionary<string, int> elementCache = new Dictionary<string, int>();
+        private Dictionary<string, (int id, Boolean isFile)> elementCache = new Dictionary<string, (int, Boolean)>();
         private Dictionary<string, (dynamic Items, DateTime timeStamp)> apiCache  = new Dictionary<string, (dynamic Items, DateTime timeStamp)>();
 
         public dynamic GetWebAPI(string action, string args = "")
@@ -56,7 +58,7 @@ namespace AGMToolsFS
             foreach (dynamic project in projects )
             {
                 this.projectsCache.Add((string)project.name, (int)project.id);
-                this.elementCache.Add($"\\{project.name}", -1);
+                this.elementCache.Add($"\\{project.name}", (-1, false));
             }
             
         }
@@ -123,6 +125,7 @@ namespace AGMToolsFS
                         CreationTime = null
                     };
                     files.Add(finfo);
+                    
                 }
                 return DokanResult.Success;
             }
@@ -131,16 +134,16 @@ namespace AGMToolsFS
                 string[] path = filename.Split(new Char[] { '\\'});
                 var pid = this.projectsCache[path[1]];
                 var fid = -1;
-                Console.WriteLine(filename);
+                //Console.WriteLine(filename);
                 
                 if (this.elementCache.ContainsKey(filename))
                 {
-                    fid = this.elementCache[filename];
+                    fid = this.elementCache[filename].id;
                 }
 
                 dynamic items;
                 var apikey = $"\"pid\": \"{pid}\", \"fid\": \"{fid}\"";
-                if (this.apiCache.TryGetValue(apikey, out var x) && DateTime.UtcNow.Subtract(x.timeStamp).TotalSeconds < 1000)
+                if (this.apiCache.TryGetValue(apikey, out var x) && DateTime.UtcNow.Subtract(x.timeStamp).TotalSeconds < this.maxCacheSeconds)
                 {
                     items = apiCache[apikey].Items;
                 }
@@ -149,15 +152,9 @@ namespace AGMToolsFS
                     items = this.GetWebAPI("filesGetFolder", apikey);
                     this.apiCache.Add(apikey, (items, DateTime.UtcNow));
                 }
+
                               
 
-                /*if (String.IsNullOrEmpty(path[2]))
-                { // Haputprojektverzeichnis
-                    items = this.GetWebAPI("filesGetFolder", "\"pid\": \"" + pid + "\", \"fid\": \"-1\"");
-                } else
-                { // Projektunterverzeichnis
-                    items = this.GetWebAPI("filesGetFolder", "\"pid\": \"" + pid + "\", \"fid\": \"1842\"");
-                }*/
 
                 foreach (var item in items) 
                 {
@@ -165,10 +162,10 @@ namespace AGMToolsFS
                     var rawsize = (string)item.rawsize;
 
                     size = string.IsNullOrEmpty(rawsize) ? 0 : Convert.ToInt64(rawsize);
-                    
+                    FileInformation finfo;
                     if ((string)item.type == "file")
                     {
-                        files.Add(new FileInformation
+                        finfo = new FileInformation
                         {
                             FileName = (string)item.name,
                             Attributes = FileAttributes.Normal,
@@ -176,53 +173,34 @@ namespace AGMToolsFS
                             LastWriteTime = null,//Convert.ToDateTime((string)item.modificationDate),
                             CreationTime = null,//Convert.ToDateTime((string)item.creationDate),
                             Length = size
-                        });
+                        };
                     } else
                     {
-                        files.Add(new FileInformation
+                        finfo = new FileInformation
                         {
                             FileName = (string)item.name,
                             Attributes = FileAttributes.Directory,
                             LastAccessTime = DateTime.Now,
                             LastWriteTime = null,//Convert.ToDateTime((string)item.modificationDate),
                             CreationTime = null,//Convert.ToDateTime((string)item.creationDate)
-                        });
+                        };
+                        
                     }
+                    files.Add(finfo);
 
                     var key = $"{filename}\\{item.name}";
                     if (!this.elementCache.ContainsKey(key))
                     {
-                        this.elementCache.Add(key, (int)item.id);
+                        this.elementCache.Add(key, ((int)item.id, (string)item.type=="file"?true:false));
                     }
+
                     
+                        
+
                 }
                 
                 return DokanResult.Success;
-                /*foreach (var name in key.GetSubKeyNames())
-                {
-                    var finfo = new FileInformation
-                    {
-                        FileName = name,
-                        Attributes = FileAttributes.Directory,
-                        LastAccessTime = DateTime.Now,
-                        LastWriteTime = null,
-                        CreationTime = null
-                    };
-                    files.Add(finfo);
-                }
-                foreach (var name in key.GetValueNames())
-                {
-                    var finfo = new FileInformation
-                    {
-                        FileName = name,
-                        Attributes = FileAttributes.Normal,
-                        LastAccessTime = DateTime.Now,
-                        LastWriteTime = null,
-                        CreationTime = null
-                    };
-                    files.Add(finfo);
-                }
-                return DokanResult.Success;*/
+                
             }
         }
 
@@ -242,16 +220,21 @@ namespace AGMToolsFS
 
                 return DokanResult.Success;
             }
-
-            
-           return DokanResult.Error;
-
-            fileinfo.Attributes = FileAttributes.Directory;
-            fileinfo.LastAccessTime = DateTime.Now;
-            fileinfo.LastWriteTime = null;
-            fileinfo.CreationTime = null;
-
-            return DokanResult.Success;
+            else
+            {
+                if (this.elementCache.TryGetValue(filename, out (int id, bool isFile) val))
+                {
+                    fileinfo.Attributes = val.isFile ? FileAttributes.Normal : FileAttributes.Directory;
+                    fileinfo.LastAccessTime = DateTime.Now;
+                    fileinfo.LastWriteTime = null;
+                    fileinfo.CreationTime = null;
+                    return DokanResult.Success;
+                }
+                else
+                {
+                    return DokanResult.Error;
+                }
+            }
         }
 
         public NtStatus LockFile(
@@ -280,7 +263,20 @@ namespace AGMToolsFS
             DokanFileInfo info)
         {
             readBytes = 0;
-            return DokanResult.Error;
+            string[] path = filename.Split(new Char[] { '\\' });
+            var pid = this.projectsCache[path[1]];
+            var fid = -1;
+            //Console.WriteLine(filename);
+
+            if (this.elementCache.ContainsKey(filename))
+            {
+                fid = this.elementCache[filename].id;
+            }
+            var s = "Test\nHello World!\nÄüßßsTest;";
+            buffer = Encoding.UTF8.GetBytes(s);
+            readBytes = buffer.Length;
+            return DokanResult.Success;
+
         }
 
         public NtStatus SetEndOfFile(string filename, long length, DokanFileInfo info)
