@@ -1,23 +1,29 @@
 import { RemoteService } from "../../_services/remote.service";
 import { Project } from "../../_models/project.model";
-import { Component, OnInit, ViewChild, ChangeDetectorRef, NgZone } from "@angular/core";
+import { Component, OnInit, ViewChild, NgZone } from "@angular/core";
 import config from "../../_config/config";
 import { AuthenticationService } from "../../_services/authentication.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertService } from "../../_services/alert.service";
 import { MultiSelect, AShowType } from 'nativescript-multi-select';
 import { MSOption } from 'nativescript-multi-select';
 import { NavbarService } from "../../_services/navbar.service";
-import * as fs from 'tns-core-modules/file-system';
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { View, EventData } from "tns-core-modules/ui/core/view";
 import { layout } from "tns-core-modules/utils/utils";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
-import { DownloadProgress } from "nativescript-download-progress"
+import { openUrl } from "tns-core-modules/utils/utils";
 import * as app from "tns-core-modules/application";
-
+import * as clipboard from "nativescript-clipboard";
+import {
+    CFAlertDialog,
+    DialogOptions,
+    CFAlertGravity,
+    CFAlertActionAlignment,
+    CFAlertActionStyle,
+    CFAlertStyle
+} from 'nativescript-cfalert-dialog';
+import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
 
 
 @Component({
@@ -26,18 +32,13 @@ import * as app from "tns-core-modules/application";
     styleUrls: ["./files.component.scss"]
 })
 export class FilesComponent implements OnInit {
-    renameItemName: string;
-    renameItemForm: FormGroup;
     showProgressbar: boolean;
     progressbarColumns: string;
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
-        private modalService: NgbModal,
-        private fb: FormBuilder,
         private alertService: AlertService,
         private NavbarService: NavbarService,
-        private cdr: ChangeDetectorRef,
         private zone: NgZone,
     ) {
         this._MSelect = new MultiSelect();
@@ -63,9 +64,7 @@ export class FilesComponent implements OnInit {
     currentPath: any = [];
     lastFolder: any;
     lastItem: any;
-    items: any[];
-    newFolderName: string;
-    newFolderForm: FormGroup;
+    items: ObservableArray<any>;
     shareLink: string = "";
 
 
@@ -220,49 +219,47 @@ export class FilesComponent implements OnInit {
         }
         return "other";
     }
-    editTags($event) {
-        var tags = $event.object.bindingContext.tags;
-        const options: MSOption = {
-            title: "Tags auswählen",
-            selectedItems: tags,
-            items: this.tags,
-            bindValue: "id",
-            displayLabel: "name",
-            onConfirm: selectedItems => {
-                this.zone.run(() => {
-                    console.log("SELECTED ITEMS => ", selectedItems);
-                })
-            },
-            onCancel: () => { },
-            onItemSelected: () => { },
-            android: {
-                titleSize: 25,
-                cancelButtonTextColor: "#252323",
-                confirmButtonTextColor: "#70798C",
-            },
-            ios: {
-                cancelButtonBgColor: "#252323",
-                confirmButtonBgColor: "#70798C",
-                cancelButtonTextColor: "#ffffff",
-                confirmButtonTextColor: "#ffffff",
-                showType: AShowType.TypeBounceIn
-            }
-        };
 
-        this._MSelect.show(options);
-        return;
-        /*this.remoteService
-            .getNoCache("filesToggleTag", {
-                type: item.type,
-                fid: item.id,
-                tagid: tagid
-            })
-            .subscribe(data => {
-                if (data.status == true) {
-                    //this.goTo(this.lastItem);
-                    this.reloadHere();
+
+    editTags(item) {
+        this.itemsListView.listView.notifySwipeToExecuteFinished();
+        var itemTags = item.tags;
+        var allTags = this.tags.map(tag => tag.id);
+        var allTagNames = this.tags.map(tag => tag.name);
+        var preselected = [];
+        allTags.forEach(tag => {
+            if (itemTags.map(tag => tag.id).includes(tag.toString())) {
+                preselected.push(true);
+            } else {
+                preselected.push(false);
+            }
+        });
+        let cfalertDialog = new CFAlertDialog();
+        const options: DialogOptions = {
+            dialogStyle: CFAlertStyle.ALERT,
+            title: "Tags auswählen",
+            multiChoiceList: {
+                items: allTagNames,
+                selectedItems: preselected,
+                onClick: (dialogInterface, index) => {
+                    this.remoteService
+                        .getNoCache("filesToggleTag", {
+                            type: item.type,
+                            fid: item.id,
+                            tagid: this.tags[index].id
+                        })
+                        .subscribe(data => {
+                            if (data.status == true) {
+                                this.alertService.success("Gespeichert!");
+                                this.reloadHere();
+                            }
+                        });
                 }
-            });*/
+            }
+        }
+        cfalertDialog.show(options);
+        return;
+
     }
     download(item) {
 
@@ -274,14 +271,15 @@ export class FilesComponent implements OnInit {
             "&token=" +
             this.authenticationService.currentUserValue.token +
             "&download";
+        this.itemsListView.listView.notifySwipeToExecuteFinished();
+        openUrl(url);
 
-        console.log(url);
         //this.toggleProgressbar(true);
 
 
 
-        const destPath = fs.knownFolders.documents().path + "/";
-        const download = new DownloadProgress();
+        //const destPath = fs.knownFolders.documents().path + "/";
+        /*const download = new DownloadProgress();
         download.addProgressCallback(progress => {
             console.log('Progress:', progress);
         })
@@ -289,7 +287,7 @@ export class FilesComponent implements OnInit {
             console.log("Success", f);
         }).catch(e => {
             console.log("Error", e);
-        })
+        })*/
 
         /*const downloader = new Downloader();
         const imageDownloaderId = downloader.createDownload({
@@ -327,21 +325,41 @@ export class FilesComponent implements OnInit {
 
     }
 
-    share(item, shareModal) {
-        this.shareLink = "";
-        this.modalService
-            .open(shareModal)
-            .result.then(result => { }, reason => { });
+    share(item) {
         this.remoteService
             .getNoCache("filesCreateShare", { type: item.type, fid: item.id })
             .subscribe(data => {
                 if (data.status == true) {
-                    this.shareLink = config.apiUrl + "share/?l=" + data.link
+                    var shareLink = config.apiUrl + "share/?l=" + data.link
+                    let cfalertDialog = new CFAlertDialog();
+                    let options: DialogOptions = {
+                        // Options go here
+                        dialogStyle: CFAlertStyle.ALERT,
+                        title: "Freigeben",
+                        message: "Ein Link wurde generiert:\n" + shareLink,
+                        textAlignment: CFAlertGravity.START,
+                        cancellable: true,
+                        buttons: [{
+                            text: "Abbrechen",
+                            buttonStyle: CFAlertActionStyle.DEFAULT,
+                            buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
+                            onClick: () => { }
+                        }, {
+                            text: "Kopieren",
+                            buttonStyle: CFAlertActionStyle.POSITIVE,
+                            buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
+                            onClick: () => {
+                                clipboard.setText(shareLink);
+                                this.alertService.success("Link kopiert!");
+                            }
+                        }]
+                    }
+                    cfalertDialog.show(options);
                 }
             });
+        this.itemsListView.listView.notifySwipeToExecuteFinished();
     }
     rename(item, renameModal) {
-        this.renameItemForm.get("renameItemName").setValue(item.name);
         this.modalService
             .open(renameModal)
             .result.then(result => {

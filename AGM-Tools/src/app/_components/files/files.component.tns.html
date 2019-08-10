@@ -52,27 +52,27 @@
     </ng-template>
     <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto">
         <GridLayout columns="*, *, *" col="0" id="left-stack">
-            <GridLayout col="0" class="tagsSwipeContainer" (tap)="editTags($event)" id="swipeTags">
+            <GridLayout col="0" class="tagsSwipeContainer" (tap)="editTags($event.object.bindingContext)" id="swipeTags">
                 <Label text="&#xf02c;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
             <GridLayout col="1" class="downloadSwipeContainer" (tap)="download($event.object.bindingContext)" id="swipeDownload">
                 <Label text="&#xf381;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
-            <GridLayout col="2" class="shareSwipeContainer" (tap)="share($event)" id="swipeShare">
+            <GridLayout col="2" class="shareSwipeContainer" (tap)="share($event.object.bindingContext)" id="swipeShare">
                 <Label text="&#xf14d;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
         </GridLayout>
         <GridLayout columns="*, *, *, *" col="2" id="right-stack">
-            <GridLayout col="0" class="renameSwipeContainer" (tap)="rename($event)" id="swipeRename">
+            <GridLayout col="0" class="renameSwipeContainer" (tap)="rename($event.object.bindingContext)" id="swipeRename">
                 <Label text="&#xf044;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
-            <GridLayout col="1" class="moveSwipeContainer" (tap)="move($event)" id="swipeMove">
+            <GridLayout col="1" class="moveSwipeContainer" (tap)="move($event.object.bindingContext)" id="swipeMove">
                 <Label text="&#xf0b2;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
-            <GridLayout col="2" class="copySwipeContainer" (tap)="copy($event)" id="swipeCopy">
+            <GridLayout col="2" class="copySwipeContainer" (tap)="copy($event.object.bindingContext)" id="swipeCopy">
                 <Label text="&#xf0c5;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
-            <GridLayout col="3" class="deleteSwipeContainer" (tap)="delete($event)" id="swipeDelete">
+            <GridLayout col="3" class="deleteSwipeContainer" (tap)="delete($event.object.bindingContext)" id="swipeDelete">
                 <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
             </GridLayout>
         </GridLayout>

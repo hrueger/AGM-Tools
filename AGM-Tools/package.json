@@ -55,6 +55,7 @@
         "nativescript-angular": "8.0.2",
         "nativescript-cache": "^1.0.0",
         "nativescript-cfalert-dialog": "^1.0.15",
+        "nativescript-clipboard": "^1.1.7",
         "nativescript-download-progress": "^1.2.0",
         "nativescript-feedback": "^1.3.10",
         "nativescript-localstorage": "^2.0.1",
