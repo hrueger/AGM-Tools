@@ -80,6 +80,20 @@ namespace AGMToolsFS
 
         public void CloseFile(string filename, DokanFileInfo info)
         {
+            if (this.elementCache.TryGetValue(filename, out var val))
+            {
+                if (this._fileCache.ContainsKey(val.id))
+                {
+                    this._fileCache.Remove(val.id);
+                } else
+                {
+
+                }
+            } else
+            {
+                
+            }
+            
         }
 
         public NtStatus CreateFile(
@@ -271,6 +285,7 @@ namespace AGMToolsFS
         private Thread _downloadTask;
         private Stream _currentStream;
         private string _lastFilename;
+        private int _totalBytesRead;
 
         public NtStatus ReadFile(
             string filename,
@@ -297,7 +312,7 @@ namespace AGMToolsFS
                     var item = this.elementCache[filename];
                     var type = item.finfo.Attributes == FileAttributes.Normal ? "file" : "folder";
                     var url = $"{this.apiUrl}?get={item.id}&type={type}&token={this.userToken}&download";
-                    
+
 
 
 
@@ -326,33 +341,32 @@ namespace AGMToolsFS
 
                     // Geht aber nicht mit groﬂen Dateien
 
-                    //if (!this._fileCache.ContainsKey(item.id))
-                    //{
-                    //    this._fileCache.Add(item.id, client.DownloadData(url));
-                    //}
-
-                    //var fileContent = this._fileCache[item.id];
-                    //using(var stream = new MemoryStream(fileContent))
-                    //{
-                    //    stream.Position = offset;
-                    //    readBytes = stream.Read(buffer, 0, buffer.Length);
-                    //}
-
-                    //return DokanResult.Success;
-
-                    if (this._currentStream == null || filename != this._lastFilename)
+                    if (!this._fileCache.ContainsKey(item.id))
                     {
-                        this._currentStream?.Dispose();
-
-                        this._currentStream = this.GetStream(url);
-                        this._lastFilename = filename;
+                        this._fileCache.Add(item.id, client.DownloadData(url));
                     }
-                    
-                    this._currentStream.Position = offset;
-                    readBytes = this._currentStream.Read(buffer, 0, buffer.Length);
-                    
+
+                    var fileContent = this._fileCache[item.id];
+                    using (var stream = new MemoryStream(fileContent))
+                    {
+                        stream.Position = offset;
+                        readBytes = stream.Read(buffer, 0, buffer.Length);
+                    }
+
 
                     return DokanResult.Success;
+
+                    //if (this._currentStream == null || filename != this._lastFilename)
+                    //{
+                    //    this._currentStream?.Dispose();
+
+                    //    this._currentStream = this.GetStream(url);
+                    //    this._lastFilename = filename;
+                    //}
+
+
+                    //readBytes = this._currentStream.Read(buffer, 0, buffer.Length);
+                    //return DokanResult.Success;
                 }
             }
             else
@@ -363,9 +377,22 @@ namespace AGMToolsFS
             return DokanResult.Error;
         }
 
-        private PartialHttpStream GetStream(string url)
+        private Stream GetStream(string url)
         {
-            return new PartialHttpStream(url);
+            HttpWebRequest req = HttpWebRequest.CreateHttp(url);
+            HttpWebResponse response;
+            try
+            {
+                response = (HttpWebResponse)req.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                response = (HttpWebResponse)ex.Response;
+                
+                throw ex;
+            }
+            
+            return response.GetResponseStream();
         }
 
         private void StartDownloadAsync(object state)
