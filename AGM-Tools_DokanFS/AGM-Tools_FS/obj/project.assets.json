@@ -1,91 +1,7 @@
 {
   "version": 3,
   "targets": {
-    ".NETFramework,Version=v4.0": {
-      "Newtonsoft.Json/12.0.2": {
-        "type": "package",
-        "compile": {
-          "lib/net40/Newtonsoft.Json.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Newtonsoft.Json.dll": {}
-        }
-      },
-      "StringInterpolationBridgeStrong/0.9.1": {
-        "type": "package",
-        "compile": {
-          "lib/net40/StringInterpolationBridge.dll": {}
-        },
-        "runtime": {
-          "lib/net40/StringInterpolationBridge.dll": {}
-        }
-      },
-      "System.ValueTuple/4.5.0": {
-        "type": "package",
-        "compile": {
-          "ref/portable-net40+sl4+win8+wp8/System.ValueTuple.dll": {}
-        },
-        "runtime": {
-          "lib/portable-net40+sl4+win8+wp8/System.ValueTuple.dll": {}
-        }
-      },
-      "DokanNet/1.1.2.1": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.0",
-        "dependencies": {
-          "StringInterpolationBridgeStrong": "0.9.1"
-        },
-        "compile": {
-          "bin/placeholder/DokanNet.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DokanNet.dll": {}
-        }
-      }
-    },
-    ".NETFramework,Version=v4.0/win": {
-      "Newtonsoft.Json/12.0.2": {
-        "type": "package",
-        "compile": {
-          "lib/net40/Newtonsoft.Json.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Newtonsoft.Json.dll": {}
-        }
-      },
-      "StringInterpolationBridgeStrong/0.9.1": {
-        "type": "package",
-        "compile": {
-          "lib/net40/StringInterpolationBridge.dll": {}
-        },
-        "runtime": {
-          "lib/net40/StringInterpolationBridge.dll": {}
-        }
-      },
-      "System.ValueTuple/4.5.0": {
-        "type": "package",
-        "compile": {
-          "ref/portable-net40+sl4+win8+wp8/System.ValueTuple.dll": {}
-        },
-        "runtime": {
-          "lib/portable-net40+sl4+win8+wp8/System.ValueTuple.dll": {}
-        }
-      },
-      "DokanNet/1.1.2.1": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.0",
-        "dependencies": {
-          "StringInterpolationBridgeStrong": "0.9.1"
-        },
-        "compile": {
-          "bin/placeholder/DokanNet.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DokanNet.dll": {}
-        }
-      }
-    },
-    ".NETFramework,Version=v4.6": {
+    ".NETFramework,Version=v4.8": {
       "Newtonsoft.Json/12.0.2": {
         "type": "package",
         "compile": {
@@ -97,11 +13,14 @@
       },
       "System.ValueTuple/4.5.0": {
         "type": "package",
+        "frameworkAssemblies": [
+          "mscorlib"
+        ],
         "compile": {
-          "ref/portable-net40+sl4+win8+wp8/System.ValueTuple.dll": {}
+          "ref/net47/System.ValueTuple.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.0/System.ValueTuple.dll": {}
+          "lib/net47/System.ValueTuple.dll": {}
         }
       },
       "DokanNet/1.1.2.1": {
@@ -115,7 +34,7 @@
         }
       }
     },
-    ".NETFramework,Version=v4.6/win": {
+    ".NETFramework,Version=v4.8/win": {
       "Newtonsoft.Json/12.0.2": {
         "type": "package",
         "compile": {
@@ -127,11 +46,14 @@
       },
       "System.ValueTuple/4.5.0": {
         "type": "package",
+        "frameworkAssemblies": [
+          "mscorlib"
+        ],
         "compile": {
-          "ref/portable-net40+sl4+win8+wp8/System.ValueTuple.dll": {}
+          "ref/net47/System.ValueTuple.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.0/System.ValueTuple.dll": {}
+          "lib/net47/System.ValueTuple.dll": {}
         }
       },
       "DokanNet/1.1.2.1": {
@@ -175,20 +97,6 @@
         "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
         "newtonsoft.json.12.0.2.nupkg.sha512",
         "newtonsoft.json.nuspec"
-      ]
-    },
-    "StringInterpolationBridgeStrong/0.9.1": {
-      "sha512": "VBZqkU1E9KPk4uZajbhO6flBYSw55x188X7DuvF6i7cvX3jAGe/yd8Zs5ms689J8HooEBMUxMqBqtgUjp3S+fQ==",
-      "type": "package",
-      "path": "stringinterpolationbridgestrong/0.9.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net20/StringInterpolationBridge.dll",
-        "lib/net40/StringInterpolationBridge.dll",
-        "lib/net46/_._",
-        "stringinterpolationbridgestrong.0.9.1.nupkg.sha512",
-        "stringinterpolationbridgestrong.nuspec"
       ]
     },
     "System.ValueTuple/4.5.0": {
@@ -242,12 +150,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETFramework,Version=v4.0": [
-      "DokanNet >= 1.1.2.1",
-      "Newtonsoft.Json >= 12.0.2",
-      "System.ValueTuple >= 4.5.0"
-    ],
-    ".NETFramework,Version=v4.6": [
+    ".NETFramework,Version=v4.8": [
       "DokanNet >= 1.1.2.1",
       "Newtonsoft.Json >= 12.0.2",
       "System.ValueTuple >= 4.5.0"
@@ -274,21 +177,13 @@
         "C:\\Users\\Hannes\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net4.0",
-        "net4.6"
+        "net4.8"
       ],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net40": {
-          "projectReferences": {
-            "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
-              "projectPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj"
-            }
-          }
-        },
-        "net46": {
+        "net48": {
           "projectReferences": {
             "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
               "projectPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj"
@@ -303,19 +198,7 @@
       }
     },
     "frameworks": {
-      "net40": {
-        "dependencies": {
-          "Newtonsoft.Json": {
-            "target": "Package",
-            "version": "[12.0.2, )"
-          },
-          "System.ValueTuple": {
-            "target": "Package",
-            "version": "[4.5.0, )"
-          }
-        }
-      },
-      "net46": {
+      "net48": {
         "dependencies": {
           "Newtonsoft.Json": {
             "target": "Package",

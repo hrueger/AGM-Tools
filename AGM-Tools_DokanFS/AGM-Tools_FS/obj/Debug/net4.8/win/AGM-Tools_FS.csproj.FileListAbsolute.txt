@@ -1,0 +1,16 @@
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\AGM-Tools_FS.exe
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\AGM-Tools_FS.pdb
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\Newtonsoft.Json.dll
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\System.ValueTuple.dll
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\DokanNet.dll
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\DokanNet.pdb
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\de\DokanNet.resources.dll
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\fr\DokanNet.resources.dll
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\bin\Debug\net4.8\win\sv\DokanNet.resources.dll
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\obj\Debug\net4.8\win\AGM-Tools_FS.csprojAssemblyReference.cache
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\obj\Debug\net4.8\win\AGM-Tools_FS.csproj.CoreCompileInputs.cache
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\obj\Debug\net4.8\win\AGM-Tools_FS.AssemblyInfoInputs.cache
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\obj\Debug\net4.8\win\AGM-Tools_FS.AssemblyInfo.cs
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\obj\Debug\net4.8\win\AGM-Tools_FS.csproj.CopyComplete
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\obj\Debug\net4.8\win\AGM-Tools_FS.exe
+E:\Angular\AGM-Tools\AGM-Tools_DokanFS\AGM-Tools_FS\obj\Debug\net4.8\win\AGM-Tools_FS.pdb

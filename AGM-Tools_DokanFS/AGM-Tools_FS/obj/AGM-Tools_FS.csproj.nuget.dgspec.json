@@ -21,21 +21,13 @@
           "C:\\Users\\Hannes\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net4.0",
-          "net4.6"
+          "net4.8"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net40": {
-            "projectReferences": {
-              "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
-                "projectPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj"
-              }
-            }
-          },
-          "net46": {
+          "net48": {
             "projectReferences": {
               "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj": {
                 "projectPath": "E:\\Angular\\AGM-Tools\\AGM-Tools_DokanFS\\DokanNet\\DokanNet.csproj"
@@ -50,19 +42,7 @@
         }
       },
       "frameworks": {
-        "net40": {
-          "dependencies": {
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[12.0.2, )"
-            },
-            "System.ValueTuple": {
-              "target": "Package",
-              "version": "[4.5.0, )"
-            }
-          }
-        },
-        "net46": {
+        "net48": {
           "dependencies": {
             "Newtonsoft.Json": {
               "target": "Package",

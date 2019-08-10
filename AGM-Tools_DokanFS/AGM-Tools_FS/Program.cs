@@ -297,8 +297,7 @@ namespace AGMToolsFS
                     var item = this.elementCache[filename];
                     var type = item.finfo.Attributes == FileAttributes.Normal ? "file" : "folder";
                     var url = $"{this.apiUrl}?get={item.id}&type={type}&token={this.userToken}&download";
-                    var s = "Test";
-
+                    
 
 
 
@@ -348,8 +347,7 @@ namespace AGMToolsFS
                         this._currentStream = this.GetStream(url);
                         this._lastFilename = filename;
                     }
-
-
+                    
                     this._currentStream.Position = offset;
                     readBytes = this._currentStream.Read(buffer, 0, buffer.Length);
                     
@@ -365,32 +363,10 @@ namespace AGMToolsFS
             return DokanResult.Error;
         }
 
-        private Stream GetStream(string url)
+        private PartialHttpStream GetStream(string url)
         {
-            // Häppchenweise die Datei laden und in BlockingCollection ablegen
-            //Create a stream for the file
-            Stream stream = null;
-
-            //This controls how many bytes to read at a time and send to the client
-            int bytesToRead = 4096;
-
-            // Buffer to read bytes in chunk size specified above
-            byte[] buffer = new Byte[bytesToRead];
-
-                //Create a WebRequest to get the file
-                HttpWebRequest fileReq = (HttpWebRequest)HttpWebRequest.Create(url);
-
-                //Create a response for this request
-                HttpWebResponse fileResp = (HttpWebResponse)fileReq.GetResponse();
-
-                if (fileReq.ContentLength > 0)
-                {
-                    fileResp.ContentLength = fileReq.ContentLength;
-                }
-
-                //Get the Stream returned from the response
-                return fileResp.GetResponseStream();
-            }
+            return new PartialHttpStream(url);
+        }
 
         private void StartDownloadAsync(object state)
         {
