@@ -19,70 +19,79 @@
         ></Span>
     </FormattedString>
 </Label>-->
+<GridLayout rows="*,auto">
+    <GridLayout rowSpan="2">
+        <ListView [items]="projects" id="projects" *ngIf="selectProject && !viewFile" class="list-group">
+            <ng-template let-project="item" let-index="index">
+                <GridLayout (tap)="goToProject(project)" rows="auto, auto" columns="auto, *, auto" class="list-group-item">
+                    <Label row="0" col="1" [text]="project.name"></Label>
+                    <Label row="1" col="1" [text]="project.description" class="body"></Label>
+                </GridLayout>
+            </ng-template>
+        </ListView>
 
-<ListView [items]="projects" id="projects" *ngIf="selectProject && !viewFile" class="list-group">
-    <ng-template let-project="item" let-index="index">
-        <GridLayout (tap)="goToProject(project)" rows="auto, auto" columns="auto, *, auto" class="list-group-item">
-            <Label row="0" col="1" [text]="project.name"></Label>
-            <Label row="1" col="1" [text]="project.description" class="body"></Label>
+        <GridLayout [columns]="progressColumns" class="progressbar" *ngIf="showProgressbar">
+            <StackLayout col="0" class="progressbar-value"></StackLayout>
         </GridLayout>
-    </ng-template>
-</ListView>
 
-<GridLayout [columns]="progressColumns" class="progressbar" *ngIf="showProgressbar">
-    <StackLayout col="0" class="progressbar-value"></StackLayout>
-</GridLayout>
+        <RadListView #itemsListView [items]="items" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true" *ngIf="!selectProject && !viewFile" id="items" class="list-group">
+            <ng-template let-item="item" let-index="index">
+                <StackLayout>
+                    <GridLayout (tap)="goTo(item)" rows="auto, auto" columns="auto, *, auto" class="list-group-item">
+                        <Image row="0" col="0" rowSpan="2" [src]="getIcon(item)" class="thumb"></Image>
+                        <Label row="0" col="1" [text]="item.name"></Label>
+                        <Label row="1" col="1" [text]="item.size" class="body"></Label>
+                        <Label row="0" col="2" [text]="item.modificationDate | date" class="body time"></Label>
+                        <StackLayout *ngIf="item.tags" row="1" col="2" orientation="vertical">
+                            <Label [style.color]="tag.color" [style.background-color]="tag.backgroundColor" class="badge" *ngFor="let tag of item.tags" [text]="tag.name"></Label>
+                        </StackLayout>
 
-<RadListView #itemsListView [items]="items" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true" *ngIf="!selectProject && !viewFile" id="items" class="list-group">
-    <ng-template let-item="item" let-index="index">
-        <StackLayout>
-            <GridLayout (tap)="goTo(item)" rows="auto, auto" columns="auto, *, auto" class="list-group-item">
-                <Image row="0" col="0" rowSpan="2" [src]="getIcon(item)" class="thumb"></Image>
-                <Label row="0" col="1" [text]="item.name"></Label>
-                <Label row="1" col="1" [text]="item.size" class="body"></Label>
-                <Label row="0" col="2" [text]="item.modificationDate | date" class="body time"></Label>
-                <StackLayout *ngIf="item.tags" row="1" col="2" orientation="vertical">
-                    <Label [style.color]="tag.color" [style.background-color]="tag.backgroundColor" class="badge" *ngFor="let tag of item.tags" [text]="tag.name"></Label>
+                    </GridLayout>
+                    <StackLayout height="1" class="list-group-seperator">
+                    </StackLayout>
                 </StackLayout>
+            </ng-template>
+            <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto">
+                <GridLayout columns="*, *, *" col="0" id="left-stack">
+                    <GridLayout col="0" class="tagsSwipeContainer" (tap)="editTags($event.object.bindingContext)" id="swipeTags">
+                        <Label text="&#xf02c;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </GridLayout>
+                    <GridLayout col="1" class="downloadSwipeContainer" (tap)="download($event.object.bindingContext)" id="swipeDownload">
+                        <Label text="&#xf381;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </GridLayout>
+                    <GridLayout col="2" class="shareSwipeContainer" (tap)="share($event.object.bindingContext)" id="swipeShare">
+                        <Label text="&#xf14d;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </GridLayout>
+                </GridLayout>
+                <GridLayout columns="*, *, *, *" col="2" id="right-stack">
+                    <GridLayout col="0" class="renameSwipeContainer" (tap)="rename($event.object.bindingContext)" id="swipeRename">
+                        <Label text="&#xf044;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </GridLayout>
+                    <GridLayout col="1" class="moveSwipeContainer" (tap)="move($event.object.bindingContext)" id="swipeMove">
+                        <Label text="&#xf0b2;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </GridLayout>
+                    <GridLayout col="2" class="copySwipeContainer" (tap)="copy($event.object.bindingContext)" id="swipeCopy">
+                        <Label text="&#xf0c5;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </GridLayout>
+                    <GridLayout col="3" class="deleteSwipeContainer" (tap)="delete($event.object.bindingContext)" id="swipeDelete">
+                        <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </GridLayout>
+                </GridLayout>
+            </GridLayout>
+        </RadListView>
 
-            </GridLayout>
-            <StackLayout height="1" class="list-group-seperator">
-            </StackLayout>
+        <StackLayout *ngIf="viewFile">
+
+            <Image *ngIf="getType() == 'image'" [src]="fileSourceUrl"></Image>
+            <VideoPlayer *ngIf="getType() == 'video'" [src]="fileSourceUrl" autoplay="true"></VideoPlayer>
+            <PDFView *ngIf="getType() == 'pdf'" [src]="fileSourceUrl"></PDFView>
+            <Label *ngIf="getType() == 'other'" text="Dieser Dateityp wird nicht unterstüzt."></Label>
         </StackLayout>
-    </ng-template>
-    <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto">
-        <GridLayout columns="*, *, *" col="0" id="left-stack">
-            <GridLayout col="0" class="tagsSwipeContainer" (tap)="editTags($event.object.bindingContext)" id="swipeTags">
-                <Label text="&#xf02c;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
-            </GridLayout>
-            <GridLayout col="1" class="downloadSwipeContainer" (tap)="download($event.object.bindingContext)" id="swipeDownload">
-                <Label text="&#xf381;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
-            </GridLayout>
-            <GridLayout col="2" class="shareSwipeContainer" (tap)="share($event.object.bindingContext)" id="swipeShare">
-                <Label text="&#xf14d;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
-            </GridLayout>
-        </GridLayout>
-        <GridLayout columns="*, *, *, *" col="2" id="right-stack">
-            <GridLayout col="0" class="renameSwipeContainer" (tap)="rename($event.object.bindingContext)" id="swipeRename">
-                <Label text="&#xf044;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
-            </GridLayout>
-            <GridLayout col="1" class="moveSwipeContainer" (tap)="move($event.object.bindingContext)" id="swipeMove">
-                <Label text="&#xf0b2;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
-            </GridLayout>
-            <GridLayout col="2" class="copySwipeContainer" (tap)="copy($event.object.bindingContext)" id="swipeCopy">
-                <Label text="&#xf0c5;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
-            </GridLayout>
-            <GridLayout col="3" class="deleteSwipeContainer" (tap)="delete($event.object.bindingContext)" id="swipeDelete">
-                <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
-            </GridLayout>
+
+    </GridLayout>
+    <GridLayout row="1">
+        <GridLayout columns="*, auto" row="1">
+            <Button col="1" (tap)="openNewFolderModal()" text="+" class="fab-button"></Button>
         </GridLayout>
     </GridLayout>
-</RadListView>
-
-<StackLayout *ngIf="viewFile">
-
-    <Image *ngIf="getType() == 'image'" [src]="fileSourceUrl"></Image>
-    <VideoPlayer *ngIf="getType() == 'video'" [src]="fileSourceUrl" autoplay="true"></VideoPlayer>
-    <PDFView *ngIf="getType() == 'pdf'" [src]="fileSourceUrl"></PDFView>
-    <Label *ngIf="getType() == 'other'" text="Dieser Dateityp wird nicht unterstüzt."></Label>
-</StackLayout>
+</GridLayout>

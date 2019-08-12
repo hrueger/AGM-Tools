@@ -7,9 +7,16 @@
     <ActionItem ios:visibility="collapsed" icon="res://ic_back" (tap)="up()"></ActionItem>
     <ActionItem ios:visibility="collapsed" icon="res://ic_next" (tap)="down()"></ActionItem>
 </ActionBar>
-<RadCalendar class="calendar" #calendar [eventSource]="calendarEvents" eventsViewMode="Inline" selectionMode="None" [viewMode]="viewMode" transitionMode="Slide" locale="de-DE">
-</RadCalendar>
 
-<AbsoluteLayout class="fab-button-container">
-    <Button (tap)="openNewModal()" text="+" class="fab-button"></Button>
-</AbsoluteLayout>
+<GridLayout rows="*,auto">
+    <GridLayout rowSpan="2">
+        <RadCalendar class="calendar" #calendar [eventSource]="calendarEvents" eventsViewMode="Inline" selectionMode="None" [viewMode]="viewMode" transitionMode="Slide" locale="de-DE">
+        </RadCalendar>
+
+    </GridLayout>
+    <GridLayout row="1">
+        <GridLayout columns="*, auto" row="1">
+            <Button col="1" (tap)="openNewModal()" text="+" class="fab-button"></Button>
+        </GridLayout>
+    </GridLayout>
+</GridLayout>

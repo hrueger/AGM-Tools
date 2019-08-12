@@ -8,31 +8,31 @@
     <ActionItem icon="~/assets/user-edit.png" ios.position="right" (tap)="openEditModal()"></ActionItem>
 </ActionBar>
 
+<GridLayout rows="*,auto">
+    <GridLayout rowSpan="2">
+        <RadListView #usersListView height="3000" [items]="users" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
+            <ng-template let-user="item" let-i="index" let-odd="odd" let-even="even">
+                <StackLayout>
+                    <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item">
+                        <Label class="list-group-heading" row="0" col="1" [text]="user.username"></Label>
+                        <Label row="1" col="1" class="body" [text]="user.email"></Label>
+                        <Label row="0" col="2" class="body" [text]="user.groupname"></Label>
+                    </GridLayout>
 
-<StackLayout>
-
-    <RadListView #usersListView height="3000" [items]="users" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
-        <ng-template let-user="item" let-i="index" let-odd="odd" let-even="even">
-            <StackLayout>
-                <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item">
-                    <Label class="list-group-heading" row="0" col="1" [text]="user.username"></Label>
-                    <Label row="1" col="1" class="body" [text]="user.email"></Label>
-                    <Label row="0" col="2" class="body" [text]="user.groupname"></Label>
-                </GridLayout>
-
-                <StackLayout height="1" class="list-group-seperator">
+                    <StackLayout height="1" class="list-group-seperator">
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
-        </ng-template>
-        <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
-            <StackLayout id="delete-view" col="2" class="deleteSwipeContainer" (tap)="onRightSwipeClick($event)">
-                <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
-            </StackLayout>
+            </ng-template>
+            <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
+                <StackLayout id="delete-view" col="2" class="deleteSwipeContainer" (tap)="onRightSwipeClick($event)">
+                    <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                </StackLayout>
+            </GridLayout>
+        </RadListView>
+    </GridLayout>
+    <GridLayout row="1">
+        <GridLayout columns="*, auto" row="1">
+            <Button col="1" (tap)="openNewModal()" text="+" class="fab-button"></Button>
         </GridLayout>
-    </RadListView>
-</StackLayout>
-
-
-<AbsoluteLayout class="fab-button-container">
-    <Button (tap)="openNewModal()" text="+" class="fab-button"></Button>
-</AbsoluteLayout>
+    </GridLayout>
+</GridLayout>

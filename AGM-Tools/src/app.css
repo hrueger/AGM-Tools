@@ -39,15 +39,9 @@ StackLayout.content {
     background-color: transparent;
     background-color: #30bcff;
     border-radius: 28;
-    width: 56;
-    height: 56;
-    text-align: center;
-    vertical-align: center;
-}
-
-.fab-button-container {
-    margin-top: 80%;
-    margin-left: 80%;
+    width: 60;
+    height: 60;
+    margin: 20;
 }
 
 .nav-button-back {
