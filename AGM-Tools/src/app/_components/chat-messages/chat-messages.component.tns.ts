@@ -1,27 +1,34 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    Inject,
-    OnInit
+    OnInit,
+    Input,
+    OnChanges,
+    ViewChild,
+    ElementRef,
+    AfterViewChecked,
+    ChangeDetectorRef
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Location, NgSwitchDefault } from "@angular/common";
+import { ActivatedRoute, Router, Route } from "@angular/router";
+import { Location } from "@angular/common";
 
 import { Chat } from "../../_models/chat.model";
 import { ChatsDataService } from "../../_services/chat.data.service";
 import { Message } from "../../_models/message.model";
-import { RemoteService } from "../../_services/remote.service";
+import { Contact } from "../../_models/contact.model";
 import { from } from "rxjs";
 import { filter } from "rxjs/operators";
-import { Contact } from "../../_models/contact.model";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
-    selector: "ns-chat",
+    selector: "chat-messages",
     templateUrl: "chat-messages.component.html",
     styleUrls: ["chat-messages.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChatMessagesComponent implements OnInit {
+export class ChatMessagesComponent
+    implements OnInit, AfterViewChecked {
+    @Input() inputReceiverId: number;
     receiverId: number;
     chat: Chat = {
         contact: new Contact(),
@@ -32,50 +39,70 @@ export class ChatMessagesComponent implements OnInit {
         text: null,
         rid: null
     };
-    currentContact = new Contact();
+
     unread: number;
-    messages: Message[] = [];
+    messages: Message[];
     //chats: Chat[];
 
+    public messageGotToSend: Event;
+    @ViewChild("messagesListView", { static: false }) messagesListView: ElementRef;
+    messageSentFromChild(event: Event) {
+        this.messageGotToSend = event;
+    }
+
     constructor(
-        private route: ActivatedRoute,
-        private chatsService: ChatsDataService,
         private remoteService: RemoteService,
-        private router: Router,
         private _location: Location,
-        @Inject("platform") public platform
+        private cdr: ChangeDetectorRef,
+        private route: ActivatedRoute
     ) { }
 
     ngOnInit() {
-
         this.route.params.subscribe(params => {
             this.receiverId = +params.index;
-            this.remoteService.get("chatGetChats").subscribe(chats => {
-                if (chats) {
-                    from(chats)
-                        .pipe(
+            console.log("received change: loading for chat ");
+            this.remoteService.get("chatGetContacts").subscribe(chats => {
+                //this.chats = chats;
+                from(chats)
+                    .pipe(
+                        filter(
                             //@ts-ignore
-                            filter(chat => chat.rid == this.receiverId)
+                            chat => chat.rid == this.receiverId
                         )
-                        .subscribe(
-                            chat =>
-                                //@ts-ignore
-                                (this.chat = chat)
-                        );
-                }
-
+                    )
+                    .subscribe(chat => {
+                        //@ts-ignore
+                        this.chat = chat;
+                        this.getMessages(this.receiverId);
+                    });
             });
-            this.getMessages(this.receiverId);
         });
-        /*this.route.queryParams.subscribe(params => {
-            this.unread = +params.unread;
-        });*/
+
+
+
+
+    }
+    scrollToBottom(): void {
+        if (this.messagesListView && this.messagesListView.nativeElement && this.messagesListView.nativeElement.items.length > 0) {
+            this.messagesListView.nativeElement.scrollToIndex(this.messagesListView.nativeElement.items.length - 1);
+
+        }
+    }
+    ngAfterViewChecked() {
+        this.scrollToBottom();
     }
 
     getMessages(receiverId) {
         this.remoteService
             .get("chatGetMessages", { rid: receiverId })
-            .subscribe(data => { this.messages = data });
+            .subscribe(data => {
+                if (data != null) {
+                    this.messages = data;
+                    this.cdr.detectChanges();
+                } else {
+                    this.messages = [];
+                }
+            });
     }
 
     goBack() {

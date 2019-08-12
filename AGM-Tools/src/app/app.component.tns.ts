@@ -42,7 +42,7 @@ export class AppComponent {
         this.authenticationService.currentUser.subscribe(x => {
             if (x) {
                 this.currentUser = x;
-                this.useremail = "Email";
+                this.useremail = x.email;
                 this.username = x.firstName + " " + x.lastName;
                 this.initials = x.firstName.charAt(0) + " " + x.lastName.charAt(0);
             } else {

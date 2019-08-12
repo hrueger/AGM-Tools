@@ -82,14 +82,14 @@
 
         <StackLayout *ngIf="viewFile">
 
-            <Image *ngIf="getType() == 'image'" [src]="fileSourceUrl"></Image>
-            <VideoPlayer *ngIf="getType() == 'video'" [src]="fileSourceUrl" autoplay="true"></VideoPlayer>
-            <PDFView *ngIf="getType() == 'pdf'" [src]="fileSourceUrl"></PDFView>
+            <Image *ngIf="getType() == 'image'" [src]="getSrc()"></Image>
+            <VideoPlayer *ngIf="getType() == 'video'" [src]="getSrc()" autoplay="true"></VideoPlayer>
+            <PDFView *ngIf="getType() == 'pdf'" [src]="getSrc()"></PDFView>
             <Label *ngIf="getType() == 'other'" text="Dieser Dateityp wird nicht unterstüzt."></Label>
         </StackLayout>
 
     </GridLayout>
-    <GridLayout row="1">
+    <GridLayout row="1" *ngIf="!selectProject && !viewFile">
         <GridLayout columns="*, auto" row="1">
             <Button col="1" (tap)="openNewFolderModal()" text="+" class="fab-button"></Button>
         </GridLayout>

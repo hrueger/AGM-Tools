@@ -97,7 +97,7 @@ export class RemoteService {
     }
     private handleError<T>(operation = "operation", result?: T) {
         return (error: any): Observable<T> => {
-            console.error(error);
+            console.error("Error occured in remote.service.ts:", error);
 
             if (!error.startsWith("java.net.UnknownHostException")) {
                 this.log(`${operation} failed: ${error.message}`);

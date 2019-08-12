@@ -1,3 +1,42 @@
+.action-bar {
+    .action-bar-title {
+        .thumb {
+            width: 40;
+            height: 40;
+            border-radius: 50%;
+            margin-right: 10;
+        }
+        .title {
+            font-weight: bold;
+            font-size: 17;
+        }
+        .subtitle {
+            font-weight: normal;
+            font-size: 12;
+        }
+    }
+    .action-item {
+        .icon {
+            font-size: 25;
+            padding-right: 15;
+            &.phone {
+                padding-right: 5;
+            }
+        }
+    }
+}
+
+.wallpaper {
+    background-image: url("~/assets/backgrounds/11.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.messages-area {
+    background-image: url("../../assets/backgrounds/1.png");
+    background-repeat: no-repeat;
+}
+
 div.messages-header {
     position: fixed;
     margin-top: -28px;
@@ -12,6 +51,7 @@ div.messages-header {
     height: 60px;
     padding: 8px;
 }
+
 .messages-header.title {
     color: #000;
     font-size: 1.6rem;

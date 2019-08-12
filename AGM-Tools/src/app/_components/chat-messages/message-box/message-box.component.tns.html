@@ -1,47 +1,9 @@
 <FlexboxLayout class="message-box">
-    <Label *ngIf="platform.isIOS" text="&#xf067;" class="mdi icon"></Label>
-    <FlexboxLayout
-        [shadow]="
-            platform.isAndroid
-                ? {
-                      elevation: 2,
-                      shape: 'RECTANGLE',
-                      bgcolor: '#FFFFFF',
-                      cornerRadius: 50
-                  }
-                : null
-        "
-        class="text-area"
-    >
-        <Label
-            *ngIf="platform.isAndroid"
-            text="&#xf580;"
-            class="mdi icon emojis"
-        ></Label>
-        <TextView
-            [hint]="platform.isAndroid ? 'Type a message' : ''"
-            text=""
-            class="text-view"
-        ></TextView>
-        <Label
-            *ngIf="platform.isAndroid"
-            text="&#xf0c6;"
-            class="mdi icon attach"
-        ></Label>
-        <Label text="&#xf030;" class="mdi icon camera"></Label>
+    <FlexboxLayout class="text-area">
+        <Button text="&#xf580;" class="fas icon"></Button>
+        <TextView hint="Type a message" text="" class="text-view"></TextView>
+        <Button text="&#xf0c6;" class="fas icon"></Button>
+        <Button text="&#xf030;" class="fas icon"></Button>
     </FlexboxLayout>
-    <Label *ngIf="platform.isIOS" text="&#xf142;" class="mdi separator"></Label>
-    <Label
-        text="&#xf130;"
-        class="mdi icon send"
-        [shadow]="
-            platform.isAndroid
-                ? {
-                      elevation: 3,
-                      shape: 'OVAL',
-                      bgcolor: '#006968'
-                  }
-                : null
-        "
-    ></Label>
+    <Button text="&#xf1d8;" class="fas icon send"></Button>
 </FlexboxLayout>

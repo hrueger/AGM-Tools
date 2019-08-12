@@ -13,6 +13,7 @@ import { layout } from "tns-core-modules/utils/utils";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import { openUrl } from "tns-core-modules/utils/utils";
+import * as dialog from "tns-core-modules/ui/dialogs";
 import * as app from "tns-core-modules/application";
 import * as clipboard from "nativescript-clipboard";
 import {
@@ -33,7 +34,6 @@ import { ObservableArray } from "tns-core-modules/data/observable-array/observab
 })
 export class FilesComponent implements OnInit {
     showProgressbar: boolean;
-    progressbarColumns: string;
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
@@ -44,8 +44,6 @@ export class FilesComponent implements OnInit {
         this._MSelect = new MultiSelect();
     }
     @ViewChild("itemsListView", { read: RadListViewComponent, static: false }) itemsListView: RadListViewComponent;
-    newFolderModalInvalidMessage: boolean = false;
-    renameItemFormInvalidMessage: boolean = false;
     selectProject: boolean = true;
     viewFile: boolean = false;
     projects: Project[];
@@ -155,6 +153,15 @@ export class FilesComponent implements OnInit {
                 ) {
                     this.currentPath.push(item);
                 }
+
+                /*data.forEach(item, index => {
+                    this.items.splice(index, 0, item);
+                });
+                if (data.length < this.items.length) {
+                    for (var i = data.length; i < this.items.length; i++) {
+                        this.items.splice(i, 1);
+                    }
+                }*/
                 this.items = data;
 
 
@@ -164,36 +171,43 @@ export class FilesComponent implements OnInit {
     }
     getSrc() {
         let file = this.currentPath[this.currentPath.length - 1];
-        return (
-            config.apiUrl +
+        const path = config.apiUrl +
             "?get=" +
             file.id +
             "&type=file" +
             "&token=" +
-            this.authenticationService.currentUserValue.token
-        );
+            this.authenticationService.currentUserValue.token;
+        return path;
     }
     openNewFolderModal(content) {
-        this.modalService
-            .open(content, { ariaLabelledBy: "modal-basic-title" })
-            .result.then(
-                result => {
-                    this.remoteService
-                        .getNoCache("filesNewFolder", {
-                            name: this.newFolderForm.get("newFolderName").value,
-                            pid: this.pid,
-                            fid: this.currentPath[this.currentPath.length - 1]
-                                .id
-                        })
-                        .subscribe(data => {
-                            if (data && data.status == true) {
-                                this.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
-                                this.reloadHere();
-                            }
-                        });
-                },
-                reason => { }
-            );
+        var that = this;
+        dialog.prompt({
+            title: "Neuer Ordner",
+            message: "in /" + this.currentPath.map(item => item.name).join("/") + "/",
+            okButtonText: "Erstellen",
+            cancelButtonText: "Abbrechen",
+            defaultText: "Neuer Ordner",
+            inputType: dialog.inputType.text
+
+        }).then(function (r) {
+            if (r.result) {
+                that.remoteService
+                    .getNoCache("filesNewFolder", {
+                        name: r.text,
+                        pid: that.pid,
+                        fid: that.currentPath[that.currentPath.length - 1]
+                            .id
+                    })
+                    .subscribe(data => {
+                        if (data && data.status == true) {
+                            that.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
+                            //this.reloadHere();
+                        }
+                    });
+            }
+
+        });
+
     }
     getType() {
         let filename = this.currentPath[
@@ -251,7 +265,7 @@ export class FilesComponent implements OnInit {
                         .subscribe(data => {
                             if (data.status == true) {
                                 this.alertService.success("Gespeichert!");
-                                this.reloadHere();
+                                //this.reloadHere();
                             }
                         });
                 }
@@ -262,7 +276,6 @@ export class FilesComponent implements OnInit {
 
     }
     download(item) {
-
         var url = config.apiUrl +
             "?get=" +
             item.id +
@@ -273,56 +286,6 @@ export class FilesComponent implements OnInit {
             "&download";
         this.itemsListView.listView.notifySwipeToExecuteFinished();
         openUrl(url);
-
-        //this.toggleProgressbar(true);
-
-
-
-        //const destPath = fs.knownFolders.documents().path + "/";
-        /*const download = new DownloadProgress();
-        download.addProgressCallback(progress => {
-            console.log('Progress:', progress);
-        })
-        download.downloadFile(url).then(f => {
-            console.log("Success", f);
-        }).catch(e => {
-            console.log("Error", e);
-        })*/
-
-        /*const downloader = new Downloader();
-        const imageDownloaderId = downloader.createDownload({
-            url: url,
-            fileName: item.name,
-            path: fs.knownFolders.documents().path + "/"
-        });
-        console.log("Starting...");
-        downloader
-            .start(imageDownloaderId, (progressData: ProgressEventData) => {
-                console.log(`Progress : ${progressData.value}%`);
-                console.log(`Current Size : ${progressData.currentSize}`);
-                console.log(`Total Size : ${progressData.totalSize}`);
-                console.log(`Download Speed in bytes : ${progressData.speed}`);
-            })
-            .then((completed: DownloadEventData) => {
-                console.log(`Image : ${completed.path}`);
-            })
-            .catch(error => {
-                console.log(error.message);
-            }).finally(() => {
-                console.log("end");
-            });*/
-
-
-        /*this.alertService.success("Datei erfolgreich heruntergeladen!");
-        console.log("SUCCESS", f);
-
-        this.alertService.error(e);
-        console.log("Error", e);
-        */
-
-
-
-
     }
 
     share(item) {
@@ -360,18 +323,28 @@ export class FilesComponent implements OnInit {
         this.itemsListView.listView.notifySwipeToExecuteFinished();
     }
     rename(item, renameModal) {
-        this.modalService
-            .open(renameModal)
-            .result.then(result => {
-                this.remoteService
-                    .getNoCache("filesRename", { type: item.type, fid: item.id, name: this.renameItemForm.get("renameItemName").value })
+        var that = this;
+        dialog.prompt({
+            title: (item.type == "file" ? "Datei" : "Ordner") + " umbenennen",
+            message: "in /" + this.currentPath.map(item => item.name).join("/") + "/" + item.name,
+            okButtonText: "Umbenennen",
+            cancelButtonText: "Abbrechen",
+            defaultText: item.name,
+            inputType: dialog.inputType.text
+
+        }).then(function (r) {
+            if (r.result) {
+                that.remoteService
+                    .getNoCache("filesRename", { type: item.type, fid: item.id, name: r.text })
                     .subscribe(data => {
                         if (data.status == true) {
-                            this.alertService.success("Das Element wurde erfolgreich umbenannt.");
-                            this.reloadHere();
+                            that.alertService.success("Das Element wurde erfolgreich umbenannt.");
+                            //this.reloadHere();
                         }
                     });
-            }, reason => { });
+            }
+        });
+
 
     }
     delete(item) {
@@ -379,7 +352,7 @@ export class FilesComponent implements OnInit {
             this.remoteService.getNoCache("filesDelete", { type: item.type, fid: item.id }).subscribe(data => {
                 if (data.status == true) {
                     this.alertService.success("Das Element wurde erfolgreich gelöscht.");
-                    this.reloadHere();
+                    //this.reloadHere();
                 }
             });
         }
@@ -391,23 +364,14 @@ export class FilesComponent implements OnInit {
         this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt. Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
     }
 
-    copyShareLink(inputField) {
-        inputField.select();
-        document.execCommand('copy');
-        inputField.setSelectionRange(0, 0);
-        this.alertService.success("Link in die Zwischenablage kopiert!");
-    }
-    openShareLinkInNewTab() {
-        var win = window.open(this.shareLink, '_blank');
-        win.focus();
-    }
-    reloadHere() {
+
+    /*reloadHere() {
         if (this.lastItem.id == -1) {
             this.navigate({ id: -1 });
         } else {
             this.goTo(this.lastItem, true);
         }
-    }
+    }*/
 
     public onCellSwiping(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
@@ -461,9 +425,6 @@ export class FilesComponent implements OnInit {
         //swipeLimits.threshold = leftItem.getMeasuredWidth() / 2;
     }
 
-
-
-
     public onLeftSwipeClick(args: EventData) {
         let itemView = args.object as View;
         console.log("Button clicked: " + itemView.id + " for item with index: " + this.itemsListView.listView.items.indexOf(itemView.bindingContext));
@@ -479,12 +440,5 @@ export class FilesComponent implements OnInit {
     onDrawerButtonTap(): void {
         const sideDrawer = <RadSideDrawer>app.getRootView();
         sideDrawer.showDrawer();
-    }
-
-    setProgressbarWidth(percent) {
-        this.progressbarColumns = percent + "*," + (100 - percent) + "*";
-    }
-    toggleProgressbar(show: boolean) {
-        this.showProgressbar = show;
     }
 }
