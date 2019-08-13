@@ -13,7 +13,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Location } from "@angular/common";
 
 import { Chat } from "../../_models/chat.model";
-import { ChatsDataService } from "../../_services/chat.data.service";
 import { Message } from "../../_models/message.model";
 import { Contact } from "../../_models/contact.model";
 import { from } from "rxjs";
@@ -54,7 +53,7 @@ export class ChatMessagesComponent
         private remoteService: RemoteService,
         private _location: Location,
         private cdr: ChangeDetectorRef
-    ) {}
+    ) { }
 
     ngOnInit() {
         /*this.route.params.subscribe(params => {

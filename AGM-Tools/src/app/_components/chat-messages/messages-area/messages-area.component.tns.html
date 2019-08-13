@@ -1,15 +1,21 @@
-<RadListView class="messages-area" *ngIf="messages" [items]="messages">
-    <ng-template tkListItemTemplate let-message="item">
-        <StackLayout [shadow]="2" cornerRadius="20" class="message-bubble" [class.continuation]="isContinuation(idx)" [class.myself]="message.fromMe">
-            <FlexboxLayout class="message-bubble-content">
-                <Label class="message-text" [text]="message.text" textWrap="true"></Label>
-                <FlexboxLayout class="meta">
-                    <Label [text]="message.created | date: 'shortTime'" class="time"></Label>
-                    <Label *ngIf="message.fromMe && isNotSent(message)" text="&#xf017;" class="check fas" [class.blue]="isViewed(message)"></Label>
-                    <Label *ngIf="message.fromMe && isSent(message)" text="&#xf00c;" class="check fas" [class.blue]="isViewed(message)"></Label>
-                    <Label *ngIf="message.fromMe && isDefault(message)" text="&#xf560;" class="check fas" [class.blue]="isViewed(message)"></Label>
+<RadListView #messagesListView class="messages-area" *ngIf="messages" [items]="messages">
+    <ng-template let-message="item" let-index="index">
+        <FlexboxLayout class="messages">
+            <StackLayout [shadow]="2" cornerRadius="20" class="message-bubble" [class.continuation]="isContinuation(index)" [class.myself]="message.fromMe" [class.system]="message.system">
+                <FlexboxLayout class="message-bubble-content">
+                    <StackLayout>
+                        <Label class="sendername" *ngIf="!isContinuation(index) && !message.system && !message.fromMe" [text]="' ' + message.sendername"></Label>
+                        <Label class="message-text" [text]="message.text" textWrap="true"></Label>
+                    </StackLayout>
+
+                    <FlexboxLayout class="meta">
+                        <Label [text]="message.created | date: 'shortTime'" class="time"></Label>
+                        <Label *ngIf="message.fromMe && isNotSent(message)" text="&#xf017;" class="check fas"></Label>
+                        <Label *ngIf="message.fromMe && isSent(message)" text="&#xf00c;" class="check fas"></Label>
+                        <Label *ngIf="message.fromMe && isDefault(message)" text="&#xf560;" class="check fas" [class.blue]="isViewed(message)"></Label>
+                    </FlexboxLayout>
                 </FlexboxLayout>
-            </FlexboxLayout>
-        </StackLayout>
+            </StackLayout>
+        </FlexboxLayout>
     </ng-template>
 </RadListView>

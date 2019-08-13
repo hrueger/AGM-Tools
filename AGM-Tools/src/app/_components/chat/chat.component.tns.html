@@ -8,7 +8,6 @@
             <Label row="1 " col="1 " [text]="chat.text " class="body "></Label>
             <Label row="0 " col="2 " [text]="chat.when | shortWhen | uppercase " class="body time " [class.time-unread]="chat.unread> 0"></Label>
             <StackLayout row="1" col="2" orientation="horizontal" class="m-x-auto">
-                <Label *ngIf="chat.muted" text="&#xf026;" class="mdi muted"></Label>
                 <Label *ngIf="chat.unread > 0" [text]="chat.unread" class="body unread"></Label>
             </StackLayout>
         </GridLayout>

@@ -1,6 +1,5 @@
 import { Chat } from "./chat.model";
 import { Contact } from "./contact.model";
-import { SentStatus } from "./sent-status.model";
 
 export class Message {
     id?: number;
@@ -8,8 +7,9 @@ export class Message {
     chat: Chat;
     fromMe: boolean;
     readonly created: number = Date.now();
-    sent: SentStatus;
+    sent: string;
     sendername: string;
+    system?: boolean;
 
     toString(): string {
         const { created, text } = this;

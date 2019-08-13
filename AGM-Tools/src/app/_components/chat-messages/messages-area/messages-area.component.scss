@@ -5,7 +5,7 @@
         align-items: flex-start;
         padding: 0 10 5 10;
         .message-bubble {
-            margin: 10 15 2 0;
+            margin: 10 15 0 0;
             padding: 0;
             &.myself {
                 align-self: flex-end;
@@ -16,7 +16,19 @@
                 }
             }
             &.continuation {
-                margin-top: 1;
+                margin-top: 0;
+            }
+            &.system {
+                align-self: center;
+                padding: 0;
+                margin-top: 8;
+                text-align: center;
+                .message-bubble-content {
+                    background-color: #c6e0f8;
+                    text-align: center;
+                    padding: 0;
+                    margin: 0;
+                }
             }
             .message-bubble-content {
                 align-items: flex-start;
@@ -24,8 +36,13 @@
                 justify-content: flex-end;
                 border-radius: 8;
                 background-color: white;
+                .sendername {
+                    display: block;
+                    color: #2b669a;
+                    font-weight: bold;
+                }
                 .message-text {
-                    color: #8d1b1b;
+                    color: #000000;
                     font-size: 15;
                     margin: 5;
                 }
@@ -46,15 +63,8 @@
                         font-size: 14;
                         padding-top: 2;
                         margin-left: -4;
-                        &.ios {
-                            opacity: 0.6;
-                        }
                         &.blue {
                             color: #52c5f7;
-                            &.ios {
-                                color: #2f97f3;
-                                opacity: 1;
-                            }
                         }
                     }
                 }
@@ -72,7 +82,7 @@
     display: flex;
 }
 
-.continuation {
+.speech-wrapper .continuation {
     margin-top: 8px;
 }
 
@@ -88,7 +98,7 @@
     max-width: 75%;
 }
 
-.system-msg {
+.speech-wrapper .system-msg {
     padding: 5px;
     display: inline;
     position: relative;
@@ -98,7 +108,7 @@
     margin: auto;
 }
 
-.system-msg.new-day {
+.speech-wrapper .system-msg.new-day {
     background-color: #a5c7ff;
 }
 
@@ -158,11 +168,11 @@
     left: auto;
 }
 
-.blue {
+.speech-wrapper .blue {
     color: #3498db !important;
 }
 
-.addon {
+.speech-wrapper .addon {
     margin-left: 5px;
     margin-top: 3px;
 }

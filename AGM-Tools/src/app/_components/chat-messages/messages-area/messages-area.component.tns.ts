@@ -3,10 +3,11 @@ import {
     Component,
     Inject,
     Input,
-    OnInit
+    OnInit,
+    ViewChild,
+    ElementRef
 } from "@angular/core";
 import { Message } from "../../../_models/message.model";
-import { SentStatus } from "../../../_models/sent-status.model";
 
 @Component({
     moduleId: module.id,
@@ -17,27 +18,43 @@ import { SentStatus } from "../../../_models/sent-status.model";
 })
 export class MessagesAreaComponent implements OnInit {
     @Input() messages: Message[];
+    @ViewChild("messagesListView", { static: false }) messagesListView: ElementRef;
+    shouldScrollToBottom: boolean = false;
+    constructor(@Inject("platform") public platform) { }
 
-    constructor(@Inject("platform") public platform) {}
+    scrollToBottom(): void {
+        if (this.messagesListView && this.messagesListView.nativeElement && this.messagesListView.nativeElement.items.length > 0) {
+            this.messagesListView.nativeElement.scrollToIndex(this.messagesListView.nativeElement.items.length - 1);
 
-    ngOnInit() {}
+        } else {
+            console.log("!!! Couldn't scroll to bottom");
+        }
+    }
+    ngAfterViewChecked() {
+        if (this.shouldScrollToBottom) {
+            this.scrollToBottom();
+            this.shouldScrollToBottom = false;
+        }
+    }
+
+    ngOnInit() {
+        this.shouldScrollToBottom = true;
+    }
 
     isContinuation(idx: number) {
-        return (
-            (!this.messages[idx].fromMe &&
-                this.messages[idx - 1] &&
-                !this.messages[idx - 1].fromMe) ||
-            (this.messages[idx].fromMe &&
-                this.messages[idx - 1] &&
-                this.messages[idx - 1].fromMe)
-        );
+        if (idx && this.messages[idx]) {
+            return (this.messages[idx - 1] && this.messages[idx].fromMe == this.messages[idx - 1].fromMe && !this.messages[idx].system);
+        } else {
+            return false;
+        }
+
     }
 
     getIcon(message: Message) {
-        switch (message.sent) {
-            case SentStatus.NOT_SENT:
+        switch (parseInt(message.sent)) {
+            case 0:
                 return "not_sent";
-            case SentStatus.SENT:
+            case 1:
                 return "sent";
             default:
                 return "default";
@@ -46,22 +63,22 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     isSent(message: Message) {
-        if (message.sent == SentStatus.SENT) {
+        if (parseInt(message.sent) == 1) {
             return true;
         }
     }
     isNotSent(message: Message) {
-        if (message.sent == SentStatus.NOT_SENT) {
+        if (parseInt(message.sent) == 0) {
             return true;
         }
     }
     isDefault(message: Message) {
-        if (message.sent == SentStatus.RECEIVED) {
+        if (parseInt(message.sent) == 2 || parseInt(message.sent) == 3) {
             return true;
         }
     }
 
     isViewed(message: Message) {
-        return message.sent === SentStatus.VIEWED;
+        return parseInt(message.sent) === 3;
     }
 }

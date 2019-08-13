@@ -28,7 +28,6 @@ import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages
 import { MessagesAreaComponent } from "./_components/chat-messages/messages-area/messages-area.component";
 import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
 import { NavbarService } from "./_services/navbar.service";
-import { ChatsDataService } from "./_services/chat.data.service";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { CommonModule } from "@angular/common";
 import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
@@ -114,7 +113,6 @@ registerLocaleData(localeDe);
         Location,
         NavbarService,
         OneSignalService,
-        ChatsDataService,
         {
             provide: LOCALE_ID,
             useValue: "de-DE"

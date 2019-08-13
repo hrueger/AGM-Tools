@@ -8,7 +8,6 @@ import {
     ChangeDetectorRef
 } from "@angular/core";
 import { Message } from "../../../_models/message.model";
-import { SentStatus } from "../../../_models/sent-status.model";
 import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
@@ -26,7 +25,7 @@ export class MessagesAreaComponent implements OnInit {
     constructor(
         private remoteService: RemoteService,
         private cdr: ChangeDetectorRef
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.messages = this.messages.slice(0, 50);
@@ -48,7 +47,7 @@ export class MessagesAreaComponent implements OnInit {
                 chat: null,
                 fromMe: true,
                 created: Date.now(),
-                sent: SentStatus.NOT_SENT,
+                sent: "0",
                 sendername: ""
             };
             this.messages.push(message);
@@ -59,7 +58,7 @@ export class MessagesAreaComponent implements OnInit {
                 })
                 .subscribe(data => {
                     message = this.messages.pop();
-                    message.sent = SentStatus.SENT;
+                    message.sent = "1";
                     this.messages.push(message);
                     // console.log(this.messages);
                     this.cdr.detectChanges();
@@ -87,10 +86,10 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     getIcon(message: Message) {
-        switch (message.sent) {
-            case SentStatus.NOT_SENT:
+        switch (parseInt(message.sent)) {
+            case 0:
                 return "&#xf017;";
-            case SentStatus.SENT:
+            case 1:
                 return "&#xf00c;";
             default:
                 return "&#xf560;";
@@ -99,6 +98,6 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     isViewed(message: Message) {
-        return message.sent === SentStatus.VIEWED;
+        return parseInt(message.sent) === 3;
     }
 }

@@ -13,7 +13,6 @@ import { ActivatedRoute, Router, Route } from "@angular/router";
 import { Location } from "@angular/common";
 
 import { Chat } from "../../_models/chat.model";
-import { ChatsDataService } from "../../_services/chat.data.service";
 import { Message } from "../../_models/message.model";
 import { Contact } from "../../_models/contact.model";
 import { from } from "rxjs";
@@ -27,7 +26,7 @@ import { RemoteService } from "../../_services/remote.service";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatMessagesComponent
-    implements OnInit, AfterViewChecked {
+    implements OnInit {
     @Input() inputReceiverId: number;
     receiverId: number;
     chat: Chat = {
@@ -45,7 +44,6 @@ export class ChatMessagesComponent
     //chats: Chat[];
 
     public messageGotToSend: Event;
-    @ViewChild("messagesListView", { static: false }) messagesListView: ElementRef;
     messageSentFromChild(event: Event) {
         this.messageGotToSend = event;
     }
@@ -82,15 +80,7 @@ export class ChatMessagesComponent
 
 
     }
-    scrollToBottom(): void {
-        if (this.messagesListView && this.messagesListView.nativeElement && this.messagesListView.nativeElement.items.length > 0) {
-            this.messagesListView.nativeElement.scrollToIndex(this.messagesListView.nativeElement.items.length - 1);
 
-        }
-    }
-    ngAfterViewChecked() {
-        this.scrollToBottom();
-    }
 
     getMessages(receiverId) {
         this.remoteService

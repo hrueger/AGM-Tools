@@ -34,7 +34,6 @@ import { AvatarModule } from "ngx-avatar";
 import { NavbarService } from "./_services/navbar.service";
 import { AccordionModule } from "nativescript-accordion/angular";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
-import { ChatsDataService } from "./_services/chat.data.service";
 import { registerLocaleData } from "@angular/common";
 import localeDe from "@angular/common/locales/de";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
@@ -109,7 +108,6 @@ import { NewProjectModalComponent } from "./_components/_modals/new-project.moda
     providers: [
         FormBuilder,
         NavbarService,
-        ChatsDataService,
         ModalDialogService,
         ModalDatetimepicker,
         PlatformRef,
