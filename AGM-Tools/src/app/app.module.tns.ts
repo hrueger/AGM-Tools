@@ -60,6 +60,8 @@ import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
 import { NewCalendarEventModalComponent } from "./_components/_modals/new-calendar-event.modal.tns";
 import { NewProjectModalComponent } from "./_components/_modals/new-project.modal.tns";
+import { EmojiModule } from './_components/ns-emojipicker/emoji/emoji.module';
+import { PickerModule } from './_components/ns-emojipicker/picker/picker.module';
 
 @NgModule({
     declarations: [
@@ -103,7 +105,8 @@ import { NewProjectModalComponent } from "./_components/_modals/new-project.moda
         NativeScriptUIDataFormModule,
         NativeScriptUIGaugeModule,
         AvatarModule,
-        AccordionModule
+        PickerModule,
+        EmojiModule,
     ],
     providers: [
         FormBuilder,

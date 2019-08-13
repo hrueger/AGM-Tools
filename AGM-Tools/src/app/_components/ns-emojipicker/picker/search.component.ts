@@ -13,11 +13,8 @@ import { EmojiSearch } from './emoji-search.service';
 
 let id = 0;
 
-@Component({
-  selector: 'emoji-search',
-  template: `
-    <StackLayout class="emoji-mart-search">
-      <TextField
+/*
+<TextField
         [id]="inputId"
         #inputRef
         type="search"
@@ -26,8 +23,9 @@ let id = 0;
         [autofocus]="autoFocus"
         [(ngModel)]="query"
         (ngModelChange)="handleChange()"
+         ngDefaultControl
       ></TextField>
-      
+
       <Label class="emoji-mart-sr-only" [htmlFor]="inputId">
         {{ i18n.search }}
       </Label>
@@ -49,6 +47,13 @@ let id = 0;
           <path [attr.d]="icon" />
         </svg>
       </Button>
+*/
+
+@Component({
+  selector: 'emoji-search',
+  template: `
+    <StackLayout class="emoji-mart-search">
+      <Label tet="Search"></Label>
     </StackLayout>
   `,
   preserveWhitespaces: false,

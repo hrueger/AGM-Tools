@@ -11,7 +11,7 @@ import { Emoji } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 @Component({
   selector: 'emoji-skins',
   template: `
-    <TextField 
+    <StackLayout
       class="emoji-mart-skin-swatches"
       [class.emoji-mart-skin-swatches-opened]="opened"
     >

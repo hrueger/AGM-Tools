@@ -1,6 +1,9 @@
+<AbsoluteLayout *ngIf="showEmojiPicker">
+    <emoji-mart></emoji-mart>
+</AbsoluteLayout>
 <FlexboxLayout class="message-box">
     <FlexboxLayout class="text-area">
-        <Button text="&#xf580;" class="fas icon"></Button>
+        <Button (tap)="toggleEmojiPicker()" text="&#xf580;" class="fas icon"></Button>
         <TextView hint="Type a message" text="" class="text-view"></TextView>
         <Button text="&#xf0c6;" class="fas icon"></Button>
         <Button text="&#xf030;" class="fas icon"></Button>

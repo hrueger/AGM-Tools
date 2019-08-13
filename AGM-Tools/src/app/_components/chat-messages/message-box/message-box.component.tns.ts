@@ -7,5 +7,10 @@ import { Component, Inject, Input } from "@angular/core";
     styleUrls: ["./message-box.component.scss"]
 })
 export class MessageBoxComponent {
-    constructor(@Inject("platform") public platform) {}
+    showEmojiPicker: boolean = false;
+    constructor(@Inject("platform") public platform) { }
+
+    toggleEmojiPicker() {
+        this.showEmojiPicker = !this.showEmojiPicker;
+    }
 }

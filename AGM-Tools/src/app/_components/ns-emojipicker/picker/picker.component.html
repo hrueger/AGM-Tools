@@ -1,16 +1,22 @@
-<StackLayout class="emoji-mart" [style.width]="getWidth()" [ngStyle]="style">
+<StackLayout class="emoji-mart">
     <StackLayout class="emoji-mart-bar">
-        <emoji-mart-anchors [categories]="categories" (anchorClick)="handleAnchorClick($event)" [color]="color" [selected]="selected" [i18n]="i18n" [icons]="categoriesIcons"></emoji-mart-anchors>
+         <!--<Label text="Kategorien"></Label>-->
+       <emoji-mart-anchors [categories]="categories" (anchorClick)="handleAnchorClick($event)" [color]="color" [selected]="selected" [i18n]="i18n" [icons]="categoriesIcons"></emoji-mart-anchors>
     </StackLayout>
-    <emoji-search #searchRef [i18n]="i18n" (searchResults)="handleSearch($event)" (enterKey)="handleEnterKey($event)" [include]="include" [exclude]="exclude" [custom]="custom" [autoFocus]="autoFocus" [icons]="searchIcons" [emojisToShowFilter]="emojisToShowFilter"></emoji-search>
+    <Label text="Suche"></Label>
+    <!--<emoji-search #searchRef [i18n]="i18n" (searchResults)="handleSearch($event)" (enterKey)="handleEnterKey($event)" [include]="include" [exclude]="exclude" [custom]="custom" [autoFocus]="autoFocus" [icons]="searchIcons" [emojisToShowFilter]="emojisToShowFilter"></emoji-search>-->
     <StackLayout #scrollRef class="emoji-mart-scroll" (scroll)="handleScroll()" [attr.aria-label]="i18n.emojilist">
-        <emoji-category *ngFor="let category of activeCategories; let idx = index; trackBy: categoryTrack" #categoryRef [id]="category.id" [name]="category.name" [emojis]="category.emojis" [perLine]="perLine" [totalFrequentLines]="totalFrequentLines" [hasStickyPosition]="isNative"
+        <!--<emoji-category *ngFor="let category of activeCategories; let idx = index; trackBy: categoryTrack" #categoryRef [id]="category.id" [name]="category.name" [emojis]="category.emojis" [perLine]="perLine" [totalFrequentLines]="totalFrequentLines" [hasStickyPosition]="isNative"
             [i18n]="i18n" [hideObsolete]="hideObsolete" [notFoundEmoji]="notFoundEmoji" [custom]="category.id == RECENT_CATEGORY.id ? CUSTOM_CATEGORY.emojis : undefined" [recent]="category.id == RECENT_CATEGORY.id ? recent : undefined" [emojiIsNative]="isNative"
             [emojiSkin]="skin" [emojiSize]="emojiSize" [emojiSet]="set" [emojiSheetSize]="sheetSize" [emojiForceSize]="isNative" [emojiTooltip]="emojiTooltip" [emojiBackgroundImageFn]="backgroundImageFn" (emojiOver)="handleEmojiOver($event)" (emojiLeave)="handleEmojiLeave()"
-            (emojiClick)="handleEmojiClick($event)"></emoji-category>
+            (emojiClick)="handleEmojiClick($event)"></emoji-category>-->
+            
+    <Label text="Emojies"></Label>
     </StackLayout>
     <StackLayout class="emoji-mart-bar" *ngIf="showPreview">
-        <emoji-preview #previewRef [title]="title" [emoji]="previewEmoji" [idleEmoji]="emoji" [emojiIsNative]="isNative" [emojiSize]="38" [emojiSkin]="skin" [emojiSet]="set" [i18n]="i18n" [emojiSheetSize]="sheetSize" [emojiBackgroundImageFn]="backgroundImageFn"
-            (skinChange)="handleSkinChange($event)"></emoji-preview>
+        <!--<emoji-preview #previewRef [title]="title" [emoji]="previewEmoji" [idleEmoji]="emoji" [emojiIsNative]="isNative" [emojiSize]="38" [emojiSkin]="skin" [emojiSet]="set" [i18n]="i18n" [emojiSheetSize]="sheetSize" [emojiBackgroundImageFn]="backgroundImageFn"
+            (skinChange)="handleSkinChange($event)"></emoji-preview>-->
+            
+    <Label text="Vorschau"></Label>
     </StackLayout>
 </StackLayout>

@@ -26,8 +26,8 @@ import { EmojiCategory } from '@ctrl/ngx-emoji-mart/ngx-emoji';
             <path [attr.d]="icons[category.id]" />
           </svg>
         </StackLayout>
-        <Label class="emoji-mart-anchor-bar" [style.background-color]="color"></Label>
-      </span>
+        <Label class="emoji-mart-anchor-bar" [style.background-color]="color">
+      </Label>
     </ng-template>
   </StackLayout>
   `,

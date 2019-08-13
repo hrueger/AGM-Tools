@@ -59,6 +59,7 @@ const I18N: any = {
 @Component({
   selector: 'emoji-mart',
   templateUrl: './picker.component.html',
+  styleUrls: ["./picker.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   preserveWhitespaces: false,
 })
