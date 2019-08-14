@@ -32,7 +32,6 @@ import { NativeScriptUIDataFormModule } from "nativescript-ui-dataform/angular";
 import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
 import { AvatarModule } from "ngx-avatar";
 import { NavbarService } from "./_services/navbar.service";
-import { AccordionModule } from "nativescript-accordion/angular";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { registerLocaleData } from "@angular/common";
 import localeDe from "@angular/common/locales/de";
@@ -57,6 +56,7 @@ import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns"
 import { EditUserModalComponent } from "./_components/_modals/edit-user.modal.tns";
 import { NewNotificationModalComponent } from "./_components/_modals/new-notification.modal.tns";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
+import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
 import { NewCalendarEventModalComponent } from "./_components/_modals/new-calendar-event.modal.tns";
 import { NewProjectModalComponent } from "./_components/_modals/new-project.modal.tns";
@@ -82,6 +82,7 @@ import { PickerModule } from './_components/ns-emojipicker/picker/picker.module'
         NavbarComponent,
         SidebarComponent,
         ShortWhenPipe,
+        TruncatePipe,
         ChatMessagesComponent,
         MessagesAreaComponent,
         MessageBoxComponent,
@@ -90,8 +91,7 @@ import { PickerModule } from './_components/ns-emojipicker/picker/picker.module'
         EditUserModalComponent,
         NewNotificationModalComponent,
         NewCalendarEventModalComponent,
-        NewProjectModalComponent,
-        TruncatePipe
+        NewProjectModalComponent
     ],
     imports: [
         NativeScriptModule,
@@ -115,6 +115,7 @@ import { PickerModule } from './_components/ns-emojipicker/picker/picker.module'
         ModalDatetimepicker,
         PlatformRef,
         ModalDatetimepicker,
+        ToIconPipe,
         { provide: "platform", useValue: platform },
         {
             provide: LOCALE_ID,

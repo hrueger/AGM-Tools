@@ -1,0 +1,7 @@
+<FlexboxLayout class="emoji-picker-anchors">
+    <ng-container *ngFor="let category of categories; let idx = index">
+        <Label *ngIf="category.anchor !== false" (tap)="this.handleClick($event, idx)" class="emoji-picker-anchor" [class.emoji-picker-anchor-selected]="category.name === selected.name"
+        [style.color]="category.name === selected.name ? color : null" [text]="parseIcon(icons[category.id])"
+            class="fas"></Label>
+    </ng-container>
+</FlexboxLayout>

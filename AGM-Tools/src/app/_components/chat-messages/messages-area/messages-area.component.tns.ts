@@ -27,13 +27,13 @@ export class MessagesAreaComponent implements OnInit {
             this.messagesListView.nativeElement.scrollToIndex(this.messagesListView.nativeElement.items.length - 1);
 
         } else {
-            console.log("!!! Couldn't scroll to bottom");
+            this.shouldScrollToBottom = true;
         }
     }
     ngAfterViewChecked() {
         if (this.shouldScrollToBottom) {
-            this.scrollToBottom();
             this.shouldScrollToBottom = false;
+            this.scrollToBottom();
         }
     }
 

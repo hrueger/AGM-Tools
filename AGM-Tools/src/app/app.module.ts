@@ -50,6 +50,7 @@ import { routes } from "./app.routes";
 import { DashboardLayoutModule } from '@syncfusion/ej2-angular-layouts';
 import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
+import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 
 registerLocaleData(localeDe);
 
@@ -74,6 +75,7 @@ registerLocaleData(localeDe);
         ChatMessagesComponent,
         ShortWhenPipe,
         TruncatePipe,
+        ToIconPipe,
         MessagesAreaComponent,
         MessageBoxComponent,
         DoneComponent,

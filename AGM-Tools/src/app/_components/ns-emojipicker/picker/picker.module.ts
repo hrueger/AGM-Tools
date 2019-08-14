@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { EmojiModule } from '../emoji/public_api';
 import { AnchorsComponent } from './anchors.component';
 import { CategoryComponent } from './category.component';
 import { PickerComponent } from './picker.component';
@@ -29,4 +29,4 @@ import { SkinComponent } from './skins.component';
     SkinComponent,
   ],
 })
-export class PickerModule {}
+export class PickerModule { }

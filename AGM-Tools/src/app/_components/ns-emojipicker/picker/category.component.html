@@ -1,0 +1,19 @@
+<RadListView [items]="emojis">
+    <ng-template let-emoji="item">
+        <StackLayout>
+            
+            <emojitest [emoji]="emoji" [size]="emojiSize" [skin]="emojiSkin" [isNative]="emojiIsNative" [set]="emojiSet" [sheetSize]="emojiSheetSize" [forceSize]="emojiForceSize" [tooltip]="emojiTooltip" [backgroundImageFn]="emojiBackgroundImageFn" [hideObsolete]="hideObsolete"
+                (emojiOver)="emojiOver.emit($event)" (emojiLeave)="emojiLeave.emit($event)" (emojiClick)="emojiClick.emit($event)">
+        </emojitest>
+        </StackLayout>
+    </ng-template>
+</RadListView>
+<!--<ListViewGridLayout tkListViewLayout scrollDirection="Vertical" spanCount="10"></ListViewGridLayout>-->
+
+
+<StackLayout *ngIf="emojis && !emojis.length">
+    <StackLayout>
+        <ngx-emoji [emoji]="notFoundEmoji" size="38" [skin]="emojiSkin" [isNative]="emojiIsNative" [set]="emojiSet" [sheetSize]="emojiSheetSize" [forceSize]="emojiForceSize" [tooltip]="emojiTooltip" [backgroundImageFn]="emojiBackgroundImageFn"></ngx-emoji>
+    </StackLayout>
+    <Label class="emoji-mart-no-results-label" [text]="i18n.notfound + 'notfound!!!!'"></Label>
+</StackLayout>

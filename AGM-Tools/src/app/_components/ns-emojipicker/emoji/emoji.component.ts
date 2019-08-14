@@ -18,13 +18,13 @@ export interface Emoji {
   skin: 1 | 2 | 3 | 4 | 5 | 6;
   sheetSize: 16 | 20 | 32 | 64;
   set:
-    | 'apple'
-    | 'google'
-    | 'twitter'
-    | 'emojione'
-    | 'messenger'
-    | 'facebook'
-    | '';
+  | 'apple'
+  | 'google'
+  | 'twitter'
+  | 'emojione'
+  | 'messenger'
+  | 'facebook'
+  | '';
   size: number;
   emoji: string | EmojiData;
   backgroundImageFn: (set: string, sheetSize: number) => string;
@@ -40,24 +40,8 @@ export interface EmojiEvent {
 }
 
 @Component({
-  selector: 'ngx-emoji',
-  template: `
-  <button *ngIf="isVisible"
-    type="button"
-    (click)="handleClick($event)"
-    (mouseenter)="handleOver($event)"
-    (mouseleave)="handleLeave($event)"
-    [title]="title"
-    [attr.aria-label]="label"
-    class="emoji-mart-emoji"
-    [class.emoji-mart-emoji-native]="isNative"
-    [class.emoji-mart-emoji-custom]="custom">
-    <span [ngStyle]="style">
-      <ng-template [ngIf]="isNative">{{ unified }}</ng-template>
-      <ng-content></ng-content>
-    </span>
-  </button>
-  `,
+  selector: 'emoji',
+  templateUrl: "./emoji.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
   preserveWhitespaces: false,
 })
@@ -88,9 +72,11 @@ export class EmojiComponent implements OnChanges, Emoji {
   // TODO: replace 4.0.3 w/ dynamic get verison from emoji-datasource in package.json
   @Input() backgroundImageFn: Emoji['backgroundImageFn'] = DEFAULT_BACKGROUNDFN;
 
-  constructor(private emojiService: EmojiService) {}
+  constructor(private emojiService: EmojiService) {
+  }
 
   ngOnChanges() {
+
     if (!this.emoji) {
       return (this.isVisible = false);
     }
@@ -120,24 +106,22 @@ export class EmojiComponent implements OnChanges, Emoji {
 
     if (this.isNative && data.unified && data.native) {
       // hide older emoji before the split into gendered emoji
-      this.style = { fontSize: `${this.size}px` };
+      this.style = { fontSize: `${this.size}` };
 
       if (this.forceSize) {
         this.style.display = 'inline-block';
-        this.style.width = `${this.size}px`;
-        this.style.height = `${this.size}px`;
-        this.style['word-break'] = 'keep-all';
+        this.style.width = `${this.size}`;
+        this.style.height = `${this.size}`;
       }
     } else if (data.custom) {
       this.style = {
-        width: `${this.size}px`,
-        height: `${this.size}px`,
-        display: 'inline-block',
+        width: `${this.size}`,
+        height: `${this.size}`,
       };
       if (data.spriteUrl && this.sheetRows && this.sheetColumns) {
         this.style = {
           ...this.style,
-          backgroundImage: `url(${data.spriteUrl})`,
+          backgroundImage: `url("${data.spriteUrl}")`,
           backgroundSize: `${100 * this.sheetColumns}% ${100 *
             this.sheetRows}%`,
           backgroundPosition: this.emojiService.getSpritePosition(data.sheet, this.sheetColumns),
@@ -145,14 +129,14 @@ export class EmojiComponent implements OnChanges, Emoji {
       } else {
         this.style = {
           ...this.style,
-          backgroundImage: `url(${data.imageUrl})`,
+          backgroundImage: `url("${data.imageUrl}")`,
           backgroundSize: 'contain',
         };
       }
     } else {
       if (data.hidden.length && data.hidden.includes(this.set)) {
         if (this.fallback) {
-          this.style = { fontSize: `${this.size}px` };
+          this.style = { fontSize: `${this.size}` };
           this.unified = this.fallback(data, this);
         } else {
           return (this.isVisible = false);
@@ -168,6 +152,7 @@ export class EmojiComponent implements OnChanges, Emoji {
         );
       }
     }
+    console.log(this.style);
     return (this.isVisible = true);
   }
 

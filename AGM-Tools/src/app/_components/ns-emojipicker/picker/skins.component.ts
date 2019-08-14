@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 
-import { Emoji } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { Emoji } from '../emoji/public_api';
 
 @Component({
   selector: 'emoji-skins',

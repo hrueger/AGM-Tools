@@ -1,0 +1,6 @@
+<StackLayout *ngIf="isVisible" (click)="handleClick($event)" (mouseenter)="handleOver($event)" (mouseleave)="handleLeave($event)" [title]="title" [attr.aria-label]="label" class="emoji-mart-emoji" [class.emoji-mart-emoji-native]="isNative" [class.emoji-mart-emoji-custom]="custom">
+    <Label [ngStyle]="style">
+        <ng-template [ngIf]="isNative">{{ unified }}</ng-template>
+        <ng-content></ng-content>
+    </Label>
+</StackLayout>
