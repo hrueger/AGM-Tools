@@ -1,6 +1,8 @@
 .emoji-picker-container {
     width: 100%;
+    height: 300;
     background-color: transparent;
+    
 }
 
 .emoji-picker {
@@ -17,4 +19,13 @@
     border-bottom-color: #858585;
     border-bottom-style: solid;
     border-bottom-width: 1;
+}
+
+.tabViewContainer {
+    font-size: 10;
+    
+}
+
+.emoji-list-container {
+    background-color: #fff;
 }

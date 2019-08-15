@@ -23,7 +23,6 @@ import { CategoryComponent } from './category.component';
 import { EmojiFrequentlyService } from './emoji-frequently.service';
 import { PreviewComponent } from './preview.component';
 import { SearchComponent } from './search.component';
-import * as icons from './svgs';
 
 
 
@@ -89,8 +88,8 @@ export class PickerComponent implements OnInit {
   @Input() include?: string[];
   @Input() exclude?: string[] = ["custom"];
   @Input() notFoundEmoji = 'sleuth_or_spy';
-  @Input() categoriesIcons = icons.categories;
-  @Input() searchIcons = icons.search;
+  @Input() categoriesIcons;
+  @Input() searchIcons;
   @Input() showSingleCategory = false;
   @Output() emojiClick = new EventEmitter<any>();
   @Output() emojiSelect = new EventEmitter<any>();
@@ -194,8 +193,8 @@ export class PickerComponent implements OnInit {
         this.categories.push(category);
       }
 
-      this.categoriesIcons = { ...icons.categories, ...this.categoriesIcons };
-      this.searchIcons = { ...icons.search, ...this.searchIcons };
+      this.categoriesIcons = {...this.categoriesIcons };
+      this.searchIcons = { ...this.searchIcons };
     }
 
     const includeRecent =
@@ -225,6 +224,7 @@ export class PickerComponent implements OnInit {
     this.categories[categoriesToLoadFirst - 1].emojis = lastActiveCategoryEmojis.slice(0, 60);
 
     this.ref.markForCheck();
+    
   }
   /*setActiveCategories(categoriesToMakeActive: Array<EmojiCategory>) {
     if (this.showSingleCategory) {

@@ -152,7 +152,6 @@ export class EmojiComponent implements OnChanges, Emoji {
         );
       }
     }
-    console.log(this.style);
     return (this.isVisible = true);
   }
 
