@@ -6,7 +6,7 @@ import {
   EmojiVariation,
 } from './data/data.interfaces';
 import { emojis } from './data/emojis';
-import { Emoji } from './emoji.component';
+import { Emoji } from './emoji.model';
 
 const COLONS_REGEX = /^(?:\:([^\:]+)\:)(?:\:skin-tone-(\d)\:)?$/;
 const SKINS = ['1F3FA', '1F3FB', '1F3FC', '1F3FD', '1F3FE', '1F3FF'];

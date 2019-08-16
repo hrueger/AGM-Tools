@@ -1,5 +1,3 @@
-export * from './anchors.component';
-export * from './category.component';
 export * from './emoji-frequently.service';
 export * from './emoji-search.service';
 export * from './picker.component';

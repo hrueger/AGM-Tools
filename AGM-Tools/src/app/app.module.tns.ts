@@ -60,7 +60,6 @@ import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker"
 import { NewCalendarEventModalComponent } from "./_components/_modals/new-calendar-event.modal.tns";
 import { NewProjectModalComponent } from "./_components/_modals/new-project.modal.tns";
-import { EmojiModule } from './_components/ns-emojipicker/emoji/emoji.module';
 import { PickerModule } from './_components/ns-emojipicker/picker/picker.module';
 
 @NgModule({
@@ -105,8 +104,7 @@ import { PickerModule } from './_components/ns-emojipicker/picker/picker.module'
         NativeScriptUIDataFormModule,
         NativeScriptUIGaugeModule,
         AvatarModule,
-        PickerModule,
-        EmojiModule,
+        PickerModule
     ],
     providers: [
         FormBuilder,

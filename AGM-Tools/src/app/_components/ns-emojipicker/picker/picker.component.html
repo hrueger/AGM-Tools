@@ -1,13 +1,13 @@
-<StackLayout class="emoji-picker-container">
-    
-        <!--<StackLayout row="0" class="emoji-picker-bar">
+<GridLayout rows="*, auto" class="emoji-picker-container emoji-list-container">
+    <!--<StackLayout row="0" class="emoji-picker-bar">
             
             <emoji-picker-anchors [categories]="categories" (anchorClick)="handleAnchorClick($event)" [color]="color" [selected]="selected" [i18n]="i18n" [icons]="categoriesIcons"></emoji-picker-anchors>
         </StackLayout>
 
         <StackLayout row="1">
             <Label text="Suche"></Label>-->
-        <!--<emoji-search #searchRef [i18n]="i18n" (searchResults)="handleSearch($event)" (enterKey)="handleEnterKey($event)" [include]="include" [exclude]="exclude" [custom]="custom" [autoFocus]="autoFocus" [icons]="searchIcons" [emojisToShowFilter]="emojisToShowFilter"></emoji-search>--><!--
+    <!--<emoji-search #searchRef [i18n]="i18n" (searchResults)="handleSearch($event)" (enterKey)="handleEnterKey($event)" [include]="include" [exclude]="exclude" [custom]="custom" [autoFocus]="autoFocus" [icons]="searchIcons" [emojisToShowFilter]="emojisToShowFilter"></emoji-search>-->
+    <!--
         </StackLayout>
 
         <StackLayout row="2">
@@ -16,25 +16,27 @@
             (emojiOver)="handleEmojiOver($event)" (emojiLeave)="handleEmojiLeave()" (emojiClick)="handleEmojiClick($event)"></emoji-category>
         </StackLayout>-->
 
-        <TabView row="0" id="tabViewContainer" class="fas">
-            <ng-container *ngFor="let category of categories; let idx = index">
-                <StackLayout  *tabItem="{title: '', iconSource: '~/assets/emoji-picker/'+category.id+'.png'}">
-                    <StackLayout *ngIf="category.id=='search'" class="emoji-list-container">
-                        <Label text="Suche" textWrap="true" class="m-15 h2 text-left"></Label>
-                    </StackLayout>
-                    <StackLayout *ngIf="category.id!='search'" class="emoji-list-container">
-                        <Label *ngFor="let emoji of " [text]="'Emoji'+emoji"></Label>
-                        <RadListView [items]="category.emojis">
-                            <ng-template let-emoji="item">
-                                
-                                <emoji [emoji]="emoji" [size]="emojiSize" [skin]="emojiSkin" [isNative]="emojiIsNative" [set]="emojiSet" [sheetSize]="emojiSheetSize" [forceSize]="emojiForceSize" [tooltip]="emojiTooltip" [backgroundImageFn]="emojiBackgroundImageFn" [hideObsolete]="hideObsolete" (emojiOver)="emojiOver.emit($event)" (emojiLeave)="emojiLeave.emit($event)" (emojiClick)="emojiClick.emit($event)"></emoji>
-                                
-                            </ng-template>
-                            <ListViewGridLayout scrollDirection="Vertical" spanCount="2"></ListViewGridLayout>
-                        </RadListView>
-                    </StackLayout>
+    <TabView row="0" id="tabViewContainer" class="fas">
+        <ng-container *ngFor="let category of categories; let idx = index">
+            <StackLayout *tabItem="{title: '', iconSource: '~/assets/emoji-picker/'+category.id+'.png'}">
+                <StackLayout *ngIf="category.id=='search'" class="emoji-list-container">
+                    <Label text="Suche" textWrap="true" class="m-15 h2 text-left"></Label>
                 </StackLayout>
-            </ng-container>
-        </TabView>
-
-</StackLayout>
+                <StackLayout *ngIf="category.id!='search'" class="emoji-list-container">
+                    <RadListView #listView [items]="category.emojis">
+                        <ListViewGridLayout tkListViewLayout scrollDirection="Vertical" [spanCount]="perLine">
+                        </ListViewGridLayout>
+                        <ng-template let-emoji="item">
+                            <Image [src]="getImgSrc(emoji)"></Image>
+                        </ng-template>
+                    </RadListView>
+                </StackLayout>
+            </StackLayout>
+        </ng-container>
+    </TabView>
+    <GridLayout row="1" rows="auto" cols="*, *, *">
+        <Label row="0" column="0" text="Suche"></Label>
+        <Label row="0" column="1" text="Suche"></Label>
+        <Label row="0" column="2" text="Suche"></Label>
+    </GridLayout>
+</GridLayout>

@@ -29,6 +29,7 @@ export class ChatMessagesComponent
     implements OnInit {
     @Input() inputReceiverId: number;
     receiverId: number;
+    showEmojiPicker = true;
     chat: Chat = {
         contact: new Contact(),
         type: null,

@@ -46,7 +46,7 @@ export class EmojiFrequentlyService {
     localStorage.setItem(`${this.NAMESPACE}.last`, emoji.id);
     localStorage.setItem(`${this.NAMESPACE}.frequently`, JSON.stringify(this.frequently));
   }
-  get(perLine: number, totalLines: number) {
+  get(quantity: number) {
     if (!this.initialized) {
       this.init();
     }
@@ -54,14 +54,14 @@ export class EmojiFrequentlyService {
       this.defaults = {};
       const result = [];
 
-      for (let i = 0; i < perLine; i++) {
-        this.defaults[this.DEFAULTS[i]] = perLine - i;
+      for (let i = 0; i < this.DEFAULTS.length; i++) {
+        this.defaults[this.DEFAULTS[i]] = this.DEFAULTS.length - i;
         result.push(this.DEFAULTS[i]);
       }
       return result;
     }
 
-    const quantity = perLine * totalLines;
+
     const frequentlyKeys = Object.keys(this.frequently);
 
     const sorted = frequentlyKeys
