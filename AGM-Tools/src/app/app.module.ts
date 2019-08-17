@@ -40,7 +40,7 @@ import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
 import { AccordionModule } from "@syncfusion/ej2-angular-navigations";
-//import { PickerModule } from "@ctrl/ngx-emoji-mart";
+import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { OneSignalService } from "./_services/onesignal.service";
 import { FileUploadComponent } from "./_components/file-upload/file-upload.component";
 import { ToastrModule } from "ngx-toastr";
@@ -105,7 +105,7 @@ registerLocaleData(localeDe);
         UploaderModule,
         FormsModule,
         ReactiveFormsModule,
-        //PickerModule,
+        PickerModule,
         BrowserAnimationsModule,
         AccordionModule,
         PdfJsViewerModule,

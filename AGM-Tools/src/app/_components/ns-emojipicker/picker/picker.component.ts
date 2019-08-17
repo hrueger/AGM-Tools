@@ -54,7 +54,7 @@ const I18N: any = {
 };
 
 @Component({
-  selector: 'emoji-mart',
+  selector: 'emoji-picker',
   templateUrl: './picker.component.html',
   styleUrls: ["./picker.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,7 +62,7 @@ const I18N: any = {
 })
 export class PickerComponent implements OnInit {
   @Input() perLine = 10;
-
+  @Input() showEmojiPicker: boolean = false;
   @Input() i18n: any = {};
 
   @Input() color = '#2b669a';
@@ -73,6 +73,7 @@ export class PickerComponent implements OnInit {
   @Input() activeCategories: EmojiCategory[] = [];
   @Input() skin: Emoji['skin'] = 1;
   @Output() emojiClick = new EventEmitter<any>();
+  @Output() backspaceClick = new EventEmitter<any>();
   @Output() skinChange = new EventEmitter<Emoji['skin']>();
 
   recent?: string[];
@@ -84,10 +85,13 @@ export class PickerComponent implements OnInit {
     name: 'Recent',
     emojis: null,
   };
+  showSearch: boolean = false;
   constructor(
     private lastUsedEmojisService: EmojiFrequentlyService,
     private emojiService: EmojiService,
   ) { }
+
+
 
   ngOnInit() {
 
@@ -140,5 +144,19 @@ export class PickerComponent implements OnInit {
     }
 
   }
+
+  onEmojiClick(emoji) {
+    this.lastUsedEmojisService.add(emoji);
+    this.emojiClick.emit(emoji);
+  }
+
+  backspace() {
+    this.backspaceClick.emit();
+  }
+
+  toggleSearch() {
+    this.showSearch = !this.showSearch;
+  }
+
 
 }

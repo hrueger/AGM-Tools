@@ -8,42 +8,25 @@ export class EmojiFrequentlyService {
   frequently: { [key: string]: number } | null = null;
   defaults: { [key: string]: number } = {};
   initialized = false;
-  DEFAULTS = [
-    '+1',
-    'grinning',
-    'kissing_heart',
-    'heart_eyes',
-    'laughing',
-    'stuck_out_tongue_winking_eye',
-    'sweat_smile',
-    'joy',
-    'scream',
-    'disappointed',
-    'unamused',
-    'weary',
-    'sob',
-    'sunglasses',
-    'heart',
-    'poop',
-  ];
+  DEFAULTS = ["1f44d", "1f60e", "1f605", "1f602", "1f600"];
 
   init() {
     this.frequently = JSON.parse(localStorage.getItem(`${this.NAMESPACE}.frequently`) || 'null');
     this.initialized = true;
   }
-  add(emoji: EmojiData) {
+  add(emojiId: string) {
     if (!this.initialized) {
       this.init();
     }
     if (!this.frequently) {
       this.frequently = this.defaults;
     }
-    if (!this.frequently[emoji.id]) {
-      this.frequently[emoji.id] = 0;
+    if (!this.frequently[emojiId]) {
+      this.frequently[emojiId] = 0;
     }
-    this.frequently[emoji.id] += 1;
+    this.frequently[emojiId] += 1;
 
-    localStorage.setItem(`${this.NAMESPACE}.last`, emoji.id);
+    localStorage.setItem(`${this.NAMESPACE}.last`, emojiId);
     localStorage.setItem(`${this.NAMESPACE}.frequently`, JSON.stringify(this.frequently));
   }
   get(quantity: number) {

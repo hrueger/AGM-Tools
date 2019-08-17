@@ -29,7 +29,7 @@ export class ChatMessagesComponent
     implements OnInit {
     @Input() inputReceiverId: number;
     receiverId: number;
-    showEmojiPicker = true;
+    showEmojiPicker = false;
     chat: Chat = {
         contact: new Contact(),
         type: null,
@@ -43,18 +43,21 @@ export class ChatMessagesComponent
     unread: number;
     messages: Message[];
     //chats: Chat[];
+    public messageGotToSend: string;
+    inputMessage: string;
 
-    public messageGotToSend: Event;
-    messageSentFromChild(event: Event) {
-        this.messageGotToSend = event;
-    }
-
+    @ViewChild("inputMessageField", { static: false }) inputMessageField: ElementRef;
     constructor(
         private remoteService: RemoteService,
         private _location: Location,
         private cdr: ChangeDetectorRef,
         private route: ActivatedRoute
     ) { }
+
+    sendMessage() {
+        this.messageGotToSend = this.inputMessage;
+        this.inputMessage = "";
+    }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
@@ -76,12 +79,21 @@ export class ChatMessagesComponent
                     });
             });
         });
-
-
-
-
     }
 
+
+    onEmojiClick(emoji: string) {
+        //@ts-ignore
+        this.inputMessage = (this.inputMessage ? this.inputMessage : "") + String.fromCodePoint("0x" + emoji);
+        //console.log(this.inputMessageField.nativeElement.android.setSelection);
+        if (this.inputMessageField.nativeElement.android) {
+            setTimeout(() => {
+                this.inputMessageField.nativeElement.android.setSelection(
+                    this.inputMessageField.nativeElement.android.length()
+                );
+            }, 0);
+        }
+    }
 
     getMessages(receiverId) {
         this.remoteService
@@ -99,5 +111,32 @@ export class ChatMessagesComponent
     goBack() {
         //@ts-ignore
         this._location.back();
+    }
+
+
+
+    toggleEmojiPicker() {
+        if (this.showEmojiPicker) {
+            this.showEmojiPicker = false;
+            this.inputMessageField.nativeElement.focus();
+        } else {
+            this.showEmojiPicker = true;
+            this.inputMessageField.nativeElement.dismissSoftInput();
+        }
+    }
+    showKeyboard() {
+        this.showEmojiPicker = false;
+    }
+
+    onBackspaceClick() {
+        this.inputMessage = (this.inputMessage ? this.inputMessage.slice(0, -1) : "");
+        //console.log(this.inputMessageField.nativeElement.android.setSelection);
+        if (this.inputMessageField.nativeElement.android) {
+            setTimeout(() => {
+                this.inputMessageField.nativeElement.android.setSelection(
+                    this.inputMessageField.nativeElement.android.length()
+                );
+            }, 0);
+        }
     }
 }

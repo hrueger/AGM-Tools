@@ -8,12 +8,21 @@
 </ActionBar>
 <GridLayout rows="*, auto" columns="auto" class="wallpaper">
     <StackLayout row="0" column="0" width="100%">
-        <ns-messages-area [messages]="messages" class="messages-area"></ns-messages-area>
+        <ns-messages-area [receiverId]="receiverId" [messageSent]="messageGotToSend" [messages]="messages" class="messages-area">
+        </ns-messages-area>
     </StackLayout>
     <StackLayout row="1" column="0" width="100%">
-        <ns-message-box class="message-box"></ns-message-box>
-
-        <emoji-mart *ngIf="showEmojiPicker"></emoji-mart>
-
+        <FlexboxLayout class="message-box mobile">
+            <FlexboxLayout class="text-area">
+                <Button (tap)="toggleEmojiPicker()" text="&#xf580;" class="fas icon"></Button>
+                <TextView #inputMessageField (tap)="showKeyboard()" hint="Nachricht" [(ngModel)]="inputMessage" class="text-view"></TextView>
+                <Button text="&#xf0c6;" class="fas icon"></Button>
+                <Button text="&#xf030;" class="fas icon"></Button>
+            </FlexboxLayout>
+            <Button text="&#xf1d8;" (tap)="sendMessage()" class="fas icon send"></Button>
+        </FlexboxLayout>
+        <emoji-picker (emojiClick)="onEmojiClick($event)" (backspaceClick)="onBackspaceClick()" [showEmojiPicker]="showEmojiPicker">
+        </emoji-picker>
     </StackLayout>
+
 </GridLayout>

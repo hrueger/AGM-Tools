@@ -4,7 +4,8 @@
     background-color: transparent;
 }
 
-.emoji-picker {
+.emoji-picker,
+.emoji-search-container {
     color: #222427;
     background: #fff;
     margin: 10;
@@ -20,10 +21,24 @@
     border-bottom-width: 1;
 }
 
-.tabViewContainer {
-    font-size: 10;
-}
-
 .emoji-list-container {
     background-color: #fff;
+    .emoji {
+        margin: 4;
+    }
+}
+
+.bottom-bar {
+    background-color: rgb(226, 226, 226);
+    padding-top: 12;
+    padding-bottom: 0;
+    padding-left: 15;
+    padding-right: 15;
+    .icon {
+        font-size: 25;
+    }
+}
+
+.emoji-search-container * {
+    border: 1 solid red;
 }

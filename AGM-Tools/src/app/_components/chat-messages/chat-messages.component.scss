@@ -26,6 +26,66 @@
     }
 }
 
+.message-box {
+    padding: 5px;
+}
+
+.emoji-picker {
+    position: absolute;
+    bottom: 50px;
+    left: 10px;
+}
+
+.message-box {
+    width: 100%;
+    align-items: flex-end;
+    .icon {
+        padding: 5;
+        flex-grow: 0;
+        border-radius: 50%;
+    }
+    .text-area {
+        flex-grow: 1;
+        align-items: flex-end;
+        .text-view {
+            flex-grow: 1;
+        }
+    }
+}
+
+.message-box .icon {
+    font-size: 24;
+    margin: 0 0 5 0;
+    padding: 0;
+    background-color: #ffffff;
+    border-color: transparent;
+    border-width: 1;
+    width: 30;
+    height: 30;
+    color: #979797;
+}
+
+.message-box .text-area {
+    background: white;
+    border-radius: 50%;
+    padding: 0 5;
+    margin: 5;
+}
+
+.message-box .text-area .text-view {
+    flex-grow: 1;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.message-box .send {
+    font-size: 30;
+    width: 45;
+    height: 45;
+    color: white;
+    background-color: #2b669a;
+}
+
 .wallpaper {
     background-image: url("~/assets/backgrounds/11.jpg");
     background-repeat: no-repeat;
@@ -69,4 +129,10 @@ div.messages-header {
     bottom: 0px;
     margin-left: -24px;
     background-color: #f2f2f2;
+}
+
+.message-box {
+    &.mobile {
+        background-color: transparent;
+    }
 }

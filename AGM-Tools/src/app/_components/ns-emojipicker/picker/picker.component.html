@@ -1,42 +1,37 @@
-<GridLayout rows="*, auto" class="emoji-picker-container emoji-list-container">
-    <!--<StackLayout row="0" class="emoji-picker-bar">
-            
-            <emoji-picker-anchors [categories]="categories" (anchorClick)="handleAnchorClick($event)" [color]="color" [selected]="selected" [i18n]="i18n" [icons]="categoriesIcons"></emoji-picker-anchors>
-        </StackLayout>
-
-        <StackLayout row="1">
-            <Label text="Suche"></Label>-->
-    <!--<emoji-search #searchRef [i18n]="i18n" (searchResults)="handleSearch($event)" (enterKey)="handleEnterKey($event)" [include]="include" [exclude]="exclude" [custom]="custom" [autoFocus]="autoFocus" [icons]="searchIcons" [emojisToShowFilter]="emojisToShowFilter"></emoji-search>-->
-    <!--
-        </StackLayout>
-
-        <StackLayout row="2">
-            <emoji-category [name]="selected.name" [id]="selected.id" [emojis]="selected.emojis" [perLine]="perLine" [totalFrequentLines]="totalFrequentLines" [hasStickyPosition]="isNative" [i18n]="i18n" [hideObsolete]="hideObsolete" [notFoundEmoji]="notFoundEmoji" [custom]="undefined"
-            [recent]="selected.id == RECENT_CATEGORY.id ? recent : undefined" [emojiIsNative]="isNative" [emojiSkin]="skin" [emojiSize]="emojiSize" [emojiSet]="set" [emojiSheetSize]="sheetSize" [emojiForceSize]="isNative" [emojiTooltip]="emojiTooltip" [emojiBackgroundImageFn]="backgroundImageFn"
-            (emojiOver)="handleEmojiOver($event)" (emojiLeave)="handleEmojiLeave()" (emojiClick)="handleEmojiClick($event)"></emoji-category>
-        </StackLayout>-->
-
+<GridLayout visibility="{{ showEmojiPicker && !showSearch ? 'visible' : 'collapsed' }}" rows=" *, auto" class="emoji-picker-container emoji-list-container">
     <TabView row="0" id="tabViewContainer" class="fas">
-        <ng-container *ngFor="let category of categories; let idx = index">
+        <ng-container *ngFor="let category of categories; let idx=i ndex">
             <StackLayout *tabItem="{title: '', iconSource: '~/assets/emoji-picker/'+category.id+'.png'}">
                 <StackLayout *ngIf="category.id=='search'" class="emoji-list-container">
                     <Label text="Suche" textWrap="true" class="m-15 h2 text-left"></Label>
                 </StackLayout>
                 <StackLayout *ngIf="category.id!='search'" class="emoji-list-container">
-                    <RadListView #listView [items]="category.emojis">
-                        <ListViewGridLayout tkListViewLayout scrollDirection="Vertical" [spanCount]="perLine">
+                    <RadListView #listView height="250" [items]="category.emojis">
+                        <ListViewGridLayout tkListViewLayout scrollDirection="Vertical" [spanCount]="perLine" itemHeight="50">
                         </ListViewGridLayout>
                         <ng-template let-emoji="item">
-                            <Image [src]="getImgSrc(emoji)"></Image>
+                            <Image class="emoji" (tap)="onEmojiClick(emoji)" [src]="getImgSrc(emoji)"></Image>
                         </ng-template>
                     </RadListView>
                 </StackLayout>
             </StackLayout>
         </ng-container>
     </TabView>
-    <GridLayout row="1" rows="auto" cols="*, *, *">
-        <Label row="0" column="0" text="Suche"></Label>
-        <Label row="0" column="1" text="Suche"></Label>
-        <Label row="0" column="2" text="Suche"></Label>
+    <GridLayout class="bottom-bar" row="1" rows="35" columns="*, *, *">
+        <Label class="icon fas" (tap)="toggleSearch()" horizontalAlignment="left" row="0" col="0" text="&#xf002;"></Label>
+        <Label class="icon fas" (tap)="changeViewTo('emojis')" horizontalAlignment="center" row="0" col="1" text="&#xf580;"></Label>
+        <Label class="icon fas" (tap)="backspace()" horizontalAlignment="right" row="0" col="2" text="&#xf55a;"></Label>
     </GridLayout>
+</GridLayout>
+<GridLayout rows="auto, * auto" columns="auto, auto" visibility="{{ showEmojiPicker && showSearch ? 'visible' : 'collapsed' }}" class="emoji-search-container">
+    <RadListView #searchListView row="0" col="0" colspan="3" height="50" [items]="categories[5].emojis">
+        <ListViewLinearLayout tkListViewLayout scrollDirection="Horizontal"></ListViewLinearLayout>
+        <ng-template let-emoji="item">
+            <Image class="emoji" (tap)="onEmojiClick(emoji)" [src]="getImgSrc(emoji)"></Image>
+        </ng-template>
+    </RadListView>
+    <Label class="icon fas" (tap)="toggleSearch()" row="1" col="0" text="&#xf060;"></Label>
+    <TextField hint="Emoji Suchen" text="Ganz viel text, info, info, info..." returnKeyType="search" row="1" col="1">
+    </TextField>
+    <Label class="icon fas" (tap)="clearSearch()" row="1" col="2" text="&#xf00d;"></Label>
 </GridLayout>
