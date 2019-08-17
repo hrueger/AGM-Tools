@@ -16,12 +16,10 @@ import {
   categories,
   Emoji,
   EmojiCategory,
-  EmojiData,
   EmojiEvent,
   EmojiService,
-} from '../emoji/public_api';
+} from './public_api';
 import { EmojiFrequentlyService } from './emoji-frequently.service';
-import { SearchComponent } from './search.component';
 
 
 

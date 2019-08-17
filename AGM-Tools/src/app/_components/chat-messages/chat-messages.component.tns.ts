@@ -18,6 +18,8 @@ import { Contact } from "../../_models/contact.model";
 import { from } from "rxjs";
 import { filter } from "rxjs/operators";
 import { RemoteService } from "../../_services/remote.service";
+import { ObservableArray, ChangedData } from "tns-core-modules/data/observable-array";
+
 
 @Component({
     selector: "chat-messages",
@@ -41,7 +43,7 @@ export class ChatMessagesComponent
     };
 
     unread: number;
-    messages: Message[];
+    messages: ObservableArray<Message> = new ObservableArray<Message>(0);
     //chats: Chat[];
     public messageGotToSend: string;
     inputMessage: string;
@@ -100,10 +102,11 @@ export class ChatMessagesComponent
             .get("chatGetMessages", { rid: receiverId })
             .subscribe(data => {
                 if (data != null) {
-                    this.messages = data;
+                    this.messages.length = 0;
+                    this.messages.push(...data);
                     this.cdr.detectChanges();
                 } else {
-                    this.messages = [];
+
                 }
             });
     }

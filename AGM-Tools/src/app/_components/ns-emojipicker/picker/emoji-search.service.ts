@@ -4,7 +4,7 @@ import {
   categories,
   EmojiData,
   EmojiService,
-} from '../emoji/public_api';
+} from './public_api';
 import { intersect } from './utils';
 
 @Injectable({ providedIn: 'root' })
