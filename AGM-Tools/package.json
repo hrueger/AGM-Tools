@@ -62,6 +62,7 @@
         "nativescript-modal-datetimepicker": "^1.2.0",
         "nativescript-multi-select": "^1.0.6",
         "nativescript-ngx-fonticon": "^4.2.0",
+        "nativescript-onesignal": "^1.0.8",
         "nativescript-pdf-view": "^2.0.1",
         "nativescript-photoviewer": "^2.1.5",
         "nativescript-progress-notifications": "^1.0.1",
