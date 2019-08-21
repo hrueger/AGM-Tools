@@ -105,7 +105,7 @@ if (isset($_GET["get"]) && isset($_GET["type"]) && (isset($_GET["token"])||isset
                     
                     header("Content-Length: $file_size");
                     ob_clean();
-                    while(!feof($file))  {
+                    while($file && !feof($file))  {
                         print(@fread($file, 1024*8));
                         ob_flush();
                         flush();
