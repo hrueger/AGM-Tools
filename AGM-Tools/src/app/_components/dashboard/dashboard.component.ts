@@ -1,30 +1,30 @@
-import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChartOptions, ChartType } from "chart.js";
 import { Label, MultiDataSet } from "ng2-charts";
-import { ChartType, ChartOptions } from "chart.js";
 import * as pluginDataLabels from "../../../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js";
-import { RemoteService } from "../../_services/remote.service";
 import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-dashboard",
     templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.scss"]
+    styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent implements OnInit {
     public spaceChartLabels: Label[] = [
         "Verfügbarer Speicherplatz",
         "Vom System belegt",
-        "Von Daten belegt"
+        "Von Daten belegt",
     ];
-    public spaceChartData: MultiDataSet = [[0, 0, 0]]; //[[350, 450, 100]];
+    public spaceChartData: MultiDataSet = [[0, 0, 0]]; // [[350, 450, 100]];
     public spaceChartColors = [
         {
             backgroundColor: [
                 "rgb(151, 214, 237)",
                 "rgb(237, 237, 237)",
-                "rgb(160, 160, 160)"
-            ]
-        }
+                "rgb(160, 160, 160)",
+            ],
+        },
     ];
     public spaceChartType: ChartType = "doughnut";
     public spaceChartOptions: ChartOptions = {
@@ -32,56 +32,56 @@ export class DashboardComponent implements OnInit {
             datalabels: {
                 formatter: (value, ctx) => {
                     return "";
-                }
-            }
-        }
+                },
+            },
+        },
     };
     public spaceChartPlugins = [pluginDataLabels];
     public whatsnew: any;
     public dates: any;
-    cellSpacing: any;
-    version: string;
-    notifications: any[] = [];
+    public cellSpacing: any;
+    public version: string;
+    public notifications: any[] = [];
     constructor(
         private remoteService: RemoteService,
-        private NavbarService: NavbarService
+        private NavbarService: NavbarService,
     ) { }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.NavbarService.setHeadline("Dashboard");
         this.initChart();
     }
 
-    initChart() {
-        this.remoteService.get("dashboardGetSpaceChartData").subscribe(data => {
+    public initChart() {
+        this.remoteService.get("dashboardGetSpaceChartData").subscribe((data) => {
             this.spaceChartData = [data];
         });
-        this.remoteService.get("dashboardGetWhatsnew").subscribe(data => {
+        this.remoteService.get("dashboardGetWhatsnew").subscribe((data) => {
             this.whatsnew = data;
         });
-        this.remoteService.get("dashboardGetDates").subscribe(data => {
+        this.remoteService.get("dashboardGetDates").subscribe((data) => {
             this.dates = data;
         });
-        this.remoteService.get("dashboardGetVersion").subscribe(data => {
+        this.remoteService.get("dashboardGetVersion").subscribe((data) => {
             this.version = data;
         });
         this.remoteService
             .getNoCache("dashboardGetNotifications")
-            .subscribe(data => {
+            .subscribe((data) => {
                 this.notifications = data.notifications;
             });
     }
 
-    makeNotificationSeen(notification) {
+    public makeNotificationSeen(notification) {
         this.remoteService
             .getNoCache("dashboardMakeNotificationSeen", {
-                id: notification.id
+                id: notification.id,
             })
-            .subscribe(data => {
+            .subscribe((data) => {
                 if (data.status == true) {
-                    //console.log(true);
+                    // console.log(true);
                     this.notifications = this.notifications.filter(
-                        obj => obj.id !== notification.id
+                        (obj) => obj.id !== notification.id,
                     );
                 }
             });

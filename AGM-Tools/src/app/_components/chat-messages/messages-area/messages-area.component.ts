@@ -1,11 +1,11 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     Inject,
     Input,
     OnInit,
     SimpleChanges,
-    ChangeDetectorRef
 } from "@angular/core";
 import { Message } from "../../../_models/message.model";
 import { RemoteService } from "../../../_services/remote.service";
@@ -15,25 +15,25 @@ import { RemoteService } from "../../../_services/remote.service";
     selector: "ns-messages-area",
     templateUrl: "./messages-area.component.html",
     styleUrls: ["./messages-area.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessagesAreaComponent implements OnInit {
-    @Input() messages: Message[];
-    @Input() messageSent: Event;
-    @Input() receiverId: number;
+    @Input() public messages: Message[];
+    @Input() public messageSent: Event;
+    @Input() public receiverId: number;
 
     constructor(
         private remoteService: RemoteService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
     ) { }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.messages = this.messages.slice(0, 50);
         console.log("Messages");
         console.log(this.messages);
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (
             changes.messageSent &&
             changes.messageSent.currentValue != "" &&
@@ -48,15 +48,15 @@ export class MessagesAreaComponent implements OnInit {
                 fromMe: true,
                 created: Date.now(),
                 sent: "0",
-                sendername: ""
+                sendername: "",
             };
             this.messages.push(message);
             this.remoteService
                 .getNoCache("chatSendMessage", {
                     rid: this.receiverId,
-                    message: changes.messageSent.currentValue
+                    message: changes.messageSent.currentValue,
                 })
-                .subscribe(data => {
+                .subscribe((data) => {
                     message = this.messages.pop();
                     message.sent = "1";
                     this.messages.push(message);
@@ -66,12 +66,12 @@ export class MessagesAreaComponent implements OnInit {
         }
     }
 
-    trackByFn(index, item) {
+    public trackByFn(index, item) {
         return item.id;
     }
 
-    isContinuation(idx: number) {
-        if (!this.messages[idx - 1]) return false;
+    public isContinuation(idx: number) {
+        if (!this.messages[idx - 1]) { return false; }
         return (
             /*(!this.messages[idx].fromMe &&
                 this.messages[idx - 1] &&
@@ -85,7 +85,7 @@ export class MessagesAreaComponent implements OnInit {
         );
     }
 
-    getIcon(message: Message) {
+    public getIcon(message: Message) {
         switch (parseInt(message.sent)) {
             case 0:
                 return "&#xf017;";
@@ -94,10 +94,10 @@ export class MessagesAreaComponent implements OnInit {
             default:
                 return "&#xf560;";
         }
-        //return "T";
+        // return "T";
     }
 
-    isViewed(message: Message) {
+    public isViewed(message: Message) {
         return parseInt(message.sent) === 3;
     }
 }

@@ -1,97 +1,97 @@
 import { Routes } from "@angular/router";
 
-import { DashboardComponent } from "./_components/dashboard/dashboard.component";
-import { AuthGuard } from "./_guards/auth.guard";
-import { UsersComponent } from "./_components/users/users.component";
-import { ChatComponent } from "./_components/chat/chat.component";
-import { NotificationsComponent } from "./_components/notifications/notifications.component";
-import { CalendarComponent } from "./_components/calendar/calendar.component";
-import { ProjectsComponent } from "./_components/projects/projects.component";
-import { FilesComponent } from "./_components/files/files.component";
-import { TemplatesComponent } from "./_components/templates/templates.component";
-import { BugsComponent } from "./_components/bugs/bugs.component";
-import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
-import { SettingsComponent } from "./_components/settings/settings.component";
 import { AboutComponent } from "./_components/about/about.component";
-import { LoginComponent } from "./_components/login/login.component";
+import { BugsComponent } from "./_components/bugs/bugs.component";
+import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
+import { ChatComponent } from "./_components/chat/chat.component";
+import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
+import { DashboardComponent } from "./_components/dashboard/dashboard.component";
 import { DoneComponent } from "./_components/done/done.component";
+import { FilesComponent } from "./_components/files/files.component";
+import { LoginComponent } from "./_components/login/login.component";
+import { NotificationsComponent } from "./_components/notifications/notifications.component";
+import { ProjectsComponent } from "./_components/projects/projects.component";
+import { SettingsComponent } from "./_components/settings/settings.component";
+import { TemplatesComponent } from "./_components/templates/templates.component";
+import { UsersComponent } from "./_components/users/users.component";
+import { AuthGuard } from "./_guards/auth.guard";
 
 export const routes: Routes = [
     {
         path: "dashboard",
         component: DashboardComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
 
     {
         path: "users",
         component: UsersComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "chat",
         component: ChatComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "chat-messages/:index",
         component: ChatMessagesComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "notifications",
         component: NotificationsComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "calendar",
         component: CalendarComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "projects",
         component: ProjectsComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "files",
         component: FilesComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "templates",
         component: TemplatesComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "bugs",
         component: BugsComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "clientsoftware",
         component: ClientsoftwareComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "done",
         component: DoneComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "settings",
         component: SettingsComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: "about",
         component: AboutComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
 
     /* Authentication paths*/
     { path: "login", component: LoginComponent },
     // otherwise redirect to home
-    { path: "**", redirectTo: "/dashboard" }
+    { path: "**", redirectTo: "/dashboard" },
 ];

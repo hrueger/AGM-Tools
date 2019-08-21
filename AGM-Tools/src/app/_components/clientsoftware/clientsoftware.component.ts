@@ -1,23 +1,23 @@
 import { Component, OnInit } from "@angular/core";
-import { RemoteService } from "../../_services/remote.service";
 import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-clientsoftware",
     templateUrl: "./clientsoftware.component.html",
-    styleUrls: ["./clientsoftware.component.scss"]
+    styleUrls: ["./clientsoftware.component.scss"],
 })
 export class ClientsoftwareComponent implements OnInit {
+    public apps: any;
+    public desktopapps: any;
     constructor(
         private remoteService: RemoteService,
-        private NavbarService: NavbarService
+        private NavbarService: NavbarService,
     ) {}
-    apps: any;
-    desktopapps: any;
-    ngOnInit() {
+    public ngOnInit() {
         this.NavbarService.setHeadline("Client-Software");
-        this.remoteService.get("clientsoftwareGetMobile").subscribe(data => {
-            //this.apps = data;
+        this.remoteService.get("clientsoftwareGetMobile").subscribe((data) => {
+            // this.apps = data;
         });
     }
 }

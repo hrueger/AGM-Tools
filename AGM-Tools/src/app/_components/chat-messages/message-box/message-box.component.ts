@@ -1,19 +1,16 @@
-import { Component, Output, EventEmitter } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 
 @Component({
     moduleId: module.id,
     selector: "ns-message-box",
     templateUrl: "./message-box.component.html",
-    styleUrls: ["./message-box.component.scss"]
+    styleUrls: ["./message-box.component.scss"],
 })
 export class MessageBoxComponent {
-    messageContent: string;
-    @Output() messageSent = new EventEmitter<string>();
-    showEmojiPicker = false;
-    toggleEmojiPicker() {
-        this.showEmojiPicker = !this.showEmojiPicker;
-    }
-    emojiI18n = {
+    public messageContent: string;
+    @Output() public messageSent = new EventEmitter<string>();
+    public showEmojiPicker = false;
+    public emojiI18n = {
         search: "Suchen",
         emojilist: "Emoji-Liste",
         notfound: "Keine Emojis gefunden",
@@ -29,7 +26,7 @@ export class MessageBoxComponent {
             objects: "gegenstände",
             symbols: "Symbole",
             flags: "Flaggen",
-            custom: "Benutzerdefiniert"
+            custom: "Benutzerdefiniert",
         },
         skintones: {
             1: "Standart-Hautton",
@@ -37,16 +34,19 @@ export class MessageBoxComponent {
             3: "Mittelheller Hautton",
             4: "Mittlerer Hautton",
             5: "Mitteldunkler Hautton",
-            6: "Dunkler Hautton"
-        }
+            6: "Dunkler Hautton",
+        },
     };
     constructor() {}
-    sendMessage() {
+    public toggleEmojiPicker() {
+        this.showEmojiPicker = !this.showEmojiPicker;
+    }
+    public sendMessage() {
         this.messageSent.emit(this.messageContent);
         this.messageContent = "";
     }
-    addEmoji(event) {
-        let message = this.messageContent;
+    public addEmoji(event) {
+        const message = this.messageContent;
         const text = `${message}${event.emoji.native}`;
 
         this.messageContent = text;

@@ -1,11 +1,11 @@
 import { User } from "./user.model";
 
 export class Notification {
-    id: number;
-    headline: string;
-    content: string;
-    receivers: User[];
-    seen: User[];
-    notseen: User[];
-    selected: boolean;
+    public id: number;
+    public headline: string;
+    public content: string;
+    public receivers: User[];
+    public seen: User[];
+    public notseen: User[];
+    public selected: boolean;
 }

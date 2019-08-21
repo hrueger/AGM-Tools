@@ -1,56 +1,56 @@
 import { Component, OnInit } from "@angular/core";
-import { RemoteService } from "../../_services/remote.service";
-import { Notification } from "../../_models/notification.model";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { AlertService } from "../../_services/alert.service";
+import { Notification } from "../../_models/notification.model";
 import { User } from "../../_models/user.model";
+import { AlertService } from "../../_services/alert.service";
 import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-notifications",
     templateUrl: "./notifications.component.html",
-    styleUrls: ["./notifications.component.scss"]
+    styleUrls: ["./notifications.component.scss"],
 })
 export class NotificationsComponent implements OnInit {
-    notifications: Notification[] = [];
-    headline: string;
-    content: string;
-    receivers: number[];
-    allusers: User[] = [];
-    importance: number;
-    invalidMessage: boolean = false;
-    newNotificationForm: FormGroup;
+    public notifications: Notification[] = [];
+    public headline: string;
+    public content: string;
+    public receivers: number[];
+    public allusers: User[] = [];
+    public importance: number;
+    public invalidMessage: boolean = false;
+    public newNotificationForm: FormGroup;
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
         private fb: FormBuilder,
         private alertService: AlertService,
-        private NavbarService: NavbarService
+        private NavbarService: NavbarService,
     ) {}
 
-    ngOnInit() {
+    public ngOnInit() {
         this.NavbarService.setHeadline("Benachrichtigungen");
         this.remoteService
             .get("notificationsGetNotifications")
-            .subscribe(data => {
+            .subscribe((data) => {
                 this.notifications = data;
             });
         this.newNotificationForm = this.fb.group({
             headline: [this.headline, [Validators.required]],
             content: [this.content, [Validators.required]],
             receivers: [this.receivers, [Validators.required]],
-            importance: [this.importance, [Validators.required]]
+            importance: [this.importance, [Validators.required]],
         });
-        this.remoteService.get("usersGetUsers").subscribe(data => {
+        this.remoteService.get("usersGetUsers").subscribe((data) => {
             this.allusers = data;
         });
     }
-    openNewModal(content) {
+    public openNewModal(content) {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
             .result.then(
-                result => {
+                (result) => {
                     this.invalidMessage = false;
 
                     this.remoteService
@@ -62,41 +62,41 @@ export class NotificationsComponent implements OnInit {
                             receivers: this.newNotificationForm.get("receivers")
                                 .value,
                             type: this.newNotificationForm.get("importance")
-                                .value
+                                .value,
                         })
-                        .subscribe(data => {
+                        .subscribe((data) => {
                             if (data && data.status == true) {
                                 this.alertService.success(
-                                    "Benachrichtigung erfolgreich erstellt!"
+                                    "Benachrichtigung erfolgreich erstellt!",
                                 );
                                 this.remoteService
                                     .get("notificationsGetNotifications")
-                                    .subscribe(data => {
+                                    .subscribe((data) => {
                                         this.notifications = data;
                                     });
                             }
                         });
                 },
-                reason => {}
+                (reason) => {},
             );
     }
-    deleteNotification(notification: Notification) {
+    public deleteNotification(notification: Notification) {
         if (
             confirm("Möchten Sie diese Benachrichtigung wirklich löschen?") ==
             true
         ) {
             this.remoteService
                 .getNoCache("notificationsDeleteNotification", {
-                    id: notification.id
+                    id: notification.id,
                 })
-                .subscribe(data => {
+                .subscribe((data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
-                            "Benachrichtigung erfolgreich gelöscht"
+                            "Benachrichtigung erfolgreich gelöscht",
                         );
                         this.remoteService
                             .get("notificationsGetNotifications")
-                            .subscribe(data => {
+                            .subscribe((data) => {
                                 this.notifications = data;
                             });
                     }

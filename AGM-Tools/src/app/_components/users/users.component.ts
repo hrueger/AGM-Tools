@@ -1,33 +1,33 @@
 import { Component, OnInit } from "@angular/core";
-import { RemoteService } from "../../_services/remote.service";
-import { User } from "../../_models/user.model";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-users",
     templateUrl: "./users.component.html",
-    styleUrls: ["./users.component.scss"]
+    styleUrls: ["./users.component.scss"],
 })
 export class UsersComponent implements OnInit {
-    users: User[] = [];
+    public users: User[] = [];
 
-    newUserForm: FormGroup;
-    editUserForm: FormGroup;
-    name: string;
-    email: string;
+    public newUserForm: FormGroup;
+    public editUserForm: FormGroup;
+    public name: string;
+    public email: string;
 
-    password1: string;
-    password2: string;
-    invalidMessage: boolean = false;
-    editUserName: any;
-    editUserEmail: any;
-    editUserPasswordOld: any;
-    editUserPassword1: any;
-    editUserPassword2: any;
+    public password1: string;
+    public password2: string;
+    public invalidMessage: boolean = false;
+    public editUserName: any;
+    public editUserEmail: any;
+    public editUserPasswordOld: any;
+    public editUserPassword1: any;
+    public editUserPassword2: any;
 
     constructor(
         private remoteService: RemoteService,
@@ -35,29 +35,29 @@ export class UsersComponent implements OnInit {
         private fb: FormBuilder,
         private alertService: AlertService,
         private authService: AuthenticationService,
-        private NavbarService: NavbarService
+        private NavbarService: NavbarService,
     ) { }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.NavbarService.setHeadline("Benutzer");
-        this.remoteService.get("usersGetUsers").subscribe(data => {
+        this.remoteService.get("usersGetUsers").subscribe((data) => {
             this.users = data;
         });
         this.newUserForm = this.fb.group({
             name: [this.name, [Validators.required]],
             email: [this.email, [Validators.required]],
             password1: [this.password1, [Validators.required]],
-            password2: [this.password2, [Validators.required]]
+            password2: [this.password2, [Validators.required]],
         });
         this.editUserForm = this.fb.group({
             editUserName: [this.editUserName, [Validators.required]],
             editUserEmail: [this.editUserEmail, [Validators.required]],
             editUserPasswordOld: [
                 this.editUserPasswordOld,
-                [Validators.required]
+                [Validators.required],
             ],
             editUserPassword1: [this.editUserPassword1, []],
-            editUserPassword2: [this.editUserPassword2, []]
+            editUserPassword2: [this.editUserPassword2, []],
         });
 
         this.editUserForm
@@ -65,18 +65,18 @@ export class UsersComponent implements OnInit {
             .setValue(
                 this.authService.currentUserValue.firstName +
                 " " +
-                this.authService.currentUserValue.lastName
+                this.authService.currentUserValue.lastName,
             );
         this.editUserForm
             .get("editUserEmail")
             .setValue(this.authService.currentUserValue.email);
     }
 
-    openNewModal(content) {
+    public openNewModal(content) {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
             .result.then(
-                result => {
+                (result) => {
                     this.invalidMessage = false;
 
                     this.remoteService
@@ -84,83 +84,83 @@ export class UsersComponent implements OnInit {
                             username: this.newUserForm.get("name").value,
                             email: this.newUserForm.get("email").value,
                             pw: this.newUserForm.get("password1").value,
-                            pw2: this.newUserForm.get("password2").value
+                            pw2: this.newUserForm.get("password2").value,
                         })
-                        .subscribe(data => {
+                        .subscribe((data) => {
                             if (data && data.status == true) {
                                 this.alertService.success(
-                                    "Benutzer erfolgreich erstellt"
+                                    "Benutzer erfolgreich erstellt",
                                 );
                                 this.remoteService
                                     .get("usersGetUsers")
-                                    .subscribe(data => {
+                                    .subscribe((data) => {
                                         this.users = data;
                                     });
                             }
                         });
                 },
-                reason => { }
+                (reason) => { },
             );
     }
-    openEditModal(content) {
+    public openEditModal(content) {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
             .result.then(
-                result => {
+                (result) => {
                     this.invalidMessage = false;
-                    var pwnew1val = "";
+                    const pwnew1val = "";
                     /*if (this.editUserForm.get("editUserPassword1")) {
                         pwnew1val = this.editUserForm.get("editUserPassword1")
                             .value;
                     } */
-                    var pwnew2val = "";
+                    const pwnew2val = "";
                     /*if (this.editUserForm.get("editUserPassword1")) {
                         pwnew2val = this.editUserForm.get("editUserPassword2")
                             .value;
                     }*/
                     this.remoteService
                         .getNoCache("usersEditCurrentUser", {
-                            id: this.authService.currentUserValue.id,
-                            username: this.editUserForm.get("editUserName")
+                            "id": this.authService.currentUserValue.id,
+                            "username": this.editUserForm.get("editUserName")
                                 .value,
-                            email: this.editUserForm.get("editUserEmail").value,
+                            "email": this.editUserForm.get("editUserEmail").value,
                             "pw-old": this.editUserForm.get(
-                                "editUserPasswordOld"
+                                "editUserPasswordOld",
                             ).value,
                             "pw-new": pwnew1val,
-                            "pw-new2": pwnew2val
+                            "pw-new2": pwnew2val,
                         })
-                        .subscribe(data => {
+                        .subscribe((data) => {
                             if (data && data.status == true) {
                                 this.alertService.success(
-                                    "Ihr Benutzer erfolgreich geändert"
+                                    "Ihr Benutzer erfolgreich geändert",
                                 );
                                 this.remoteService
                                     .get("usersGetUsers")
-                                    .subscribe(data => {
+                                    .subscribe((data) => {
                                         this.users = data;
                                     });
                             }
                         });
                 },
-                reason => { }
+                (reason) => { },
             );
     }
 
-    deleteUser(user: User) {
+    public deleteUser(user: User) {
         if (confirm("Möchten Sie diesen Nutzer wirklich löschen?") == true) {
             this.remoteService
                 .getNoCache("usersDeleteUser", {
-                    id: user.id
+                    id: user.id,
                 })
-                .subscribe(data => {
+                .subscribe((data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
-                            "Benutzer erfolgreich gelöscht"
+                            "Benutzer erfolgreich gelöscht",
                         );
                         this.remoteService
                             .get("usersGetUsers")
-                            .subscribe(data => {
+                            .subscribe((data) => {
                                 this.users = data;
                             });
                     }

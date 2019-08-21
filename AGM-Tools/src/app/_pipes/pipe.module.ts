@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { ToIconPipe } from './ToIcon.pipe';
+import { NgModule } from "@angular/core";
+import { ToIconPipe } from "./ToIcon.pipe";
 
 @NgModule({
     imports: [],
@@ -9,10 +9,10 @@ import { ToIconPipe } from './ToIcon.pipe';
 
 export class PipeModule {
 
-    static forRoot() {
+    public static forRoot() {
         return {
             ngModule: PipeModule,
             providers: [],
         };
     }
-} 
+}

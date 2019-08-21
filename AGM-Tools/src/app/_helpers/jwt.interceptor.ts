@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
 import {
-    HttpRequest,
-    HttpHandler,
     HttpEvent,
-    HttpInterceptor
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest,
 } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { AuthenticationService } from "../_services/authentication.service";
@@ -13,21 +13,21 @@ import { AuthenticationService } from "../_services/authentication.service";
 export class JwtInterceptor implements HttpInterceptor {
     constructor(private authenticationService: AuthenticationService) {}
 
-    intercept(
+    public intercept(
         request: HttpRequest<any>,
-        next: HttpHandler
+        next: HttpHandler,
     ): Observable<HttpEvent<any>> {
         // add authorization header with jwt token if available
-        let currentUser = this.authenticationService.currentUserValue;
+        const currentUser = this.authenticationService.currentUserValue;
         if (currentUser && currentUser.token) {
-            //console.log("Authentication token sent");
+            // console.log("Authentication token sent");
             request = request.clone({
                 setHeaders: {
-                    Authorization: `Bearer ${currentUser.token}`
-                }
+                    Authorization: `Bearer ${currentUser.token}`,
+                },
             });
         } else {
-            //console.log("Authentication token not sent");
+            // console.log("Authentication token not sent");
         }
 
         return next.handle(request);

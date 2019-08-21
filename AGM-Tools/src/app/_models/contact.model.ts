@@ -1,6 +1,6 @@
 export class Contact {
-    id?: number;
-    avatar: string;
-    name: string;
-    onlineStatus: string;
+    public id?: number;
+    public avatar: string;
+    public name: string;
+    public onlineStatus: string;
 }

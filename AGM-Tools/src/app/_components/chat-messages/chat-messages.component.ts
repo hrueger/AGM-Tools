@@ -1,61 +1,61 @@
+import { Location } from "@angular/common";
 import {
+    AfterViewChecked,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
-    OnInit,
+    ElementRef,
     Input,
     OnChanges,
+    OnInit,
     ViewChild,
-    ElementRef,
-    AfterViewChecked,
-    ChangeDetectorRef
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Location } from "@angular/common";
 
-import { Chat } from "../../_models/chat.model";
-import { Message } from "../../_models/message.model";
-import { Contact } from "../../_models/contact.model";
 import { from } from "rxjs";
 import { filter } from "rxjs/operators";
+import { Chat } from "../../_models/chat.model";
+import { Contact } from "../../_models/contact.model";
+import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "chat-messages",
     templateUrl: "chat-messages.component.html",
     styleUrls: ["chat-messages.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatMessagesComponent
     implements OnInit, OnChanges, AfterViewChecked {
-    @Input() inputReceiverId: number;
-    receiverId: number;
-    chat: Chat = {
+    @Input() public inputReceiverId: number;
+    public receiverId: number;
+    public chat: Chat = {
         contact: new Contact(),
         type: null,
         when: null,
         unread: null,
         muted: null,
         text: null,
-        rid: null
+        rid: null,
     };
 
-    unread: number;
-    messages: Message[];
-    //chats: Chat[];
+    public unread: number;
+    public messages: Message[];
+    // chats: Chat[];
 
     public messageGotToSend: Event;
-
-    messageSentFromChild(event: Event) {
-        this.messageGotToSend = event;
-    }
 
     constructor(
         private remoteService: RemoteService,
         private _location: Location,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
     ) { }
 
-    ngOnInit() {
+    public messageSentFromChild(event: Event) {
+        this.messageGotToSend = event;
+    }
+
+    public ngOnInit() {
         /*this.route.params.subscribe(params => {
             this.receiverId = +params.index;
             this.chatsService.getChats().subscribe(chats => {
@@ -70,29 +70,29 @@ export class ChatMessagesComponent
             this.unread = +params.unread;
         });*/
     }
-    scrollToBottom(): void {
+    public scrollToBottom(): void {
         const elementList = document.querySelectorAll(".browser");
         const element = elementList[0] as HTMLElement;
         element.scrollIntoView(false);
     }
-    ngAfterViewChecked() {
+    public ngAfterViewChecked() {
         this.scrollToBottom();
     }
-    ngOnChanges(data) {
+    public ngOnChanges(data) {
         if (data.inputReceiverId && data.inputReceiverId.currentValue) {
             this.receiverId = data.inputReceiverId.currentValue;
             console.log("received change: loading for chat ");
-            this.remoteService.get("chatGetContacts").subscribe(chats => {
-                //this.chats = chats;
+            this.remoteService.get("chatGetContacts").subscribe((chats) => {
+                // this.chats = chats;
                 from(chats)
                     .pipe(
                         filter(
-                            //@ts-ignore
-                            chat => chat.rid == this.receiverId
-                        )
+                            // @ts-ignore
+                            (chat) => chat.rid == this.receiverId,
+                        ),
                     )
-                    .subscribe(chat => {
-                        //@ts-ignore
+                    .subscribe((chat) => {
+                        // @ts-ignore
                         this.chat = chat;
 
                         this.getMessages(this.receiverId);
@@ -103,23 +103,23 @@ export class ChatMessagesComponent
             this.chat = null;
         }
     }
-    getMessages(receiverId) {
+    public getMessages(receiverId) {
         this.remoteService
             .get("chatGetMessages", { rid: receiverId })
-            .subscribe(data => {
+            .subscribe((data) => {
                 if (data != null) {
                     this.messages = data;
-                    //console.warn(data);
+                    // console.warn(data);
                     this.cdr.detectChanges();
                 } else {
                     this.messages = [];
                 }
             });
-        //this.scrollToBottom();
+        // this.scrollToBottom();
     }
 
-    goBack() {
-        //@ts-ignore
+    public goBack() {
+        // @ts-ignore
         this._location.back();
     }
 }

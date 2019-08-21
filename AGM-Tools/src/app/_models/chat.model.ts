@@ -1,12 +1,12 @@
 import { Contact } from "./contact.model";
 
 export class Chat {
-    id?: number;
-    contact: Contact;
-    type: string;
-    when: number;
-    muted: boolean;
-    unread: number;
-    text: string;
-    rid: any;
+    public id?: number;
+    public contact: Contact;
+    public type: string;
+    public when: number;
+    public muted: boolean;
+    public unread: number;
+    public text: string;
+    public rid: any;
 }

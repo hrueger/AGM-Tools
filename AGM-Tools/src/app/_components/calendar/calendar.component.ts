@@ -1,16 +1,16 @@
-import { Component, ViewEncapsulation, ChangeDetectorRef } from "@angular/core";
-import { RemoteService } from "../../_services/remote.service";
+import { ChangeDetectorRef, Component, ViewEncapsulation } from "@angular/core";
 import {
-    EventSettingsModel,
+    AgendaService,
     DayService,
+    EventSettingsModel,
+    MonthAgendaService,
+    MonthService,
     WeekService,
     WorkWeekService,
-    MonthService,
-    AgendaService,
-    MonthAgendaService
 } from "@syncfusion/ej2-angular-schedule";
-import { loadCldr, L10n } from "@syncfusion/ej2-base";
+import { L10n, loadCldr } from "@syncfusion/ej2-base";
 import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
 
 L10n.load({
     de: {
@@ -88,7 +88,7 @@ L10n.load({
             timelineDay: "Zeitleiste Tag",
             timelineWeek: "Zeitleiste Woche",
             timelineWorkWeek: "Zeitleiste Arbeitswoche",
-            timelineMonth: "Zeitleiste Monat"
+            timelineMonth: "Zeitleiste Monat",
         },
         recurrenceeditor: {
             none: "Nichts ausgewählt",
@@ -122,16 +122,16 @@ L10n.load({
             summaryDay: "Tag(e)",
             summaryWeek: "Woche(n)",
             summaryMonth: "Monat(e)",
-            summaryYear: "Jahr(e)"
-        }
-    }
+            summaryYear: "Jahr(e)",
+        },
+    },
 });
 
 loadCldr(
     require("../../../../node_modules/cldr-data/supplemental/numberingSystems.json"),
     require("../../../../node_modules/cldr-data/main/de/ca-gregorian.json"),
     require("../../../../node_modules/cldr-data/main/de/numbers.json"),
-    require("../../../../node_modules/cldr-data/main/de/timeZoneNames.json")
+    require("../../../../node_modules/cldr-data/main/de/timeZoneNames.json"),
 );
 
 @Component({
@@ -146,17 +146,12 @@ loadCldr(
         WorkWeekService,
         MonthService,
         AgendaService,
-        MonthAgendaService
-    ]
+        MonthAgendaService,
+    ],
 })
 export class CalendarComponent {
-    requesting: boolean = false;
-    constructor(
-        private remoteService: RemoteService,
-        private NavbarService: NavbarService,
-        private cdr: ChangeDetectorRef
-    ) {}
-    //public data: object[] = [];
+    public requesting: boolean = false;
+    // public data: object[] = [];
     public weekFirstDay: number = 1;
     public selectedDate: Date = new Date();
     public eventSettings: EventSettingsModel = {
@@ -170,37 +165,42 @@ export class CalendarComponent {
             startTime: { name: "StartTime" },
             endTime: { name: "EndTime" },
             startTimezone: { name: "StartTimezone" },
-            endTimezone: { name: "EndTimezone" }
-            //recurrenceRule: { name: "RecurrenceRule" },
-            //recurrenceID: { name: "RecurrenceID" }
-        }
+            endTimezone: { name: "EndTimezone" },
+            // recurrenceRule: { name: "RecurrenceRule" },
+            // recurrenceID: { name: "RecurrenceID" }
+        },
     };
+    constructor(
+        private remoteService: RemoteService,
+        private NavbarService: NavbarService,
+        private cdr: ChangeDetectorRef,
+    ) {}
 
-    ngOnInit() {
+    public ngOnInit() {
         this.NavbarService.setHeadline("Kalender");
-        this.remoteService.get("calendarGetDates").subscribe(dates => {
+        this.remoteService.get("calendarGetDates").subscribe((dates) => {
             if (this.requesting == false) {
                 this.requesting = true;
-                for (let date of dates) {
-                    //@ts-ignore
+                for (const date of dates) {
+                    // @ts-ignore
                     this.eventSettings.dataSource.push({
                         Id: date.id,
                         Subject: date.headline,
                         StartTime: new Date(date.startDate),
                         EndTime: new Date(date.endDate),
                         IsAllDay: false,
-                        //RecurrenceID: 10,
-                        //RecurrenceRule:
+                        // RecurrenceID: 10,
+                        // RecurrenceRule:
                         //    "FREQ=DAILY;INTERVAL=1;COUNT=5",
                         Location: date.location,
                         Description: date.description,
                         StartTimezone: "Europe/Berlin",
-                        EndTimezone: "Europe/Berlin"
+                        EndTimezone: "Europe/Berlin",
                     });
                 }
             }
             this.cdr.detectChanges();
-            //console.log(this.data);
+            // console.log(this.data);
         });
     }
 }

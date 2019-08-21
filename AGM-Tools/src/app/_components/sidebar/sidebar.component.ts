@@ -3,17 +3,17 @@ import { Component, OnInit } from "@angular/core";
 @Component({
     selector: "app-sidebar",
     templateUrl: "./sidebar.component.html",
-    styleUrls: ["./sidebar.component.scss"]
+    styleUrls: ["./sidebar.component.scss"],
 })
 export class SidebarComponent implements OnInit {
-    navLinks = [
+    public navLinks = [
         { name: "Dashboard", icon: "tachometer-alt", target: "dashboard" },
         { name: "Benutzer", icon: "user", target: "users" },
         { name: "Chat", icon: "comments", target: "chat" },
         {
             name: "Benachrichtigungen",
             icon: "envelope",
-            target: "notifications"
+            target: "notifications",
         },
         { name: "Kalender", icon: "calendar", target: "calendar" },
         { name: "Projekte", icon: "folder", target: "projects" },
@@ -22,12 +22,12 @@ export class SidebarComponent implements OnInit {
         {
             name: "Fehler / Verbesserungen",
             icon: "bug",
-            target: "bugs"
+            target: "bugs",
         },
         { name: "Fertig", icon: "check", target: "done" },
-        { name: "Client-Software", icon: "mobile", target: "clientsoftware" }
+        { name: "Client-Software", icon: "mobile", target: "clientsoftware" },
     ];
     constructor() {}
 
-    ngOnInit() {}
+    public ngOnInit() {}
 }

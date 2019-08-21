@@ -1,14 +1,14 @@
-import { Message } from './message.model';
+import { Message } from "./message.model";
 
 export class ImageMessage extends Message {
-  url: string = '';
-  thumbnail: string = '';
+  public url: string = "";
+  public thumbnail: string = "";
 
   /**
    * Method overriden
    * @returns String
    */
-  toString(): string {
+  public toString(): string {
     return `Photo${super.toString()} ` +
            `- Url: ${this.url} ` +
            `- Thumbnail: ${this.thumbnail}`;

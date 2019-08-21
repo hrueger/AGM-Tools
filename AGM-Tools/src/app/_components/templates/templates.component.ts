@@ -1,52 +1,52 @@
-import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
-import { RemoteService } from "../../_services/remote.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import config from "../../_config/config";
-import { AuthenticationService } from "../../_services/authentication.service";
-import { NavbarService } from "../../_services/navbar.service";
+import { HttpClient, HttpEventType } from "@angular/common/http";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import {
     FormBuilder,
+    FormControl,
     FormGroup,
     Validators,
-    FormControl
 } from "@angular/forms";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import config from "../../_config/config";
 import { AlertService } from "../../_services/alert.service";
-import { HttpClient, HttpEventType } from "@angular/common/http";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-templates",
     templateUrl: "./templates.component.html",
-    styleUrls: ["./templates.component.scss"]
+    styleUrls: ["./templates.component.scss"],
 })
 export class TemplatesComponent implements OnInit {
+    public imgUrl: string;
+    public templates: any;
+    public newTemplateForm: FormGroup;
+    public name: string;
+    public type: string;
+    public description: string;
+    public invalidMessage: boolean = false;
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
         private authenticationService: AuthenticationService,
         private NavbarService: NavbarService,
         private httpClient: HttpClient,
-        private alertService: AlertService
+        private alertService: AlertService,
     ) {}
-    imgUrl: string;
-    templates: any;
-    newTemplateForm: FormGroup;
-    name: string;
-    type: string;
-    description: string;
-    invalidMessage: boolean = false;
-    ngOnInit() {
+    public ngOnInit() {
         this.NavbarService.setHeadline("Vorlagen");
-        this.remoteService.get("templatesGetTemplates").subscribe(data => {
+        this.remoteService.get("templatesGetTemplates").subscribe((data) => {
             this.templates = data;
         });
         this.newTemplateForm = new FormGroup({
             name: new FormControl(null, Validators.required),
             description: new FormControl(null, Validators.required),
             type: new FormControl(null, Validators.required),
-            file: new FormControl(null, [Validators.required])
+            file: new FormControl(null, [Validators.required]),
         });
     }
-    show(template, content) {
+    public show(template, content) {
         this.imgUrl =
             config.apiUrl +
             "getTemplate.php?tid=" +
@@ -55,13 +55,13 @@ export class TemplatesComponent implements OnInit {
             this.authenticationService.currentUserValue.token;
         this.modalService
             .open(content, {})
-            .result.then(result => {}, reason => {});
+            .result.then((result) => {}, (reason) => {});
     }
-    openNewModal(content) {
+    public openNewModal(content) {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
             .result.then(
-                result => {
+                (result) => {
                     this.invalidMessage = false;
 
                     /*this.remoteService
@@ -79,27 +79,27 @@ export class TemplatesComponent implements OnInit {
                             }
                         });*/
                     this.alertService.success(
-                        "Hochladen gestartet, bitte warten!"
+                        "Hochladen gestartet, bitte warten!",
                     );
                     this.httpClient
                         .post(
                             config.apiUrl,
 
-                            this.toFormData(this.newTemplateForm.value)
+                            this.toFormData(this.newTemplateForm.value),
                         )
-                        .subscribe(data => {
-                            //@ts-ignore
+                        .subscribe((data) => {
+                            // @ts-ignore
                             if (data && data.status == true) {
                                 this.alertService.success(
-                                    "Vorlage erfolgreich hochgeladen"
+                                    "Vorlage erfolgreich hochgeladen",
                                 );
                             }
                         });
                 },
-                reason => {}
+                (reason) => {},
             );
     }
-    toFormData<T>(formValue: T) {
+    public toFormData<T>(formValue: T) {
         const formData = new FormData();
 
         for (const key of Object.keys(formValue)) {

@@ -1,7 +1,7 @@
 import { User } from "./user.model";
 
 export class Project {
-    id: number;
-    name: string;
-    members: User[];
+    public id: number;
+    public name: string;
+    public members: User[];
 }

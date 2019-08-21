@@ -6,24 +6,23 @@ export class AlertService {
   constructor(private toastr: ToastrService) {
   }
 
-  success(message: string) {
+  public success(message: string) {
     this.toastr.success(message, "Erfolg!", { timeOut: 999999 });
   }
 
-  error(message: string) {
+  public error(message: string) {
     this.toastr.error(message, "Fehler!", { timeOut: 999999 });
   }
 
-  info(message: string) {
+  public info(message: string) {
     this.toastr.info(message, "Information:", { timeOut: 999999 });
   }
 
-  warning(message: string) {
+  public warning(message: string) {
     this.toastr.warning(message, "Warnung!", { timeOut: 999999 });
   }
 
-
-  snackbar(message) {
+  public snackbar(message) {
     this.info(message);
   }
 

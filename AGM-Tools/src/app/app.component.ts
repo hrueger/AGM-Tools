@@ -1,32 +1,32 @@
 import { Component } from "@angular/core";
-import { User } from "./_models/user.model";
 import { Router } from "@angular/router";
+import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
 import { OneSignalService } from "./_services/onesignal.service";
 
 @Component({
     selector: "app-root",
     templateUrl: "./app.component.html",
-    styleUrls: ["./app.component.css"]
+    styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
-    currentUser: User;
+    public currentUser: User;
 
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
-        private oneSignalService: OneSignalService
+        private oneSignalService: OneSignalService,
     ) {
         this.authenticationService.currentUser.subscribe(
-            x => (this.currentUser = x)
+            (x) => (this.currentUser = x),
         );
     }
 
-    logout() {
+    public logout() {
         this.authenticationService.logout();
         this.router.navigate(["/login"]);
     }
-    ngOnInit() {
-        //this.oneSignalService.init();
+    public ngOnInit() {
+        // this.oneSignalService.init();
     }
 }

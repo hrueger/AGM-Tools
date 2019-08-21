@@ -10,7 +10,7 @@
     "rulesDirectory": [],
     "linterOptions": {
         "exclude": [
-            "./lib/src/data/emojis.ts"
+
         ]
     }
 }

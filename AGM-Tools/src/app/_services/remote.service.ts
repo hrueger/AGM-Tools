@@ -1,48 +1,48 @@
-import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { AlertService } from "./alert.service";
-import { Observable, BehaviorSubject, of } from "rxjs";
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable, of } from "rxjs";
+import { catchError, first, tap } from "rxjs/operators";
 import config from "../_config/config";
-import { tap, catchError, first } from "rxjs/operators";
+import { AlertService } from "./alert.service";
 import { CacheService } from "./cache.service";
 
 @Injectable({
-    providedIn: "root"
+    providedIn: "root",
 })
 export class RemoteService {
     constructor(
         private http: HttpClient,
         private alertService: AlertService,
-        private cacheService: CacheService
+        private cacheService: CacheService,
     ) { }
 
-    get(action: string, ...args: any): Observable<any> {
-        //var action = "dashboardGetSpaceChartData";
-        let subject = new BehaviorSubject(null);
+    public get(action: string, ...args: any): Observable<any> {
+        // var action = "dashboardGetSpaceChartData";
+        const subject = new BehaviorSubject(null);
         let cacheData = null;
         let echtDaten = false;
-        //console.log("hole internetdaten");
+        // console.log("hole internetdaten");
         this.http
             .post<any>(`${config.apiUrl}`, {
                 action,
-                args
+                args,
             })
             .pipe(
-                tap(_ =>
+                tap((_) =>
                     this.log(
                         "fetched " +
                         action +
                         " with data " +
-                        JSON.stringify(args)
-                    )
+                        JSON.stringify(args),
+                    ),
                 ),
-                catchError(this.handleError<any>(action, false))
+                catchError(this.handleError<any>(action, false)),
             )
-            .subscribe(data => {
-                //console.log("internetdaten bekommen");
+            .subscribe((data) => {
+                // console.log("internetdaten bekommen");
                 if (cacheData == null || !this.isEquivalent(cacheData, data)) {
-                    //console.log("Cache Daten: " + cacheData);
-                    //console.log("Echte Daten: " + data);
+                    // console.log("Cache Daten: " + cacheData);
+                    // console.log("Echte Daten: " + data);
                     if (data) {
                         subject.next(data);
                         this.cacheService.put(data, action, args);
@@ -50,49 +50,49 @@ export class RemoteService {
                         this.alertService.snackbar("Offline-Modus (Daten können veraltet sein)");
                     }
 
-                    //console.log("cache updated and new data served: " + data);
+                    // console.log("cache updated and new data served: " + data);
                 } else {
-                    //console.log("cache the same as internet");
+                    // console.log("cache the same as internet");
                 }
                 echtDaten = true;
                 subject.complete();
             });
-        //console.log("hole cachedaten");
+        // console.log("hole cachedaten");
         this.cacheService
             .get(action, args)
 
-            .subscribe(d => {
-                //console.log("cacheDaten bekommen");
+            .subscribe((d) => {
+                // console.log("cacheDaten bekommen");
                 if (echtDaten == false) {
                     subject.next(d);
                     cacheData = d;
-                    //console.log("served from cache:" + cacheData);
+                    // console.log("served from cache:" + cacheData);
                 }
             });
         return subject.asObservable();
     }
-    getNoCache(action: string, ...args: any): Observable<any> {
+    public getNoCache(action: string, ...args: any): Observable<any> {
         this.log(
             "fetching " +
             action +
             " with data " +
-            JSON.stringify(args)
+            JSON.stringify(args),
         );
         return this.http
             .post<any>(`${config.apiUrl}`, {
                 action,
-                args
+                args,
             })
             .pipe(
-                tap(_ =>
+                tap((_) =>
                     this.log(
                         "fetched " +
                         action +
                         " with data " +
-                        JSON.stringify(args)
-                    )
+                        JSON.stringify(args),
+                    ),
                 ),
-                catchError(this.handleError<any>(action, false))
+                catchError(this.handleError<any>(action, false)),
             );
     }
     private handleError<T>(operation = "operation", result?: T) {
@@ -106,7 +106,6 @@ export class RemoteService {
                 this.alertService.error(error);
             }
 
-
             return of(result as T);
         };
     }
@@ -115,13 +114,13 @@ export class RemoteService {
         console.log(`RemoteService Log: ${message}`);
     }
     private isEquivalent(a, b) {
-        //console.log("a");
-        //console.log(a);
-        //console.log("b");
-        //console.log(b);
+        // console.log("a");
+        // console.log(a);
+        // console.log("b");
+        // console.log(b);
         // Create arrays of property names
-        var aProps = Object.getOwnPropertyNames(a);
-        var bProps = Object.getOwnPropertyNames(b);
+        const aProps = Object.getOwnPropertyNames(a);
+        const bProps = Object.getOwnPropertyNames(b);
 
         // If number of properties is different,
         // objects are not equivalent
@@ -129,8 +128,8 @@ export class RemoteService {
             return false;
         }
 
-        for (var i = 0; i < aProps.length; i++) {
-            var propName = aProps[i];
+        for (let i = 0; i < aProps.length; i++) {
+            const propName = aProps[i];
 
             // If values of same property are not equal,
             // objects are not equivalent
