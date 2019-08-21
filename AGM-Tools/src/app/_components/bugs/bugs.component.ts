@@ -7,8 +7,8 @@ import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-bugs",
-    templateUrl: "./bugs.component.html",
     styleUrls: ["./bugs.component.scss"],
+    templateUrl: "./bugs.component.html",
 })
 export class BugsComponent implements OnInit {
     public bugs: any;
@@ -23,18 +23,18 @@ export class BugsComponent implements OnInit {
         private modalService: NgbModal,
         private fb: FormBuilder,
         private alertService: AlertService,
-        private NavbarService: NavbarService,
-    ) {}
+        private navbarService: NavbarService,
+    ) { }
     public ngOnInit() {
         this.remoteService.get("bugsGetBugs").subscribe((data) => {
             this.bugs = data;
         });
-        this.NavbarService.setHeadline("Fehler / Verbesserungen");
+        this.navbarService.setHeadline("Fehler / Verbesserungen");
         this.newBugForm = this.fb.group({
-            type: [this.type, [Validators.required]],
-            place: [this.place, [Validators.required]],
-            headline: [this.headline, [Validators.required]],
             description: [this.description, [Validators.required]],
+            headline: [this.headline, [Validators.required]],
+            place: [this.place, [Validators.required]],
+            type: [this.type, [Validators.required]],
         });
     }
     public openNewModal(content) {
@@ -46,35 +46,33 @@ export class BugsComponent implements OnInit {
 
                     this.remoteService
                         .getNoCache("bugsNewBug", {
-                            type: this.newBugForm.get("type").value,
-                            place: this.newBugForm.get("place").value,
+                            description: this.newBugForm.get("description").value,
                             headline: this.newBugForm.get("headline").value,
-                            description: this.newBugForm.get("description")
-                                .value,
+                            place: this.newBugForm.get("place").value,
+                            type: this.newBugForm.get("type").value,
                         })
                         .subscribe((data) => {
-                            if (data && data.status == true) {
+                            if (data && data.status === true) {
                                 this.alertService.success(
                                     "Fehler / Verbesserungsvorschlag erfolgreich erstellt!",
                                 );
                                 this.remoteService
                                     .get("bugsGetBugs")
-                                    .subscribe((data) => {
-                                        this.bugs = data;
+                                    .subscribe((res) => {
+                                        this.bugs = res;
                                     });
                             }
                         });
                 },
-                (reason) => {},
             );
     }
     public deleteBug(bug: any) {
         if (
             confirm(
                 "Möchten Sie diesen Fehler / Verbesserungsvorschlag wirklich löschen?",
+                // tslint:disable-next-line: triple-equals
             ) == true
         ) {
-            console.log(bug);
             this.remoteService
                 .getNoCache("bugsDeleteBug", {
                     id: bug.id,
@@ -86,8 +84,8 @@ export class BugsComponent implements OnInit {
                         );
                         this.remoteService
                             .get("bugsGetBugs")
-                            .subscribe((data) => {
-                                this.bugs = data;
+                            .subscribe((res) => {
+                                this.bugs = res;
                             });
                     }
                 });

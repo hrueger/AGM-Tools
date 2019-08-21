@@ -6,8 +6,8 @@ import { OneSignalService } from "./_services/onesignal.service";
 
 @Component({
     selector: "app-root",
-    templateUrl: "./app.component.html",
     styleUrls: ["./app.component.css"],
+    templateUrl: "./app.component.html",
 })
 export class AppComponent {
     public currentUser: User;

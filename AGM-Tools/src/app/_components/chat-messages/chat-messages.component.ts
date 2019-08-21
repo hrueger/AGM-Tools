@@ -20,10 +20,10 @@ import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
-    selector: "chat-messages",
-    templateUrl: "chat-messages.component.html",
-    styleUrls: ["chat-messages.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "chat-messages",
+    styleUrls: ["chat-messages.component.scss"],
+    templateUrl: "chat-messages.component.html",
 })
 export class ChatMessagesComponent
     implements OnInit, OnChanges, AfterViewChecked {
@@ -31,12 +31,12 @@ export class ChatMessagesComponent
     public receiverId: number;
     public chat: Chat = {
         contact: new Contact(),
-        type: null,
-        when: null,
-        unread: null,
         muted: null,
-        text: null,
         rid: null,
+        text: null,
+        type: null,
+        unread: null,
+        when: null,
     };
 
     public unread: number;
@@ -47,7 +47,7 @@ export class ChatMessagesComponent
 
     constructor(
         private remoteService: RemoteService,
-        private _location: Location,
+        private location: Location,
         private cdr: ChangeDetectorRef,
     ) { }
 
@@ -81,7 +81,6 @@ export class ChatMessagesComponent
     public ngOnChanges(data) {
         if (data.inputReceiverId && data.inputReceiverId.currentValue) {
             this.receiverId = data.inputReceiverId.currentValue;
-            console.log("received change: loading for chat ");
             this.remoteService.get("chatGetContacts").subscribe((chats) => {
                 // this.chats = chats;
                 from(chats)
@@ -120,6 +119,6 @@ export class ChatMessagesComponent
 
     public goBack() {
         // @ts-ignore
-        this._location.back();
+        this.location.back();
     }
 }

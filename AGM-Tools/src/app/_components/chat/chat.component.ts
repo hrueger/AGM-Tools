@@ -4,21 +4,21 @@ import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-chat",
-    templateUrl: "./chat.component.html",
     styleUrls: ["./chat.component.scss"],
+    templateUrl: "./chat.component.html",
 })
 export class ChatComponent {
     public chats = [];
     public currentRid: number;
     constructor(
         private remoteService: RemoteService,
-        private NavbarService: NavbarService,
+        private navbarService: NavbarService,
     ) {
         this.chats = [];
     }
 
     public ngOnInit() {
-        this.NavbarService.setHeadline("Chat");
+        this.navbarService.setHeadline("Chat");
         this.remoteService.get("chatGetContacts").subscribe((chats) => {
             this.chats = chats;
         });

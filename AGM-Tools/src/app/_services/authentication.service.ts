@@ -29,23 +29,22 @@ export class AuthenticationService {
 
     public login(username: string, password: string) {
         const action = "authenticate";
-        console.log(username);
         return this.http
             .post<any>(
                 `${config.apiUrl}`,
                 {
                     action,
-                    username,
                     password,
+                    username,
                 },
                 httpOptions,
             )
             .pipe(
                 map((user) => {
                     // login successful if there's a jwt token in the response
-                    console.log(user);
                     if (user && user.token) {
-                        // store user details and jwt token in local storage to keep user logged in between page refreshes
+                        // store user details and jwt token in local storage to
+                        // keep user logged in between page refreshes
                         sessionStorage.setItem(
                             "currentUser",
                             JSON.stringify(user),

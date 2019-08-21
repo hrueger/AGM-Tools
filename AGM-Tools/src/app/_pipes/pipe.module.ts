@@ -2,9 +2,9 @@ import { NgModule } from "@angular/core";
 import { ToIconPipe } from "./ToIcon.pipe";
 
 @NgModule({
-    imports: [],
     declarations: [ToIconPipe],
     exports: [ToIconPipe],
+    imports: [],
 })
 
 export class PipeModule {

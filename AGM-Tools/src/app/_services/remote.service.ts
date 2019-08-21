@@ -97,10 +97,12 @@ export class RemoteService {
     }
     private handleError<T>(operation = "operation", result?: T) {
         return (error: any): Observable<T> => {
+            // tslint:disable-next-line: no-console
             console.error("Error occured in remote.service.ts:", error);
 
             if (!error.startsWith("java.net.UnknownHostException")) {
                 this.log(`${operation} failed: ${error.message}`);
+                // tslint:disable-next-line: no-console
                 console.log(result);
 
                 this.alertService.error(error);
@@ -111,6 +113,7 @@ export class RemoteService {
     }
 
     private log(message: string) {
+        // tslint:disable-next-line: no-console
         console.log(`RemoteService Log: ${message}`);
     }
     private isEquivalent(a, b) {
@@ -128,6 +131,7 @@ export class RemoteService {
             return false;
         }
 
+        // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < aProps.length; i++) {
             const propName = aProps[i];
 

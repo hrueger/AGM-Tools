@@ -55,6 +55,7 @@ import { routes } from "./app.routes";
 registerLocaleData(localeDe);
 
 @NgModule({
+    bootstrap: [AppComponent],
     declarations: [
         AppComponent,
         LoginComponent,
@@ -122,6 +123,5 @@ registerLocaleData(localeDe);
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     ],
-    bootstrap: [AppComponent],
 })
 export class AppModule { }

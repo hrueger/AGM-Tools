@@ -14,8 +14,8 @@ import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-files",
-    templateUrl: "./files.component.html",
     styleUrls: ["./files.component.scss"],
+    templateUrl: "./files.component.html",
 })
 export class FilesComponent implements OnInit {
     public renameItemName: string;
@@ -45,7 +45,7 @@ export class FilesComponent implements OnInit {
         private modalService: NgbModal,
         private fb: FormBuilder,
         private alertService: AlertService,
-        private NavbarService: NavbarService,
+        private navbarService: NavbarService,
         private cdr: ChangeDetectorRef,
     ) { }
 
@@ -69,33 +69,26 @@ export class FilesComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.NavbarService.setHeadline("Dateien");
+        this.navbarService.setHeadline("Dateien");
         L10n.load({
             de: {
                 uploader: {
-                    invalidMinFileSize:
-                        "Diese Datei ist zu klein, um hochgeladen zu werden.",
-                    invalidMaxFileSize:
-                        "Diese Datei ist größer als die erlaubte Dateigröße.",
-                    invalidFileType:
-                        "Diese Datei besitzt keinen der erlabubten Dateitypen.",
                     Browse: "Auswählen",
                     Clear: "Leeren",
                     Upload: "Hochladen",
-                    dropFilesHint: "oder Dateien hierher ziehen",
-                    uploadFailedMessage:
-                        "Der Upload konnte nicht erfolgreich beendet werden.",
-                    uploadSuccessMessage:
-                        "Die Datei(en) wurde(n) erfolgreich hochgeladen.",
-                    removedSuccessMessage:
-                        "Die Datei wurde erfolgreich gerlöscht.",
-                    removedFailedMessage:
-                        "Die Datei konnte nicht gelöscht werden.",
-                    inProgress: "in Bearbeitung",
-                    readyToUploadMessage: "Klicke zum Hochladen",
-                    remove: "Entfernen",
                     cancel: "Abbrechen",
                     delete: "Löschen",
+                    dropFilesHint: "oder Dateien hierher ziehen",
+                    inProgress: "in Bearbeitung",
+                    invalidFileType: "Diese Datei besitzt keinen der erlabubten Dateitypen.",
+                    invalidMaxFileSize: "Diese Datei ist größer als die erlaubte Dateigröße.",
+                    invalidMinFileSize: "Diese Datei ist zu klein, um hochgeladen zu werden.",
+                    readyToUploadMessage: "Klicke zum Hochladen",
+                    remove: "Entfernen",
+                    removedFailedMessage: "Die Datei konnte nicht gelöscht werden.",
+                    removedSuccessMessage: "Die Datei wurde erfolgreich gerlöscht.",
+                    uploadFailedMessage: "Der Upload konnte nicht erfolgreich beendet werden.",
+                    uploadSuccessMessage: "Die Datei(en) wurde(n) erfolgreich hochgeladen.",
                 },
             },
         });
@@ -175,11 +168,10 @@ export class FilesComponent implements OnInit {
         // console.log(this.currentPath);
         this.remoteService
             .get("filesGetFolder", {
-                pid: this.pid,
                 fid: item.id,
+                pid: this.pid,
             })
             .subscribe((data) => {
-                console.log(this.currentPath);
                 if (
                     this.currentPath.length == 0 ||
                     this.currentPath[this.currentPath.length - 1].id != item.id
@@ -209,10 +201,9 @@ export class FilesComponent implements OnInit {
                 (result) => {
                     this.remoteService
                         .getNoCache("filesNewFolder", {
+                            fid: this.currentPath[this.currentPath.length - 1].id,
                             name: this.newFolderForm.get("newFolderName").value,
                             pid: this.pid,
-                            fid: this.currentPath[this.currentPath.length - 1]
-                                .id,
                         })
                         .subscribe((data) => {
                             if (data && data.status == true) {
@@ -221,7 +212,6 @@ export class FilesComponent implements OnInit {
                             }
                         });
                 },
-                (reason) => { },
             );
     }
     public getType() {
@@ -251,9 +241,9 @@ export class FilesComponent implements OnInit {
     public toggleTag(tagid, item) {
         this.remoteService
             .getNoCache("filesToggleTag", {
-                type: item.type,
                 fid: item.id,
                 tagid,
+                type: item.type,
             })
             .subscribe((data) => {
                 if (data.status == true) {
@@ -278,7 +268,7 @@ export class FilesComponent implements OnInit {
         this.shareLink = "";
         this.modalService
             .open(shareModal)
-            .result.then((result) => { }, (reason) => { });
+            .result.then();
         this.remoteService
             .getNoCache("filesCreateShare", { type: item.type, fid: item.id })
             .subscribe((data) => {
@@ -293,14 +283,18 @@ export class FilesComponent implements OnInit {
             .open(renameModal)
             .result.then((result) => {
                 this.remoteService
-                    .getNoCache("filesRename", { type: item.type, fid: item.id, name: this.renameItemForm.get("renameItemName").value })
+                    .getNoCache("filesRename", {
+                        fid: item.id,
+                        name: this.renameItemForm.get("renameItemName").value,
+                        type: item.type,
+                    })
                     .subscribe((data) => {
                         if (data.status == true) {
                             this.alertService.success("Das Element wurde erfolgreich umbenannt.");
                             this.reloadHere();
                         }
                     });
-            }, (reason) => { });
+            });
 
     }
     public delete(item) {
@@ -314,10 +308,12 @@ export class FilesComponent implements OnInit {
         }
     }
     public move(item) {
-        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt. Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt.\
+        Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
     }
     public copy(item) {
-        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt. Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt.\
+        Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
     }
 
     public copyShareLink(inputField) {

@@ -9,8 +9,8 @@ import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-notifications",
-    templateUrl: "./notifications.component.html",
     styleUrls: ["./notifications.component.scss"],
+    templateUrl: "./notifications.component.html",
 })
 export class NotificationsComponent implements OnInit {
     public notifications: Notification[] = [];
@@ -26,21 +26,21 @@ export class NotificationsComponent implements OnInit {
         private modalService: NgbModal,
         private fb: FormBuilder,
         private alertService: AlertService,
-        private NavbarService: NavbarService,
-    ) {}
+        private navbarService: NavbarService,
+    ) { }
 
     public ngOnInit() {
-        this.NavbarService.setHeadline("Benachrichtigungen");
+        this.navbarService.setHeadline("Benachrichtigungen");
         this.remoteService
             .get("notificationsGetNotifications")
             .subscribe((data) => {
                 this.notifications = data;
             });
         this.newNotificationForm = this.fb.group({
-            headline: [this.headline, [Validators.required]],
             content: [this.content, [Validators.required]],
-            receivers: [this.receivers, [Validators.required]],
+            headline: [this.headline, [Validators.required]],
             importance: [this.importance, [Validators.required]],
+            receivers: [this.receivers, [Validators.required]],
         });
         this.remoteService.get("usersGetUsers").subscribe((data) => {
             this.allusers = data;
@@ -55,14 +55,10 @@ export class NotificationsComponent implements OnInit {
 
                     this.remoteService
                         .getNoCache("notificationsNewNotification", {
-                            headline: this.newNotificationForm.get("headline")
-                                .value,
-                            content: this.newNotificationForm.get("content")
-                                .value,
-                            receivers: this.newNotificationForm.get("receivers")
-                                .value,
-                            type: this.newNotificationForm.get("importance")
-                                .value,
+                            content: this.newNotificationForm.get("content").value,
+                            headline: this.newNotificationForm.get("headline").value,
+                            receivers: this.newNotificationForm.get("receivers").value,
+                            type: this.newNotificationForm.get("importance").value,
                         })
                         .subscribe((data) => {
                             if (data && data.status == true) {
@@ -71,13 +67,12 @@ export class NotificationsComponent implements OnInit {
                                 );
                                 this.remoteService
                                     .get("notificationsGetNotifications")
-                                    .subscribe((data) => {
-                                        this.notifications = data;
+                                    .subscribe((res) => {
+                                        this.notifications = res;
                                     });
                             }
                         });
                 },
-                (reason) => {},
             );
     }
     public deleteNotification(notification: Notification) {
@@ -96,8 +91,8 @@ export class NotificationsComponent implements OnInit {
                         );
                         this.remoteService
                             .get("notificationsGetNotifications")
-                            .subscribe((data) => {
-                                this.notifications = data;
+                            .subscribe((res) => {
+                                this.notifications = res;
                             });
                     }
                 });

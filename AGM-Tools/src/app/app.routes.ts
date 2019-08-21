@@ -19,75 +19,75 @@ import { AuthGuard } from "./_guards/auth.guard";
 
 export const routes: Routes = [
     {
-        path: "dashboard",
-        component: DashboardComponent,
         canActivate: [AuthGuard],
+        component: DashboardComponent,
+        path: "dashboard",
     },
 
     {
-        path: "users",
+        canActivate: [AuthGuard],
         component: UsersComponent,
-        canActivate: [AuthGuard],
+        path: "users",
     },
     {
-        path: "chat",
+        canActivate: [AuthGuard],
         component: ChatComponent,
-        canActivate: [AuthGuard],
+        path: "chat",
     },
     {
-        path: "chat-messages/:index",
+        canActivate: [AuthGuard],
         component: ChatMessagesComponent,
-        canActivate: [AuthGuard],
+        path: "chat-messages/:index",
     },
     {
-        path: "notifications",
+        canActivate: [AuthGuard],
         component: NotificationsComponent,
-        canActivate: [AuthGuard],
+        path: "notifications",
     },
     {
-        path: "calendar",
+        canActivate: [AuthGuard],
         component: CalendarComponent,
-        canActivate: [AuthGuard],
+        path: "calendar",
     },
     {
-        path: "projects",
+        canActivate: [AuthGuard],
         component: ProjectsComponent,
-        canActivate: [AuthGuard],
+        path: "projects",
     },
     {
-        path: "files",
+        canActivate: [AuthGuard],
         component: FilesComponent,
-        canActivate: [AuthGuard],
+        path: "files",
     },
     {
-        path: "templates",
+        canActivate: [AuthGuard],
         component: TemplatesComponent,
-        canActivate: [AuthGuard],
+        path: "templates",
     },
     {
-        path: "bugs",
+        canActivate: [AuthGuard],
         component: BugsComponent,
-        canActivate: [AuthGuard],
+        path: "bugs",
     },
     {
-        path: "clientsoftware",
+        canActivate: [AuthGuard],
         component: ClientsoftwareComponent,
-        canActivate: [AuthGuard],
+        path: "clientsoftware",
     },
     {
-        path: "done",
+        canActivate: [AuthGuard],
         component: DoneComponent,
-        canActivate: [AuthGuard],
+        path: "done",
     },
     {
-        path: "settings",
+        canActivate: [AuthGuard],
         component: SettingsComponent,
-        canActivate: [AuthGuard],
+        path: "settings",
     },
     {
-        path: "about",
-        component: AboutComponent,
         canActivate: [AuthGuard],
+        component: AboutComponent,
+        path: "about",
     },
 
     /* Authentication paths*/

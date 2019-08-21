@@ -1,14 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ChartOptions, ChartType } from "chart.js";
 import { Label, MultiDataSet } from "ng2-charts";
+// tslint:disable-next-line: max-line-length
 import * as pluginDataLabels from "../../../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-dashboard",
-    templateUrl: "./dashboard.component.html",
     styleUrls: ["./dashboard.component.scss"],
+    templateUrl: "./dashboard.component.html",
 })
 export class DashboardComponent implements OnInit {
     public spaceChartLabels: Label[] = [
@@ -44,11 +45,11 @@ export class DashboardComponent implements OnInit {
     public notifications: any[] = [];
     constructor(
         private remoteService: RemoteService,
-        private NavbarService: NavbarService,
+        private navbarService: NavbarService,
     ) { }
 
     public ngOnInit() {
-        this.NavbarService.setHeadline("Dashboard");
+        this.navbarService.setHeadline("Dashboard");
         this.initChart();
     }
 

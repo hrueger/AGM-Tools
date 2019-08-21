@@ -2,18 +2,19 @@ import { Component, ElementRef, HostListener, Input } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
-    selector: "app-file-upload",
-    templateUrl: "./file-upload.component.html",
     providers: [
         {
+            multi: true,
             provide: NG_VALUE_ACCESSOR,
             useExisting: FileUploadComponent,
-            multi: true,
         },
     ],
+    selector: "app-file-upload",
+    templateUrl: "./file-upload.component.html",
 })
 export class FileUploadComponent implements ControlValueAccessor {
     @Input() public progress;
+    // tslint:disable-next-line: ban-types
     public onChange: Function;
     public file: File | null = null;
 
@@ -33,9 +34,11 @@ export class FileUploadComponent implements ControlValueAccessor {
         this.file = null;
     }
 
+    // tslint:disable-next-line: ban-types
     public registerOnChange(fn: Function) {
         this.onChange = fn;
     }
 
+    // tslint:disable-next-line: ban-types tslint:disable-next-line: no-empty
     public registerOnTouched(fn: Function) { }
 }

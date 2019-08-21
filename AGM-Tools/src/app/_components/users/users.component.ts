@@ -9,8 +9,8 @@ import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-users",
-    templateUrl: "./users.component.html",
     styleUrls: ["./users.component.scss"],
+    templateUrl: "./users.component.html",
 })
 export class UsersComponent implements OnInit {
     public users: User[] = [];
@@ -35,29 +35,29 @@ export class UsersComponent implements OnInit {
         private fb: FormBuilder,
         private alertService: AlertService,
         private authService: AuthenticationService,
-        private NavbarService: NavbarService,
+        private navbarService: NavbarService,
     ) { }
 
     public ngOnInit() {
-        this.NavbarService.setHeadline("Benutzer");
+        this.navbarService.setHeadline("Benutzer");
         this.remoteService.get("usersGetUsers").subscribe((data) => {
             this.users = data;
         });
         this.newUserForm = this.fb.group({
-            name: [this.name, [Validators.required]],
             email: [this.email, [Validators.required]],
+            name: [this.name, [Validators.required]],
             password1: [this.password1, [Validators.required]],
             password2: [this.password2, [Validators.required]],
         });
         this.editUserForm = this.fb.group({
-            editUserName: [this.editUserName, [Validators.required]],
             editUserEmail: [this.editUserEmail, [Validators.required]],
+            editUserName: [this.editUserName, [Validators.required]],
+            editUserPassword1: [this.editUserPassword1, []],
+            editUserPassword2: [this.editUserPassword2, []],
             editUserPasswordOld: [
                 this.editUserPasswordOld,
                 [Validators.required],
             ],
-            editUserPassword1: [this.editUserPassword1, []],
-            editUserPassword2: [this.editUserPassword2, []],
         });
 
         this.editUserForm
@@ -81,10 +81,10 @@ export class UsersComponent implements OnInit {
 
                     this.remoteService
                         .getNoCache("usersNewUser", {
-                            username: this.newUserForm.get("name").value,
                             email: this.newUserForm.get("email").value,
                             pw: this.newUserForm.get("password1").value,
                             pw2: this.newUserForm.get("password2").value,
+                            username: this.newUserForm.get("name").value,
                         })
                         .subscribe((data) => {
                             if (data && data.status == true) {
@@ -93,13 +93,12 @@ export class UsersComponent implements OnInit {
                                 );
                                 this.remoteService
                                     .get("usersGetUsers")
-                                    .subscribe((data) => {
-                                        this.users = data;
+                                    .subscribe((res) => {
+                                        this.users = res;
                                     });
                             }
                         });
                 },
-                (reason) => { },
             );
     }
     public openEditModal(content) {
@@ -120,15 +119,14 @@ export class UsersComponent implements OnInit {
                     }*/
                     this.remoteService
                         .getNoCache("usersEditCurrentUser", {
-                            "id": this.authService.currentUserValue.id,
-                            "username": this.editUserForm.get("editUserName")
-                                .value,
                             "email": this.editUserForm.get("editUserEmail").value,
-                            "pw-old": this.editUserForm.get(
-                                "editUserPasswordOld",
-                            ).value,
+                            "id": this.authService.currentUserValue.id,
                             "pw-new": pwnew1val,
                             "pw-new2": pwnew2val,
+                            "pw-old": this.editUserForm.get(
+                                "editUserPasswordOld").value,
+                            "username": this.editUserForm.get("editUserName")
+                                .value,
                         })
                         .subscribe((data) => {
                             if (data && data.status == true) {
@@ -137,13 +135,12 @@ export class UsersComponent implements OnInit {
                                 );
                                 this.remoteService
                                     .get("usersGetUsers")
-                                    .subscribe((data) => {
-                                        this.users = data;
+                                    .subscribe((res) => {
+                                        this.users = res;
                                     });
                             }
                         });
                 },
-                (reason) => { },
             );
     }
 
@@ -160,8 +157,8 @@ export class UsersComponent implements OnInit {
                         );
                         this.remoteService
                             .get("usersGetUsers")
-                            .subscribe((data) => {
-                                this.users = data;
+                            .subscribe((res) => {
+                                this.users = res;
                             });
                     }
                 });

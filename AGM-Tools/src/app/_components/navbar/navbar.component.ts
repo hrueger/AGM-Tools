@@ -10,32 +10,33 @@ import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
     selector: "navbar",
-    templateUrl: "./navbar.component.html",
     styleUrls: ["./navbar.component.scss"],
+    templateUrl: "./navbar.component.html",
 })
 export class NavbarComponent {
     public headline: string = "Nix";
 
     constructor(
         private router: Router,
-        private NavbarService: NavbarService,
+        private navbarService: NavbarService,
         private authenticationService: AuthenticationService,
         private cdr: ChangeDetectorRef,
-    ) {}
+    ) { }
     public logout() {
         this.authenticationService.logout();
         this.router.navigate(["/login"]);
     }
     public ngAfterViewChecked() {
         try {
-            this.NavbarService.change.subscribe((headline) => {
+            this.navbarService.change.subscribe((headline) => {
                 try {
                     this.headline = headline;
-                    console.log("Changed Headline to " + this.headline);
                     this.cdr.detectChanges();
+                    // tslint:disable-next-line: no-empty
                 } finally {
                 }
             });
+            // tslint:disable-next-line: no-empty
         } finally {
         }
     }

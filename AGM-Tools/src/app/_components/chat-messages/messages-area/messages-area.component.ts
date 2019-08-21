@@ -11,11 +11,11 @@ import { Message } from "../../../_models/message.model";
 import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     moduleId: module.id,
     selector: "ns-messages-area",
-    templateUrl: "./messages-area.component.html",
     styleUrls: ["./messages-area.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: "./messages-area.component.html",
 })
 export class MessagesAreaComponent implements OnInit {
     @Input() public messages: Message[];
@@ -29,8 +29,6 @@ export class MessagesAreaComponent implements OnInit {
 
     public ngOnInit() {
         this.messages = this.messages.slice(0, 50);
-        console.log("Messages");
-        console.log(this.messages);
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -43,18 +41,18 @@ export class MessagesAreaComponent implements OnInit {
                 let chat = this.messages[-1].chat
             }*/
             let message = {
-                text: changes.messageSent.currentValue,
                 chat: null,
-                fromMe: true,
                 created: Date.now(),
-                sent: "0",
+                fromMe: true,
                 sendername: "",
+                sent: "0",
+                text: changes.messageSent.currentValue,
             };
             this.messages.push(message);
             this.remoteService
                 .getNoCache("chatSendMessage", {
-                    rid: this.receiverId,
                     message: changes.messageSent.currentValue,
+                    rid: this.receiverId,
                 })
                 .subscribe((data) => {
                     message = this.messages.pop();
@@ -86,6 +84,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getIcon(message: Message) {
+        // tslint:disable-next-line: radix
         switch (parseInt(message.sent)) {
             case 0:
                 return "&#xf017;";
@@ -98,6 +97,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public isViewed(message: Message) {
+        // tslint:disable-next-line: radix
         return parseInt(message.sent) === 3;
     }
 }

@@ -15,8 +15,8 @@ import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-templates",
-    templateUrl: "./templates.component.html",
     styleUrls: ["./templates.component.scss"],
+    templateUrl: "./templates.component.html",
 })
 export class TemplatesComponent implements OnInit {
     public imgUrl: string;
@@ -30,20 +30,20 @@ export class TemplatesComponent implements OnInit {
         private remoteService: RemoteService,
         private modalService: NgbModal,
         private authenticationService: AuthenticationService,
-        private NavbarService: NavbarService,
+        private navbarService: NavbarService,
         private httpClient: HttpClient,
         private alertService: AlertService,
-    ) {}
+    ) { }
     public ngOnInit() {
-        this.NavbarService.setHeadline("Vorlagen");
+        this.navbarService.setHeadline("Vorlagen");
         this.remoteService.get("templatesGetTemplates").subscribe((data) => {
             this.templates = data;
         });
         this.newTemplateForm = new FormGroup({
-            name: new FormControl(null, Validators.required),
             description: new FormControl(null, Validators.required),
-            type: new FormControl(null, Validators.required),
             file: new FormControl(null, [Validators.required]),
+            name: new FormControl(null, Validators.required),
+            type: new FormControl(null, Validators.required),
         });
     }
     public show(template, content) {
@@ -55,7 +55,7 @@ export class TemplatesComponent implements OnInit {
             this.authenticationService.currentUserValue.token;
         this.modalService
             .open(content, {})
-            .result.then((result) => {}, (reason) => {});
+            .result.then();
     }
     public openNewModal(content) {
         this.modalService
@@ -96,7 +96,6 @@ export class TemplatesComponent implements OnInit {
                             }
                         });
                 },
-                (reason) => {},
             );
     }
     public toFormData<T>(formValue: T) {

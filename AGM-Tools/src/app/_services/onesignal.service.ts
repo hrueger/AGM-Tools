@@ -11,7 +11,7 @@ export class OneSignalService {
     public oneSignalId: any; // store OneSignalId in localStorage
 
     constructor(private authService: AuthenticationService) {
-        console.log("OneSignal Service Init", this.oneSignalInit);
+        alert("OneSignal Service Init" + JSON.stringify(this.oneSignalInit));
     }
 
     // Call this method to start the onesignal process.
@@ -20,14 +20,14 @@ export class OneSignalService {
         this.oneSignalId = localStorage.getItem("oneSignalInit");
 
         this.oneSignalInit
-            ? console.log("Already Initialized")
+            ? alert("Already Initialized")
             : this.addScript(
-                  "https://cdn.onesignal.com/sdks/OneSignalSDK.js",
-                  (callback) => {
-                      console.log("OneSignal Script Loaded");
-                      this.initOneSignal();
-                  },
-              );
+                "https://cdn.onesignal.com/sdks/OneSignalSDK.js",
+                (callback) => {
+                    alert("OneSignal Script Loaded");
+                    this.initOneSignal();
+                },
+            );
     }
 
     public addScript(fileSrc, callback) {
@@ -40,35 +40,36 @@ export class OneSignalService {
     }
 
     public initOneSignal() {
+        // @ts-ignore
         OneSignal = window.OneSignal || [];
-        console.log("Init OneSignal");
+        alert("Init OneSignal");
         OneSignal.push([
             "init",
             {
+                allowLocalhostAsSecureOrigin: true,
                 appId: "69044d74-01cc-49f8-a32f-91ca715cbba3",
                 autoRegister: true,
-                allowLocalhostAsSecureOrigin: true,
                 notifyButton: {
                     enable: false,
                 },
             },
         ]);
-        console.log("OneSignal Initialized");
+        // console.log("OneSignal Initialized");
         this.checkIfSubscribed();
     }
 
     public subscribe() {
         OneSignal.push(() => {
-            console.log("Register For Push");
+            alert("Register For Push");
             OneSignal.push(["registerForPushNotifications"]);
             OneSignal.on("subscriptionChange", (isSubscribed) => {
-                console.log(
-                    "The user's subscription state is now:",
+                alert(
+                    "The user's subscription state is now:" +
                     isSubscribed,
                 );
                 this.listenForNotification();
                 OneSignal.getUserId().then((userId) => {
-                    console.log("User ID is", userId);
+                    alert("User ID is" + userId);
                     localStorage.setItem("oneSignalId", userId);
                     this.updateLocalUserProfile();
                 });
@@ -77,16 +78,16 @@ export class OneSignalService {
     }
 
     public listenForNotification() {
-        console.log("Initalize Listener");
+        alert("Initalize Listener");
         OneSignal.on("notificationDisplay", (event) => {
-            console.log("OneSignal notification displayed:", event);
+            alert("OneSignal notification displayed:" + event);
             this.listenForNotification();
         });
     }
 
     public getUserID() {
         OneSignal.getUserId().then((userId) => {
-            console.log("User ID is", userId);
+            alert("User ID is" + userId);
             localStorage.setItem("oneSignalId", userId);
         });
     }
@@ -97,15 +98,15 @@ export class OneSignalService {
             OneSignal.isPushNotificationsEnabled(
                 (isEnabled) => {
                     if (isEnabled) {
-                        console.log("Push notifications are enabled!");
+                        alert("Push notifications are enabled!");
                         this.getUserID();
                     } else {
-                        console.log("Push notifications are not enabled yet.");
+                        alert("Push notifications are not enabled yet.");
                         this.subscribe();
                     }
                 },
                 (error) => {
-                    console.log("Push permission not granted");
+                    alert("Push permission not granted");
                 },
             );
         });
@@ -117,10 +118,11 @@ export class OneSignalService {
 
     public updateTags() {
         const userId = this.authService.currentUserValue.id;
+        // @ts-ignore
         OneSignal = window.OneSignal || [];
         OneSignal.sendTag("user_id", userId, (tagsSent) => {
             // Callback called when tags have finished sending
-            console.log("OneSignal Tag Sent", tagsSent);
+            alert("OneSignal Tag Sent" + tagsSent);
         });
     }
 }

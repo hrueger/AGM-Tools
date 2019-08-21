@@ -2,14 +2,9 @@ import { Component, OnInit } from "@angular/core";
 
 @Component({
   selector: "app-settings",
-  templateUrl: "./settings.component.html",
   styleUrls: ["./settings.component.scss"],
+  templateUrl: "./settings.component.html",
 })
-export class SettingsComponent implements OnInit {
-
-  constructor() { }
-
-  public ngOnInit() {
-  }
+export class SettingsComponent {
 
 }

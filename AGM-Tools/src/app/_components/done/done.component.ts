@@ -3,13 +3,13 @@ import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
     selector: "app-done",
-    templateUrl: "./done.component.html",
     styleUrls: ["./done.component.css"],
+    templateUrl: "./done.component.html",
 })
 export class DoneComponent implements OnInit {
-    constructor(private NavbarService: NavbarService) {}
+    constructor(private navbarService: NavbarService) { }
 
     public ngOnInit() {
-        this.NavbarService.setHeadline("Fertig");
+        this.navbarService.setHeadline("Fertig");
     }
 }

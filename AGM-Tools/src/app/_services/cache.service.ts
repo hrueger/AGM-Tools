@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
     providedIn: "root",
 })
 export class CacheService {
-    constructor() {}
     public put(data, action, ...args): void {
         // console.log("set");
         return localStorage.setItem(
@@ -18,7 +17,7 @@ export class CacheService {
             observer.next(
                 JSON.parse(
                     localStorage.getItem(JSON.stringify({ action, ...args })) ||
-                        null,
+                    null,
                 ) || null,
             );
             observer.complete();

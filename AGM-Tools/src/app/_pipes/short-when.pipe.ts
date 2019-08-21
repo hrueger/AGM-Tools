@@ -10,7 +10,6 @@ import * as parse from "date-fns/parse";
     pure: true,
 })
 export class ShortWhenPipe implements PipeTransform {
-    constructor(@Inject(LOCALE_ID) private _locale: string) {}
 
     public transform(value: number | string | Date): string {
         const datePipe = new DatePipe("de-DE");

@@ -8,8 +8,8 @@ import { AuthenticationService } from "../../_services/authentication.service";
 import { DashboardComponent } from "../dashboard/dashboard.component";
 
 @Component({
-    templateUrl: "login.component.html",
     styleUrls: ["./login.component.scss"],
+    templateUrl: "login.component.html",
 })
 export class LoginComponent implements OnInit {
     public loginForm: FormGroup;
@@ -34,8 +34,8 @@ export class LoginComponent implements OnInit {
     public ngOnInit() {
         this.title.setTitle("AGM-Tools | Login");
         this.loginForm = this.formBuilder.group({
-            username: ["", Validators.required],
             password: ["", Validators.required],
+            username: ["", Validators.required],
         });
 
         // get return url from route parameters or default to '/'
