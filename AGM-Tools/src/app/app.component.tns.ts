@@ -1,45 +1,37 @@
 import { Component, ElementRef } from "@angular/core";
-import { User } from "./_models/user.model";
-import { Router } from "@angular/router";
-import { AuthenticationService } from "./_services/authentication.service";
 import { OnInit, ViewChild } from "@angular/core";
-import * as app from "tns-core-modules/application";
+import { Router } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 import {
     DrawerTransitionBase,
     RadSideDrawer,
-    SlideInOnTopTransition
+    SlideInOnTopTransition,
 } from "nativescript-ui-sidedrawer";
+import { User } from "./_models/user.model";
+import { AuthenticationService } from "./_services/authentication.service";
+import { FirebaseService } from "./_services/firebase.service";
 
 @Component({
     selector: "app-root",
+    styleUrls: ["./app.component.css"],
     templateUrl: "./app.component.html",
-    styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-    private _sideDrawerTransition: DrawerTransitionBase;
-    @ViewChild("rsd", { static: false }) rSideDrawer: ElementRef;
-    currentUser: User;
-    username = "";
-    useremail = "";
-    initials = "";
-    navItems = [{
-        link: "['/dashboard']", icon: "&#xf3fd;", text: "Dashboard"
-    }, {
-        link: "/dashboard", icon: "&#xf3fd;", text: "Dashboard"
-    }, {
-        link: "/dashboard", icon: "&#xf3fd;", text: "Dashboard"
-    }, {
-        link: "/dashboard", icon: "&#xf3fd;", text: "Dashboard"
-    }, {
-        link: "/dashboard", icon: "&#xf3fd;", text: "Dashboard"
-    }];
+    get sideDrawerTransition(): DrawerTransitionBase {
+        return this.psideDrawerTransition;
+    }
+    @ViewChild("rsd", { static: false }) public rSideDrawer: ElementRef;
+    public currentUser: User;
+    public username = "";
+    public useremail = "";
+    public initials = "";
+    private psideDrawerTransition: DrawerTransitionBase;
 
     constructor(
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
     ) {
-        this.authenticationService.currentUser.subscribe(x => {
+        this.authenticationService.currentUser.subscribe((x) => {
             if (x) {
                 this.currentUser = x;
                 this.useremail = x.email;
@@ -55,15 +47,12 @@ export class AppComponent {
         });
     }
 
-    logout() {
+    public logout() {
         this.authenticationService.logout();
         this.router.navigate(["/login"]);
     }
-    ngOnInit() {
-        this._sideDrawerTransition = new SlideInOnTopTransition();
-    }
-    get sideDrawerTransition(): DrawerTransitionBase {
-        return this._sideDrawerTransition;
+    public ngOnInit() {
+        this.psideDrawerTransition = new SlideInOnTopTransition();
     }
     public hideDrawer(): void {
         this.rSideDrawer.nativeElement.toggleDrawerState();

@@ -220,6 +220,10 @@ if ($data) {
                 authenticate($data);
                 break;
 
+            case "updatePushToken":
+                updatePushToken($args);
+                break;    
+
             case "dashboardGetSpaceChartData":
                 dashboardGetSpaceChartData();
                 break;
@@ -238,7 +242,7 @@ if ($data) {
             case "dashboardMakeNotificationSeen":
                 dashboardMakeNotificationSeen($args);
                 break;    
-
+            
             case "usersGetUsers":
                 usersGetUsers();
                 break;
@@ -407,6 +411,18 @@ function authenticate($data) {
     }
     dieWithMessage("Nicht alle Felder wurden ausgefüllt!");
     
+}
+
+function updatePushToken($data) {
+    $db = connect();
+    $cuid = $db->real_escape_string(getCurrentUserId());
+    $pushToken = $db->real_escape_string($data["pushToken"]);
+    $res = $db->query("UPDATE users SET pushToken = '$pushToken' WHERE id = '$cuid'");
+    if ($res) {
+        dieSuccessfully();
+    } else {
+        dieWithMessage($db->error);
+    }
 }
 
 function dieWithMessage($message) {
@@ -1279,9 +1295,11 @@ function chatSendMessage($data) {
 		$retdata["chatID"] = $senderid;
 		$retdata['action'] = 'newMessage';
 		$retdata["sender"] = $name;
-
-
-		sendPushMessage("$name hat geschrieben: " . $data["message"], false, $retdata, $receivers[0]);
+        $pushToken = getPushTokenFromUserId($receivers[0]);
+        if ($pushToken) {
+            sendPushMessage($name, $data["message"], $retdata, $pushToken);
+        }
+		
 	} else {
 		//$m = buildMessage(false, $name, $data["message"], false, date("H:i"));
 		$senderid = $db->real_escape_string(getCurrentUserId());
@@ -1292,12 +1310,16 @@ function chatSendMessage($data) {
 		$retdata['action'] = 'newMessage';
 		$retdata["sender"] = $name;
 
-
+        $pushTokens = array();
 		foreach ($receivers as $receiver) {
 			if ($receiver != getCurrentUserId()) {
-				sendPushMessage("$name hat geschrieben: " . $data["message"], false, $retdata, $receiver);
+                $pushToken = getPushTokenFromUserId($receiver);
+                if ($pushToken) {
+                    $pushTokens[] = $pushToken;
+                }
 			}
-		}
+        }
+        sendPushMessage($name, $data["message"], $retdata, $pushTokens);
 	}
 	return;
 }
@@ -1605,65 +1627,76 @@ function templatesNewTemplate($data) {
 	}
 }
 
-function sendPushMessage($text, $all, $data, $receiverID = null)
+function sendPushMessage($title, $body, $payload, $sendToDevices = null)
 {
-	$content = array(
-		"en" => $text
-	);
-	if ($all) {
-		$fields = array(
-			'app_id' => "69044d74-01cc-49f8-a32f-91ca715cbba3",
-			'included_segments' => array(
-				'All'
-			),
-			'data' => $data,
-			'contents' => $content
-		);
-	} else {
-		$fields = array(
-			'app_id' => "69044d74-01cc-49f8-a32f-91ca715cbba3",
-			'filters' => array(
-				array(
-					"field" => "tag",
-					"key" => "userId",
-					"relation" => "=",
-					"value" => $receiverID
-				)
+    $url = "https://fcm.googleapis.com/fcm/send";
+    
+    $data = array();
 
-			),
-			'data' => $data,
-			'contents' => $content
-		);
-	}
+    $notification = array();
+    $notification ['title'] = $title;
+    $notification ['body'] =  $body;
+    $data["notification"] = $notification;
+    
+    
+    $data ['to'] = $sendToDevices;
+    
+    
+    $data['data'] = $payload;
 
+    $content = json_encode($data);
 
-	$fields = json_encode($fields);
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		'Content-Type: application/json; charset=utf-8',
-		'Authorization: Basic ZDVjN2RlYmYtNWZiZC00MWViLThhMjMtYjI1OTk4YzlmNzJi'
-	));
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HEADER, false);
-	curl_setopt($ch, CURLOPT_POST, true);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER,
+            array(
+                "Content-type: application/json",
+                "Authorization: key=AAAA3lIT2YI:APA91bERjeHMf2NBJpiwyM44TRtDFV3hz7-OZTZmOehPEX9TRokxc52jbGXQTEtFZO8a3jKH6OJT2Fvvk7ixO2tijydzF2nXPqrtcuyrBXEdzH8tyMUYhWfSt46x8wsbK6nq7LYLsZYp"
+                ));
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
 
-	$response = curl_exec($ch);
-	curl_close($ch);
-	$log = time() . "          Send message no all: $all with receiverID: $receiverID             ";
-	//file_put_contents('./log_push.html', $log . $response . "<br><br>", FILE_APPEND);
-	//echo get_current_user();
+    $json_response = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    if ( $status != 201 && $status != 200) {
+        var_dump($data);
+        var_dump($json_response);
+
+        die("Error: call to URL $url failed with status $status, response $json_response, curl_error " . curl_error($curl) . ", curl_errno " . curl_errno($curl));
+    }
+
+    curl_close($curl);
+    
+
 }
+
 
 function getCurrentUserName() {
     $db = connect();
-    
-    return @$db->query("SELECT username FROM users WHERE id=".@$db->real_escape_string(getCurrentUserId()))->fetch_all(MYSQLI_ASSOC)[0]["username"] || "Unbekannt";
+    return @($db->query("SELECT username FROM users WHERE id=".@$db->real_escape_string(getCurrentUserId()))->fetch_all(MYSQLI_ASSOC)[0]["username"]);
 }
 
 function dieSuccessfully() {
     die(json_encode(array("status"=>true)));
+}
+
+function getPushTokenFromUserId($uid) {
+    $db = connect();
+    $uid = $db->real_escape_string($uid);
+    $res = $db->query("SELECT pushToken FROM users WHERE id = $uid");
+    if ($res) {
+        $res = $res->fetch_all(MYSQLI_ASSOC);
+        if ($res) {
+            $res = $res[0];
+            if ($res) {
+                $res = $res["pushToken"];
+                if ($res) {
+                    return $res;
+                }
+            }
+        }
+    }
+    return null;
 }
 ?>

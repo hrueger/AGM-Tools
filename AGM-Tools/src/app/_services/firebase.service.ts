@@ -6,12 +6,15 @@ let OneSignal;
 const url = "";
 
 @Injectable()
-export class OneSignalService {
+export class FirebaseService {
     public oneSignalInit; // to check if OneSignal is already initialized.
     public oneSignalId: any; // store OneSignalId in localStorage
 
     constructor(private authService: AuthenticationService) {
         alert("OneSignal Service Init" + JSON.stringify(this.oneSignalInit));
+        if (!this.oneSignalInit) {
+            this.init();
+        }
     }
 
     // Call this method to start the onesignal process.

@@ -1,68 +1,71 @@
 import { Component, OnInit } from "@angular/core";
-import { NavbarService } from "../../_services/navbar.service";
-import { RemoteService } from "../../_services/remote.service";
 import {
-    CFAlertDialog,
-    DialogOptions,
     CFAlertActionAlignment,
     CFAlertActionStyle,
-    CFAlertStyle
+    CFAlertDialog,
+    CFAlertStyle,
+    DialogOptions,
 } from "nativescript-cfalert-dialog";
 import { AlertService } from "../../_services/alert.service";
+import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
+import { FirebaseService } from "../../_services/firebase.service";
 
 @Component({
     selector: "app-dashboard",
+    styleUrls: ["./dashboard.component.css"],
     templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.css"]
 })
 export class DashboardComponent implements OnInit {
-    spaceChartData: { name: string; amount: string }[] = [];
-    whatsnew;
-    dates;
-    selectedIndexes = [0, 3];
-    items: any = [];
-    version: string;
-    notifications: any[] = [];
-    cfalertDialog: CFAlertDialog;
+    public spaceChartData: Array<{ name: string; amount: string }> = [];
+    public whatsnew;
+    public dates;
+    public selectedIndexes = [0, 3];
+    public items: any = [];
+    public version: string;
+    public notifications: any[] = [];
+    public cfalertDialog: CFAlertDialog;
 
     constructor(
         private remoteService: RemoteService,
-        private NavbarService: NavbarService,
-        private alertService: AlertService
+        private navbarService: NavbarService,
+        private alertService: AlertService,
+        private oneSignalService: FirebaseService,
     ) {
         this.cfalertDialog = new CFAlertDialog();
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.initChart();
+        this.oneSignalService.init();
     }
-    initChart() {
-        this.remoteService.get("dashboardGetSpaceChartData").subscribe(data => {
-            //console.log("Bekommene Daten: " + data);
-            //console.log(data);
+    public initChart() {
+        this.remoteService.get("dashboardGetSpaceChartData").subscribe((data) => {
+            // console.log("Bekommene Daten: " + data);
+            // console.log(data);
             if (data) {
                 this.spaceChartData = [
                     { name: "Verfügbar", amount: data[0] },
                     { name: "Vom System belegt", amount: data[1] },
-                    { name: "Von Daten belegt", amount: data[2] }
+                    { name: "Von Daten belegt", amount: data[2] },
                 ];
             }
 
         });
-        this.remoteService.get("dashboardGetWhatsnew").subscribe(data => {
+        this.remoteService.get("dashboardGetWhatsnew").subscribe((data) => {
             this.whatsnew = data;
         });
-        this.remoteService.get("dashboardGetDates").subscribe(data => {
+        this.remoteService.get("dashboardGetDates").subscribe((data) => {
             this.dates = data;
         });
-        this.remoteService.get("dashboardGetVersion").subscribe(data => {
+        this.remoteService.get("dashboardGetVersion").subscribe((data) => {
             this.version = data;
         });
         this.remoteService
             .getNoCache("dashboardGetNotifications")
-            .subscribe(data => {
+            .subscribe((data) => {
                 this.notifications = data.notifications;
-                this.notifications.forEach(notification => {
+                this.notifications.forEach((notification) => {
                     let type;
 
                     if (notification.type == "alert-success") {
@@ -78,35 +81,32 @@ export class DashboardComponent implements OnInit {
                     }
 
                     const options: DialogOptions = {
-                        dialogStyle: CFAlertStyle.NOTIFICATION,
-                        title: type + notification.headline,
-                        message: notification.content + "\n\n" + notification.sender + " am " + notification.date + " um " + notification.time + " Uhr",
                         backgroundBlur: true,
-                        onDismiss: dialog => { },
+                        dialogStyle: CFAlertStyle.NOTIFICATION,
+                        message: notification.content + "\n\n" + notification.sender + " am " +
+                            notification.date + " um " + notification.time + " Uhr",
+                        title: type + notification.headline,
+                        onDismiss: (dialog) => { },
                         buttons: [{
                             text: "Gelesen",
                             buttonStyle: CFAlertActionStyle.POSITIVE,
                             buttonAlignment: CFAlertActionAlignment.END,
                             textColor: "#eee",
                             backgroundColor: "#5cb85c",
-                            onClick: response => {
+                            onClick: (response) => {
                                 this.remoteService
                                     .getNoCache("dashboardMakeNotificationSeen", {
-                                        id: notification.id
+                                        id: notification.id,
                                     })
-                                    .subscribe(data => {
-                                        if (data.status != true) {
-                                            //console.log("Fehler, Benachrichtigung konnte nicht als gelesen markiert werden...");
-                                        }
-                                    });
-                            }
-                        }]
+                                    .subscribe();
+                            },
+                        }],
                     };
                     this.cfalertDialog.show(options);
 
                 });
             });
 
-        this.NavbarService.setHeadline("Dashboard");
+        this.navbarService.setHeadline("Dashboard");
     }
 }
