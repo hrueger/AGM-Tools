@@ -31,17 +31,17 @@ This is a .NET wrapper over Dokan, and allows you to create your own file system
     </dependencies>
   </metadata>
   <files>
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.0\de\DokanNet.resources.dll" target="lib\net40\de\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.0\fr\DokanNet.resources.dll" target="lib\net40\fr\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.0\sv\DokanNet.resources.dll" target="lib\net40\sv\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\bin\Debug\net4.0\DokanNet.dll" target="lib\net40\DokanNet.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.6\de\DokanNet.resources.dll" target="lib\net46\de\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.6\fr\DokanNet.resources.dll" target="lib\net46\fr\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.6\sv\DokanNet.resources.dll" target="lib\net46\sv\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\bin\Debug\net4.6\DokanNet.dll" target="lib\net46\DokanNet.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\bin\Debug\netstandard1.3\de\DokanNet.resources.dll" target="lib\netstandard1.3\de\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\bin\Debug\netstandard1.3\fr\DokanNet.resources.dll" target="lib\netstandard1.3\fr\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\bin\Debug\netstandard1.3\sv\DokanNet.resources.dll" target="lib\netstandard1.3\sv\DokanNet.resources.dll" />
-    <file src="E:\AGM-Tools_DokanFS\DokanNet\bin\Debug\netstandard1.3\DokanNet.dll" target="lib\netstandard1.3\DokanNet.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.0\de\DokanNet.resources.dll" target="lib\net40\de\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.0\fr\DokanNet.resources.dll" target="lib\net40\fr\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.0\sv\DokanNet.resources.dll" target="lib\net40\sv\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\bin\Debug\net4.0\DokanNet.dll" target="lib\net40\DokanNet.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.6\de\DokanNet.resources.dll" target="lib\net46\de\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.6\fr\DokanNet.resources.dll" target="lib\net46\fr\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\obj\Debug\net4.6\sv\DokanNet.resources.dll" target="lib\net46\sv\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\bin\Debug\net4.6\DokanNet.dll" target="lib\net46\DokanNet.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\bin\Debug\netstandard1.3\de\DokanNet.resources.dll" target="lib\netstandard1.3\de\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\bin\Debug\netstandard1.3\fr\DokanNet.resources.dll" target="lib\netstandard1.3\fr\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\bin\Debug\netstandard1.3\sv\DokanNet.resources.dll" target="lib\netstandard1.3\sv\DokanNet.resources.dll" />
+    <file src="E:\Angular\AGM-Tools\AGM-Tools_DokanFS\DokanNet\bin\Debug\netstandard1.3\DokanNet.dll" target="lib\netstandard1.3\DokanNet.dll" />
   </files>
 </package>
