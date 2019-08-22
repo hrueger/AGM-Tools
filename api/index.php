@@ -75,7 +75,7 @@ if (isset($_GET["get"]) && isset($_GET["type"]) && (isset($_GET["token"])||isset
                         list($size_unit, $range_orig) = explode('=', $_SERVER['HTTP_RANGE'], 2);
                         if ($size_unit == 'bytes')
                         {
-                            list($range, $extra_ranges) = explode(',', $range_orig, 2);
+                            @list($range, $extra_ranges) = explode(',', $range_orig, 2);
                         }
                         else
                         {
