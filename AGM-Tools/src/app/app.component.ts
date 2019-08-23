@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
-import { FirebaseService } from "./_services/firebase.service";
+import { PushService } from "./_services/push.service";
 
 @Component({
     selector: "app-root",
@@ -15,7 +15,7 @@ export class AppComponent {
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
-        private oneSignalService: FirebaseService,
+        private oneSignalService: PushService,
     ) {
         this.authenticationService.currentUser.subscribe(
             (x) => (this.currentUser = x),

@@ -1,33 +1,30 @@
-import { Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone, ChangeDetectorRef, ApplicationRef } from "@angular/core";
+import { RouterExtensions } from "nativescript-angular/router";
 import { LocalNotifications } from "nativescript-local-notifications";
 import { Message, messaging } from "nativescript-plugin-firebase/messaging";
+import { Subject } from "rxjs";
 import * as applicationSettings from "tns-core-modules/application-settings";
 import { alert, confirm } from "tns-core-modules/ui/dialogs";
+import { MessagesAreaComponent } from "../_components/chat-messages/messages-area/messages-area.component.tns";
 import { RemoteService } from "./remote.service";
-import { RouterExtensions } from "nativescript-angular/router";
 
-const getCircularReplacer = () => {
-    const seen = new WeakSet<any>();
-    return (key, value) => {
-        if (typeof value === "object" && value !== null) {
-            if (seen.has(value)) {
-                return;
-            }
-            seen.add(value);
-        }
-        return value;
-    };
-};
-
-@Injectable()
-export class FirebaseService {
+@Injectable({
+    providedIn: MessagesAreaComponent,
+})
+export class PushService {
     private static APP_REGISTERED_FOR_NOTIFICATIONS = "APP_REGISTERED_FOR_NOTIFICATIONS";
+    public newMesssageCallback: (body: string, fromMe: boolean) => void;
     private messageStorage: Message[] = [];
 
     constructor(private remoteService: RemoteService, private router: RouterExtensions, private zone: NgZone) { }
 
-    public init() {
+    public setNewMesssageCallback(cb: (body: string, fromMe: boolean) => any): void {
+        this.newMesssageCallback = cb;
+        console.log("Updated to ", cb);
+    }
 
+    public init() {
+        const cb = this;
         LocalNotifications.addOnMessageReceivedCallback((data: any) => {
             const message = this.messageStorage[data.id];
             switch (data.channel) {
@@ -35,31 +32,44 @@ export class FirebaseService {
                     if (data.event == "button") {
                         console.log("als gelesen markiert!");
                     } else if (data.event == "input") {
-                        console.log("geantwortet: ", data.response);
+                        this.remoteService
+                            .getNoCache("chatSendMessage", {
+                                message: data.response,
+                                rid: message.data.chatID,
+                            })
+                            .subscribe(() => {
+                                console.log("Gesendet!");
+                            });
+
+                        console.log(cb);
+
                     } else {
                         // Angetippt
-                        this.zone.run(() => this.router.navigate(["chat-messages", message.data.chatID]));
+                        this.zone.run(() => {
+                            this.router.navigate(["chat-messages", message.data.chatID]);
+                        });
                     }
                     break;
                 default:
                     console.log("unbekannte nachricht angetippt!");
             }
+
         });
 
         this.doRegisterPushHandlers();
         this.doRegisterForPushNotifications();
-        if (!applicationSettings.getBoolean(FirebaseService.APP_REGISTERED_FOR_NOTIFICATIONS, false)) {
+        if (!applicationSettings.getBoolean(PushService.APP_REGISTERED_FOR_NOTIFICATIONS, false)) {
             this.doRequestConsent(() => {
                 LocalNotifications.hasPermission().then((result) => {
                     if (!result) {
                         LocalNotifications.requestPermission().then((res) => {
                             if (res) {
-                                applicationSettings.setBoolean(FirebaseService.APP_REGISTERED_FOR_NOTIFICATIONS, true);
+                                applicationSettings.setBoolean(PushService.APP_REGISTERED_FOR_NOTIFICATIONS, true);
                                 this.doRegisterForPushNotifications();
                             }
                         });
                     } else {
-                        applicationSettings.setBoolean(FirebaseService.APP_REGISTERED_FOR_NOTIFICATIONS, true);
+                        applicationSettings.setBoolean(PushService.APP_REGISTERED_FOR_NOTIFICATIONS, true);
                         this.doRegisterForPushNotifications();
                     }
                 });
@@ -170,7 +180,7 @@ export class FirebaseService {
         return 0;
     }
     private handleNewChatMessage(message: Message): number {
-        const id = Math.round(Math.random() * 10000)
+        const id = Math.round(Math.random() * 10000);
         LocalNotifications.schedule([{
             actions: [{
                 id: "markAsRead",

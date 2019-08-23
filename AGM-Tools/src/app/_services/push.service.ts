@@ -6,7 +6,7 @@ let OneSignal;
 const url = "";
 
 @Injectable()
-export class FirebaseService {
+export class PushService {
     public oneSignalInit; // to check if OneSignal is already initialized.
     public oneSignalId: any; // store OneSignalId in localStorage
 

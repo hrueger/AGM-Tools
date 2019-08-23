@@ -48,7 +48,7 @@ import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { NavbarService } from "./_services/navbar.service";
-import { FirebaseService } from "./_services/firebase.service";
+import { PushService } from "./_services/push.service";
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
 
@@ -115,7 +115,7 @@ registerLocaleData(localeDe);
     providers: [
         Location,
         NavbarService,
-        FirebaseService,
+        PushService,
         {
             provide: LOCALE_ID,
             useValue: "de-DE",

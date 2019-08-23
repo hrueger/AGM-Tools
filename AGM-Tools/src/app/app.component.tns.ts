@@ -9,7 +9,6 @@ import {
 } from "nativescript-ui-sidedrawer";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
-import { FirebaseService } from "./_services/firebase.service";
 
 @Component({
     selector: "app-root",

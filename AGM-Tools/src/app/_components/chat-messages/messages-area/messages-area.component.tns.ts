@@ -10,11 +10,13 @@ import {
 } from "@angular/core";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { Message } from "../../../_models/message.model";
+import { PushService } from "../../../_services/push.service.tns";
 import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     moduleId: module.id,
+    providers: [PushService],
     selector: "ns-messages-area",
     styleUrls: ["./messages-area.component.scss"],
     templateUrl: "./messages-area.component.html",
@@ -25,7 +27,22 @@ export class MessagesAreaComponent implements OnInit {
     @Input() public receiverId: number;
     @ViewChild("messagesListView", { static: false }) public messagesListView: ElementRef;
     public shouldScrollToBottom: boolean = false;
-    constructor(private remoteService: RemoteService) { }
+    constructor(private remoteService: RemoteService, private pushService: PushService) {
+        this.pushService.setNewMesssageCallback(this.newMessageFromPushService);
+    }
+
+    public newMessageFromPushService(body: any, fromMe: boolean) {
+        console.log("Etwas bekommen: ", body);
+        const message = {
+            chat: null,
+            created: Date.now(),
+            fromMe,
+            sendername: "",
+            sent: "0",
+            text: body,
+        };
+        this.messages.push(message);
+    }
 
     public ngOnChanges(changes: SimpleChanges) {
         if (

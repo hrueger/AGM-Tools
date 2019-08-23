@@ -9,7 +9,7 @@ import {
 import { AlertService } from "../../_services/alert.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
-import { FirebaseService } from "../../_services/firebase.service";
+import { PushService } from "../../_services/push.service";
 
 @Component({
     selector: "app-dashboard",
@@ -30,14 +30,14 @@ export class DashboardComponent implements OnInit {
         private remoteService: RemoteService,
         private navbarService: NavbarService,
         private alertService: AlertService,
-        private oneSignalService: FirebaseService,
+        private pushService: PushService,
     ) {
         this.cfalertDialog = new CFAlertDialog();
     }
 
     public ngOnInit() {
         this.initChart();
-        this.oneSignalService.init();
+        this.pushService.init();
     }
     public initChart() {
         this.remoteService.get("dashboardGetSpaceChartData").subscribe((data) => {

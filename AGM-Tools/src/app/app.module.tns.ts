@@ -49,7 +49,6 @@ registerElement("VideoPlayer", () => Video);
 import { PDFView } from "nativescript-pdf-view";
 registerElement("PDFView", () => PDFView);
 import { FormBuilder } from "@angular/forms";
-import { ModalDialogService } from "nativescript-angular/modal-dialog";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { PickerModule } from "nativescript-emoji-picker";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker";
@@ -60,7 +59,7 @@ import { NewProjectModalComponent } from "./_components/_modals/new-project.moda
 import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
-import { FirebaseService } from "./_services/firebase.service";
+import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
 
 @NgModule({
@@ -118,7 +117,7 @@ import { routes } from "./app.routes";
     providers: [
         FormBuilder,
         NavbarService,
-        FirebaseService,
+        PushService,
         ModalDatetimepicker,
         PlatformRef,
         ModalDatetimepicker,
