@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { LocalNotifications } from "nativescript-local-notifications";
 import { Message, messaging } from "nativescript-plugin-firebase/messaging";
 import * as applicationSettings from "tns-core-modules/application-settings";
-import * as platform from "tns-core-modules/platform";
 import { alert, confirm } from "tns-core-modules/ui/dialogs";
 import { RemoteService } from "./remote.service";
+import { RouterExtensions } from "nativescript-angular/router";
 
 const getCircularReplacer = () => {
     const seen = new WeakSet<any>();
@@ -22,13 +22,33 @@ const getCircularReplacer = () => {
 @Injectable()
 export class FirebaseService {
     private static APP_REGISTERED_FOR_NOTIFICATIONS = "APP_REGISTERED_FOR_NOTIFICATIONS";
+    private messageStorage: Message[] = [];
 
-    constructor(private remoteService: RemoteService) { }
+    constructor(private remoteService: RemoteService, private router: RouterExtensions, private zone: NgZone) { }
 
     public init() {
-        applicationSettings.clear();
+
+        LocalNotifications.addOnMessageReceivedCallback((data: any) => {
+            const message = this.messageStorage[data.id];
+            switch (data.channel) {
+                case "newMessage":
+                    if (data.event == "button") {
+                        console.log("als gelesen markiert!");
+                    } else if (data.event == "input") {
+                        console.log("geantwortet: ", data.response);
+                    } else {
+                        // Angetippt
+                        this.zone.run(() => this.router.navigate(["chat-messages", message.data.chatID]));
+                    }
+                    break;
+                default:
+                    console.log("unbekannte nachricht angetippt!");
+            }
+        });
+
+        this.doRegisterPushHandlers();
+        this.doRegisterForPushNotifications();
         if (!applicationSettings.getBoolean(FirebaseService.APP_REGISTERED_FOR_NOTIFICATIONS, false)) {
-            this.doRegisterPushHandlers();
             this.doRequestConsent(() => {
                 LocalNotifications.hasPermission().then((result) => {
                     if (!result) {
@@ -87,12 +107,10 @@ export class FirebaseService {
         );
         messaging.addOnMessageReceivedCallback(
             (message) => {
-                alert(">>>>>>>>>>>>>>>>>>>Wie kommt die hier raus???" + message);
+                this.messageRecieved(message);
             },
-        ).then(() => {
-            // tslint:disable-next-line: no-console
-            console.log("Added addOnMessageReceivedCallback");
-        }, (err) => {
+            // tslint:disable-next-line: no-empty
+        ).then(() => { }, (err) => {
             // tslint:disable-next-line: no-console
             console.log("Failed to add addOnMessageReceivedCallback: " + err);
         });
@@ -118,38 +136,7 @@ export class FirebaseService {
             },
 
             onMessageReceivedCallback: (message: Message) => {
-                // tslint:disable-next-line: no-console
-                console.log(">>>> Push message received", message);
-                console.log(message.data);
-                LocalNotifications.schedule([{
-                    at: new Date(new Date().getTime() + (1 * 50)),
-                    badge: 1,
-                    body: message.body,
-                    id: 1,
-                    title: message.title,
-                    actions: [{
-                        id: "answer",
-                        type: "input",
-                        title: "Antworten",
-                        placeholder: "Nachricht",
-                        submitLabel: "Senden",
-                        launch: false,
-                        editable: true,
-                        // choices: ["Red", "Yellow", "Green"] // TODO Android only, but yet to see it in action
-                    }],
-                    // tslint:disable-next-line: no-empty
-                }]).then(() => { },
-                    (error) => {
-                        // tslint:disable-next-line: no-console
-                        console.log("scheduling error: " + error);
-                    });
-                LocalNotifications.addOnMessageReceivedCallback((data) => {
-                    alert(JSON.stringify({
-                        message: `id: '${data.id}', title: '${data.title}'.`,
-                        okButtonText: "Ok, thanks for the info.",
-                        title: "Local Notification received",
-                    }));
-                });
+                this.messageRecieved(message);
             },
 
             showNotifications: true,
@@ -157,6 +144,61 @@ export class FirebaseService {
         })
             // tslint:disable-next-line: no-console
             .catch((err) => console.log(">>>> Failed to register for push notifications"));
+    }
+
+    private messageRecieved(message: Message) {
+        // tslint:disable-next-line: no-console
+        console.log(">>>> Push message received", message);
+        switch (message.data.action) {
+            case "newMessage":
+                this.messageStorage[this.handleNewChatMessage(message)] = message;
+                break;
+            case "calendarEvent":
+                this.messageStorage[this.handleCalendarEventMessage(message)] = message;
+                break;
+            default:
+                this.messageStorage[this.handleUnknownMessage(message)] = message;
+                break;
+        }
+    }
+    private handleUnknownMessage(message: Message): number {
+        console.log("Method not implemented.");
+        return 0;
+    }
+    private handleCalendarEventMessage(message: Message): number {
+        throw new Error("Method not implemented.");
+        return 0;
+    }
+    private handleNewChatMessage(message: Message): number {
+        const id = Math.round(Math.random() * 10000)
+        LocalNotifications.schedule([{
+            actions: [{
+                id: "markAsRead",
+                title: "Als gelesen markieren",
+                type: "button",
+            }, {
+                editable: true,
+                id: "answer",
+                launch: false,
+                placeholder: "Nachricht",
+                submitLabel: "Senden",
+                title: "Antworten",
+                type: "input",
+            }],
+            at: new Date(new Date().getTime() + (1 * 50)),
+            badge: 1,
+            body: message.body,
+            channel: "newMessage",
+            id,
+            title: message.title,
+            // tslint:disable-next-line: no-empty
+        }]).then(() => { },
+            (error) => {
+                // tslint:disable-next-line: no-console
+                console.log("scheduling error: " + error);
+            });
+        return id;
+
     }
 
 }
