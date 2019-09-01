@@ -227,9 +227,8 @@ export class PushService {
                                 rid: message.data.chatID,
                             })
                             .subscribe(() => {
-                                that.chatActionSubject.next();
+                                that.chatActionSubject.next({body: message.data.body, fromMe: true});
                             });
-
 
                     } else {
                         // Angetippt
@@ -238,8 +237,16 @@ export class PushService {
                         });
                     }
                     break;
+                case "calendarEvent":
+                        this.zone.run(() => {
+                            this.router.navigate(["calendar"]);
+                        });
+                        break;
                 default:
-                    console.log("unbekannte nachricht angetippt!");
+                    console.log("Unbekannte nachricht angetippt!");
+                    this.zone.run(() => {
+                        this.router.navigate(["dashboard"]);
+                    });
             }
 
         });

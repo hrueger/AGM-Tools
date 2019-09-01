@@ -29,7 +29,7 @@ export class MessagesAreaComponent implements OnInit {
     public shouldScrollToBottom: boolean = false;
     constructor(private remoteService: RemoteService, private pushService: PushService) {}
 
-    public newMessageFromPushService(body: any, fromMe: boolean) {
+    public newMessageFromPushService(body: string, fromMe: boolean) {
         const message = {
             chat: null,
             created: Date.now(),
@@ -93,11 +93,8 @@ export class MessagesAreaComponent implements OnInit {
         this.shouldScrollToBottom = true;
         this.pushService.reregisterCallback();
         this.pushService.getChatActions().subscribe((data) => {
-            this.newMessageFromPushService(data, true);
+            this.newMessageFromPushService(data.body, data.fromMe);
         });
-        console.log("Subscribed!");
-        this.pushService.testSubject();
-        console.log("tested");
     }
 
     public isContinuation(idx: number) {
