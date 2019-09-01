@@ -1294,10 +1294,11 @@ function chatSendMessage($data) {
 		$retdata = [];
 		$retdata["chatID"] = $senderid;
 		$retdata['action'] = 'newMessage';
-		$retdata["sender"] = $name;
+        $retdata["sender"] = $name;
+        $retdata["body"] = $data["message"];
         $pushToken = getPushTokenFromUserId($receivers[0]);
         if ($pushToken) {
-            sendPushMessage($name, $data["message"], $retdata, $pushToken);
+            sendPushMessage($name, $data["message"], $retdata, [$pushToken]);
         }
 		
 	} else {
@@ -1309,7 +1310,8 @@ function chatSendMessage($data) {
 		$retdata["chatID"] = $_POST["chatID"];
 		$retdata['action'] = 'newMessage';
 		$retdata["sender"] = $name;
-
+        $retdata["body"] = $data["message"];
+        
         $pushTokens = array();
 		foreach ($receivers as $receiver) {
 			if ($receiver != getCurrentUserId()) {
