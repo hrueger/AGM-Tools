@@ -4,6 +4,10 @@ import { registerLocaleData } from "@angular/common";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import localeDe from "@angular/common/locales/de";
 import { LOCALE_ID, NgModule } from "@angular/core";
+import { AngularFireModule } from "@angular/fire";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { AngularFireMessagingModule } from "@angular/fire/messaging";
 import { FormsModule } from "@angular/forms";
 import { ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
@@ -22,6 +26,7 @@ import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 import { AvatarModule } from "ngx-avatar";
 import { ContextMenuModule } from "ngx-contextmenu";
 import { ToastrModule } from "ngx-toastr";
+import { environment } from "../environments/environment";
 import { AboutComponent } from "./_components/about/about.component";
 import { BugsComponent } from "./_components/bugs/bugs.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
@@ -83,8 +88,11 @@ registerLocaleData(localeDe);
         FileUploadComponent,
     ],
     imports: [
+        AngularFireDatabaseModule,
+        AngularFireAuthModule,
+        AngularFireMessagingModule,
+        AngularFireModule.initializeApp(environment.firebase),
         RouterModule.forRoot(routes, { useHash: true, enableTracing: true }),
-
         ContextMenuModule.forRoot({
             useBootstrap4: true,
         }),

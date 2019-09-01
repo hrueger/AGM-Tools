@@ -11,11 +11,11 @@ import { PushService } from "./_services/push.service";
 })
 export class AppComponent {
     public currentUser: User;
-
+    public pushMessage: any;
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
-        private oneSignalService: PushService,
+        private pushService: PushService,
     ) {
         this.authenticationService.currentUser.subscribe(
             (x) => (this.currentUser = x),
@@ -27,6 +27,9 @@ export class AppComponent {
         this.router.navigate(["/login"]);
     }
     public ngOnInit() {
-        // this.oneSignalService.init();
+        const userId = Math.round(Math.random() * 10000);
+        this.pushService.requestPermission(userId);
+        this.pushService.receiveMessage();
+        this.pushMessage = this.pushService.currentMessage;
     }
 }
