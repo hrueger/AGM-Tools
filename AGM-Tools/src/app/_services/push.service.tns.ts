@@ -13,48 +13,25 @@ import { RemoteService } from "./remote.service";
 })
 export class PushService {
     private static APP_REGISTERED_FOR_NOTIFICATIONS = "APP_REGISTERED_FOR_NOTIFICATIONS";
-    public newMesssageCallback: (body: string, fromMe: boolean) => void;
+
+    public chatActionSubject = new Subject<any>();
+    public calendarActionSubject = new Subject<any>();
     private messageStorage: Message[] = [];
 
     constructor(private remoteService: RemoteService, private router: RouterExtensions, private zone: NgZone) { }
 
-    public setNewMesssageCallback(cb: (body: string, fromMe: boolean) => any): void {
-        this.newMesssageCallback = cb;
-        console.log("Updated to ", cb);
+    public getChatActions() {
+        return this.chatActionSubject.asObservable();
+    }
+    public getCalendarActions() {
+        return this.calendarActionSubject.asObservable();
     }
 
+    public reregisterCallback() {
+        this.registerOnClickCallback();
+    }
     public init() {
-        const cb = this;
-        LocalNotifications.addOnMessageReceivedCallback((data: any) => {
-            const message = this.messageStorage[data.id];
-            switch (data.channel) {
-                case "newMessage":
-                    if (data.event == "button") {
-                        console.log("als gelesen markiert!");
-                    } else if (data.event == "input") {
-                        this.remoteService
-                            .getNoCache("chatSendMessage", {
-                                message: data.response,
-                                rid: message.data.chatID,
-                            })
-                            .subscribe(() => {
-                                console.log("Gesendet!");
-                            });
-
-                        console.log(cb);
-
-                    } else {
-                        // Angetippt
-                        this.zone.run(() => {
-                            this.router.navigate(["chat-messages", message.data.chatID]);
-                        });
-                    }
-                    break;
-                default:
-                    console.log("unbekannte nachricht angetippt!");
-            }
-
-        });
+        this.registerOnClickCallback();
 
         this.doRegisterPushHandlers();
         this.doRegisterForPushNotifications();
@@ -157,8 +134,6 @@ export class PushService {
     }
 
     private messageRecieved(message: Message) {
-        // tslint:disable-next-line: no-console
-        console.log(">>>> Push message received", message);
         switch (message.data.action) {
             case "newMessage":
                 this.messageStorage[this.handleNewChatMessage(message)] = message;
@@ -172,12 +147,38 @@ export class PushService {
         }
     }
     private handleUnknownMessage(message: Message): number {
-        console.log("Method not implemented.");
-        return 0;
+        const id = Math.round(Math.random() * 10000);
+        LocalNotifications.schedule([{
+            at: new Date(new Date().getTime() + (1 * 50)),
+            badge: 1,
+            body: message.body,
+            channel: "unknownNotification",
+            id,
+            title: message.title,
+            // tslint:disable-next-line: no-empty
+        }]).then(() => { },
+            (error) => {
+                // tslint:disable-next-line: no-console
+                console.log("scheduling error: " + error);
+            });
+        return id;
     }
     private handleCalendarEventMessage(message: Message): number {
-        throw new Error("Method not implemented.");
-        return 0;
+        const id = Math.round(Math.random() * 10000);
+        LocalNotifications.schedule([{
+            at: new Date(new Date().getTime() + (1 * 50)),
+            badge: 1,
+            body: message.body,
+            channel: "calendarEvent",
+            id,
+            title: message.title,
+            // tslint:disable-next-line: no-empty
+        }]).then(() => { },
+            (error) => {
+                // tslint:disable-next-line: no-console
+                console.log("scheduling error: " + error);
+            });
+        return id;
     }
     private handleNewChatMessage(message: Message): number {
         const id = Math.round(Math.random() * 10000);
@@ -211,4 +212,36 @@ export class PushService {
 
     }
 
+    private registerOnClickCallback() {
+        const that = this;
+        LocalNotifications.addOnMessageReceivedCallback((data: any) => {
+            const message = this.messageStorage[data.id];
+            switch (data.channel) {
+                case "newMessage":
+                    if (data.event == "button") {
+                        that.chatActionSubject.next();
+                    } else if (data.event == "input") {
+                        this.remoteService
+                            .getNoCache("chatSendMessage", {
+                                message: data.response,
+                                rid: message.data.chatID,
+                            })
+                            .subscribe(() => {
+                                that.chatActionSubject.next();
+                            });
+
+
+                    } else {
+                        // Angetippt
+                        this.zone.run(() => {
+                            this.router.navigate(["chat-messages", message.data.chatID]);
+                        });
+                    }
+                    break;
+                default:
+                    console.log("unbekannte nachricht angetippt!");
+            }
+
+        });
+    }
 }
