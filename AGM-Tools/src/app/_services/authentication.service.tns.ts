@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import config from "../_config/config";
@@ -8,18 +8,22 @@ require("nativescript-localstorage");
 
 const httpOptions = {
     headers: new HttpHeaders({
-        "Content-Type": "application/json"
-    })
+        "Content-Type": "application/json",
+    }),
 };
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
-    private currentUserSubject: BehaviorSubject<User>;
+
+    public get currentUserValue(): User {
+        return this.currentUserSubject.value;
+    }
     public currentUser: Observable<User>;
+    private currentUserSubject: BehaviorSubject<User>;
 
     constructor(private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<User>(
-            JSON.parse(localStorage.getItem("currentUser"))
+            JSON.parse(localStorage.getItem("currentUser")),
         );
         this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -28,42 +32,38 @@ export class AuthenticationService {
         return new Observable<boolean>();
     }
 
-    public get currentUserValue(): User {
-        return this.currentUserSubject.value;
-    }
-
-    login(username: string, password: string) {
-        var action = "authenticate";
+    public login(username: string, password: string) {
+        const action = "authenticate";
 
         return this.http
             .post<any>(
                 `${config.apiUrl}`,
                 {
                     action,
+                    password,
                     username,
-                    password
                 },
-                httpOptions
+                httpOptions,
             )
             .pipe(
-                map(user => {
+                map((user) => {
                     // login successful if there's a jwt token in the response
-                    console.log(user);
                     if (user && user.token) {
-                        // store user details and jwt token in local storage to keep user logged in between page refreshes
+                        // store user details and jwt token in local
+                        // storage to keep user logged in between page refreshes
                         localStorage.setItem(
                             "currentUser",
-                            JSON.stringify(user)
+                            JSON.stringify(user),
                         );
                         this.currentUserSubject.next(user);
                     }
 
                     return user;
-                })
+                }),
             );
     }
 
-    logout() {
+    public logout() {
         // remove user from local storage to log user out
         localStorage.removeItem("currentUser");
         this.currentUserSubject.next(null);

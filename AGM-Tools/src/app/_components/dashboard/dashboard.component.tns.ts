@@ -6,10 +6,9 @@ import {
     CFAlertStyle,
     DialogOptions,
 } from "nativescript-cfalert-dialog";
-import { AlertService } from "../../_services/alert.service";
 import { NavbarService } from "../../_services/navbar.service";
-import { RemoteService } from "../../_services/remote.service";
 import { PushService } from "../../_services/push.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-dashboard",
@@ -29,7 +28,6 @@ export class DashboardComponent implements OnInit {
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
-        private alertService: AlertService,
         private pushService: PushService,
     ) {
         this.cfalertDialog = new CFAlertDialog();
@@ -82,17 +80,10 @@ export class DashboardComponent implements OnInit {
 
                     const options: DialogOptions = {
                         backgroundBlur: true,
-                        dialogStyle: CFAlertStyle.NOTIFICATION,
-                        message: notification.content + "\n\n" + notification.sender + " am " +
-                            notification.date + " um " + notification.time + " Uhr",
-                        title: type + notification.headline,
-                        onDismiss: (dialog) => { },
                         buttons: [{
-                            text: "Gelesen",
-                            buttonStyle: CFAlertActionStyle.POSITIVE,
-                            buttonAlignment: CFAlertActionAlignment.END,
-                            textColor: "#eee",
                             backgroundColor: "#5cb85c",
+                            buttonAlignment: CFAlertActionAlignment.END,
+                            buttonStyle: CFAlertActionStyle.POSITIVE,
                             onClick: (response) => {
                                 this.remoteService
                                     .getNoCache("dashboardMakeNotificationSeen", {
@@ -100,7 +91,14 @@ export class DashboardComponent implements OnInit {
                                     })
                                     .subscribe();
                             },
+                            text: "Gelesen",
+                            textColor: "#eee",
                         }],
+                        dialogStyle: CFAlertStyle.NOTIFICATION,
+                        message: notification.content + "\n\n" + notification.sender + " am " +
+                            notification.date + " um " + notification.time + " Uhr",
+                        onDismiss: (dialog) => { /* dismiss */ },
+                        title: type + notification.headline,
                     };
                     this.cfalertDialog.show(options);
 

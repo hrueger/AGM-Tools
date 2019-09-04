@@ -1,33 +1,34 @@
-import { Component, OnInit, ViewContainerRef, ViewChild } from "@angular/core";
-import { RemoteService } from "../../_services/remote.service";
+import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
-import { AlertService } from "../../_services/alert.service";
-import { NavbarService } from "../../_services/navbar.service";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
-import { RadListViewComponent } from "nativescript-ui-listview/angular";
-import { ListViewEventData } from "nativescript-ui-listview";
 import {
-    CFAlertDialog,
     CFAlertActionAlignment,
     CFAlertActionStyle,
-    CFAlertStyle
-} from 'nativescript-cfalert-dialog';
-import { View } from "tns-core-modules/ui/core/view/view";
-import { AuthenticationService } from "../../_services/authentication.service";
+    CFAlertDialog,
+    CFAlertStyle,
+} from "nativescript-cfalert-dialog";
+import { NYTPhotoItem, PaletteType, PhotoViewer, PhotoViewerOptions } from "nativescript-photoviewer";
+import { ListViewEventData } from "nativescript-ui-listview";
+import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
+import { View } from "tns-core-modules/ui/core/view/view";
 import { Page } from "tns-core-modules/ui/page/page";
-import { PhotoViewer, PhotoViewerOptions, PaletteType, NYTPhotoItem } from "nativescript-photoviewer";
+import { AlertService } from "../../_services/alert.service";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-templates",
+    styleUrls: ["./templates.component.scss"],
     templateUrl: "./templates.component.html",
-    styleUrls: ["./templates.component.scss"]
 })
 export class TemplatesComponent implements OnInit {
-    @ViewChild("templatesListView", { read: RadListViewComponent, static: false }) templatesListView: RadListViewComponent;
-    templates: any[] = [];
-    photoViewer: PhotoViewer;
+    @ViewChild("templatesListView", { read: RadListViewComponent, static: false })
+    public templatesListView: RadListViewComponent;
+    public templates: any[] = [];
+    public photoViewer: PhotoViewer;
 
     constructor(
         private remoteService: RemoteService,
@@ -35,45 +36,45 @@ export class TemplatesComponent implements OnInit {
         private modal: ModalDialogService,
         private vcRef: ViewContainerRef,
         private authService: AuthenticationService,
-        private _page: Page) {
-        this._page.on("loaded", () => {
+        private page: Page) {
+        this.page.on("loaded", () => {
             this.photoViewer = new PhotoViewer();
         });
     }
 
-    ngOnInit() {
-        this.remoteService.get("templatesGetTemplates").subscribe(data => {
+    public ngOnInit() {
+        this.remoteService.get("templatesGetTemplates").subscribe((data) => {
             this.templates = data;
         });
     }
-    onSetupItemView(args: SetupItemViewArgs) {
+    public onSetupItemView(args: SetupItemViewArgs) {
         args.view.context.third = args.index % 3 === 0;
         args.view.context.header = (args.index + 1) % this.templates.length === 1;
         args.view.context.footer = args.index + 1 === this.templates.length;
     }
 
-    showTemplate(index) {
+    public showTemplate(index) {
 
-
-        let templates/*: NYTPhotoItem[]*/ = [];
-        this.templates.forEach(template => {
+        const templates /*: NYTPhotoItem[]*/ = [];
+        this.templates.forEach((template) => {
             templates.push(/*{
-                image: */`https://agmtools.allgaeu-gymnasium.de/AGM-Tools_NEU_API/getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.token}`/*,
+                image: */`https://agmtools.allgaeu-gymnasium.de/AGM-Tools_NEU_API/\
+                getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.token}`, /*,
                 title: template.name,
                 summary: template.description,
                 credit: template.type
             }*/);
         });
 
-        let photoviewerOptions: PhotoViewerOptions = {
-            startIndex: index,
+        const photoviewerOptions: PhotoViewerOptions = {
             android: {
                 paletteType: PaletteType.DarkVibrant,
                 showAlbum: false,
-            }
+            },
+            startIndex: index,
         };
 
-        this.photoViewer.showGallery(templates, photoviewerOptions).then(() => { });
+        this.photoViewer.showGallery(templates, photoviewerOptions).then(() => { /* leer */ });
     }
 
     public openNewModal() {
@@ -105,75 +106,66 @@ export class TemplatesComponent implements OnInit {
                         }
                     });
             }
-    
+
         });*/
     }
 
-    onDrawerButtonTap(): void {
-        const sideDrawer = <RadSideDrawer>app.getRootView();
+    public onDrawerButtonTap(): void {
+        const sideDrawer =  app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }
 
-
-
-
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
-        const swipeView = args['object'];
-        const rightItem = swipeView.getViewById<View>('delete-view');
+        const swipeView = args.object;
+        const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.right = rightItem.getMeasuredWidth();
     }
 
-
     public onRightSwipeClick(args) {
-        var uid = args.object.bindingContext.id;
-        let cfalertDialog = new CFAlertDialog();
-        const onNoPressed = response => {
-            console.log("nein");
+        const uid = args.object.bindingContext.id;
+        const cfalertDialog = new CFAlertDialog();
+        const onNoPressed = (response) => {
             this.templatesListView.listView.notifySwipeToExecuteFinished();
         };
-        const onYesPressed = response => {
-            console.log("ja");
+        const onYesPressed = (response) => {
             this.templatesListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
                 .getNoCache("templatesDeleteTemplate", {
-                    id: uid
+                    id: uid,
                 })
-                .subscribe(data => {
+                .subscribe((data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
-                            "Vorlage erfolgreich gelöscht"
+                            "Vorlage erfolgreich gelöscht",
                         );
                         this.remoteService
                             .get("templatesGetTemplates")
-                            .subscribe(data => {
-                                this.templates = data;
+                            .subscribe((res) => {
+                                this.templates = res;
                             });
-                    } else {
-                        console.log(data);
                     }
                 });
 
         };
         cfalertDialog.show({
-            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
-            title: "Bestätigung",
-            message: "Soll diese Vorlage wirklich gelöscht werden?",
             buttons: [
                 {
-                    text: "Ja",
-                    buttonStyle: CFAlertActionStyle.POSITIVE,
                     buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    onClick: onYesPressed
-
+                    buttonStyle: CFAlertActionStyle.POSITIVE,
+                    onClick: onYesPressed,
+                    text: "Ja",
 
                 },
                 {
-                    text: "Nein",
-                    buttonStyle: CFAlertActionStyle.NEGATIVE,
                     buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    onClick: onNoPressed
-                }]
+                    buttonStyle: CFAlertActionStyle.NEGATIVE,
+                    onClick: onNoPressed,
+                    text: "Nein",
+                }],
+            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
+            message: "Soll diese Vorlage wirklich gelöscht werden?",
+            title: "Bestätigung",
         });
     }
 }

@@ -1,14 +1,14 @@
-import { Component, ViewChild, NgZone } from "@angular/core";
+import { Component, NgZone, ViewChild } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
+import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
-import { RemoteService } from "../../_services/remote.service";
 import { AlertService } from "../../_services/alert.service";
-import { MultiSelect, MSOption, AShowType } from "nativescript-multi-select";
+import { RemoteService } from "../../_services/remote.service";
 
 export class Project {
-    name: string;
-    description: string;
-    members: Array<any>;
+    public name: string;
+    public description: string;
+    public members: any[];
 
     constructor(name: string, description: string) {
         this.name = name;
@@ -16,72 +16,72 @@ export class Project {
     }
 }
 
-
+// tslint:disable-next-line: max-classes-per-file
 @Component({
     selector: "new-project-modal",
     templateUrl: "new-project.modal.tns.html",
 })
 export class NewProjectModalComponent {
-    private project: Project;
-    private _MSelect: MultiSelect;
-    private users: Array<any> = [];
-    public members: Array<any> = [];
-    noMembersSelectedInvalidMessage: boolean = false;
-    @ViewChild('dataform', { static: false }) dataform: RadDataFormComponent;
-    dataFormConfig = {
-        "isReadOnly": false,
-        "commitMode": "Immediate",
-        "validationMode": "Immediate",
-        "propertyAnnotations":
+    public members: any[] = [];
+    public noMembersSelectedInvalidMessage: boolean = false;
+    @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
+    public dataFormConfig = {
+        commitMode: "Immediate",
+        isReadOnly: false,
+        propertyAnnotations:
             [
                 {
-                    "name": "title",
-                    "displayName": "Titel",
-                    "index": 0,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Titel",
+                    index: 0,
+                    name: "title",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "description",
-                    "displayName": "Beschreibung",
-                    "index": 1,
-                    "editor": "MultilineText",
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Beschreibung",
+                    editor: "MultilineText",
+                    index: 1,
+                    name: "description",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "location",
-                    "displayName": "Ort",
-                    "index": 2,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Ort",
+                    index: 2,
+                    name: "location",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "isAllDay",
-                    "displayName": "Ganztägig",
-                    "index": 3,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Ganztägig",
+                    index: 3,
+                    name: "isAllDay",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "important",
-                    "displayName": "Wichtiger Termin",
-                    "index": 4,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
-                }
-            ]
+                    displayName: "Wichtiger Termin",
+                    index: 4,
+                    name: "important",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
+                },
+            ],
+        validationMode: "Immediate",
     };
+    private project: Project;
+    private multiSelect: MultiSelect;
+    private users: any[] = [];
 
-    public constructor(private params: ModalDialogParams, private remoteService: RemoteService, private alertService: AlertService, private zone: NgZone) {
-        this._MSelect = new MultiSelect();
-        this.remoteService.get("usersGetUsers").subscribe(data => {
-            data.forEach(user => {
+    public constructor(private params: ModalDialogParams, private remoteService: RemoteService, private zone: NgZone) {
+        this.multiSelect = new MultiSelect();
+        this.remoteService.get("usersGetUsers").subscribe((data) => {
+            data.forEach((user) => {
                 this.users.push({ name: user.username, id: user.id });
             });
         });
@@ -89,48 +89,48 @@ export class NewProjectModalComponent {
 
     public openMembersSelectMenu(): void {
         const options: MSOption = {
-            title: "Mitglieder auswählen",
-            selectedItems: this.users,
-            items: this.users,
-            bindValue: 'id',
-            displayLabel: 'name',
-            confirmButtonText: "Ok",
+            android: {
+                cancelButtonTextColor: "#252323",
+                confirmButtonTextColor: "#70798C",
+                titleSize: 25,
+            },
+            bindValue: "id",
             cancelButtonText: "Abbrechen",
-            onConfirm: selectedItems => {
+            confirmButtonText: "Ok",
+            displayLabel: "name",
+            ios: {
+                cancelButtonBgColor: "#252323",
+                cancelButtonTextColor: "#ffffff",
+                confirmButtonBgColor: "#70798C",
+                confirmButtonTextColor: "#ffffff",
+                showType: AShowType.TypeBounceIn,
+            },
+            items: this.users,
+            onCancel: () => {
+                // Cancel
+            },
+            onConfirm: (selectedItems) => {
                 this.zone.run(() => {
                     this.members = selectedItems;
 
                 });
             },
-            onItemSelected: selectedItem => {
+            onItemSelected: (selectedItem) => {
 
                 this.zone.run(() => {
                     this.noMembersSelectedInvalidMessage = false;
                 });
             },
-            onCancel: () => {
-            },
-            android: {
-                titleSize: 25,
-                cancelButtonTextColor: "#252323",
-                confirmButtonTextColor: "#70798C",
-            },
-            ios: {
-                cancelButtonBgColor: "#252323",
-                confirmButtonBgColor: "#70798C",
-                cancelButtonTextColor: "#ffffff",
-                confirmButtonTextColor: "#ffffff",
-                showType: AShowType.TypeBounceIn
-            }
+            selectedItems: this.users,
+            title: "Mitglieder auswählen",
         };
 
-        this._MSelect.show(options);
+        this.multiSelect.show(options);
     }
-
 
     public close() {
         this.dataform.dataForm.validateAll()
-            .then(result => {
+            .then((result) => {
                 if (result == true) {
                     if (this.members.length && this.members.length > 0) {
                         this.project.members = this.members;
@@ -138,24 +138,17 @@ export class NewProjectModalComponent {
                     } else {
                         this.noMembersSelectedInvalidMessage = true;
                     }
-                } else {
-                    console.log("validation failed");
                 }
             });
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.project = new Project("", "");
 
     }
 
-
-
-    goBack() {
+    public goBack() {
         this.params.closeCallback(null);
     }
-
-
-
 
 }

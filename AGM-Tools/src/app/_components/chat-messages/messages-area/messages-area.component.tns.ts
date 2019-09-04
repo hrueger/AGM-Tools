@@ -9,10 +9,10 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
+import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Message } from "../../../_models/message.model";
 import { PushService } from "../../../_services/push.service.tns";
 import { RemoteService } from "../../../_services/remote.service";
-import { ListView } from "tns-core-modules/ui/list-view/list-view";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,7 +58,6 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public listviewLoaded() {
-        console.log("listview loaded");
         this.scrollToBottom(this.messagesListView.nativeElement);
     }
 

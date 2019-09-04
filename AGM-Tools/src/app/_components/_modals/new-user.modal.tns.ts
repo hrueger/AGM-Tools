@@ -8,7 +8,6 @@ export class User {
     public password: string;
     public password2: string;
 
-
     constructor(name: string, email: string, password: string, password2: string) {
         this.name = name;
         this.password = password;
@@ -17,57 +16,57 @@ export class User {
     }
 }
 
-
+// tslint:disable-next-line: max-classes-per-file
 @Component({
     selector: "new-user-mdoal",
     templateUrl: "new-user.modal.tns.html",
 })
 export class NewUserModalComponent {
-    _user: User;
-    @ViewChild('dataform', { static: false }) dataform: RadDataFormComponent;
-    dataFormConfig = {
-        "isReadOnly": false,
-        "commitMode": "Immediate",
-        "validationMode": "Immediate",
-        "propertyAnnotations":
+    public puser: User;
+    @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
+    public dataFormConfig = {
+        commitMode: "Immediate",
+        isReadOnly: false,
+        propertyAnnotations:
             [
                 {
-                    "name": "name",
-                    "displayName": "Name des Benutzers",
-                    "index": 0,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Name des Benutzers",
+                    index: 0,
+                    name: "name",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "email",
-                    "displayName": "Email-Adresse",
-                    "index": 1,
-                    "editor": "Email",
-                    "validators": [
-                        { "name": "NonEmpty" },
-                        { "name": "EmailValidator" }
-                    ]
+                    displayName: "Email-Adresse",
+                    editor: "Email",
+                    index: 1,
+                    name: "email",
+                    validators: [
+                        { name: "NonEmpty" },
+                        { name: "EmailValidator" },
+                    ],
                 },
                 {
-                    "name": "password",
-                    "displayName": "Passwort",
-                    "index": 2,
-                    "editor": "Password",
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Passwort",
+                    editor: "Password",
+                    index: 2,
+                    name: "password",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "password2",
-                    "displayName": "Passwort wiederholen",
-                    "index": 3,
-                    "editor": "Password",
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
-                }
-            ]
+                    displayName: "Passwort wiederholen",
+                    editor: "Password",
+                    index: 3,
+                    name: "password2",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
+                },
+            ],
+            validationMode: "Immediate",
     };
 
     public constructor(private params: ModalDialogParams) {
@@ -75,11 +74,9 @@ export class NewUserModalComponent {
 
     public close() {
         this.dataform.dataForm.validateAll()
-            .then(result => {
+            .then((result) => {
                 if (result == true) {
-                    console.log("closing");
-                    this.params.closeCallback(this._user);
-                    console.log("closed");
+                    this.params.closeCallback(this.puser);
                 }
             });
     }
@@ -98,16 +95,15 @@ export class NewUserModalComponent {
         args.returnValue = validationResult;
     }
 
-
-    ngOnInit() {
-        this._user = new User("", "", "", "");
+    public ngOnInit() {
+        this.puser = new User("", "", "", "");
     }
 
     get user(): User {
-        return this._user;
+        return this.puser;
     }
 
-    goBack() {
+    public goBack() {
         this.params.closeCallback(null);
     }
 }

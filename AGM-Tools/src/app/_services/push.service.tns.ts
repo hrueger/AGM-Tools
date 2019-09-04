@@ -1,4 +1,4 @@
-import { Injectable, NgZone, ChangeDetectorRef, ApplicationRef } from "@angular/core";
+import { ApplicationRef, ChangeDetectorRef, Injectable, NgZone } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { LocalNotifications } from "nativescript-local-notifications";
 import { Message, messaging } from "nativescript-plugin-firebase/messaging";
@@ -243,6 +243,7 @@ export class PushService {
                         });
                         break;
                 default:
+                    // tslint:disable-next-line: no-console
                     console.log("Unbekannte nachricht angetippt!");
                     this.zone.run(() => {
                         this.router.navigate(["dashboard"]);

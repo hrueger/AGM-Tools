@@ -1,10 +1,9 @@
 import { Component, Inject, Input } from "@angular/core";
 
 @Component({
-    moduleId: module.id,
     selector: "ns-message-box",
+    styleUrls: ["./message-box.component.scss"],
     templateUrl: "./message-box.component.html",
-    styleUrls: ["./message-box.component.scss"]
 })
 export class MessageBoxComponent {
 }

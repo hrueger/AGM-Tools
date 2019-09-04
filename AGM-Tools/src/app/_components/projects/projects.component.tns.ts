@@ -1,72 +1,73 @@
-import { Component, OnInit, ViewContainerRef, ViewChild, NgZone } from "@angular/core";
-import { RemoteService } from "../../_services/remote.service";
+import { Component, NgZone, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import { Project } from "../../_models/project.model";
 import { User } from "../../_models/user.model";
-import { ModalDialogService } from "nativescript-angular/directives/dialogs";
+import { RemoteService } from "../../_services/remote.service";
 
 import {
-    CFAlertDialog,
     CFAlertActionAlignment,
     CFAlertActionStyle,
-    CFAlertStyle
-} from 'nativescript-cfalert-dialog';
-import { MultiSelect, MSOption, AShowType } from "nativescript-multi-select";
+    CFAlertDialog,
+    CFAlertStyle,
+} from "nativescript-cfalert-dialog";
+import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
+import { ListViewEventData } from "nativescript-ui-listview";
+import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
+import { View } from "tns-core-modules/ui/core/view/view";
 import { AlertService } from "../../_services/alert.service";
 import { NewProjectModalComponent } from "../_modals/new-project.modal.tns";
-import { ListViewEventData } from "nativescript-ui-listview";
-import { View } from "tns-core-modules/ui/core/view/view";
-import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
 
 @Component({
     selector: "app-projects",
+    styleUrls: ["./projects.component.scss"],
     templateUrl: "./projects.component.html",
-    styleUrls: ["./projects.component.scss"]
 })
 export class ProjectsComponent implements OnInit {
-    projects: Project[] = [];
-    allusers = [];
+    public projects: Project[] = [];
+    public allusers = [];
+    public membersToAdd: any[] = [];
+    @ViewChild("projectsListView", { read: RadListViewComponent, static: false })
+    public projectsListView: RadListViewComponent;
 
-    private _MSelect: MultiSelect;
-    public membersToAdd: Array<any> = [];
-    @ViewChild("projectsListView", { read: RadListViewComponent, static: false }) projectsListView: RadListViewComponent;
+    private multiSelect: MultiSelect;
     constructor(private modal: ModalDialogService,
-        private vcRef: ViewContainerRef,
-        private remoteService: RemoteService,
-        private alertService: AlertService,
-        private zone: NgZone
+                private vcRef: ViewContainerRef,
+                private remoteService: RemoteService,
+                private alertService: AlertService,
+                private zone: NgZone,
 
-    ) { this._MSelect = new MultiSelect(); }
+    ) { this.multiSelect = new MultiSelect(); }
 
-    ngOnInit() {
-        this.remoteService.get("projectsGetProjects").subscribe(data => {
+    public ngOnInit() {
+        this.remoteService.get("projectsGetProjects").subscribe((data) => {
             this.projects = data;
         });
-        this.remoteService.get("usersGetUsers").subscribe(data => {
+        this.remoteService.get("usersGetUsers").subscribe((data) => {
             this.allusers = data;
         });
 
     }
-    openNewModal(content) {
-        let options = {
+    public openNewModal(content) {
+        const options = {
             context: {},
             fullscreen: true,
-            viewContainerRef: this.vcRef
+            viewContainerRef: this.vcRef,
         };
-        this.modal.showModal(NewProjectModalComponent, options).then(newProject => {
+        this.modal.showModal(NewProjectModalComponent, options).then((newProject) => {
             if (newProject) {
                 this.remoteService
                     .getNoCache("projectsNewProject", {
-                        name: newProject.name,
                         description: newProject.description,
-                        members: newProject.members
+                        members: newProject.members,
+                        name: newProject.name,
                     })
-                    .subscribe(data => {
+                    .subscribe((data) => {
                         if (data && data.status == true) {
                             this.alertService.success(
-                                "Projekt erfolgreich erstellt!"
+                                "Projekt erfolgreich erstellt!",
                             );
-                            this.remoteService.get("projectsGetProjects").subscribe(data => {
-                                this.projects = data;
+                            this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                                this.projects = res;
                             });
                         }
                     });
@@ -77,120 +78,113 @@ export class ProjectsComponent implements OnInit {
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
-        const leftItem = swipeView.getViewById<View>('add-view');
-        const rightItem = swipeView.getViewById<View>('delete-view');
+        const leftItem = swipeView.getViewById<View>("add-view");
+        const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.left = leftItem.getMeasuredWidth();
         swipeLimits.right = rightItem.getMeasuredWidth();
         swipeLimits.threshold = leftItem.getMeasuredWidth() / 2;
     }
 
     public onLeftSwipeClick(args) {
-        var id = args.object.bindingContext.id;
-        var alreadyMembers = args.object.bindingContext.members;
-        //console.log(alreadyMembers);
-        let usersToPick = [];
-        this.allusers.forEach(user => {
+        const id = args.object.bindingContext.id;
+        const alreadyMembers = args.object.bindingContext.members;
+        // console.log(alreadyMembers);
+        const usersToPick = [];
+        this.allusers.forEach((user) => {
             if (!alreadyMembers.includes(user.username)) {
                 usersToPick.push({ id: user.id, name: user.username });
-                //console.log("added ", user);
+                // console.log("added ", user);
             } else {
-                //console.log("rejected ", user);
+                // console.log("rejected ", user);
             }
         });
         const options: MSOption = {
-            title: "Mitglieder hinzufügen",
-            selectedItems: usersToPick,
-            items: usersToPick,
-            bindValue: 'id',
-            displayLabel: 'name',
-            confirmButtonText: "Ok",
+            android: {
+                cancelButtonTextColor: "#252323",
+                confirmButtonTextColor: "#70798C",
+                titleSize: 25,
+            },
+            bindValue: "id",
             cancelButtonText: "Abbrechen",
-            onConfirm: selectedItems => {
+            confirmButtonText: "Ok",
+            displayLabel: "name",
+            ios: {
+                cancelButtonBgColor: "#252323",
+                cancelButtonTextColor: "#ffffff",
+                confirmButtonBgColor: "#70798C",
+                confirmButtonTextColor: "#ffffff",
+                showType: AShowType.TypeBounceIn,
+            },
+            items: usersToPick,
+            onCancel: () => { /* Cancel */ },
+            onConfirm: (selectedItems) => {
                 this.zone.run(() => {
                     this.membersToAdd = selectedItems;
                     if (this.membersToAdd.length) {
                         this.remoteService.getNoCache("projectsAddMembers", {
+                            members: this.membersToAdd,
                             project: id,
-                            members: this.membersToAdd
-                        }).subscribe(data => {
+                        }).subscribe((data) => {
                             this.alertService.success(
-                                "Mitglieder erfolgreich hinzugefügt!"
+                                "Mitglieder erfolgreich hinzugefügt!",
                             );
-                            this.remoteService.get("projectsGetProjects").subscribe(data => {
-                                this.projects = data;
+                            this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                                this.projects = res;
                             });
-                        })
+                        });
                     }
                 });
             },
-            onItemSelected: selectedItem => {
-            },
-            onCancel: () => {
-            },
-            android: {
-                titleSize: 25,
-                cancelButtonTextColor: "#252323",
-                confirmButtonTextColor: "#70798C",
-            },
-            ios: {
-                cancelButtonBgColor: "#252323",
-                confirmButtonBgColor: "#70798C",
-                cancelButtonTextColor: "#ffffff",
-                confirmButtonTextColor: "#ffffff",
-                showType: AShowType.TypeBounceIn
-            }
+            onItemSelected: (selectedItem) => { /* selected */ },
+            selectedItems: usersToPick,
+            title: "Mitglieder hinzufügen",
         };
 
-        this._MSelect.show(options);
+        this.multiSelect.show(options);
     }
 
     public onRightSwipeClick(args) {
-        var id = args.object.bindingContext.id;
-        let cfalertDialog = new CFAlertDialog();
-        const onNoPressed = response => {
-            console.log("nein");
+        const id = args.object.bindingContext.id;
+        const cfalertDialog = new CFAlertDialog();
+        const onNoPressed = (response) => {
             this.projectsListView.listView.notifySwipeToExecuteFinished();
         };
-        const onYesPressed = response => {
-            console.log("ja");
+        const onYesPressed = (response) => {
             this.projectsListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
                 .getNoCache("projectsDeleteProject", {
-                    id: id
+                    id,
                 })
-                .subscribe(data => {
+                .subscribe((data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
-                            "Projekt erfolgreich gelöscht"
+                            "Projekt erfolgreich gelöscht",
                         );
-                        this.remoteService.get("projectsGetProjects").subscribe(data => {
-                            this.projects = data;
+                        this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                            this.projects = res;
                         });
-                    } else {
-                        console.log(data);
                     }
                 });
 
         };
         cfalertDialog.show({
-            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
-            title: "Bestätigung",
-            message: "Soll dieses Projekt wirklich gelöscht werden?",
             buttons: [
                 {
-                    text: "Ja",
-                    buttonStyle: CFAlertActionStyle.POSITIVE,
                     buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    onClick: onYesPressed
-
+                    buttonStyle: CFAlertActionStyle.POSITIVE,
+                    onClick: onYesPressed,
+                    text: "Ja",
 
                 },
                 {
-                    text: "Nein",
-                    buttonStyle: CFAlertActionStyle.NEGATIVE,
                     buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    onClick: onNoPressed
-                }]
+                    buttonStyle: CFAlertActionStyle.NEGATIVE,
+                    onClick: onNoPressed,
+                    text: "Nein",
+                }],
+            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
+            message: "Soll dieses Projekt wirklich gelöscht werden?",
+            title: "Bestätigung",
         });
     }
 }

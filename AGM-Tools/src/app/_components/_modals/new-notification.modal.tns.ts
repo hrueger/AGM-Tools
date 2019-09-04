@@ -1,15 +1,15 @@
-import { Component, ViewChild, NgZone } from "@angular/core";
+import { Component, NgZone, ViewChild } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
+import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
-import { MultiSelect, MSOption, AShowType } from "nativescript-multi-select";
-import { RemoteService } from "../../_services/remote.service";
 import { AlertService } from "../../_services/alert.service";
+import { RemoteService } from "../../_services/remote.service";
 
 export class Notification {
     public headline: string;
     public content: string;
     public importance: string;
-    receivers: any[];
+    public receivers: any[];
     constructor(headline: string, content: string, importance: string) {
         this.headline = headline;
         this.content = content;
@@ -17,60 +17,62 @@ export class Notification {
     }
 }
 
-
+// tslint:disable-next-line: max-classes-per-file
 @Component({
     selector: "new-notification-modal",
     templateUrl: "new-notification.modal.tns.html",
 })
 export class NewNotificationModalComponent {
-    private notification: Notification;
-    private _MSelect: MultiSelect;
-    private users: Array<any> = [];
-    public receivers: Array<any> = [];
-    @ViewChild('dataform', { static: false }) dataform: RadDataFormComponent;
-    dataFormConfig = {
-        "isReadOnly": false,
-        "commitMode": "Immediate",
-        "validationMode": "Immediate",
-        "propertyAnnotations":
+    public receivers: any[] = [];
+    @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
+    public dataFormConfig = {
+        commitMode: "Immediate",
+        isReadOnly: false,
+        propertyAnnotations:
             [
                 {
-                    "name": "headline",
-                    "displayName": "Thema",
-                    "index": 0,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
-                },
-                {
-                    "name": "content",
-                    "displayName": "Nachricht",
-                    "index": 1,
-                    "editor": "MultilineText",
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
-                },
-
-                {
-                    "name": "importance",
-                    "displayName": "Wichtigkeit",
-                    "index": 3,
-                    "editor": "Picker",
-                    "validators": [
-                        { "name": "NonEmpty" }
+                    displayName: "Thema",
+                    index: 0,
+                    name: "headline",
+                    validators: [
+                        { name: "NonEmpty" },
                     ],
-                    "valuesProvider": ["Bitte wählen", "Erfolg", "Information", "Warnung", "Gefahr"]
-                }
-            ]
-    };
-    noReceiversSelectedErrorMessage: boolean = false;
-    noTypeSelectedErrorMessage: boolean = false;
+                },
+                {
+                    displayName: "Nachricht",
+                    editor: "MultilineText",
+                    index: 1,
+                    name: "content",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
+                },
 
-    public constructor(private params: ModalDialogParams, private remoteService: RemoteService, private zone: NgZone, private alertService: AlertService) {
-        this._MSelect = new MultiSelect();
-        this.remoteService.get("usersGetUsers").subscribe(data => {
-            data.forEach(user => {
+                {
+                    displayName: "Wichtigkeit",
+                    editor: "Picker",
+                    index: 3,
+                    name: "importance",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
+                    valuesProvider: ["Bitte wählen", "Erfolg", "Information", "Warnung", "Gefahr"],
+                },
+            ],
+        validationMode: "Immediate",
+    };
+    public noReceiversSelectedErrorMessage: boolean = false;
+    public noTypeSelectedErrorMessage: boolean = false;
+    private notification: Notification;
+    private multiSelect: MultiSelect;
+    private users: any[] = [];
+
+    public constructor(
+        private params: ModalDialogParams, private remoteService: RemoteService,
+        private zone: NgZone) {
+        this.multiSelect = new MultiSelect();
+        this.remoteService.get("usersGetUsers").subscribe((data) => {
+            data.forEach((user) => {
                 this.users.push({ name: user.username, id: user.id });
             });
         });
@@ -78,10 +80,11 @@ export class NewNotificationModalComponent {
 
     public close() {
         this.dataform.dataForm.validateAll()
-            .then(result => {
+            .then((result) => {
                 if (result == true) {
                     if (this.receivers.length && this.receivers.length > 0) {
-                        if (this.notification.importance && this.notification.importance != "" && this.notification.importance != "Bitte wählen") {
+                        if (this.notification.importance && this.notification.importance != ""
+                        && this.notification.importance != "Bitte wählen") {
                             if (this.notification.importance == "Erfolg") {
                                 this.notification.importance = "1";
                             } else if (this.notification.importance == "Information") {
@@ -101,64 +104,58 @@ export class NewNotificationModalComponent {
                     } else {
                         this.noReceiversSelectedErrorMessage = true;
                     }
-                } else {
-                    console.log("validation failed");
                 }
             });
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.notification = new Notification("", "", "");
 
     }
 
-
-
-    goBack() {
+    public goBack() {
         this.params.closeCallback(null);
     }
 
-
-
     public openReceiversSelectMenu(): void {
         const options: MSOption = {
-            title: "Empfänger auswählen",
-            selectedItems: this.users,
-            items: this.users,
-            bindValue: 'id',
-            displayLabel: 'name',
-            confirmButtonText: "Ok",
+            android: {
+                cancelButtonTextColor: "#252323",
+                confirmButtonTextColor: "#70798C",
+                titleSize: 25,
+            },
+            bindValue: "id",
             cancelButtonText: "Abbrechen",
-            onConfirm: selectedItems => {
+            confirmButtonText: "Ok",
+            displayLabel: "name",
+            ios: {
+                cancelButtonBgColor: "#252323",
+                cancelButtonTextColor: "#ffffff",
+                confirmButtonBgColor: "#70798C",
+                confirmButtonTextColor: "#ffffff",
+                showType: AShowType.TypeBounceIn,
+            },
+            items: this.users,
+            onCancel: () => {
+                // console.log('CANCEL');
+            },
+            onConfirm: (selectedItems) => {
                 this.zone.run(() => {
                     this.receivers = selectedItems;
-                    //this.users = selectedItems;
-                    //console.log("SELECTED ITEMS => ", selectedItems);
+                    // this.users = selectedItems;
+                    // console.log("SELECTED ITEMS => ", selectedItems);
                 });
             },
-            onItemSelected: selectedItem => {
-                //console.log("SELECTED ITEM => ", selectedItem);
+            onItemSelected: (selectedItem) => {
+                // console.log("SELECTED ITEM => ", selectedItem);
                 this.zone.run(() => {
                     this.noReceiversSelectedErrorMessage = false;
                 });
             },
-            onCancel: () => {
-                //console.log('CANCEL');
-            },
-            android: {
-                titleSize: 25,
-                cancelButtonTextColor: "#252323",
-                confirmButtonTextColor: "#70798C",
-            },
-            ios: {
-                cancelButtonBgColor: "#252323",
-                confirmButtonBgColor: "#70798C",
-                cancelButtonTextColor: "#ffffff",
-                confirmButtonTextColor: "#ffffff",
-                showType: AShowType.TypeBounceIn
-            }
+            selectedItems: this.users,
+            title: "Empfänger auswählen",
         };
 
-        this._MSelect.show(options);
+        this.multiSelect.show(options);
     }
 }

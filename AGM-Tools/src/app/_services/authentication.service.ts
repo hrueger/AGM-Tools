@@ -13,13 +13,6 @@ const httpOptions = {
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
-    public resetPassword(arg0: string) {
-        return new Observable<boolean>();
-    }
-
-    public get currentUserValue(): User {
-        return this.currentUserSubject.value;
-    }
     public currentUser: Observable<User>;
     private currentUserSubject: BehaviorSubject<User>;
 
@@ -28,6 +21,14 @@ export class AuthenticationService {
             JSON.parse(sessionStorage.getItem("currentUser")),
         );
         this.currentUser = this.currentUserSubject.asObservable();
+    }
+
+    public resetPassword(arg0: string) {
+        return new Observable<boolean>();
+    }
+
+    public get currentUserValue(): User {
+        return this.currentUserSubject.value;
     }
 
     public login(username: string, password: string) {

@@ -9,7 +9,6 @@ export class User {
     public password1: string;
     public password2: string;
 
-
     constructor(name: string, email: string, passwordOld: string, password1: string, password2: string) {
         this.name = name;
         this.passwordOld = passwordOld;
@@ -19,80 +18,78 @@ export class User {
     }
 }
 
-
+// tslint:disable-next-line: max-classes-per-file
 @Component({
     selector: "edit-user-mdoal",
     templateUrl: "edit-user.modal.tns.html",
 })
 export class EditUserModalComponent {
-    _user: User;
-    @ViewChild('dataform', { static: false }) dataform: RadDataFormComponent;
-    dataFormConfig = {
-        "isReadOnly": false,
-        "commitMode": "Immediate",
-        "validationMode": "Immediate",
-        "propertyAnnotations":
-            [
-                {
-                    "name": "name",
-                    "displayName": "Benutzername",
-                    "index": 0,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
-                },
-                {
-                    "name": "email",
-                    "displayName": "Email-Adresse",
-                    "index": 1,
-                    "editor": "Email",
-                    "validators": [
-                        { "name": "NonEmpty" },
-                        { "name": "EmailValidator" }
-                    ]
-                },
-                {
-                    "name": "passwordOld",
-                    "displayName": "Altes Passwort (immer angeben)",
-                    "index": 2,
-                    "editor": "Password",
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
-                },
-                {
-                    "name": "password1",
-                    "displayName": "Neues Passwort",
-                    "index": 3,
-                    "editor": "Password",
-                    "validators": [
+    public puser: User;
+    @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
+    public dataFormConfig = {
+        commitMode: "Immediate",
+        isReadOnly: false,
+        propertyAnnotations:
+        [
+            {
+                displayName: "Benutzername",
+                index: 0,
+                name: "name",
+                validators: [
+                    { name: "NonEmpty" },
+                ],
+            },
+            {
+                displayName: "Email-Adresse",
+                editor: "Email",
+                index: 1,
+                name: "email",
+                validators: [
+                    { name: "NonEmpty" },
+                    { name: "EmailValidator" },
+                ],
+            },
+            {
+                displayName: "Altes Passwort (immer angeben)",
+                editor: "Password",
+                index: 2,
+                name: "passwordOld",
+                validators: [
+                    { name: "NonEmpty" },
+                ],
+            },
+            {
+                displayName: "Neues Passwort",
+                editor: "Password",
+                index: 3,
+                name: "password1",
+                validators: [
 
-                    ]
-                },
-                {
-                    "name": "password2",
-                    "displayName": "Neues Passwort wiederholen",
-                    "index": 4,
-                    "editor": "Password",
-                    "validators": [
+                ],
+            },
+            {
+                displayName: "Neues Passwort wiederholen",
+                editor: "Password",
+                index: 4,
+                name: "password2",
+                validators: [
 
-                    ]
-                }
-            ]
+                ],
+            },
+        ],
+        validationMode: "Immediate",
     };
 
     public constructor(private params: ModalDialogParams) {
-        this._user = new User(params.context.currentUser.username, params.context.currentUser.email, "", "", "");
+        this.puser = new User(params.context.currentUser.username, params.context.currentUser.email, "", "", "");
 
     }
 
     public close() {
         this.dataform.dataForm.validateAll()
-            .then(result => {
+            .then((result) => {
                 if (result == true) {
-                    console.log("closing");
-                    this.params.closeCallback(this._user);
-                    console.log("closed");
+                    this.params.closeCallback(this.puser);
                 }
             });
     }
@@ -111,16 +108,11 @@ export class EditUserModalComponent {
         args.returnValue = validationResult;
     }
 
-
-    ngOnInit() {
-
-    }
-
     get user(): User {
-        return this._user;
+        return this.puser;
     }
 
-    goBack() {
+    public goBack() {
         this.params.closeCallback(null);
     }
 }

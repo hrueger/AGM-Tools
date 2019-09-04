@@ -1,30 +1,28 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import * as app from "tns-core-modules/application";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
+import * as app from "tns-core-modules/application";
 import { AuthenticationService } from "../../_services/authentication.service";
 
 @Component({
     selector: "navbar",
+    styleUrls: ["./navbar.component.scss"],
     templateUrl: "./navbar.component.html",
-    styleUrls: ["./navbar.component.scss"]
 })
-export class NavbarComponent implements OnInit {
-    @Input() headline: string;
+export class NavbarComponent {
+    @Input() public headline: string;
 
     constructor(
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
     ) { }
-    logout() {
+    public logout() {
         this.authenticationService.logout();
         this.router.navigate(["/login"]);
     }
-    ngOnInit() {
 
-    }
-    onDrawerButtonTap(): void {
-        const sideDrawer = <RadSideDrawer>app.getRootView();
+    public onDrawerButtonTap(): void {
+        const sideDrawer =  app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }
 }

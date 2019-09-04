@@ -1,79 +1,78 @@
-import { Component, OnInit, ViewContainerRef, ViewChild } from "@angular/core";
-import { RemoteService } from "../../_services/remote.service";
-import { User } from "../../_models/user.model";
+import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
-import { AlertService } from "../../_services/alert.service";
-import { NavbarService } from "../../_services/navbar.service";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
-import { NewUserModalComponent } from "../_modals/new-user.modal.tns";
-import { EditUserModalComponent } from "../_modals/edit-user.modal.tns";
-import { RadListViewComponent } from "nativescript-ui-listview/angular";
-import { ListViewEventData } from "nativescript-ui-listview";
 import {
-    CFAlertDialog,
     CFAlertActionAlignment,
     CFAlertActionStyle,
-    CFAlertStyle
-} from 'nativescript-cfalert-dialog';
-import { View } from "tns-core-modules/ui/core/view/view";
-import { AuthenticationService } from "../../_services/authentication.service";
+    CFAlertDialog,
+    CFAlertStyle,
+} from "nativescript-cfalert-dialog";
+import { ListViewEventData } from "nativescript-ui-listview";
+import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
+import { View } from "tns-core-modules/ui/core/view/view";
+import { User } from "../../_models/user.model";
+import { AlertService } from "../../_services/alert.service";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
+import { EditUserModalComponent } from "../_modals/edit-user.modal.tns";
+import { NewUserModalComponent } from "../_modals/new-user.modal.tns";
 
 @Component({
     selector: "app-users",
+    styleUrls: ["./users.component.scss"],
     templateUrl: "./users.component.html",
-    styleUrls: ["./users.component.scss"]
 })
 export class UsersComponent implements OnInit {
-    @ViewChild("usersListView", { read: RadListViewComponent, static: false }) usersListView: RadListViewComponent;
-    users: User[] = [];
+    @ViewChild("usersListView", { read: RadListViewComponent, static: false })
+    public usersListView: RadListViewComponent;
+    public users: User[] = [];
 
     constructor(
         private remoteService: RemoteService,
         private alertService: AlertService,
         private modal: ModalDialogService,
         private vcRef: ViewContainerRef,
-        private authService: AuthenticationService
+        private authService: AuthenticationService,
     ) { }
 
-    ngOnInit() {
-        this.remoteService.get("usersGetUsers").subscribe(data => {
+    public ngOnInit() {
+        this.remoteService.get("usersGetUsers").subscribe((data) => {
             this.users = data;
         });
     }
-    onSetupItemView(args: SetupItemViewArgs) {
+    public onSetupItemView(args: SetupItemViewArgs) {
         args.view.context.third = args.index % 3 === 0;
         args.view.context.header = (args.index + 1) % this.users.length === 1;
         args.view.context.footer = args.index + 1 === this.users.length;
     }
 
-
-
     public openNewModal() {
-        let options = {
+        const options = {
             context: {},
             fullscreen: true,
-            viewContainerRef: this.vcRef
+            viewContainerRef: this.vcRef,
         };
-        this.modal.showModal(NewUserModalComponent, options).then(newUser => {
+        this.modal.showModal(NewUserModalComponent, options).then((newUser) => {
             if (newUser) {
                 this.remoteService
                     .getNoCache("usersNewUser", {
-                        username: newUser.name,
                         email: newUser.email,
                         pw: newUser.password,
-                        pw2: newUser.password2
+                        pw2: newUser.password2,
+                        username: newUser.name,
                     })
-                    .subscribe(data => {
+                    .subscribe((data) => {
                         if (data && data.status == true) {
                             this.alertService.success(
-                                "Benutzer erfolgreich erstellt"
+                                "Benutzer erfolgreich erstellt",
                             );
                             this.remoteService
                                 .get("usersGetUsers")
-                                .subscribe(data => {
-                                    this.users = data;
+                                .subscribe((res) => {
+                                    this.users = res;
                                 });
                         }
                     });
@@ -82,38 +81,38 @@ export class UsersComponent implements OnInit {
         });
     }
 
-    onDrawerButtonTap(): void {
-        const sideDrawer = <RadSideDrawer>app.getRootView();
+    public onDrawerButtonTap(): void {
+        const sideDrawer =  app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }
 
-    openEditModal() {
-        let currentUser = this.authService.currentUserValue;
-        let options = {
+    public openEditModal() {
+        const currentUser = this.authService.currentUserValue;
+        const options = {
             context: { currentUser },
             fullscreen: true,
-            viewContainerRef: this.vcRef
+            viewContainerRef: this.vcRef,
         };
-        this.modal.showModal(EditUserModalComponent, options).then(newUser => {
+        this.modal.showModal(EditUserModalComponent, options).then((newUser) => {
             if (newUser) {
                 this.remoteService
                     .getNoCache("usersEditCurrentUser", {
-                        id: this.authService.currentUserValue.id,
-                        username: newUser.name,
-                        email: newUser.email,
-                        "pw-old": newUser.passwordOld,
+                        "email": newUser.email,
+                        "id": this.authService.currentUserValue.id,
                         "pw-new": newUser.password1,
-                        "pw-new2": newUser.password2
+                        "pw-new2": newUser.password2,
+                        "pw-old": newUser.passwordOld,
+                        "username": newUser.name,
                     })
-                    .subscribe(data => {
+                    .subscribe((data) => {
                         if (data && data.status == true) {
                             this.alertService.success(
-                                "Eigene Daten erfolgreich geändert!"
+                                "Eigene Daten erfolgreich geändert!",
                             );
                             this.remoteService
                                 .get("usersGetUsers")
-                                .subscribe(data => {
-                                    this.users = data;
+                                .subscribe((res) => {
+                                    this.users = res;
                                 });
                         }
                     });
@@ -122,69 +121,59 @@ export class UsersComponent implements OnInit {
         });
     }
 
-
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
-        const swipeView = args['object'];
-        const rightItem = swipeView.getViewById<View>('delete-view');
+        const swipeView = args.object;
+        const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.right = rightItem.getMeasuredWidth();
     }
 
-
     public onRightSwipeClick(args) {
-        var uid = args.object.bindingContext.id;
-        let cfalertDialog = new CFAlertDialog();
-        const onNoPressed = response => {
-            console.log("nein");
+        const uid = args.object.bindingContext.id;
+        const cfalertDialog = new CFAlertDialog();
+        const onNoPressed = (response) => {
             this.usersListView.listView.notifySwipeToExecuteFinished();
         };
-        const onYesPressed = response => {
-            console.log("ja");
+        const onYesPressed = (response) => {
             this.usersListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
                 .getNoCache("usersDeleteUser", {
-                    id: uid
+                    id: uid,
                 })
-                .subscribe(data => {
+                .subscribe((data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
-                            "Benutzer erfolgreich gelöscht"
+                            "Benutzer erfolgreich gelöscht",
                         );
                         this.remoteService
                             .get("usersGetUsers")
-                            .subscribe(data => {
-                                this.users = data;
+                            .subscribe((res) => {
+                                this.users = res;
                             });
-                    } else {
-                        console.log(data);
                     }
                 });
 
         };
         cfalertDialog.show({
-            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
-            title: "Bestätigung",
-            message: "Soll dieser Benutzer wirklich gelöscht werden?",
             buttons: [
                 {
-                    text: "Ja",
-                    buttonStyle: CFAlertActionStyle.POSITIVE,
                     buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    onClick: onYesPressed
-
+                    buttonStyle: CFAlertActionStyle.POSITIVE,
+                    onClick: onYesPressed,
+                    text: "Ja",
 
                 },
                 {
-                    text: "Nein",
-                    buttonStyle: CFAlertActionStyle.NEGATIVE,
                     buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    onClick: onNoPressed
-                }]
+                    buttonStyle: CFAlertActionStyle.NEGATIVE,
+                    onClick: onNoPressed,
+                    text: "Nein",
+                }],
+            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
+            message: "Soll dieser Benutzer wirklich gelöscht werden?",
+            title: "Bestätigung",
         });
     }
-
-
-
 
     /*
      openEditModal(content) {
@@ -194,9 +183,9 @@ export class UsersComponent implements OnInit {
                  result => {
                      this.invalidMessage = false;
                      var pwnew1val = "";
-                     
+
                      var pwnew2val = "";
- 
+
  this.remoteService
      .getNoCache("usersEditCurrentUser", {
          id: this.authService.currentUserValue.id,
@@ -225,8 +214,8 @@ export class UsersComponent implements OnInit {
  reason => { }
              );
      }
- 
+
  deleteUser(user: User) {
-     
+
  }*/
 }

@@ -1,19 +1,19 @@
-import { Component, ViewChild, NgZone } from "@angular/core";
+import { Component, NgZone, ViewChild } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
+import * as ModalPicker from "nativescript-modal-datetimepicker";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
-import { RemoteService } from "../../_services/remote.service";
 import { AlertService } from "../../_services/alert.service";
-import * as ModalPicker from 'nativescript-modal-datetimepicker';
+import { RemoteService } from "../../_services/remote.service";
 
 export class CalendarEvent {
-    id: number;
-    title: string;
-    description: string;
-    location: string;
-    startDate: string;
-    endDate: string;
-    isAllDay: boolean;
-    important: boolean;
+    public id: number;
+    public title: string;
+    public description: string;
+    public location: string;
+    public startDate: string;
+    public endDate: string;
+    public isAllDay: boolean;
+    public important: boolean;
 
     constructor(title: string, description: string, location: string, isAllDay: boolean, important: boolean) {
         this.title = title;
@@ -24,82 +24,80 @@ export class CalendarEvent {
     }
 }
 
-
+// tslint:disable-next-line: max-classes-per-file
 @Component({
     selector: "new-calendar-event-modal",
     templateUrl: "new-calendar-event.modal.tns.html",
 })
 export class NewCalendarEventModalComponent {
-    private event: CalendarEvent;
     public startDate: string = "";
     public endDate: string = "";
-    endDateInvalidMessage = false;
-    startDateInvalidMessage = false;
-    endDateBeforeStartDateInvalidMessage = false;
-    startDateToSend = "";
-    endDateToSend = "";
-    @ViewChild('dataform', { static: false }) dataform: RadDataFormComponent;
-    dataFormConfig = {
-        "isReadOnly": false,
-        "commitMode": "Immediate",
-        "validationMode": "Immediate",
-        "propertyAnnotations":
+    public endDateInvalidMessage = false;
+    public startDateInvalidMessage = false;
+    public endDateBeforeStartDateInvalidMessage = false;
+    public startDateToSend = "";
+    public endDateToSend = "";
+    @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
+    public dataFormConfig = {
+        commitMode: "Immediate",
+        isReadOnly: false,
+        propertyAnnotations:
             [
                 {
-                    "name": "title",
-                    "displayName": "Titel",
-                    "index": 0,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Titel",
+                    index: 0,
+                    name: "title",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "description",
-                    "displayName": "Beschreibung",
-                    "index": 1,
-                    "editor": "MultilineText",
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Beschreibung",
+                    editor: "MultilineText",
+                    index: 1,
+                    name: "description",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "location",
-                    "displayName": "Ort",
-                    "index": 2,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Ort",
+                    index: 2,
+                    name: "location",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "isAllDay",
-                    "displayName": "Ganztägig",
-                    "index": 3,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
+                    displayName: "Ganztägig",
+                    index: 3,
+                    name: "isAllDay",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
                 },
                 {
-                    "name": "important",
-                    "displayName": "Wichtiger Termin",
-                    "index": 4,
-                    "validators": [
-                        { "name": "NonEmpty" }
-                    ]
-                }
-            ]
+                    displayName: "Wichtiger Termin",
+                    index: 4,
+                    name: "important",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
+                },
+            ],
+            validationMode: "Immediate",
     };
+    private event: CalendarEvent;
 
-    public constructor(private params: ModalDialogParams, private remoteService: RemoteService, private alertService: AlertService) {
+    public constructor(private params: ModalDialogParams) {}
 
-    }
-
-    pick(what: string) {
+    public pick(what: string) {
         const picker = new ModalPicker.ModalDatetimepicker();
         picker.pickDate({
-            title: (what == "start" ? 'Startdatum auswählen' : "Enddatum auswählen"),
+            title: (what == "start" ? "Startdatum auswählen" : "Enddatum auswählen"),
         }).then((result) => {
-            var res = result.day + '.' + result.month + '.' + result.year;
-            var dateToSend = result.year + '-' + result.month + '-' + result.day;
+            const res = result.day + "." + result.month + "." + result.year;
+            const dateToSend = result.year + "-" + result.month + "-" + result.day;
             if (what == "start") {
                 this.startDate = res;
                 this.startDateToSend = dateToSend;
@@ -110,36 +108,35 @@ export class NewCalendarEventModalComponent {
             this.startDateInvalidMessage = false;
             this.endDateBeforeStartDateInvalidMessage = false;
             picker.pickTime({
-                title: (what == "start" ? 'Startzeit auswählen' : "Endzeit auswählen"),
+                title: (what == "start" ? "Startzeit auswählen" : "Endzeit auswählen"),
 
-            }).then((result) => {
-                var res = result.hour + ':' + result.minute;
+            }).then((data) => {
+                const time = data.hour + ":" + data.minute;
                 if (what == "start") {
-                    this.startDate += " " + res;
-                    this.startDateToSend += " " + res;
+                    this.startDate += " " + time;
+                    this.startDateToSend += " " + time;
                 } else {
-                    this.endDate += " " + res;
-                    this.endDateToSend += " " + res;
+                    this.endDate += " " + time;
+                    this.endDateToSend += " " + time;
                 }
                 this.endDateInvalidMessage = false;
                 this.endDateBeforeStartDateInvalidMessage = false;
             }).catch((error) => {
-                console.log('Error: ' + error);
+                // tslint:disable-next-line: no-console
+                console.log("Error: " + error);
             });
         }).catch((error) => {
-            console.log('Error: ' + error);
+            // tslint:disable-next-line: no-console
+            console.log("Error: " + error);
         });
     }
 
-
     public close() {
         this.dataform.dataForm.validateAll()
-            .then(result => {
+            .then((result) => {
                 if (result == true) {
                     if (this.startDate && this.startDate != "") {
                         if (this.endDate && this.endDate != "") {
-
-
 
                             if (new Date(this.startDate) >= new Date(this.endDate)) {
                                 this.endDateBeforeStartDateInvalidMessage = true;
@@ -155,24 +152,17 @@ export class NewCalendarEventModalComponent {
                     } else {
                         this.startDateInvalidMessage = true;
                     }
-                } else {
-                    console.log("validation failed");
                 }
             });
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.event = new CalendarEvent("", "", "", false, false);
 
     }
 
-
-
-    goBack() {
+    public goBack() {
         this.params.closeCallback(null);
     }
-
-
-
 
 }

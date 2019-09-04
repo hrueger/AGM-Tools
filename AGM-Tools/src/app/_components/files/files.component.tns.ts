@@ -1,84 +1,80 @@
-import { RemoteService } from "../../_services/remote.service";
-import { Project } from "../../_models/project.model";
-import { Component, OnInit, ViewChild, NgZone } from "@angular/core";
-import config from "../../_config/config";
-import { AuthenticationService } from "../../_services/authentication.service";
-import { AlertService } from "../../_services/alert.service";
-import { MultiSelect, AShowType } from 'nativescript-multi-select';
-import { MSOption } from 'nativescript-multi-select';
-import { NavbarService } from "../../_services/navbar.service";
-import { RadListViewComponent } from "nativescript-ui-listview/angular";
-import { View, EventData } from "tns-core-modules/ui/core/view";
-import { layout } from "tns-core-modules/utils/utils";
-import { ListViewEventData } from "nativescript-ui-listview";
-import { RadSideDrawer } from "nativescript-ui-sidedrawer";
-import { openUrl } from "tns-core-modules/utils/utils";
-import * as dialog from "tns-core-modules/ui/dialogs";
-import * as app from "tns-core-modules/application";
-import * as clipboard from "nativescript-clipboard";
+import { Component, NgZone, OnInit, ViewChild } from "@angular/core";
 import {
-    CFAlertDialog,
-    DialogOptions,
-    CFAlertGravity,
     CFAlertActionAlignment,
     CFAlertActionStyle,
-    CFAlertStyle
-} from 'nativescript-cfalert-dialog';
+    CFAlertDialog,
+    CFAlertGravity,
+    CFAlertStyle,
+    DialogOptions,
+} from "nativescript-cfalert-dialog";
+import * as clipboard from "nativescript-clipboard";
+import { MultiSelect } from "nativescript-multi-select";
+import { ListViewEventData } from "nativescript-ui-listview";
+import { RadListViewComponent } from "nativescript-ui-listview/angular";
+import { RadSideDrawer } from "nativescript-ui-sidedrawer";
+import * as app from "tns-core-modules/application";
 import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
-
+import { EventData, View } from "tns-core-modules/ui/core/view";
+import * as dialog from "tns-core-modules/ui/dialogs";
+import { layout } from "tns-core-modules/utils/utils";
+import { openUrl } from "tns-core-modules/utils/utils";
+import config from "../../_config/config";
+import { Project } from "../../_models/project.model";
+import { AlertService } from "../../_services/alert.service";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { NavbarService } from "../../_services/navbar.service";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-files",
+    styleUrls: ["./files.component.scss"],
     templateUrl: "./files.component.html",
-    styleUrls: ["./files.component.scss"]
 })
 export class FilesComponent implements OnInit {
-    showProgressbar: boolean;
-    constructor(
-        private remoteService: RemoteService,
-        private authenticationService: AuthenticationService,
-        private alertService: AlertService,
-        private NavbarService: NavbarService,
-        private zone: NgZone,
-    ) {
-        this._MSelect = new MultiSelect();
-    }
-    @ViewChild("itemsListView", { read: RadListViewComponent, static: false }) itemsListView: RadListViewComponent;
-    selectProject: boolean = true;
-    viewFile: boolean = false;
-    projects: Project[];
-    imageSource: string;
-    pid: number;
-    private _MSelect: MultiSelect;
+    public showProgressbar: boolean;
+    @ViewChild("itemsListView", { read: RadListViewComponent, static: false })
+    public itemsListView: RadListViewComponent;
+    public selectProject: boolean = true;
+    public viewFile: boolean = false;
+    public projects: Project[];
+    public imageSource: string;
+    public pid: number;
 
-
-    tags = [
+    public tags = [
         { id: 1, name: "Fertig" },
         { id: 4, name: "Zu verbessern" },
         { id: 2, name: "In Arbeit" },
-        { id: 3, name: "Wichtig" }
-    ]
+        { id: 3, name: "Wichtig" },
+    ];
 
-    currentPath: any = [];
-    lastFolder: any;
-    lastItem: any;
-    items: ObservableArray<any>;
-    shareLink: string = "";
-
+    public currentPath: any = [];
+    public lastFolder: any;
+    public lastItem: any;
+    public items: ObservableArray<any>;
+    public shareLink: string = "";
+    private multiSelect: MultiSelect;
 
     private leftItem: View;
     private rightItem: View;
     private mainView: View;
+    constructor(
+        private remoteService: RemoteService,
+        private authenticationService: AuthenticationService,
+        private alertService: AlertService,
+        private navbarService: NavbarService,
+        private zone: NgZone,
+    ) {
+        this.multiSelect = new MultiSelect();
+    }
 
+    public ngOnInit() {
+        this.navbarService.setHeadline("Dateien");
 
-    ngOnInit() {
-        this.NavbarService.setHeadline("Dateien");
-
-        this.remoteService.get("projectsGetProjects").subscribe(data => {
+        this.remoteService.get("projectsGetProjects").subscribe((data) => {
             this.projects = data;
         });
     }
-    goTo(item: any, reload = false) {
+    public goTo(item: any, reload = false) {
         if (!reload) {
             this.currentPath.push(item);
         }
@@ -90,15 +86,13 @@ export class FilesComponent implements OnInit {
                 "https://agmtools.allgaeu-gymnasium.de/AGM-Tools/getFile.php?fid=" +
                 item.id;
 
-
         }
     }
-    getIcon(item: any) {
+    public getIcon(item: any) {
 
-        var basepath = "~/assets/icons/";
+        const basepath = "~/assets/icons/";
 
-
-        let iconPath = basepath + "extralarge/";
+        const iconPath = basepath + "extralarge/";
         if (item.type == "folder") {
             return basepath + "folder.png";
         } else {
@@ -112,23 +106,23 @@ export class FilesComponent implements OnInit {
             );
         }
     }
-    goToProject(project: Project) {
+    public goToProject(project: Project) {
         this.selectProject = false;
         this.pid = project.id;
         this.currentPath = [];
-        //console.warn(this.currentPath);
-        //console.warn("Pushed project");
+        // console.warn(this.currentPath);
+        // console.warn("Pushed project");
 
         this.navigate({ id: -1, name: project.name });
     }
-    goToFiles() {
+    public goToFiles() {
         if (this.viewFile) {
             this.viewFile = false;
         }
         this.selectProject = true;
         this.currentPath = [];
     }
-    upTo(id) {
+    public upTo(id) {
         if (this.viewFile) {
             this.viewFile = false;
         }
@@ -138,15 +132,14 @@ export class FilesComponent implements OnInit {
         } while (item.id != id);
         this.navigate(item);
     }
-    navigate(item) {
-        //console.log(this.currentPath);
+    public navigate(item) {
+        // console.log(this.currentPath);
         this.remoteService
             .get("filesGetFolder", {
+                fid: item.id,
                 pid: this.pid,
-                fid: item.id
             })
-            .subscribe(data => {
-                console.log(this.currentPath);
+            .subscribe((data) => {
                 if (
                     this.currentPath.length == 0 ||
                     this.currentPath[this.currentPath.length - 1].id != item.id
@@ -164,13 +157,11 @@ export class FilesComponent implements OnInit {
                 }*/
                 this.items = data;
 
-
-
                 this.lastItem = item;
             });
     }
-    getSrc() {
-        let file = this.currentPath[this.currentPath.length - 1];
+    public getSrc() {
+        const file = this.currentPath[this.currentPath.length - 1];
         const path = config.apiUrl +
             "?get=" +
             file.id +
@@ -179,29 +170,28 @@ export class FilesComponent implements OnInit {
             this.authenticationService.currentUserValue.token;
         return path;
     }
-    openNewFolderModal(content) {
-        var that = this;
+    public openNewFolderModal(content) {
+        const that = this;
         dialog.prompt({
-            title: "Neuer Ordner",
-            message: "in /" + this.currentPath.map(item => item.name).join("/") + "/",
-            okButtonText: "Erstellen",
             cancelButtonText: "Abbrechen",
             defaultText: "Neuer Ordner",
-            inputType: dialog.inputType.text
+            inputType: dialog.inputType.text,
+            message: "in /" + this.currentPath.map((item) => item.name).join("/") + "/",
+            okButtonText: "Erstellen",
+            title: "Neuer Ordner",
 
-        }).then(function (r) {
+        }).then((r) => {
             if (r.result) {
                 that.remoteService
                     .getNoCache("filesNewFolder", {
+                        fid: that.currentPath[that.currentPath.length - 1].id,
                         name: r.text,
                         pid: that.pid,
-                        fid: that.currentPath[that.currentPath.length - 1]
-                            .id
                     })
-                    .subscribe(data => {
+                    .subscribe((data) => {
                         if (data && data.status == true) {
                             that.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
-                            //this.reloadHere();
+                            // this.reloadHere();
                         }
                     });
             }
@@ -209,24 +199,24 @@ export class FilesComponent implements OnInit {
         });
 
     }
-    getType() {
-        let filename = this.currentPath[
+    public getType() {
+        const filename = this.currentPath[
             this.currentPath.length - 1
         ].name.toLowerCase();
-        var videoFileExtensions = ["mp4", "mov", "avi"];
-        var imageFileExtensions = ["jpg", "jpeg", "gif", "png"];
-        var pdfFileExtensions = ["pdf"];
-        for (let ext of videoFileExtensions) {
+        const videoFileExtensions = ["mp4", "mov", "avi"];
+        const imageFileExtensions = ["jpg", "jpeg", "gif", "png"];
+        const pdfFileExtensions = ["pdf"];
+        for (const ext of videoFileExtensions) {
             if (filename.endsWith(ext)) {
                 return "video";
             }
         }
-        for (let ext of pdfFileExtensions) {
+        for (const ext of pdfFileExtensions) {
             if (filename.endsWith(ext)) {
                 return "pdf";
             }
         }
-        for (let ext of imageFileExtensions) {
+        for (const ext of imageFileExtensions) {
             if (filename.endsWith(ext)) {
                 return "image";
             }
@@ -234,49 +224,48 @@ export class FilesComponent implements OnInit {
         return "other";
     }
 
-
-    editTags(item) {
+    public editTags(item) {
         this.itemsListView.listView.notifySwipeToExecuteFinished();
-        var itemTags = item.tags;
-        var allTags = this.tags.map(tag => tag.id);
-        var allTagNames = this.tags.map(tag => tag.name);
-        var preselected = [];
-        allTags.forEach(tag => {
-            if (itemTags.map(tag => tag.id).includes(tag.toString())) {
+        const itemTags = item.tags;
+        const allTags = this.tags.map((tag) => tag.id);
+        const allTagNames = this.tags.map((tag) => tag.name);
+        const preselected = [];
+        allTags.forEach((tag) => {
+            if (itemTags.map((ntag) => ntag.id).includes(tag.toString())) {
                 preselected.push(true);
             } else {
                 preselected.push(false);
             }
         });
-        let cfalertDialog = new CFAlertDialog();
+        const cfalertDialog = new CFAlertDialog();
         const options: DialogOptions = {
             dialogStyle: CFAlertStyle.ALERT,
-            title: "Tags auswählen",
             multiChoiceList: {
                 items: allTagNames,
-                selectedItems: preselected,
                 onClick: (dialogInterface, index) => {
                     this.remoteService
                         .getNoCache("filesToggleTag", {
-                            type: item.type,
                             fid: item.id,
-                            tagid: this.tags[index].id
+                            tagid: this.tags[index].id,
+                            type: item.type,
                         })
-                        .subscribe(data => {
+                        .subscribe((data) => {
                             if (data.status == true) {
                                 this.alertService.success("Gespeichert!");
-                                //this.reloadHere();
+                                // this.reloadHere();
                             }
                         });
-                }
-            }
-        }
+                },
+                selectedItems: preselected,
+            },
+            title: "Tags auswählen",
+        };
         cfalertDialog.show(options);
         return;
 
     }
-    download(item) {
-        var url = config.apiUrl +
+    public download(item) {
+        const url = config.apiUrl +
             "?get=" +
             item.id +
             "&type=" +
@@ -288,82 +277,81 @@ export class FilesComponent implements OnInit {
         openUrl(url);
     }
 
-    share(item) {
+    public share(item) {
         this.remoteService
             .getNoCache("filesCreateShare", { type: item.type, fid: item.id })
-            .subscribe(data => {
+            .subscribe((data) => {
                 if (data.status == true) {
-                    var shareLink = config.apiUrl + "share/?l=" + data.link
-                    let cfalertDialog = new CFAlertDialog();
-                    let options: DialogOptions = {
-                        // Options go here
-                        dialogStyle: CFAlertStyle.ALERT,
-                        title: "Freigeben",
-                        message: "Ein Link wurde generiert:\n" + shareLink,
-                        textAlignment: CFAlertGravity.START,
-                        cancellable: true,
+                    const shareLink = config.apiUrl + "share/?l=" + data.link;
+                    const cfalertDialog = new CFAlertDialog();
+                    const options: DialogOptions = {
                         buttons: [{
-                            text: "Abbrechen",
+                            buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
                             buttonStyle: CFAlertActionStyle.DEFAULT,
-                            buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                            onClick: () => { }
+                        onClick: () => { /* Clicked */ },
+                            text: "Abbrechen",
                         }, {
-                            text: "Kopieren",
-                            buttonStyle: CFAlertActionStyle.POSITIVE,
                             buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
+                            buttonStyle: CFAlertActionStyle.POSITIVE,
                             onClick: () => {
                                 clipboard.setText(shareLink);
                                 this.alertService.success("Link kopiert!");
-                            }
-                        }]
-                    }
+                            },
+                            text: "Kopieren",
+                        }],
+                        cancellable: true,
+                        dialogStyle: CFAlertStyle.ALERT,
+                        message: "Ein Link wurde generiert:\n" + shareLink,
+                        textAlignment: CFAlertGravity.START,
+                        title: "Freigeben",
+                    };
                     cfalertDialog.show(options);
                 }
             });
         this.itemsListView.listView.notifySwipeToExecuteFinished();
     }
-    rename(item, renameModal) {
-        var that = this;
+    public rename(item, renameModal) {
+        const that = this;
         dialog.prompt({
-            title: (item.type == "file" ? "Datei" : "Ordner") + " umbenennen",
-            message: "in /" + this.currentPath.map(item => item.name).join("/") + "/" + item.name,
-            okButtonText: "Umbenennen",
             cancelButtonText: "Abbrechen",
             defaultText: item.name,
-            inputType: dialog.inputType.text
+            inputType: dialog.inputType.text,
+            message: "in /" + this.currentPath.map((itm) => itm.name).join("/") + "/" + item.name,
+            okButtonText: "Umbenennen",
+            title: (item.type == "file" ? "Datei" : "Ordner") + " umbenennen",
 
-        }).then(function (r) {
+        }).then((r) => {
             if (r.result) {
                 that.remoteService
                     .getNoCache("filesRename", { type: item.type, fid: item.id, name: r.text })
-                    .subscribe(data => {
+                    .subscribe((data) => {
                         if (data.status == true) {
                             that.alertService.success("Das Element wurde erfolgreich umbenannt.");
-                            //this.reloadHere();
+                            // this.reloadHere();
                         }
                     });
             }
         });
 
-
     }
-    delete(item) {
+    public delete(item) {
         if (confirm("Soll dieses Element wirklich gelöscht werden?")) {
-            this.remoteService.getNoCache("filesDelete", { type: item.type, fid: item.id }).subscribe(data => {
+            this.remoteService.getNoCache("filesDelete", { type: item.type, fid: item.id }).subscribe((data) => {
                 if (data.status == true) {
                     this.alertService.success("Das Element wurde erfolgreich gelöscht.");
-                    //this.reloadHere();
+                    // this.reloadHere();
                 }
             });
         }
     }
-    move(item) {
-        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt. Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+    public move(item) {
+        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt.\
+        Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
     }
-    copy(item) {
-        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt. Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+    public copy(item) {
+        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt.\
+        Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
     }
-
 
     /*reloadHere() {
         if (this.lastItem.id == -1) {
@@ -375,70 +363,79 @@ export class FilesComponent implements OnInit {
 
     public onCellSwiping(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
-        const swipeView = args['swipeView'];
-        this.mainView = args['mainView'];
-        this.leftItem = swipeView.getViewById('left-stack');
-        this.rightItem = swipeView.getViewById('right-stack');
+        // @ts-ignore
+        const swipeView = args.swipeView;
+        // @ts-ignore
+        this.mainView = args.mainView;
+        this.leftItem = swipeView.getViewById("left-stack");
+        this.rightItem = swipeView.getViewById("right-stack");
 
         if (args.data.x > 0) {
             const leftDimensions = View.measureChild(
-                <View>this.leftItem.parent,
+                 this.leftItem.parent as View,
                 this.leftItem,
                 layout.makeMeasureSpec(Math.abs(args.data.x), layout.EXACTLY),
                 layout.makeMeasureSpec(this.mainView.getMeasuredHeight(), layout.EXACTLY));
-            View.layoutChild(<View>this.leftItem.parent, this.leftItem, 0, 0, leftDimensions.measuredWidth, leftDimensions.measuredHeight);
+            View.layoutChild( this.leftItem.parent as View, this.leftItem, 0, 0,
+                leftDimensions.measuredWidth, leftDimensions.measuredHeight);
             this.hideOtherSwipeTemplateView("left");
         } else {
             const rightDimensions = View.measureChild(
-                <View>this.rightItem.parent,
+                 this.rightItem.parent as View,
                 this.rightItem,
                 layout.makeMeasureSpec(Math.abs(args.data.x), layout.EXACTLY),
                 layout.makeMeasureSpec(this.mainView.getMeasuredHeight(), layout.EXACTLY));
 
-            View.layoutChild(<View>this.rightItem.parent, this.rightItem, this.mainView.getMeasuredWidth() - rightDimensions.measuredWidth, 0, this.mainView.getMeasuredWidth(), rightDimensions.measuredHeight);
+            View.layoutChild( this.rightItem.parent as View, this.rightItem,
+                this.mainView.getMeasuredWidth() - rightDimensions.measuredWidth, 0,
+                this.mainView.getMeasuredWidth(), rightDimensions.measuredHeight);
             this.hideOtherSwipeTemplateView("right");
-        }
-    }
-
-    private hideOtherSwipeTemplateView(currentSwipeView: string) {
-        switch (currentSwipeView) {
-            case "left":
-                if (this.rightItem.getActualSize().width !== 0) {
-                    View.layoutChild(<View>this.rightItem.parent, this.rightItem, this.mainView.getMeasuredWidth(), 0, this.mainView.getMeasuredWidth(), 0);
-                }
-                break;
-            case "right":
-                if (this.leftItem.getActualSize().width !== 0) {
-                    View.layoutChild(<View>this.leftItem.parent, this.leftItem, 0, 0, 0, 0);
-                }
-                break;
-            default:
-                break;
         }
     }
 
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
-        swipeLimits.left = swipeView.getViewById<View>('swipeTags').getMeasuredWidth() + swipeView.getViewById<View>('swipeDownload').getMeasuredWidth() + swipeView.getViewById<View>('swipeShare').getMeasuredWidth();
-        swipeLimits.right = swipeView.getViewById<View>('swipeRename').getMeasuredWidth() + swipeView.getViewById<View>('swipeMove').getMeasuredWidth() + swipeView.getViewById<View>('swipeCopy').getMeasuredWidth() + swipeView.getViewById<View>('swipeDelete').getMeasuredWidth();
-        //swipeLimits.threshold = leftItem.getMeasuredWidth() / 2;
+        swipeLimits.left = swipeView.getViewById<View>("swipeTags").getMeasuredWidth() +
+        swipeView.getViewById<View>("swipeDownload").getMeasuredWidth() +
+        swipeView.getViewById<View>("swipeShare").getMeasuredWidth();
+        swipeLimits.right = swipeView.getViewById<View>("swipeRename").getMeasuredWidth() +
+        swipeView.getViewById<View>("swipeMove").getMeasuredWidth() +
+        swipeView.getViewById<View>("swipeCopy").getMeasuredWidth() +
+        swipeView.getViewById<View>("swipeDelete").getMeasuredWidth();
+        // swipeLimits.threshold = leftItem.getMeasuredWidth() / 2;
     }
 
     public onLeftSwipeClick(args: EventData) {
-        let itemView = args.object as View;
-        console.log("Button clicked: " + itemView.id + " for item with index: " + this.itemsListView.listView.items.indexOf(itemView.bindingContext));
+        const itemView = args.object as View;
         this.itemsListView.listView.notifySwipeToExecuteFinished();
     }
 
     public onRightSwipeClick(args: EventData) {
-        let itemView = args.object as View;
-        console.log("Button clicked: " + itemView.id + " for item with index: " + this.itemsListView.listView.items.indexOf(itemView.bindingContext));
+        const itemView = args.object as View;
         this.itemsListView.listView.notifySwipeToExecuteFinished();
     }
 
-    onDrawerButtonTap(): void {
-        const sideDrawer = <RadSideDrawer>app.getRootView();
+    public onDrawerButtonTap(): void {
+        const sideDrawer =  app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
+    }
+
+    private hideOtherSwipeTemplateView(currentSwipeView: string) {
+        switch (currentSwipeView) {
+            case "left":
+                if (this.rightItem.getActualSize().width !== 0) {
+                    View.layoutChild( this.rightItem.parent as View,
+                        this.rightItem, this.mainView.getMeasuredWidth(), 0, this.mainView.getMeasuredWidth(), 0);
+                }
+                break;
+            case "right":
+                if (this.leftItem.getActualSize().width !== 0) {
+                    View.layoutChild( this.leftItem.parent as View, this.leftItem, 0, 0, 0, 0);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -1,25 +1,23 @@
 import { Injectable } from "@angular/core";
-import { getString, setString } from "tns-core-modules/application-settings";
 import { Observable } from "rxjs";
+import { getString, setString } from "tns-core-modules/application-settings";
 
 @Injectable({
-    providedIn: "root"
+    providedIn: "root",
 })
 export class CacheService {
-    constructor() {}
-    put(data, action, ...args): void {
-        //console.log("set");
+    public put(data, action, ...args): void {
         return setString(
             JSON.stringify({ action, ...args }),
-            JSON.stringify(data)
+            JSON.stringify(data),
         );
     }
-    get(action, ...args): Observable<any> {
-        return new Observable(observer => {
+    public get(action, ...args): Observable<any> {
+        return new Observable((observer) => {
             observer.next(
                 JSON.parse(
-                    getString(JSON.stringify({ action, ...args })) || null
-                ) || null
+                    getString(JSON.stringify({ action, ...args })) || null,
+                ) || null,
             );
             observer.complete();
         });

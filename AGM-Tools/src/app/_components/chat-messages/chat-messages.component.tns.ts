@@ -20,10 +20,10 @@ import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
-    selector: "chat-messages",
-    templateUrl: "chat-messages.component.html",
-    styleUrls: ["chat-messages.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "chat-messages",
+    styleUrls: ["chat-messages.component.scss"],
+    templateUrl: "chat-messages.component.html",
 })
 export class ChatMessagesComponent
     implements OnInit {
@@ -32,12 +32,12 @@ export class ChatMessagesComponent
     public showEmojiPicker = false;
     public chat: Chat = {
         contact: new Contact(),
-        type: null,
-        when: null,
-        unread: null,
         muted: null,
-        text: null,
         rid: null,
+        text: null,
+        type: null,
+        unread: null,
+        when: null,
     };
 
     public unread: number;
@@ -62,7 +62,6 @@ export class ChatMessagesComponent
     public ngOnInit() {
         this.route.params.subscribe((params) => {
             this.receiverId = +params.index;
-            console.log("received change: loading for chat ");
             this.remoteService.get("chatGetContacts").subscribe((chats) => {
                 // this.chats = chats;
                 from(chats)
