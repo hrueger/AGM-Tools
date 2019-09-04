@@ -28,9 +28,9 @@ COPY httpd.conf /etc/apache2/httpd.conf
 
 ## create folders for app ##
 RUN mkdir /agmtools-bin && mkdir /agmtools-bin/api && mkdir /agmtools-bin/share && chown -R apache:apache /agmtools-bin && chmod -R 755 /agmtools-bin && mkdir bootstrap
-COPY ../AGM-Tools/dist/agmtools/ /agmtools-bin/
-COPY ../api/ /agmtools-bin/api/
-COPY ../share/ /agmtools-bin/share/
+COPY ./AGM-Tools/dist/agmtools/ /agmtools-bin/
+COPY ./api/ /agmtools-bin/api/
+COPY ./share/ /agmtools-bin/share/
 
 ## Add cron ##
 RUN (crontab -l ; echo "* * * * * php /agmtools-bin/api/cron.php") 2>&1 | sed "s/no crontab for $(whoami)//"  | sort | uniq | crontab -
