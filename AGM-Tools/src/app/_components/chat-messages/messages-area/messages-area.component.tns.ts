@@ -12,6 +12,7 @@ import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { Message } from "../../../_models/message.model";
 import { PushService } from "../../../_services/push.service.tns";
 import { RemoteService } from "../../../_services/remote.service";
+import { ListView } from "tns-core-modules/ui/list-view/list-view";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,8 +27,9 @@ export class MessagesAreaComponent implements OnInit {
     @Input() public messageSent;
     @Input() public receiverId: number;
     @ViewChild("messagesListView", { static: false }) public messagesListView: ElementRef;
-    public shouldScrollToBottom: boolean = false;
-    constructor(private remoteService: RemoteService, private pushService: PushService) {}
+    constructor(private remoteService: RemoteService, private pushService: PushService) {
+
+    }
 
     public newMessageFromPushService(body: string, fromMe: boolean) {
         const message = {
@@ -41,60 +43,23 @@ export class MessagesAreaComponent implements OnInit {
         this.messages.push(message);
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
-        if (
-            changes.messageSent &&
-            changes.messageSent.currentValue != "" &&
-            changes.messageSent.currentValue != null
-        ) {
-            /*if (this.messages[-1]) {
-                let chat = this.messages[-1].chat
-            }*/
-            let message = {
-                chat: null,
-                created: Date.now(),
-                fromMe: true,
-                sendername: "",
-                sent: "0",
-                text: changes.messageSent.currentValue,
-            };
-            this.messages.push(message);
-            this.remoteService
-                .getNoCache("chatSendMessage", {
-                    message: changes.messageSent.currentValue,
-                    rid: this.receiverId,
-                })
-                .subscribe(() => {
-                    message = this.messages.pop();
-                    message.sent = "1";
-                    this.messages.push(message);
-                    this.messagesListView.nativeElement.refresh();
-                });
-        }
-    }
-
-    public scrollToBottom(): void {
-        if (this.messagesListView && this.messagesListView.nativeElement &&
-            this.messagesListView.nativeElement.items.length > 0) {
-            this.messagesListView.nativeElement.scrollToIndex(this.messagesListView.nativeElement.items.length - 1);
-
-        } else {
-            this.shouldScrollToBottom = true;
-        }
-    }
-    public ngAfterViewChecked() {
-        if (this.shouldScrollToBottom) {
-            this.shouldScrollToBottom = false;
-            this.scrollToBottom();
+    public scrollToBottom(lv: ListView) {
+        if (lv && lv.items.length > 0) {
+            lv.scrollToIndex(lv.items.length - 1);
+            lv.refresh();
         }
     }
 
     public ngOnInit() {
-        this.shouldScrollToBottom = true;
         this.pushService.reregisterCallback();
         this.pushService.getChatActions().subscribe((data) => {
             this.newMessageFromPushService(data.body, data.fromMe);
         });
+    }
+
+    public listviewLoaded() {
+        console.log("listview loaded");
+        this.scrollToBottom(this.messagesListView.nativeElement);
     }
 
     public isContinuation(idx: number) {

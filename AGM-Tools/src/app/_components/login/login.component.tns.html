@@ -1,9 +1,7 @@
-<FlexboxLayout class="page">
+<!--<FlexboxLayout class="page">
     <StackLayout class="form">
 
         <Label class="header" text="AGM-Tools v2"></Label>
-
-        <PreviousNextView class="pnv">
             <GridLayout rows="auto, auto, auto">
                 <StackLayout row="0" class="input-field">
                     <TextField class="input login-field" hint="Benutzername" [isEnabled]="!processing" autocorrect="false" autocapitalizationType="none" [(ngModel)]="username" returnKeyType="next" (returnPress)="focusPassword()"></TextField>
@@ -17,12 +15,106 @@
 
                 <ActivityIndicator [busy]="processing"></ActivityIndicator>
             </GridLayout>
-        </PreviousNextView>
-
         <Button [text]="'Login'" [isEnabled]="!processing" (tap)="submit()" class="btn btn-primary m-t-20"></Button>
         <Label *ngIf="isLoggingIn" text="Passwort vergessen?" class="password-reset-label" (tap)="forgotPassword()"></Label>
-        <!--<Image class="logo" src="~/assets/logo/logo.png"></Image>-->
+        <Image class="logo" src="~/assets/logo/logo.png"></Image>
     </StackLayout>
+</FlexboxLayout>-->
+<GridLayout>
 
-
-</FlexboxLayout>
+    <GridLayout #background
+      scaleX="1.4"
+      scaleY="1.4"
+      class="background"
+      (loaded)="startBackgroundAnimation(background)"></GridLayout>
+  
+    <GridLayout rows="auto, auto, auto, auto, *, auto" columns="*" #initialContainer
+      class="initial-container">
+      
+      <Label
+        col="0"
+        row="0"
+        text="AGM-TOOLS"
+        class="initial-label"></Label>
+      <Label
+        col="0"
+        row="1"
+        text="Version 0.0.1 vom 04.09.2019"
+        class="version-label"></Label>
+      
+      <Button
+        text="Login"
+        col="0"
+        row="2"
+        (tap)="showMainContent()"
+        class="initial-button"></Button>
+      <Button
+        text="Take a Tour"
+        col="0"
+        row="3"
+        (tap)="takeATour()"
+        class="initial-button"></Button>
+      <Image
+        col="0"
+        row="5"
+        src="~/assets/logo/logo3.png"
+        stretch="none"
+        class="initial-logo"></Image>
+    </GridLayout>
+  
+    <StackLayout #mainContainer
+      class="main-container">
+      <Label
+        class="main-label"
+        text="AGM-TOOLS"></Label>
+  
+      <GridLayout #formControls
+        class="form-controls"
+        rows="auto, auto"
+        translateY="50">
+        <TextField
+          hint="Benutzername"
+          returnKeyType="next"
+          (returnPress)="focusPassword()"
+          [(ngModel)]="username"
+          [isEnabled]="!isAuthenticating"
+          autocorrect="false"
+          autocapitalizationType="none"
+          [class.light]="!isLoggingIn"
+          row="0"></TextField>
+        <TextField #passwordField
+          hint="Passwort"
+          secure="true"
+          returnKeyType="done"
+          (returnPress)="submit()"
+          [(ngModel)]="password"
+          [isEnabled]="!isAuthenticating"
+          [class.light]="!isLoggingIn"
+          row="1"></TextField>
+  
+        <ActivityIndicator
+          [busy]="isAuthenticating"
+          rowSpan="2"></ActivityIndicator>
+      </GridLayout>
+  
+      <Button
+        text="Login"
+        [isEnabled]="!isAuthenticating"
+        class="submit-button"
+        (tap)="submit()"></Button>
+  
+      <Label
+        class="forgot-password-label"
+        text="Passwort vergessen?"
+        (tap)="forgotPassword()"></Label>
+    </StackLayout>
+  
+    <!-- The fruit logo that appears within the container -->
+    <AbsoluteLayout #logoContainer
+      class="logo-container">
+      <Image
+        src="~/assets/logo/logo.png"
+        stretch="none"></Image>
+    </AbsoluteLayout>
+  
+  </GridLayout>

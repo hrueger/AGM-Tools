@@ -13,6 +13,9 @@ const httpOptions = {
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
+    public resetPassword(arg0: string) {
+        return new Observable<boolean>();
+    }
 
     public get currentUserValue(): User {
         return this.currentUserSubject.value;

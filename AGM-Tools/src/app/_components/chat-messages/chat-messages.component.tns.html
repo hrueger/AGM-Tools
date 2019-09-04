@@ -6,12 +6,10 @@
         <Label row="1" col="1" [text]="chat.contact.lastseen" class="subtitle"></Label>
     </GridLayout>
 </ActionBar>
-<GridLayout rows="*, auto" columns="auto" class="wallpaper">
-    <StackLayout row="0" column="0" width="100%">
-        <ns-messages-area [receiverId]="receiverId" [messageSent]="messageGotToSend" [messages]="messages" class="messages-area">
-        </ns-messages-area>
-    </StackLayout>
-    <StackLayout row="1" column="0" width="100%">
+<GridLayout rows="*, auto" columns="*" class="wallpaper">
+    <ns-messages-area row="0" column="0" [receiverId]="receiverId" [messageSent]="messageGotToSend" [messages]="messages" class="messages-area">
+    </ns-messages-area>
+    <GridLayout row="1" column="0">
         <FlexboxLayout class="message-box mobile">
             <FlexboxLayout class="text-area">
                 <Button (tap)="toggleEmojiPicker()" text="&#xf580;" class="fas icon"></Button>
@@ -23,5 +21,5 @@
         </FlexboxLayout>
         <emoji-picker (emojiClick)="onEmojiClick($event)" (backspaceClick)="onBackspaceClick()" [showEmojiPicker]="showEmojiPicker">
         </emoji-picker>
-    </StackLayout>
+    </GridLayout>
 </GridLayout>

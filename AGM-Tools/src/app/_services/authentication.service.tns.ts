@@ -24,6 +24,10 @@ export class AuthenticationService {
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
+    public resetPassword(username: string): Observable<boolean> {
+        return new Observable<boolean>();
+    }
+
     public get currentUserValue(): User {
         return this.currentUserSubject.value;
     }

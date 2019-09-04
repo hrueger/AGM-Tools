@@ -15,7 +15,7 @@ export class ChatComponent {
     constructor(
         private remoteService: RemoteService,
         private NavbarService: NavbarService,
-        private router: RouterExtensions
+        private router: RouterExtensions,
     ) {
         this.chats = [];
     }
@@ -28,13 +28,12 @@ export class ChatComponent {
     }
 
     goToChat(rid) {
-        /*const extras: NavigationExtras = {
-            queryParams: {
-                unread: 3
-            }
-        };*/
-        this.router.navigate(["chat-messages", rid]);
-
+        this.router.navigate(["chat-messages", rid], {
+            animated: true,
+            transition: {
+                name: "slideLeft",
+            },
+        });
 
     }
 }

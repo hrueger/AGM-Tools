@@ -1,21 +1,45 @@
-<RadListView #messagesListView class="messages-area" *ngIf="messages" [items]="messages">
+<ListView (loaded)="listviewLoaded($event)" #messagesListView separatorColor="transparent" class="messages-area" [items]="messages">
     <ng-template let-message="item" let-index="index">
-        <FlexboxLayout class="messages">
-            <StackLayout [shadow]="2" cornerRadius="20" class="message-bubble" [class.continuation]="isContinuation(index)" [class.myself]="message.fromMe" [class.system]="message.system">
-                <FlexboxLayout class="message-bubble-content">
-                    <StackLayout>
-                        <Label class="sendername" *ngIf="!isContinuation(index) && !message.system && !message.fromMe" [text]="' ' + message.sendername"></Label>
-                        <Label class="message-text" [text]="message.text" textWrap="true"></Label>
-                    </StackLayout>
-
-                    <FlexboxLayout class="meta">
-                        <Label [text]="message.created | date: 'shortTime'" class="time"></Label>
-                        <Label *ngIf="message.fromMe && isNotSent(message)" text="&#xf017;" class="check fas"></Label>
-                        <Label *ngIf="message.fromMe && isSent(message)" text="&#xf00c;" class="check fas"></Label>
-                        <Label *ngIf="message.fromMe && isDefault(message)" text="&#xf560;" class="check fas" [class.blue]="isViewed(message)"></Label>
-                    </FlexboxLayout>
-                </FlexboxLayout>
+        <!--<GridLayout rows="auto" [columns]="message.system ? '*, auto, *' : (message.fromMe ? '*, auto' : 'auto, *')">
+            <StackLayout
+            row="0"
+            [col]="message.system ? '1' : (message.fromMe ? '1' : '0')"
+            
+            cornerRadius="20"
+            class="message-bubble"
+            [class.continuation]="isContinuation(index)"
+            [class.fromMe]="message.fromMe"
+            [horizontalAlignment]="message.fromMe ? 'right' : 'left'"
+            [class.system]="message.system">
+            
+                <Label class="sendername" *ngIf="!isContinuation(index) && !message.system && !message.fromMe" [text]="' ' + message.sendername"></Label>
+                
+                <Label class="message-text" [text]="message.text" textWrap="true"></Label>
+                
+                <GridLayout *ngIf="!message.system" class="meta" rows="auto" columns="auto, auto">
+                    <Label row="0" col="0" [text]="message.created | date: 'shortTime'" class="time"></Label>
+                    <Label row="0" col="1" *ngIf="message.fromMe && isNotSent(message)" text="&#xf017;" class="check fas"></Label>
+                    <Label row="0" col="1" *ngIf="message.fromMe && isSent(message)" text="&#xf00c;" class="check fas"></Label>
+                    <Label row="0" col="1" *ngIf="message.fromMe && isDefault(message)" text="&#xf560;" class="check fas" [class.blue]="isViewed(message)"></Label>
+                </GridLayout>
             </StackLayout>
-        </FlexboxLayout>
+        </GridLayout>-->
+        <FlexboxLayout class="messages">
+                <StackLayout [shadow]="2" cornerRadius="20" class="message-bubble" [class.continuation]="isContinuation(index)" [class.myself]="message.fromMe" [class.system]="message.system">
+                    <FlexboxLayout class="message-bubble-content">
+                        <StackLayout>
+                            <Label class="sendername" *ngIf="!isContinuation(index) && !message.system && !message.fromMe" [text]="' ' + message.sendername"></Label>
+                            <Label class="message-text" [text]="message.text" textWrap="true"></Label>
+                        </StackLayout>
+    
+                        <FlexboxLayout class="meta">
+                            <Label [text]="message.created | date: 'shortTime'" class="time"></Label>
+                            <Label *ngIf="message.fromMe && isNotSent(message)" text="&#xf017;" class="check fas"></Label>
+                            <Label *ngIf="message.fromMe && isSent(message)" text="&#xf00c;" class="check fas"></Label>
+                            <Label *ngIf="message.fromMe && isDefault(message)" text="&#xf560;" class="check fas" [class.blue]="isViewed(message)"></Label>
+                        </FlexboxLayout>
+                    </FlexboxLayout>
+                </StackLayout>
+            </FlexboxLayout>
     </ng-template>
-</RadListView>
+</ListView>

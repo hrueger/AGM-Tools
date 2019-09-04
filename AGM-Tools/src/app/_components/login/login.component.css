@@ -1,6 +1,129 @@
-.page {
+/* Hide a bunch of things to setup the initial animations */
+.form-controls, .sign-up-stack {
+    opacity: 0;
+  }
+  
+  .background {
     background-image: url("~/assets/loginbg.jpg");
-    /*height: 100vh;*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .initial-container {
+    margin-top: 170;
+  }
+  .initial-logo {
+    horizontal-align: center;
+  }
+  .initial-label {
+    color: white;
+    horizontal-align: center;
+  }
+  .version-label {
+    color: white;
+    horizontal-align: center;
+    margin-bottom: 80;
+  }
+  .initial-button {
+    background-color: white;
+    color: #2b669a;
+    height: 55;
+    width: 275;
+    font-size: 15;
+    vertical-align: center;
+    font-weight: bold;
+  }
+  
+  
+  .main-container {
+    visibility: collapse;
+    opacity: 0;
+    margin-left: 30;
+    margin-right: 30;
+    background-color: white;
+  }
+  .main-label {
+    horizontal-align: center;
+    color: black;
+  }
+  
+  Image {
+    margin-top: 5;
+    margin-bottom: 20;
+  }
+  Button, TextField {
+    margin-left: 16;
+    margin-right: 16;
+    margin-bottom: 10;
+  }
+  TextField {
+    color: black;
+    placeholder-color: #2b669a;
+  }
+  .submit-button {
+    background-color: #2b669a;
+    color: white;
+    margin-top: 20;
+  }
+  
+  .forgot-password-label {
+    font-size: 13;
+    margin-right: 20;
+    margin-bottom: 20;
+    margin-top: 15;
+    color: #2b669a;
+    horizontal-align: right;
+
+  }
+  .sign-up-stack {
+    background-color: #2b669a;
+  }
+  .sign-up-stack Label {
+    color: white;
+    text-align: center;
+    font-size: 15;
+  }
+  
+  .logo-container {
+    visibility: collapse;
+    horizontal-align: center;
+    opacity: 0;
+  }
+  .main-container {
+    height: 360;
+    width: 275;
+  }
+  .initial-label {
+    font-size: 32;
+    letter-spacing: 0.35;
+  }
+  .main-label {
+    font-size: 28;
+    margin-top: 32;
+    margin-bottom: 32;
+    letter-spacing: 0.3;
+  }
+  TextField {
+    margin-bottom: 10;
+  }
+  .submit-button {
+    margin-top: 15;
+  }
+  .sign-up-stack Label {
+    padding-top: 5;
+    height: 200;
+    text-transform: uppercase;
+  }
+  .forgot-password-label {
+    font-size: 13;
+    text-transform: uppercase;
+  }
+  .logo-container Image {
+    top: 90;
+  }
+/*.page {
+    background-image: url("~/assets/loginbg.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -27,3 +150,4 @@
     background-color: transparent;
     color: white;
 }
+*/

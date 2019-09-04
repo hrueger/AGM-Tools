@@ -13,10 +13,8 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
-        "build": "ng build",
-        "test": "ng test",
+        "build": "ng build --prod --base-href / & rmdir dist\\agmtools\\assets\\emoji-picker-icons /Q /S & rmdir dist\\agmtools\\assets\\emoji-picker-emojis /Q /S",
         "lint": "ng lint",
-        "e2e": "ng e2e",
         "android": "tns run android --bundle",
         "ios": "tns run ios --bundle"
     },
@@ -65,6 +63,7 @@
         "nativescript-modal-datetimepicker": "^1.2.0",
         "nativescript-multi-select": "^1.0.6",
         "nativescript-ngx-fonticon": "^4.2.0",
+        "nativescript-ngx-slides": "^6.1.0",
         "nativescript-pdf-view": "^2.0.1",
         "nativescript-photoviewer": "^2.1.5",
         "nativescript-plugin-firebase": "^9.1.0",

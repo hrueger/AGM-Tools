@@ -9,7 +9,7 @@
         <ScrollView row="1">
             <StackLayout class="sidedrawer-content">
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" [nsRouterLink]="['/dashboard']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" pageTransition="fade" [nsRouterLink]="['/dashboard']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf3fd;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -19,7 +19,7 @@
                     </Button>
                 </GridLayout>
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" [nsRouterLink]="['/users']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" pageTransition="fade" [nsRouterLink]="['/users']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf007;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -29,7 +29,7 @@
                 </GridLayout>
 
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/chat']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/chat']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf086;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -39,7 +39,7 @@
                 </GridLayout>
 
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/notifications']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/notifications']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf0e0;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -49,7 +49,7 @@
                 </GridLayout>
 
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/calendar']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/calendar']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf073;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -58,7 +58,7 @@
                     </Button>
                 </GridLayout>
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/projects']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/projects']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf07b;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -67,7 +67,7 @@
                     </Button>
                 </GridLayout>
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/files']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/files']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf15c;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -76,7 +76,7 @@
                     </Button>
                 </GridLayout>
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/templates']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/templates']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf1c5;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -85,7 +85,7 @@
                     </Button>
                 </GridLayout>
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/bugs']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/bugs']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf188;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -94,7 +94,7 @@
                     </Button>
                 </GridLayout>
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/done']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/done']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf00c;" class="fas"></Span>
                             <Span text="    " class=""></Span>
@@ -104,7 +104,7 @@
                 </GridLayout>
                 <StackLayout class="hr-light"></StackLayout>
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" [nsRouterLink]="['/clientsoftware']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
+                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/clientsoftware']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
                         <FormattedString style="background-color: transparent;">
                             <Span text="&#xf3cd;" class="fas"></Span>
                             <Span text="    " class=""></Span>
