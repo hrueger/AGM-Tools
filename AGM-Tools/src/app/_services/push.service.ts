@@ -16,6 +16,10 @@ export class PushService {
     );
   }
 
+  public init() {
+    // only that ts of vscode doesnt complain, because it won't parse the .tns file...
+  }
+
   public updateToken(userId, token) {
     // Update Token
   }
