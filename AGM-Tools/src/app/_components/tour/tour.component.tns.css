@@ -1,1 +1,24 @@
-/* Add mobile styles for the component here.  */
+.prev-next-button {
+    color: #fff;
+    font-size: 25;
+    border-color: transparent;
+}
+GridLayout.navigation {
+    padding: 5;
+}
+.content {
+    padding: 20;
+    padding-bottom: 100;
+}
+.content .teaser-img {
+    width: 70%;
+    margin-bottom: 60;
+}
+.content .headline {
+    font-size: 40;
+    margin-top: 40;
+    margin-bottom: 40;
+}
+.content .description {
+    font-size: 20;
+}

@@ -1,18 +1,20 @@
-<GridLayout>
-    <Carousel indicatorColor="#fff" finite="true" bounce="true" showIndicator="true" verticalAlignment="bottom" android:indicatorAnimation="scale" color="white">
-        <CarouselItem id="slide1" backgroundColor="#b3cde0" verticalAlignment="middle">
-            <Label text="Slide 1" backgroundColor="#50000000" horizontalAlignment="center"></Label>
-        </CarouselItem>
-        <CarouselItem id="slide2" backgroundColor="#6497b1" verticalAlignment="middle">
-            <Label text="Slide 2" backgroundColor="#50000000" horizontalAlignment="center"></Label>
-        </CarouselItem>
-        <CarouselItem id="slide3" backgroundColor="#005b96" verticalAlignment="middle">
-            <Label text="Slide 3" backgroundColor="#50000000" horizontalAlignment="center"></Label>
-        </CarouselItem>
-        <CarouselItem id="slide4" backgroundColor="#03396c" verticalAlignment="middle">
-            <Label text="Slide 4" backgroundColor="#50000000" horizontalAlignment="center"></Label>
+<GridLayout rows="*, 70" cols="*">
+    <Carousel (loaded)="loaded()" #slidesCarousel rowspan="2" row="0" col="0" (pageChanged)="pageChanged($event)" indicatorColor="#fff" [items]="slides" indicatorOffset="0,60" finite="true" bounce="true" showIndicator="true" verticalAlignment="bottom" android:indicatorAnimation="scale" color="white">
+        <CarouselItem *ngFor="let slide of slides" [backgroundColor]="slide.backgroundColor" verticalAlignment="middle">
+            <ScrollView>
+                <StackLayout class="content">
+                    <Label textWrap="true" textAlignment="center" class="headline" horizontalAlignment="center" [text]="slide.headline"></Label>
+                    <Image class="teaser-img" horizontalAlignment="center" [src]="'~/assets/tour/'+slide.imgSrc+'.png'"></Image>
+                    <Label textWrap="true" textAlignment="center" class="description" horizontalAlignment="center" [text]="slide.description"></Label>
+                </StackLayout>
+            </ScrollView>
         </CarouselItem>
     </Carousel>
+    <GridLayout [backgroundColor]="currentBackgroundColor" class="navigation" row="1" col="0" rows="auto, auto" columns="auto, *, auto">
+        <StackLayout row="0" col="0" colspan="3" class="hr-light"></StackLayout>
+        <Button (tap)="prev()" #btnPrev row="1" col="0" class="no-border round prev-next-button" text="Zurück"></Button>
+        <Button (tap)="next()" #btnNext row="1" col="2" class="no-border round prev-next-button" text="Weiter"></Button>
+    </GridLayout>
 </GridLayout>
 
 
