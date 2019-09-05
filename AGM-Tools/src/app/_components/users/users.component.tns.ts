@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
-import { ModalDialogService } from "nativescript-angular/directives/dialogs";
+import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/directives/dialogs";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -50,7 +50,8 @@ export class UsersComponent implements OnInit {
     }
 
     public openNewModal() {
-        const options = {
+        const options: ModalDialogOptions = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef,

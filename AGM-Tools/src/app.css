@@ -44,10 +44,20 @@ StackLayout.content {
     margin: 20;
 }
 
-.nav-button-back {
+.no-border {
     background-color: transparent;
-    border-color: transparent;
-    border-width: 0;
+    border-color: #2b669a;
+    border-width: 1;
+    z-index: 0;
+    font-size: 25;
+    padding: 0;
+    margin: 0;
+}
+.round {
+    border-radius: 30;
+}
+.no-border:active {
+    background-color: #255580;
 }
 
 .dataform {
