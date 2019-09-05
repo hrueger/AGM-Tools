@@ -1,10 +1,12 @@
 <RadSideDrawer #rsd [drawerTransition]="sideDrawerTransition">
     <GridLayout tkDrawerContent rows="auto, *" class="sidedrawer sidedrawer-left">
-        <StackLayout row="0" class="sidedrawer-header">
-            <Label class="sidedrawer-header-image fas" text="&#xf007;"></Label>
-            <Label class="sidedrawer-header-brand" text="{{username}}"></Label>
-            <Label class="sidedrawer-header-footnote" text="{{useremail}}"></Label>
-        </StackLayout>
+        <GridLayout rows="*, auto, auto, auto" columns="*, auto, auto" row="0" class="sidedrawer-header">
+            <Button row="0" col="1" class="no-border round fas" pageTransition="fade" [nsRouterLink]="['/settings']" text="&#xf013;"></Button>
+            <Button row="0" col="2" class="no-border round fas" (tap)="logout()" text="&#xf2f5;"></Button>
+            <Label row="0" col="0" class="sidedrawer-header-image fas" text="&#xf007;"></Label>
+            <Label row="1" col="0" colspan="3" class="sidedrawer-header-brand" text="{{username}}"></Label>
+            <Label row="2" col="0" colspan="3" class="sidedrawer-header-footnote" text="{{useremail}}"></Label>
+        </GridLayout>
 
         <ScrollView row="1">
             <StackLayout class="sidedrawer-content">

@@ -19,8 +19,17 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    border-bottom: 4px solid #f5f5f5;
-    margin-bottom: 4px;
+    border-bottom: 4 solid #f5f5f5;
+    margin-bottom: 4;
+}
+
+.sidedrawer-header Button {
+    width: 50;
+    height: 50;
+    color: #fff;
+    border-color: transparent;
+    font-size: 20;
+    vertical-align: top;
 }
 
 .sidedrawer-header-brand {

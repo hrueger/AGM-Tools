@@ -47,6 +47,7 @@ export class AppComponent {
     }
 
     public logout() {
+        this.rSideDrawer.nativeElement.toggleDrawerState();
         this.authenticationService.logout();
         this.router.navigate(["/login"]);
     }
