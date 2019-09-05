@@ -14,6 +14,7 @@ import { NotificationsComponent } from "./_components/notifications/notification
 import { ProjectsComponent } from "./_components/projects/projects.component";
 import { SettingsComponent } from "./_components/settings/settings.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
+import { TourComponent } from "./_components/tour/tour.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { AuthGuard } from "./_guards/auth.guard";
 
@@ -23,7 +24,10 @@ export const routes: Routes = [
         component: DashboardComponent,
         path: "dashboard",
     },
-
+    {
+        component: TourComponent,
+        path: "tour",
+    },
     {
         canActivate: [AuthGuard],
         component: UsersComponent,

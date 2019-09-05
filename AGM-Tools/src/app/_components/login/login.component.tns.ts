@@ -1,15 +1,12 @@
-import { AlertService } from "../../_services/alert.service";
-import { AuthenticationService } from "../../_services/authentication.service";
-
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { Color } from "tns-core-modules/color";
 import { connectionType, getConnectionType } from "tns-core-modules/connectivity";
 import { Animation } from "tns-core-modules/ui/animation";
 import { View } from "tns-core-modules/ui/core/view";
 import { prompt } from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page";
-import { User } from "../../_models/user.model";
+import { AlertService } from "../../_services/alert.service";
+import { AuthenticationService } from "../../_services/authentication.service";
 
 @Component({
     selector: "app-login",
@@ -37,9 +34,6 @@ export class LoginComponent {
     this.page.actionBarHidden = true;
   }
 
-  public takeATour() {
-    alert("Not implemented yet!");
-  }
 
   public focusPassword() {
     this.passwordEl.nativeElement.focus();

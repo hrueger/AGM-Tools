@@ -49,6 +49,9 @@ registerElement("VideoPlayer", () => Video);
 import { PDFView } from "nativescript-pdf-view";
 registerElement("PDFView", () => PDFView);
 registerElement("PullToRefresh", () => require("@nstudio/nativescript-pulltorefresh").PullToRefresh);
+import { Carousel, CarouselItem } from "nativescript-carousel";
+registerElement("Carousel", () => Carousel);
+registerElement("CarouselItem", () => CarouselItem);
 import { FormBuilder } from "@angular/forms";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { PickerModule } from "nativescript-emoji-picker";
@@ -58,6 +61,7 @@ import { NewCalendarEventModalComponent } from "./_components/_modals/new-calend
 import { NewNotificationModalComponent } from "./_components/_modals/new-notification.modal.tns";
 import { NewProjectModalComponent } from "./_components/_modals/new-project.modal.tns";
 import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns";
+import { TourComponent } from "./_components/tour/tour.component";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
@@ -93,6 +97,7 @@ import { routes } from "./app.routes";
         NewNotificationModalComponent,
         NewCalendarEventModalComponent,
         NewProjectModalComponent,
+        TourComponent,
     ],
     entryComponents: [
         NewUserModalComponent,

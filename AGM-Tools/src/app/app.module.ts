@@ -56,6 +56,7 @@ import { NavbarService } from "./_services/navbar.service";
 import { PushService } from "./_services/push.service";
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
+import { TourComponent } from './_components/tour/tour.component';
 
 registerLocaleData(localeDe);
 
@@ -86,6 +87,7 @@ registerLocaleData(localeDe);
         MessageBoxComponent,
         DoneComponent,
         FileUploadComponent,
+        TourComponent,
     ],
     imports: [
         AngularFireDatabaseModule,

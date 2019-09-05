@@ -52,7 +52,8 @@
         text="Take a Tour"
         col="0"
         row="3"
-        (tap)="takeATour()"
+        pageTransition="fade"
+        [nsRouterLink]="['/tour']"
         class="initial-button"></Button>
       <Image
         col="0"
