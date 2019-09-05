@@ -48,6 +48,7 @@ import { Video } from "nativescript-videoplayer";
 registerElement("VideoPlayer", () => Video);
 import { PDFView } from "nativescript-pdf-view";
 registerElement("PDFView", () => PDFView);
+registerElement("PullToRefresh", () => require("@nstudio/nativescript-pulltorefresh").PullToRefresh);
 import { FormBuilder } from "@angular/forms";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { PickerModule } from "nativescript-emoji-picker";

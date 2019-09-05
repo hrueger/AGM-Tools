@@ -1,62 +1,46 @@
 <navbar headline="Dashboard"></navbar>
-<ScrollView>
-    <StackLayout class="content">
-        <!--<StackLayout class="card" *ngIf="notifications.length">
-            <Label text="Neue Benachrichtigungen" class="headline"></Label>
-            <StackLayout *ngFor="let notification of notifications" [class]="'notification notification-' + notification.type">
-                <Button (tap)="makeNotificationSeen(notification)" class="btn btn-primary" text="Gelesen"></Button>
-                <Label>
-                    <FormattedText>
-                        <Span fontAttributes="Bold">{{ notification.headline }}</Span>
-                        <Span>{{ notification.content }}</Span>
-                        <Span fontSize="15" fontAttributes="Bold">{{ notification.sender }}</Span>
-                        <Span fontSize="15"> am {{ notification.date }} um
-                            {{ notification.time }} Uhr</Span>
-                    </FormattedText>
+<PullToRefresh (refresh)="refresh($event)">
+    <ScrollView>
+        <StackLayout class="content">
+            <StackLayout class="card">
+                <Label text="Speicherplatz" class="headline"></Label>
+                <RadPieChart height="200" allowAnimation="true">
+                    <DonutSeries seriesName="pie" tkPieSeries selectionMode="DataPoint" outerRadiusFactor="0.9" expandRadius="0.4" outerRadiusFactor="0.7" innerRadiusFactor="0.4" [items]="spaceChartData" valueProperty="amount" legendLabel="name"></DonutSeries>
+                    <RadLegendView tkPieLegend position="Right" title="Legende" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView>
+                    <Palette tkPiePalette seriesName="pie">
+                        <PaletteEntry tkPiePaletteEntry fillColor="#85C8FF" strokeColor="#85C8FF"></PaletteEntry>
+                        <PaletteEntry tkPiePaletteEntry fillColor="#CFCFCF" strokeColor="#CFCFCF"></PaletteEntry>
+                        <PaletteEntry tkPiePaletteEntry fillColor="#E6E6E6" strokeColor="#E6E6E6"></PaletteEntry>
+                    </Palette>
+                </RadPieChart>
+            </StackLayout>
+            <StackLayout class="card">
+                <Label class="headline" text="Nächste Termine"></Label>
+                <Label textWrap="true" *ngFor="let date of dates">
+                    <FormattedString textWarp="true">
+                        <Span textWarp="true" text="{{ date.name }}&#xA;"
+                            style="font-weight: bold;font-size: 15; padding-top:5;"></Span>
+                        <Span textWarp="true" text="am {{ date.date }}, {{ date.date }} ab {{
+                                date.starttime
+                            }} Uhr&#xA;"></Span>
+                        <Span textWarp="true" text="{{ date.countdown }}&#xA;" color="#337ab7"></Span>
+                    </FormattedString>
                 </Label>
             </StackLayout>
-        </StackLayout>--->
-
-
-
-        <StackLayout class="card">
-            <Label text="Speicherplatz" class="headline"></Label>
-            <RadPieChart height="200" allowAnimation="true">
-                <DonutSeries seriesName="pie" tkPieSeries selectionMode="DataPoint" outerRadiusFactor="0.9" expandRadius="0.4" outerRadiusFactor="0.7" innerRadiusFactor="0.4" [items]="spaceChartData" valueProperty="amount" legendLabel="name"></DonutSeries>
-                <RadLegendView tkPieLegend position="Right" title="Legende" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView>
-                <Palette tkPiePalette seriesName="pie">
-                    <PaletteEntry tkPiePaletteEntry fillColor="#85C8FF" strokeColor="#85C8FF"></PaletteEntry>
-                    <PaletteEntry tkPiePaletteEntry fillColor="#CFCFCF" strokeColor="#CFCFCF"></PaletteEntry>
-                    <PaletteEntry tkPiePaletteEntry fillColor="#E6E6E6" strokeColor="#E6E6E6"></PaletteEntry>
-                </Palette>
-            </RadPieChart>
+            <StackLayout class="card">
+                <Label class="headline" text="Version"></Label>
+                <Label textWrap="true" text="{{ version }}"></Label>
+            </StackLayout>
+            <StackLayout class="card">
+                <Label class="headline" text="What's new"></Label>
+                <Label textWrap="true" *ngFor="let version of whatsnew">
+                    <FormattedString textWarp="true">
+                        <Span textWarp="true" text="{{ version.version }}&#xA;"
+                            style="font-weight: bold;font-size: 15; padding-top:10;"></Span>
+                        <Span *ngFor="let change of version.news" textWarp="true" text="- {{ change }}&#xA;"></Span>
+                    </FormattedString>
+                </Label>
+            </StackLayout>
         </StackLayout>
-        <StackLayout class="card">
-            <Label class="headline" text="Nächste Termine"></Label>
-            <Label textWrap="true" *ngFor="let date of dates">
-                <FormattedString textWarp="true">
-                    <Span textWarp="true" text="{{ date.name }}&#xA;"
-                        style="font-weight: bold;font-size: 15; padding-top:5;"></Span>
-                    <Span textWarp="true" text="am {{ date.date }}, {{ date.date }} ab {{
-                            date.starttime
-                        }} Uhr&#xA;"></Span>
-                    <Span textWarp="true" text="{{ date.countdown }}&#xA;" color="#337ab7"></Span>
-                </FormattedString>
-            </Label>
-        </StackLayout>
-        <StackLayout class="card">
-            <Label class="headline" text="Version"></Label>
-            <Label textWrap="true" text="{{ version }}"></Label>
-        </StackLayout>
-        <StackLayout class="card">
-            <Label class="headline" text="What's new"></Label>
-            <Label textWrap="true" *ngFor="let version of whatsnew">
-                <FormattedString textWarp="true">
-                    <Span textWarp="true" text="{{ version.version }}&#xA;"
-                        style="font-weight: bold;font-size: 15; padding-top:10;"></Span>
-                    <Span *ngFor="let change of version.news" textWarp="true" text="- {{ change }}&#xA;"></Span>
-                </FormattedString>
-            </Label>
-        </StackLayout>
-    </StackLayout>
-</ScrollView>
+    </ScrollView>
+</PullToRefresh>

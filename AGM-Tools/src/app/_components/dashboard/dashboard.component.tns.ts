@@ -24,6 +24,11 @@ export class DashboardComponent implements OnInit {
     public version: string;
     public notifications: any[] = [];
     public cfalertDialog: CFAlertDialog;
+    gotSpaceChartData: boolean;
+    gotWhatsNew: boolean;
+    gotVersion: boolean;
+    gotDates: boolean;
+    gotNotifications: boolean;
 
     constructor(
         private remoteService: RemoteService,
@@ -33,11 +38,21 @@ export class DashboardComponent implements OnInit {
         this.cfalertDialog = new CFAlertDialog();
     }
 
+    public refresh(event) {
+        const pullRefresh = event.object;
+        this.getData(pullRefresh);
+   }
+
     public ngOnInit() {
-        this.initChart();
+        this.getData();
         this.pushService.init();
     }
-    public initChart() {
+    public getData(obj = false) {
+        this.gotSpaceChartData = false;
+        this.gotWhatsNew = false;
+        this.gotVersion = false;
+        this.gotDates = false;
+        this.gotNotifications = false;
         this.remoteService.get("dashboardGetSpaceChartData").subscribe((data) => {
             // console.log("Bekommene Daten: " + data);
             // console.log(data);
@@ -48,20 +63,30 @@ export class DashboardComponent implements OnInit {
                     { name: "Von Daten belegt", amount: data[2] },
                 ];
             }
+            this.gotSpaceChartData = true;
+            this.checkForRefreshDone(obj);
 
         });
         this.remoteService.get("dashboardGetWhatsnew").subscribe((data) => {
             this.whatsnew = data;
+            this.gotWhatsNew = true;
+            this.checkForRefreshDone(obj);
         });
         this.remoteService.get("dashboardGetDates").subscribe((data) => {
             this.dates = data;
+            this.gotDates = true;
+            this.checkForRefreshDone(obj);
         });
         this.remoteService.get("dashboardGetVersion").subscribe((data) => {
             this.version = data;
+            this.gotVersion = true;
+            this.checkForRefreshDone(obj);
         });
         this.remoteService
             .getNoCache("dashboardGetNotifications")
             .subscribe((data) => {
+                this.gotNotifications = true;
+                this.checkForRefreshDone(obj);
                 this.notifications = data.notifications;
                 this.notifications.forEach((notification) => {
                     let type;
@@ -106,5 +131,15 @@ export class DashboardComponent implements OnInit {
             });
 
         this.navbarService.setHeadline("Dashboard");
+    }
+    private checkForRefreshDone(obj: any) {
+        if (obj
+            && this.gotDates
+            && this.gotNotifications
+            && this.gotSpaceChartData
+            && this.gotVersion
+            && this.gotWhatsNew) {
+            obj.refreshing = false;
+        }
     }
 }
