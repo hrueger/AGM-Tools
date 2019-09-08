@@ -11,6 +11,10 @@
     color: white;
 }
 
+.action-bar-small {
+    font-size: 10;
+}
+
 StackLayout.content {
     padding: 8;
 }
@@ -53,9 +57,11 @@ StackLayout.content {
     padding: 0;
     margin: 0;
 }
+
 .round {
     border-radius: 30;
 }
+
 .no-border:active {
     background-color: #255580;
 }

@@ -30,7 +30,8 @@ export class TemplatesComponent implements OnInit {
     public showingTemplate: boolean = false;
     public pageNumber: number;
     public templatesToShow: any[] = [];
-    currentTemplateName: string;
+    public currentTemplateName: string;
+    currentTemplateDescription: any;
 
     constructor(
         private remoteService: RemoteService,
@@ -44,6 +45,7 @@ export class TemplatesComponent implements OnInit {
     public ngOnInit() {
         this.remoteService.get("templatesGetTemplates").subscribe((data) => {
             this.templates = data;
+            this.templatesToShow = [];
             this.templates.forEach((template) => {
                 this.templatesToShow.push({
                     // credit: template.type,
@@ -57,6 +59,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
     }
     public onPageChanged(e: PageChangeEventData) {
         this.currentTemplateName = this.templates[e.page].name;
+        this.currentTemplateDescription = this.templates[e.page].description;
     }
     public downloadCurrentTemplate() {
         alert("Herunterladen von Vorlagen wird noch nicht unterstützt!");
@@ -68,9 +71,17 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
     }
 
     public showTemplate(index: number) {
-
         this.pageNumber = index;
         this.showingTemplate = true;
+        this.page.actionBarHidden = true;
+        this.currentTemplateName = this.templates[index].name;
+        this.currentTemplateDescription = this.templates[index].description;
+    }
+    public back(): void {
+        this.showingTemplate = false;
+        this.page.actionBarHidden = false;
+        this.currentTemplateName = "";
+        this.currentTemplateDescription = "";
     }
 
     public openNewModal() {
@@ -107,7 +118,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
     }
 
     public onDrawerButtonTap(): void {
-        const sideDrawer =  app.getRootView() as RadSideDrawer;
+        const sideDrawer = app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }
 
