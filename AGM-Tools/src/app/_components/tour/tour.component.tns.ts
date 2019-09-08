@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Carousel } from "nativescript-carousel";
 import { Page } from "tns-core-modules/ui/page";
+import { RouterExtensions } from "nativescript-angular/router";
 
 @Component({
   selector: "app-tour",
@@ -56,7 +57,7 @@ export class TourComponent implements OnInit {
       imgSrc: "share",
     },
   ];
-  constructor(private page: Page) { }
+  constructor(private page: Page, private router: RouterExtensions) { }
 
   public ngOnInit() {
     this.page.actionBarHidden = true;
@@ -65,16 +66,22 @@ export class TourComponent implements OnInit {
     this.pageChanged({ index: 0});
   }
   public prev() {
-    this.carouselView.nativeElement.selectedPage--;
+    if (this.carouselView.nativeElement.selectedPage > 0) {
+      this.carouselView.nativeElement.selectedPage--;
+    }
   }
   public next() {
-    this.carouselView.nativeElement.selectedPage++;
+    if (this.carouselView.nativeElement.selectedPage == this.slides.length - 1) {
+      this.router.back();
+    } else {
+      this.carouselView.nativeElement.selectedPage++;
+    }
   }
 
   public pageChanged(args: any): void {
     this.currentBackgroundColor = this.slides[args.index].backgroundColor;
     if (args.index + 1 == this.slides.length) { // last item
-      this.btnNext.nativeElement.text = "Weiter";
+      this.btnNext.nativeElement.text = "Fertig";
       this.btnPrev.nativeElement.visibility = "visible";
     } else if (args.index == 0) { // first item
       this.btnPrev.nativeElement.visibility = "hidden";
