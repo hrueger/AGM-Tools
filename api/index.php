@@ -1056,10 +1056,11 @@ function chatGetContacts() {
                 $latestmessage = trim_text($line["message"], 40);
                 
                 $rid = $db->real_escape_string($line["rid"]);
-                $id = $db->real_escape_string($line["id"]);
+                $cuid = $db->real_escape_string(getCurrentUserId());
 
                 // nachrichten empfangen machen
-                if (!$db->query("UPDATE messages SET `status` = 'received' WHERE `receiver`='$rid' AND `status`='sent' AND `sender` = '$id'")) {
+                if (!$db->query("UPDATE messages SET `status` = 'received' WHERE `sender`=(SELECT members FROM receivers WHERE `id` = '$rid') AND `status`='sent' AND `receiver` = (SELECT id FROM receivers WHERE `members` = '$cuid')")) {
+                //if ($res = $db->query("SELECT members FROM receivers WHERE `id` = '$rid'")) {
                     dieWithMessage("Datenbankfehler: ".$db->error);
                 }
                 
@@ -1089,6 +1090,13 @@ function chatGetContacts() {
                 if ($latestmessage == ": ") {
                     $latestmessage = "";
                 }
+
+                // nachrichten empfangen machen
+                if (!$db->query(fehlt)) {
+                //if ($res = $db->query("SELECT members FROM receivers WHERE `id` = '$rid'")) {
+                    dieWithMessage("Datenbankfehler: ".$res->fetch_all(MYSQLI_ASSOC)[0]["members"]);
+                }
+
 				$result[] = array(
                     "contact" => array(
                         "avatar" => $avatar->__toString(),
