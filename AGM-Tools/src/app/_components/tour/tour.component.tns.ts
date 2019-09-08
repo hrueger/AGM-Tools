@@ -16,43 +16,43 @@ export class TourComponent implements OnInit {
   public slides = [
     {
       backgroundColor: "#2980b9",
-      description: "Profitiere vom einzigartigen Workflow, den dir diese Plattform bietet.\
-      Alles ist vernetzt und perfekt aufeinander abgestimmt!",
+      description: "Profitiere vom einzigartigen Workflow, den dir diese Plattform bietet. \
+Alles ist vernetzt und perfekt aufeinander abgestimmt!",
       headline: "Alles vereint",
       imgSrc: "collaboration",
     },
     {
       backgroundColor: "#e74c3c",
-      description: "Behalte mit dem integrierten Kalender deine Termine im Überblick\
-      oder exportiere sie direkt in Deinen Kalender!",
+      description: "Behalte mit dem integrierten Kalender deine Termine im Überblick \
+oder exportiere sie direkt in Deinen Kalender!",
       headline: "Integrierter Kalender",
       imgSrc: "calendar",
     },
     {
       backgroundColor: "#3498db",
-      description: "Kommuniziere mit Deinen Mitstreitern direkt in der App und\
-      verlinke Dateien, verwende Emojis und verschicke Bilder!",
+      description: "Kommuniziere mit Deinen Mitstreitern direkt in der App und \
+verlinke Dateien, verwende Emojis und verschicke Bilder!",
       headline: "Eingebauter Chat",
       imgSrc: "chat",
     },
     {
       backgroundColor: "#8e44ad",
-      description: "Die schnellsten Push-Nachrichten über alle Aktivitäten\
-      halten Dich immer auf dem Laufenden!",
+      description: "Die schnellsten Push-Nachrichten über alle Aktivitäten \
+halten Dich immer auf dem Laufenden!",
       headline: "Immer Up-to-Date",
       imgSrc: "mail",
     },
     {
       backgroundColor: "#27ae60",
-      description: "Habe alle deine Dateien immer mit dabei - dank integrierter\
-      Dateiverwaltung, Dateibrowser und Dateivorschau!",
+      description: "Habe alle deine Dateien immer mit dabei - dank integrierter \
+Dateiverwaltung, Dateibrowser und Dateivorschau!",
       headline: "Dateien immer mit dabei",
       imgSrc: "image",
     },
     {
       backgroundColor: "#f1c40f",
-      description: "Teile alles auch mit den Personen, die AGM-Tools (leider) noch nicht haben\
-      - mit den Tools, die Du bereits kennst!",
+      description: "Teile alles auch mit den Personen, die AGM-Tools (leider) noch nicht haben \
+- mit den Tools, die Du bereits kennst!",
       headline: "Teilen - was immer Du willst",
       imgSrc: "share",
     },
