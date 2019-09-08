@@ -42,8 +42,6 @@ export class ChatMessagesComponent
 
     public unread: number;
     public messages: ObservableArray<Message> = new ObservableArray<Message>(0);
-    // chats: Chat[];
-    public messageGotToSend: string;
     public inputMessage: string;
 
     @ViewChild("inputMessageField", { static: false }) public inputMessageField: ElementRef;
@@ -55,7 +53,27 @@ export class ChatMessagesComponent
     ) { }
 
     public sendMessage() {
-        this.messageGotToSend = this.inputMessage;
+        let message = {
+            chat: null,
+            created: Date.now(),
+            fromMe: true,
+            sendername: "",
+            sent: "notsent",
+            text: this.inputMessage,
+        };
+        this.messages.push(message);
+        this.remoteService
+            .getNoCache("chatSendMessage", {
+                message: this.inputMessage,
+                rid: this.receiverId,
+            })
+            .subscribe((data) => {
+                message = this.messages.pop();
+                message.sent = "sent";
+                this.messages.push(message);
+                // console.log(this.messages);
+                this.cdr.detectChanges();
+            });
         this.inputMessage = "";
     }
 

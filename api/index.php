@@ -222,7 +222,7 @@ if ($data) {
 
             case "updatePushToken":
                 updatePushToken($args);
-                break;    
+                break;
 
             case "dashboardGetSpaceChartData":
                 dashboardGetSpaceChartData();
@@ -1032,6 +1032,7 @@ function chatGetContacts() {
 	ORDER BY `timestamp` DESC
 	");
 
+    
 
 	if ($res) {
 		$res = $res->fetch_all(MYSQLI_ASSOC);
@@ -1039,14 +1040,6 @@ function chatGetContacts() {
 		$res = array();
 	}
 
-
-	$ret = [];
-	$ret["action"] = "gotContacts";
-	$ret["status"] = "true";
-	$ret["message"] = "";
-	//var_dump($clients);
-
-    //log_to_file(print_r($res, true));
     require_once("./vendor/autoload.php");
    
 	foreach ($res as $line) {
@@ -1058,15 +1051,23 @@ function chatGetContacts() {
 		if ($line["type"] == "private") {
 
 			if (!in_array($userid, $members)) {
-				//echo "hi<br>";
-				//$name = htmlentities(mb_convert_encoding($line["name"], 'UTF-8', 'ASCII'), ENT_SUBSTITUTE, "UTF-8"); //encoding auf UTF 8
 				$name = $line["name"];
 
                 $latestmessage = trim_text($line["message"], 40);
-               
+                
+                $rid = $db->real_escape_string($line["rid"]);
+                $id = $db->real_escape_string($line["id"]);
+
+                // nachrichten empfangen machen
+                if (!$db->query("UPDATE messages SET `status` = 'received' WHERE `receiver`='$rid' AND `status`='sent' AND `sender` = '$id'")) {
+                    dieWithMessage("Datenbankfehler: ".$db->error);
+                }
+                
+
+                $numberUnread = $db->query("SELECT COUNT(*) FROM messages WHERE receiver=$rid AND ");
+
 				$result[] = array(
                     "contact" => array(
-                        /*"avatar" => 'https://randomuser.me/api/portraits/med/men/'.random_int(0, 100).'.jpg',*/
                           "avatar" => $avatar->__toString(),
                         "name" => htmlspecialchars($line["name"])
                     ),
@@ -1076,7 +1077,7 @@ function chatGetContacts() {
                     "muted" => false,
                     "unread" => 0,
                     "text" => [htmlspecialchars($latestmessage)],
-                    "rid" => $line["rid"]
+                    "rid" => $line["rid"],
                 );
 			}
 		} else {
@@ -1202,19 +1203,19 @@ function chatGetMessages($data) {
 					}
 				}
 				if ($allseen) {
-					$status = 2;
+					$status = "seen";
 				} else {
-					$status = 1;
+					$status = "received";
 				}
 			} else {
-				$status = 0;
+				$status = "sent";
 			}
 			//echo $status;
 		}
 
 		$time = $line["timestamp"];
 		
-		$ret[] = array("id"=> uniqid(), "fromMe" => $alt, "sendername" => $name, "text" => $message, "sent" => $status+1, "created" => $time);
+		$ret[] = array("id"=> uniqid(), "fromMe" => $alt, "sendername" => $name, "text" => $message, "sent" => $status, "created" => $time);
 
 
 
@@ -1223,9 +1224,6 @@ function chatGetMessages($data) {
 		//$previousSender = $line["sender"];
 		$lastDay = date('d.m.Y', strtotime($line["timestamp"]));
 		$number++;
-
-
-		/// make messages received, jetzt abver wirklich!
 
 		if ($type == "group") {
 			$status = $line["status"];
@@ -1247,7 +1245,7 @@ function chatGetMessages($data) {
 			}
 			$status = $db->real_escape_string(serialize($status));
 			$mID = $db->real_escape_string($line["id"]);
-			$db->query("UPDATE `messages` SET `status` = '$status' WHERE `messages`.`id` = $mID;");
+			$db->query("UPDATE `messages` SET `status` = '$status' WHERE `messages`.`id` = $mID");
 			//$existing = false;
 			//foreach (explode("-", $receiverIdArray[$line["receiver"]]["members"]) as $member) {
 			//	if ($member == $myID) $existing = true;
@@ -1257,7 +1255,7 @@ function chatGetMessages($data) {
 		} else {
             if ($alt==false) {
                 $mID = $db->real_escape_string($line["id"]);
-			    $db->query("UPDATE `messages` SET `status` = '2' WHERE `messages`.`id` = $mID;");
+			    $db->query("UPDATE `messages` SET `status` = 'seen' WHERE `messages`.`id` = $mID");
             }
 			//echo $db->affected_rows."   -   ".$db->error."\n";
 			//echo "das war ein privater chat von ".$line["receiver"]."\n";
@@ -1277,7 +1275,7 @@ function chatSendMessage($data) {
     $db = connect();
     $data["message"] = $db->real_escape_string($data["message"]);
     $data["rid"] = $db->real_escape_string($data["rid"]);
-    $res = $db->query("INSERT INTO messages (message, sender, timestamp, receiver, status) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 0)");
+    $res = $db->query("INSERT INTO messages (message, sender, timestamp, receiver, status) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 'sent')");
 	if (!$res) {
 		dieWithMessage($db->error);
     }
@@ -1497,8 +1495,6 @@ function filesDelete($data) {
 	}
 }
 
-
-
 function clientsoftwareGetMobile() {
     $ret = [];
     if ($handle = opendir('/var/www/html/AGM-Tools/releases/mobile/')) {
@@ -1609,6 +1605,7 @@ function templatesGetTemplates() {
     }
     die(json_encode($templates));
 }
+
 function templatesNewTemplate($data) {
     if (isset($data["type"]) &&
 	isset($data["description"]) &&

@@ -9,14 +9,14 @@ import { MessagesAreaComponent } from "../_components/chat-messages/messages-are
 import { RemoteService } from "./remote.service";
 
 @Injectable({
-    providedIn: MessagesAreaComponent,
+    providedIn: "root",
 })
 export class PushService {
     private static APP_REGISTERED_FOR_NOTIFICATIONS = "APP_REGISTERED_FOR_NOTIFICATIONS";
 
     public chatActionSubject = new Subject<any>();
     public calendarActionSubject = new Subject<any>();
-    private messageStorage: Message[] = [];
+    private MESSAGE_CACHE_PREFIX: string = "MESSAGECACHE_";
 
     constructor(private remoteService: RemoteService, private router: RouterExtensions, private zone: NgZone) { }
 
@@ -27,8 +27,10 @@ export class PushService {
         return this.calendarActionSubject.asObservable();
     }
 
-    public reregisterCallback() {
+    public reregisterCallbacks() {
         this.registerOnClickCallback();
+        this.registerOnReceivedCallback();
+        this.registerOnReceivedCallback2();
     }
     public init() {
         this.registerOnClickCallback();
@@ -92,15 +94,7 @@ export class PushService {
                 this.remoteService.getNoCache("updatePushToken", { pushToken: token }).subscribe();
             },
         );
-        messaging.addOnMessageReceivedCallback(
-            (message) => {
-                this.messageRecieved(message);
-            },
-            // tslint:disable-next-line: no-empty
-        ).then(() => { }, (err) => {
-            // tslint:disable-next-line: no-console
-            console.log("Failed to add addOnMessageReceivedCallback: " + err);
-        });
+        this.registerOnReceivedCallback();
     }
 
     public doUnregisterForPushNotifications(): void {
@@ -115,37 +109,26 @@ export class PushService {
     }
 
     public doRegisterForPushNotifications(): void {
-        messaging.registerForPushNotifications({
-            onPushTokenReceivedCallback: (token: string): void => {
-                // tslint:disable-next-line: no-console
-                console.log(">>>> Firebase plugin received a push token: " + token);
-                this.remoteService.getNoCache("updatePushToken", { pushToken: token }).subscribe();
-            },
-
-            onMessageReceivedCallback: (message: Message) => {
-                this.messageRecieved(message);
-            },
-
-            showNotifications: true,
-            showNotificationsWhenInForeground: false,
-        })
-            // tslint:disable-next-line: no-console
-            .catch((err) => console.log(">>>> Failed to register for push notifications"));
+        this.registerOnReceivedCallback2();
     }
 
     private messageRecieved(message: Message) {
         switch (message.data.action) {
             case "newMessage":
-                this.messageStorage[this.handleNewChatMessage(message)] = message;
+                applicationSettings.setString(this.MESSAGE_CACHE_PREFIX +
+                    this.handleNewChatMessage(message), JSON.stringify(message));
                 break;
             case "calendarEvent":
-                this.messageStorage[this.handleCalendarEventMessage(message)] = message;
+                applicationSettings.setString(this.MESSAGE_CACHE_PREFIX +
+                    this.handleCalendarEventMessage(message), JSON.stringify(message));
                 break;
             default:
-                this.messageStorage[this.handleUnknownMessage(message)] = message;
+                applicationSettings.setString(this.MESSAGE_CACHE_PREFIX +
+                    this.handleUnknownMessage(message), JSON.stringify(message));
                 break;
         }
     }
+
     private handleUnknownMessage(message: Message): number {
         const id = Math.round(Math.random() * 10000);
         LocalNotifications.schedule([{
@@ -163,6 +146,7 @@ export class PushService {
             });
         return id;
     }
+
     private handleCalendarEventMessage(message: Message): number {
         const id = Math.round(Math.random() * 10000);
         LocalNotifications.schedule([{
@@ -180,7 +164,13 @@ export class PushService {
             });
         return id;
     }
+
     private handleNewChatMessage(message: Message): number {
+        this.chatActionSubject.next({
+            action: "newMessage",
+            data: message,
+            fromMe: false,
+        });
         const id = Math.round(Math.random() * 10000);
         LocalNotifications.schedule([{
             actions: [{
@@ -215,11 +205,16 @@ export class PushService {
     private registerOnClickCallback() {
         const that = this;
         LocalNotifications.addOnMessageReceivedCallback((data: any) => {
-            const message = this.messageStorage[data.id];
+            const message = JSON.parse(applicationSettings.getString(that.MESSAGE_CACHE_PREFIX + data.id));
             switch (data.channel) {
                 case "newMessage":
                     if (data.event == "button") {
-                        that.chatActionSubject.next();
+                        that.chatActionSubject.next({
+                            action: "markAsRead",
+                            data: {
+                                body: message,
+                            },
+                        });
                     } else if (data.event == "input") {
                         this.remoteService
                             .getNoCache("chatSendMessage", {
@@ -227,7 +222,13 @@ export class PushService {
                                 rid: message.data.chatID,
                             })
                             .subscribe(() => {
-                                that.chatActionSubject.next({body: message.data.body, fromMe: true});
+                                that.chatActionSubject.next({
+                                    action: "newMessage",
+                                    data: {
+                                        body: data.response,
+                                    },
+                                    fromMe: true,
+                                });
                             });
 
                     } else {
@@ -238,10 +239,10 @@ export class PushService {
                     }
                     break;
                 case "calendarEvent":
-                        this.zone.run(() => {
-                            this.router.navigate(["calendar"]);
-                        });
-                        break;
+                    this.zone.run(() => {
+                        this.router.navigate(["calendar"]);
+                    });
+                    break;
                 default:
                     // tslint:disable-next-line: no-console
                     console.log("Unbekannte nachricht angetippt!");
@@ -251,5 +252,31 @@ export class PushService {
             }
 
         });
+    }
+
+    private registerOnReceivedCallback() {
+        messaging.addOnMessageReceivedCallback((message) => {
+            this.messageRecieved(message);
+        }).then(() => { /* */ }, (err) => {
+            // tslint:disable-next-line: no-console
+            console.log("Failed to add addOnMessageReceivedCallback: " + err);
+        });
+    }
+
+    private registerOnReceivedCallback2() {
+        messaging.registerForPushNotifications({
+            onPushTokenReceivedCallback: (token: string): void => {
+                // tslint:disable-next-line: no-console
+                console.log(">>>> Firebase plugin received a push token: " + token);
+                this.remoteService.getNoCache("updatePushToken", { pushToken: token }).subscribe();
+            },
+            onMessageReceivedCallback: (message: Message) => {
+                this.messageRecieved(message);
+            },
+            showNotifications: true,
+            showNotificationsWhenInForeground: false,
+        })
+            // tslint:disable-next-line: no-console
+            .catch((err) => console.log(">>>> Failed to register for push notifications"));
     }
 }

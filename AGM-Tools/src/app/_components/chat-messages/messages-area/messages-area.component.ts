@@ -45,7 +45,7 @@ export class MessagesAreaComponent implements OnInit {
                 created: Date.now(),
                 fromMe: true,
                 sendername: "",
-                sent: "0",
+                sent: "notsent",
                 text: changes.messageSent.currentValue,
             };
             this.messages.push(message);
@@ -56,7 +56,7 @@ export class MessagesAreaComponent implements OnInit {
                 })
                 .subscribe((data) => {
                     message = this.messages.pop();
-                    message.sent = "1";
+                    message.sent = "sent";
                     this.messages.push(message);
                     // console.log(this.messages);
                     this.cdr.detectChanges();
@@ -85,10 +85,10 @@ export class MessagesAreaComponent implements OnInit {
 
     public getIcon(message: Message) {
         // tslint:disable-next-line: radix
-        switch (parseInt(message.sent)) {
-            case 0:
+        switch (message.sent) {
+            case "notsent":
                 return "&#xf017;";
-            case 1:
+            case "sent":
                 return "&#xf00c;";
             default:
                 return "&#xf560;";
@@ -98,6 +98,6 @@ export class MessagesAreaComponent implements OnInit {
 
     public isViewed(message: Message) {
         // tslint:disable-next-line: radix
-        return parseInt(message.sent) === 3;
+        return message.sent === "seen";
     }
 }

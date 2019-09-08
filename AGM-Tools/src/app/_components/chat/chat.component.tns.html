@@ -1,6 +1,6 @@
 <navbar headline="Chat"></navbar>
 
-<ListView [items]="chats" id="chats" class="list-group">
+<ListView #chatsListView [items]="chats" id="chats" class="list-group">
     <ng-template let-chat="item" let-index="index">
         <GridLayout (tap)="goToChat(chat.rid)" rows=" auto, auto " columns="auto, *, auto " class="list-group-item ">
             <Image row="0 " col="0 " rowSpan="2 " [src]="chat.contact.avatar " class="thumb "></Image>

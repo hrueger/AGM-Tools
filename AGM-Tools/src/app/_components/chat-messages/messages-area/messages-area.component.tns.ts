@@ -27,34 +27,46 @@ export class MessagesAreaComponent implements OnInit {
     @Input() public messageSent;
     @Input() public receiverId: number;
     @ViewChild("messagesListView", { static: false }) public messagesListView: ElementRef;
-    constructor(private remoteService: RemoteService, private pushService: PushService) {
+    constructor(private pushService: PushService) {
 
     }
 
-    public newMessageFromPushService(body: string, fromMe: boolean) {
-        const message = {
-            chat: null,
-            created: Date.now(),
-            fromMe,
-            sendername: "",
-            sent: "0",
-            text: body,
-        };
-        this.messages.push(message);
+    public newMessageFromPushService(data: any) {
+        if (data.action == "newMessage") {
+            const message = {
+                chat: null,
+                created: Date.now(),
+                fromMe: data.fromMe,
+                sendername: (data.fromMe ? "" : data.data.sender),
+                sent: "notsent",
+                text: data.data.body,
+            };
+            this.messages.push(message);
+            this.scrollToBottom(this.messagesListView.nativeElement);
+            setTimeout(() => {
+                this.scrollToBottom(this.messagesListView.nativeElement);
+            }, 300);
+        } else {
+            console.log(data);
+        }
     }
 
     public scrollToBottom(lv: ListView) {
         if (lv && lv.items.length > 0) {
-            lv.scrollToIndex(lv.items.length - 1);
-            lv.refresh();
+            lv.scrollToIndex(lv.items.length);
+            lv.android.setSelection(lv.items.length - 1);
+            // lv.refresh();
         }
     }
 
     public ngOnInit() {
-        this.pushService.reregisterCallback();
+        this.pushService.reregisterCallbacks();
         this.pushService.getChatActions().subscribe((data) => {
-            this.newMessageFromPushService(data.body, data.fromMe);
+            this.newMessageFromPushService(data);
         });
+        setTimeout(() => {
+            this.scrollToBottom(this.messagesListView.nativeElement);
+        }, 500);
     }
 
     public listviewLoaded() {
@@ -64,8 +76,9 @@ export class MessagesAreaComponent implements OnInit {
     public isContinuation(idx: number) {
         if (idx && this.messages.getItem(idx)) {
             if ((this.messages.getItem(idx - 1) &&
-                this.messages.getItem(idx).fromMe == this.messages.getItem(idx - 1).fromMe
-                && !this.messages.getItem(idx).system)) {
+                this.messages.getItem(idx).fromMe == this.messages.getItem(idx - 1).fromMe &&
+                this.messages.getItem(idx).sendername == this.messages.getItem(idx - 1).sendername &&
+                !this.messages.getItem(idx).system)) {
                 return true;
             } else {
                 return false;
@@ -78,10 +91,10 @@ export class MessagesAreaComponent implements OnInit {
 
     public getIcon(message: Message) {
         // tslint:disable-next-line: radix
-        switch (parseInt(message.sent)) {
-            case 0:
+        switch (message.sent) {
+            case "notsent":
                 return "not_sent";
-            case 1:
+            case "sent":
                 return "sent";
             default:
                 return "default";
@@ -90,26 +103,23 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public isSent(message: Message) {
-        // tslint:disable-next-line: radix
-        if (parseInt(message.sent) == 1) {
+        if (message.sent == "sent") {
             return true;
         }
     }
     public isNotSent(message: Message) {
-        // tslint:disable-next-line: radix
-        if (parseInt(message.sent) == 0) {
+        if (message.sent == "notsent") {
             return true;
         }
     }
     public isDefault(message: Message) {
-        // tslint:disable-next-line: radix
-        if (parseInt(message.sent) == 2 || parseInt(message.sent) == 3) {
+        if (message.sent == "received" || message.sent == "seen") {
             return true;
         }
     }
 
     public isViewed(message: Message) {
-        // tslint:disable-next-line: radix
-        return parseInt(message.sent) === 3;
+        console.log(message.sent);
+        return message.sent === "seen";
     }
 }

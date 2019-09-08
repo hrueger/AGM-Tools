@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { PushService } from "../../_services/push.service.tns";
 
 @Component({
     selector: "app-chat",
@@ -11,19 +12,47 @@ import { RemoteService } from "../../_services/remote.service";
 export class ChatComponent {
     public chats = [];
     public currentRid: number;
+    @ViewChild("chatsListView", { static: false }) public chatsListView: ElementRef;
 
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
         private router: RouterExtensions,
+        private pushService: PushService,
     ) {
         this.chats = [];
+    }
+
+    public newMessageFromPushService(data: any) {
+        if (data.action == "newMessage") {
+            let index = null;
+            this.chats.some((cht, i) => {
+                // tslint:disable-next-line: radix
+                if (parseInt(cht.rid) == parseInt(data.data.data.chatID)) {
+                    index = i;
+                    return true;
+                }
+                return false;
+            });
+            if (this.chats[index]) {
+                this.chats[index].unread = (this.chats[index].unread > 0 ? this.chats[index].unread++ : 1);
+                this.chats[index].text = data.data.body;
+                this.chats[index].when = new Date();
+                this.chatsListView.nativeElement.refresh();
+            }
+        } else {
+            console.log(data);
+        }
     }
 
     public ngOnInit() {
         this.navbarService.setHeadline("Chat");
         this.remoteService.get("chatGetContacts").subscribe((chats) => {
             this.chats = chats;
+        });
+        this.pushService.reregisterCallbacks();
+        this.pushService.getChatActions().subscribe((data) => {
+            this.newMessageFromPushService(data);
         });
     }
 
