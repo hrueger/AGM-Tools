@@ -7,7 +7,7 @@ import {
     CFAlertDialog,
     CFAlertStyle,
 } from "nativescript-cfalert-dialog";
-import { NYTPhotoItem, PaletteType, PhotoViewer, PhotoViewerOptions } from "nativescript-photoviewer";
+import { PageChangeEventData } from "nativescript-image-swipe";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
@@ -16,7 +16,6 @@ import { View } from "tns-core-modules/ui/core/view/view";
 import { Page } from "tns-core-modules/ui/page/page";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
-import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
@@ -28,7 +27,10 @@ export class TemplatesComponent implements OnInit {
     @ViewChild("templatesListView", { read: RadListViewComponent, static: false })
     public templatesListView: RadListViewComponent;
     public templates: any[] = [];
-    public photoViewer: PhotoViewer;
+    public showingTemplate: boolean = false;
+    public pageNumber: number;
+    public templatesToShow: any[] = [];
+    currentTemplateName: string;
 
     constructor(
         private remoteService: RemoteService,
@@ -37,15 +39,27 @@ export class TemplatesComponent implements OnInit {
         private vcRef: ViewContainerRef,
         private authService: AuthenticationService,
         private page: Page) {
-        this.page.on("loaded", () => {
-            this.photoViewer = new PhotoViewer();
-        });
     }
 
     public ngOnInit() {
         this.remoteService.get("templatesGetTemplates").subscribe((data) => {
             this.templates = data;
+            this.templates.forEach((template) => {
+                this.templatesToShow.push({
+                    // credit: template.type,
+                    imageUrl: `https://agmtools.allgaeu-gymnasium.de/AGM-Tools_NEU_API/\
+getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.token}`,
+                    // summary: template.description,
+                    // title: template.name,
+                });
+            });
         });
+    }
+    public onPageChanged(e: PageChangeEventData) {
+        this.currentTemplateName = this.templates[e.page].name;
+    }
+    public downloadCurrentTemplate() {
+        alert("Herunterladen von Vorlagen wird noch nicht unterstützt!");
     }
     public onSetupItemView(args: SetupItemViewArgs) {
         args.view.context.third = args.index % 3 === 0;
@@ -53,28 +67,10 @@ export class TemplatesComponent implements OnInit {
         args.view.context.footer = args.index + 1 === this.templates.length;
     }
 
-    public showTemplate(index) {
+    public showTemplate(index: number) {
 
-        const templates /*: NYTPhotoItem[]*/ = [];
-        this.templates.forEach((template) => {
-            templates.push(/*{
-                image: */`https://agmtools.allgaeu-gymnasium.de/AGM-Tools_NEU_API/\
-                getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.token}`, /*,
-                title: template.name,
-                summary: template.description,
-                credit: template.type
-            }*/);
-        });
-
-        const photoviewerOptions: PhotoViewerOptions = {
-            android: {
-                paletteType: PaletteType.DarkVibrant,
-                showAlbum: false,
-            },
-            startIndex: index,
-        };
-
-        this.photoViewer.showGallery(templates, photoviewerOptions).then(() => { /* leer */ });
+        this.pageNumber = index;
+        this.showingTemplate = true;
     }
 
     public openNewModal() {

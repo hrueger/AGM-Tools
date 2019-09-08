@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { RouterExtensions } from "nativescript-angular/router";
 import { Carousel } from "nativescript-carousel";
 import { Page } from "tns-core-modules/ui/page";
-import { RouterExtensions } from "nativescript-angular/router";
 
 @Component({
   selector: "app-tour",
