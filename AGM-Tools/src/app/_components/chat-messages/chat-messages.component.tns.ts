@@ -1,4 +1,3 @@
-import { Location } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -10,13 +9,19 @@ import {
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
+import * as camera from "nativescript-camera";
+import { PhotoEditor, PhotoEditorControl } from "nativescript-photo-editor";
 
 import { from } from "rxjs";
 import { filter } from "rxjs/operators";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
+import { knownFolders, path } from "tns-core-modules/file-system/file-system";
+import { ImageSource } from "tns-core-modules/image-source/image-source";
+import config from "../../_config/config";
 import { Chat } from "../../_models/chat.model";
 import { Contact } from "../../_models/contact.model";
 import { Message } from "../../_models/message.model";
+import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
@@ -39,7 +44,7 @@ export class ChatMessagesComponent
         unread: null,
         when: null,
     };
-
+    public dialogOpen: boolean = false;
     public unread: number;
     public messages: ObservableArray<Message> = new ObservableArray<Message>(0);
     public inputMessage: string;
@@ -50,7 +55,92 @@ export class ChatMessagesComponent
         private router: RouterExtensions,
         private cdr: ChangeDetectorRef,
         private route: ActivatedRoute,
+        private authService: AuthenticationService,
     ) { }
+
+    public toggleAttachmentDialog() {
+        this.dialogOpen = !this.dialogOpen;
+    }
+
+    public sendDocument() {
+        alert("Noch nicht implementiert!");
+    }
+    public sendPicture() {
+        const that = this;
+        camera.requestPermissions().then(
+            function success() {
+                camera.takePicture({saveToGallery: false}).
+                then((imageAsset) => {
+                    console.log("picture taken", imageAsset);
+                    const source = new ImageSource();
+                    source.fromAsset(imageAsset)
+                    .then((imageSource) => {
+                        const photoEditor = new PhotoEditor();
+                        photoEditor.editPhoto({
+                            imageSource,
+                        }).then((newImage: ImageSource) => {
+                            const folderDest = knownFolders.documents();
+                            const date = new Date();
+                            const filename = "agmtools_" + date.getDate() + "-"
+                                            + (date.getMonth())  + "-"
+                                            + date.getFullYear() + "_"
+                                            + date.getHours() + "-"
+                                            + date.getMinutes() + "-"
+                                            + date.getSeconds();
+                            const pathDest = path.join(folderDest.path, filename + ".png");
+                            const saved: boolean = newImage.saveToFile(pathDest, "png");
+                            if (saved) {
+                                const url = config.apiUrl;
+                                const name = pathDest.substr(pathDest.lastIndexOf("/") + 1);
+
+                                // upload configuration
+                                const bghttp = require("nativescript-background-http");
+                                const session = bghttp.session("image-upload");
+                                const request = {
+                                    description: "Uploading " + name,
+                                    headers: {
+                                        "Content-Type": "application/octet-stream",
+                                    },
+                                    method: "POST",
+                                    url,
+                                };
+                                const params = [
+                                    { name: "token", value: that.authService.currentUserValue.token },
+                                    { name: "chatFile", filename: pathDest, mimeType: "image/png" },
+                                    { name: "type", value: "image" },
+                                    ];
+                                const task = session.multipartUpload(params, request);
+                                task.on("progress", progressHandler);
+                                task.on("error", errorHandler);
+                                task.on("responded", respondedHandler);
+                                task.on("complete", completeHandler);
+                                task.on("cancelled", cancelledHandler); // Android only
+                            }
+                        }).catch((e) => {
+                            console.error(e);
+                        });
+                    });
+                }).catch((err) => {
+                    console.log("Error -> " + err.message);
+                });
+            },
+            function failure() {
+            console.log("no permission");
+            },
+        );
+    }
+    public sendGallery() {
+        alert("Noch nicht implementiert!");
+    }
+    public sendAudio() {
+        alert("Noch nicht implementiert!");
+    }
+    public sendLocation() {
+        alert("Noch nicht implementiert!");
+    }
+    public sendContact() {
+        alert("Noch nicht implementiert!");
+    }
 
     public sendMessage() {
         let message = {
@@ -157,4 +247,46 @@ export class ChatMessagesComponent
             }, 0);
         }
     }
+
+}
+
+// event arguments:
+// task: Task
+// currentBytes: number
+// totalBytes: number
+function progressHandler(e) {
+    alert("uploaded " + e.currentBytes + " / " + e.totalBytes);
+}
+
+// event arguments:
+// task: Task
+// responseCode: number
+// error: java.lang.Exception (Android) / NSError (iOS)
+// response: net.gotev.uploadservice.ServerResponse (Android) / NSHTTPURLResponse (iOS)
+function errorHandler(e) {
+    alert("received " + e.responseCode + " code.");
+    let serverResponse = e.response;
+}
+
+// event arguments:
+// task: Task
+// responseCode: number
+// data: string
+function respondedHandler(e) {
+    alert("received " + e.responseCode + " code. Server sent: " + e.data);
+}
+
+// event arguments:
+// task: Task
+// responseCode: number
+// response: net.gotev.uploadservice.ServerResponse (Android) / NSHTTPURLResponse (iOS)
+function completeHandler(e) {
+    alert("received " + e.responseCode + " code");
+    let serverResponse = e.response;
+}
+
+// event arguments:
+// task: Task
+function cancelledHandler(e) {
+    alert("upload cancelled");
 }

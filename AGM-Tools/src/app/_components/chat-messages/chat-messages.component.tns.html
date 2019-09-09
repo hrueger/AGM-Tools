@@ -6,16 +6,44 @@
         <Label row="1" col="1" [text]="chat.contact.lastseen" class="subtitle"></Label>
     </GridLayout>
 </ActionBar>
-<GridLayout rows="*, auto" columns="*" class="wallpaper">
+<GridLayout rows="*, auto" columns="*" class="wallpaper" [class.dialogOpen]="dialogOpen">
     <ns-messages-area row="0" column="0" [receiverId]="receiverId" [messageSent]="messageGotToSend" [messages]="messages" class="messages-area">
     </ns-messages-area>
-    <GridLayout row="1" column="0">
-        <FlexboxLayout class="message-box mobile">
+    <GridLayout rows="auto, auto"  row="1" column="0">
+
+        <GridLayout row="0" class="dialog" rows="*, *" columns="*, *, *">
+            <StackLayout row="0" col="0" (tap)="sendDocument()">
+                <Image src="~/assets/attachment/document.png"></Image>
+                <Label text="Dokument"></Label>
+            </StackLayout>
+            <StackLayout row="0" col="1" (tap)="sendPicture()">
+                <Image src="~/assets/attachment/camera.png"></Image>
+                <Label text="Kamera"></Label>
+            </StackLayout>
+            <StackLayout row="0" col="2" (tap)="sendGallery()">
+                <Image src="~/assets/attachment/gallery.png"></Image>
+                <Label text="Galerie"></Label>
+            </StackLayout>
+            <StackLayout row="1" col="0" (tap)="sendAudio()">
+                <Image src="~/assets/attachment/audio.png"></Image>
+                <Label text="Audio"></Label>
+            </StackLayout>
+            <StackLayout row="1" col="1" (tap)="sendLocation()">
+                <Image src="~/assets/attachment/location.png"></Image>
+                <Label text="Standort"></Label>
+            </StackLayout>
+            <StackLayout row="1" col="2" (tap)="sendContact()">
+                <Image src="~/assets/attachment/contact.png"></Image>
+                <Label text="Kontakt"></Label>
+            </StackLayout>
+        </GridLayout>
+
+        <FlexboxLayout row="1" class="message-box mobile">
             <FlexboxLayout class="text-area">
-                <Button (tap)="toggleEmojiPicker()" text="&#xf580;" class="fas icon"></Button>
+                <Button (tap)="toggleEmojiPicker()" text="&#xf580;" class="no-border fas icon"></Button>
                 <TextView #inputMessageField (tap)="showKeyboard()" hint="Nachricht" [(ngModel)]="inputMessage" class="text-view"></TextView>
-                <Button text="&#xf0c6;" class="fas icon"></Button>
-                <Button text="&#xf030;" class="fas icon"></Button>
+                <Button text="&#xf030;" (tap)="sendImage()" class="no-border fas icon"></Button>
+                <Button text="&#xf0c6;" (tap)="toggleAttachmentDialog()" class="no-border fas icon"></Button>
             </FlexboxLayout>
             <Button text="&#xf1d8;" (tap)="sendMessage()" class="fas icon send"></Button>
         </FlexboxLayout>

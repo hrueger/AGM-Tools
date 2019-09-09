@@ -119,7 +119,6 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public isViewed(message: Message) {
-        console.log(message.sent);
         return message.sent === "seen";
     }
 }

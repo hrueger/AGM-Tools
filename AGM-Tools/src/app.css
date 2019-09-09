@@ -2,6 +2,30 @@
 
 /*@import "./custom.css";*/
 
+
+@keyframes showDialog {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.dialogOpen .dialog {
+    visibility: visible;
+    animation-name: showDialog;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+.dialog {
+    visibility: collapse;
+    opacity: 0;
+}
+
+.dialog {
+    background-color: white;
+    border-radius: 8;
+    
+}
+
+
 * {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
