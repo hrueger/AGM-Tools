@@ -53,7 +53,7 @@ export class LoginComponent {
 
   public login() {
     if (getConnectionType() === connectionType.none) {
-      alert("Groceries requires an internet connection to log in.");
+      alert("AGM-Tools benötigt eine Internetverbindung.");
       return;
     }
 
@@ -76,9 +76,9 @@ export class LoginComponent {
     prompt({
       cancelButtonText: "Cancel",
       defaultText: "",
-      message: "Enter the email address you used to register for Groceries to reset your password.",
+      message: "Bitte gib deine Email-Adresse ein, um dein Passwort zurückzusetzen.",
       okButtonText: "Ok",
-      title: "Forgot Password",
+      title: "Passwort vergesssen",
     }).then((data) => {
       if (data.result) {
         this.authService.resetPassword(data.text.trim())
