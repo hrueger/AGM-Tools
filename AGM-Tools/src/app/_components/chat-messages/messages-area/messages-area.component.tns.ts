@@ -10,9 +10,10 @@ import {
 } from "@angular/core";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
+import config from "../../../_config/config";
 import { Message } from "../../../_models/message.model";
+import { AuthenticationService } from "../../../_services/authentication.service";
 import { PushService } from "../../../_services/push.service.tns";
-import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,10 +28,12 @@ export class MessagesAreaComponent implements OnInit {
     @Input() public messageSent;
     @Input() public receiverId: number;
     @ViewChild("messagesListView", { static: false }) public messagesListView: ElementRef;
-    constructor(private pushService: PushService) {
+    constructor(private pushService: PushService, private authServcie: AuthenticationService) {
 
     }
-
+    public getImageSrc(src) {
+        return config.apiUrl + "?getAttachment=" + src + "&token=" + this.authServcie.currentUserValue.token;
+    }
     public newMessageFromPushService(data: any) {
         if (data.action == "newMessage") {
             const message = {

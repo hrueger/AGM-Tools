@@ -40,7 +40,7 @@ export class MessagesAreaComponent implements OnInit {
             /*if (this.messages[-1]) {
                 let chat = this.messages[-1].chat
             }*/
-            let message = {
+            let message: Message = {
                 chat: null,
                 created: Date.now(),
                 fromMe: true,

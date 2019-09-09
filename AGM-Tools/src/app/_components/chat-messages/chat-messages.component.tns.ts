@@ -69,63 +69,90 @@ export class ChatMessagesComponent
         const that = this;
         camera.requestPermissions().then(
             function success() {
-                camera.takePicture({saveToGallery: false}).
-                then((imageAsset) => {
-                    console.log("picture taken", imageAsset);
-                    const source = new ImageSource();
-                    source.fromAsset(imageAsset)
-                    .then((imageSource) => {
-                        const photoEditor = new PhotoEditor();
-                        photoEditor.editPhoto({
-                            imageSource,
-                        }).then((newImage: ImageSource) => {
-                            const folderDest = knownFolders.documents();
-                            const date = new Date();
-                            const filename = "agmtools_" + date.getDate() + "-"
-                                            + (date.getMonth())  + "-"
-                                            + date.getFullYear() + "_"
-                                            + date.getHours() + "-"
-                                            + date.getMinutes() + "-"
-                                            + date.getSeconds();
-                            const pathDest = path.join(folderDest.path, filename + ".png");
-                            const saved: boolean = newImage.saveToFile(pathDest, "png");
-                            if (saved) {
-                                const url = config.apiUrl;
-                                const name = pathDest.substr(pathDest.lastIndexOf("/") + 1);
+                camera.takePicture({ saveToGallery: false }).
+                    then((imageAsset) => {
+                        console.log("picture taken", imageAsset);
+                        const source = new ImageSource();
+                        source.fromAsset(imageAsset)
+                            .then((imageSource) => {
+                                const photoEditor = new PhotoEditor();
+                                photoEditor.editPhoto({
+                                    imageSource,
+                                }).then((newImage: ImageSource) => {
+                                    const folderDest = knownFolders.documents();
+                                    const date = new Date();
+                                    const filename = "agmtools_" + date.getDate() + "-"
+                                        + (date.getMonth()) + "-"
+                                        + date.getFullYear() + "_"
+                                        + date.getHours() + "-"
+                                        + date.getMinutes() + "-"
+                                        + date.getSeconds();
+                                    const pathDest = path.join(folderDest.path, filename + ".png");
+                                    const saved: boolean = newImage.saveToFile(pathDest, "png");
+                                    if (saved) {
 
-                                // upload configuration
-                                const bghttp = require("nativescript-background-http");
-                                const session = bghttp.session("image-upload");
-                                const request = {
-                                    description: "Uploading " + name,
-                                    headers: {
-                                        "Content-Type": "application/octet-stream",
-                                    },
-                                    method: "POST",
-                                    url,
-                                };
-                                const params = [
-                                    { name: "token", value: that.authService.currentUserValue.token },
-                                    { name: "chatFile", filename: pathDest, mimeType: "image/png" },
-                                    { name: "type", value: "image" },
-                                    ];
-                                const task = session.multipartUpload(params, request);
-                                task.on("progress", progressHandler);
-                                task.on("error", errorHandler);
-                                task.on("responded", respondedHandler);
-                                task.on("complete", completeHandler);
-                                task.on("cancelled", cancelledHandler); // Android only
-                            }
-                        }).catch((e) => {
-                            console.error(e);
-                        });
+                                        // add message to chat
+                                        /*let message: Message = {
+                                            chat: null,
+                                            created: Date.now(),
+                                            fromMe: true,
+                                            imageSrc: this.inputMessage,
+                                            sendername: "",
+                                            sent: "notsent",
+                                            type: "image",
+                                        };
+                                        this.messages.push(message);
+                                        this.remoteService
+                                            .getNoCache("chatSendMessage", {
+                                                message: this.inputMessage,
+                                                rid: this.receiverId,
+                                            })
+                                            .subscribe((data) => {
+                                                message = this.messages.pop();
+                                                message.sent = "sent";
+                                                this.messages.push(message);
+                                            });*/
+
+                                        const url = config.apiUrl + "?token=" +
+                                            that.authService.currentUserValue.token.toString();
+                                        const name = pathDest.substr(pathDest.lastIndexOf("/") + 1);
+
+                                        // upload configuration
+                                        const bghttp = require("nativescript-background-http");
+                                        const session = bghttp.session("image-upload");
+                                        const request = {
+                                            description: "Uploading " + name,
+                                            headers: {
+                                                "Content-Type": "application/octet-stream",
+                                            },
+                                            method: "POST",
+                                            url,
+                                        };
+                                        const params = [
+                                            { name: "attachment", filename: pathDest, mimeType: "image/png" },
+                                            { name: "type", value: "image" },
+                                            {
+                                                name: "sendChatAttachment", value: that.receiverId.toString(),
+                                            },
+                                        ];
+                                        const task = session.multipartUpload(params, request);
+                                        task.on("progress", progressHandler);
+                                        task.on("error", errorHandler);
+                                        task.on("responded", respondedHandler);
+                                        task.on("complete", completeHandler);
+                                        task.on("cancelled", cancelledHandler);
+
+                                    }
+                                }).catch((e) => {
+                                    console.error(e);
+                                });
+                            });
+                    }).catch((err) => {
+                        console.log("Error -> " + err.message);
                     });
-                }).catch((err) => {
-                    console.log("Error -> " + err.message);
-                });
             },
             function failure() {
-            console.log("no permission");
+                console.log("no permission");
             },
         );
     }
@@ -143,7 +170,7 @@ export class ChatMessagesComponent
     }
 
     public sendMessage() {
-        let message = {
+        let message: Message = {
             chat: null,
             created: Date.now(),
             fromMe: true,
@@ -250,43 +277,21 @@ export class ChatMessagesComponent
 
 }
 
-// event arguments:
-// task: Task
-// currentBytes: number
-// totalBytes: number
 function progressHandler(e) {
-    alert("uploaded " + e.currentBytes + " / " + e.totalBytes);
+    console.log("uploaded this: " + e.currentBytes + " / " + e.totalBytes);
 }
-
-// event arguments:
-// task: Task
-// responseCode: number
-// error: java.lang.Exception (Android) / NSError (iOS)
-// response: net.gotev.uploadservice.ServerResponse (Android) / NSHTTPURLResponse (iOS)
 function errorHandler(e) {
-    alert("received " + e.responseCode + " code.");
-    let serverResponse = e.response;
+    // console.log("received " + e.responseCode + " code.");
+    // let serverResponse = e.response;
+    alert("Die Datei konnte nicht erfolgreich hochgeladen werden, Fehlercode " + e.responseCode);
 }
-
-// event arguments:
-// task: Task
-// responseCode: number
-// data: string
 function respondedHandler(e) {
-    alert("received " + e.responseCode + " code. Server sent: " + e.data);
+    // console.log("received " + e.responseCode + " code. Server sent: " + e.data);
 }
-
-// event arguments:
-// task: Task
-// responseCode: number
-// response: net.gotev.uploadservice.ServerResponse (Android) / NSHTTPURLResponse (iOS)
 function completeHandler(e) {
-    alert("received " + e.responseCode + " code");
+    console.log("received " + e.responseCode + " code");
     let serverResponse = e.response;
 }
-
-// event arguments:
-// task: Task
 function cancelledHandler(e) {
-    alert("upload cancelled");
+    console.log("upload cancelled");
 }

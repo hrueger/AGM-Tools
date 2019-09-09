@@ -188,13 +188,44 @@ if (isset($_GET["get"]) && isset($_GET["type"]) && (isset($_GET["token"])||isset
     } else {
         die("Verweigert");
     }
-    
-
-
 }
-    
-    
 
+if (isset($_POST["sendChatAttachment"])) {
+    if (isset($_POST["type"]) && $_POST["type"] == "image") {
+        if (isset($_FILES["attachment"])) {
+            $db = connect();
+
+            $name = uniqid() . ".png";
+			$path = getSetting($db, "SETTING_FILES_DIRECT_PATH");
+			$path = $path . "/attachments/$name";
+
+			if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $path)) {
+				die("Die Datei konnte nicht hochgeladen werden, weil ".$_FILES["attachment"]["error"]);
+			}
+            $name = $db->real_escape_string($name);
+            $rid = $_POST["sendChatAttachment"];
+            chatSendMessage(array(
+                "rid" => $rid,
+                "message" => "Bild",
+                "imageSrc" => $name
+            ));
+            die(json_encode(array("status" => true, "imageSrc" => $name)));
+        }
+    }
+}
+
+if (isset($_GET["getAttachment"])) {
+    $db = connect();
+    $prepath = getSetting($db, "SETTING_FILES_DIRECT_PATH");
+    $file = $prepath . "/attachments/" . explode("/", $_GET["getAttachment"])[0];
+    if (file_exists($file)) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $header = finfo_file($finfo, $file);
+        header("Content-Type: $header");
+        readfile($file);
+        exit;
+    }
+}
 
 $data = file_get_contents('php://input');
 @$data = json_decode($data);
@@ -427,6 +458,7 @@ function updatePushToken($data) {
 
 function dieWithMessage($message) {
     http_response_code(400);
+    error_log("Debug: ".$message);
     die(json_encode(array("message"=>$message)));
 }
 
@@ -1092,10 +1124,10 @@ function chatGetContacts() {
                 }
 
                 // nachrichten empfangen machen
-                if (!$db->query(fehlt)) {
+                /*if (!$db->query(fehlt)) {
                 //if ($res = $db->query("SELECT members FROM receivers WHERE `id` = '$rid'")) {
                     dieWithMessage("Datenbankfehler: ".$res->fetch_all(MYSQLI_ASSOC)[0]["members"]);
-                }
+                }*/
 
 				$result[] = array(
                     "contact" => array(
@@ -1173,7 +1205,10 @@ function chatGetMessages($data) {
 		//	$name = false;
 		//}
 		$message = $line["message"];
-		$status = $line["status"];
+        $status = $line["status"];
+        $imageSrc = $line["imageSrc"];
+        $attachmentSrc = $line["attachmentSrc"];
+        
 		if ($type == "group" && $line["sender"] == $myID) {
 
 			$status = $line["status"];
@@ -1223,7 +1258,7 @@ function chatGetMessages($data) {
 
 		$time = $line["timestamp"];
 		
-		$ret[] = array("id"=> uniqid(), "fromMe" => $alt, "sendername" => $name, "text" => $message, "sent" => $status, "created" => $time);
+		$ret[] = array("id"=> uniqid(), "fromMe" => $alt, "sendername" => $name, "attachmentSrc" => $attachmentSrc, "imageSrc" => $imageSrc, "text" => $message, "sent" => $status, "created" => $time);
 
 
 
@@ -1281,9 +1316,18 @@ function chatGetMessages($data) {
 
 function chatSendMessage($data) {
     $db = connect();
+    if (!isset($data["imageSrc"])) {
+        $data["imageSrc"] = "";
+    }
+    $imageSrc = $db->real_escape_string($data["imageSrc"]);
+    if (!isset($data["attachmentSrc"])) {
+        $data["attachmentSrc"] = "";
+    }
+    $attachmentSrc = $db->real_escape_string($data["attachmentSrc"]);
+
     $data["message"] = $db->real_escape_string($data["message"]);
     $data["rid"] = $db->real_escape_string($data["rid"]);
-    $res = $db->query("INSERT INTO messages (message, sender, timestamp, receiver, status) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 'sent')");
+    $res = $db->query("INSERT INTO messages (`message`, sender, `timestamp`, receiver, `status`, `imageSrc`, `attachmentSrc`) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 'sent', '$imageSrc', '$attachmentSrc')");
 	if (!$res) {
 		dieWithMessage($db->error);
     }
@@ -1313,7 +1357,7 @@ function chatSendMessage($data) {
 		$senderid = $db->query("SELECT `id` FROM `receivers` WHERE `members` = '$senderid'")->fetch_all(MYSQLI_ASSOC)[0]["id"];
 
 		$retdata = [];
-		$retdata["chatID"] = $_POST["chatID"];
+		$retdata["chatID"] = $data["rid"];
 		$retdata['action'] = 'newMessage';
 		$retdata["sender"] = $name;
         $retdata["body"] = $data["message"];

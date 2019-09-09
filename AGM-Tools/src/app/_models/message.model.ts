@@ -9,4 +9,6 @@ export class Message {
     public sent: string;
     public sendername: string;
     public system?: boolean;
+    public imageSrc?: string;
+    public attachmentSrc?: string;
 }
