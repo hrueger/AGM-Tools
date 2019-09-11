@@ -2,13 +2,17 @@
 
 <ListView #chatsListView [items]="chats" id="chats" class="list-group">
     <ng-template let-chat="item" let-index="index">
-        <GridLayout (tap)="goToChat(chat.rid)" rows=" auto, auto " columns="auto, *, auto " class="list-group-item ">
-            <Image row="0 " col="0 " rowSpan="2 " [src]="chat.contact.avatar " class="thumb "></Image>
-            <Label row="0 " col="1 " [text]="chat.contact.name "></Label>
-            <Label row="1 " col="1 " [text]="chat.text " class="body "></Label>
-            <Label row="0 " col="2 " [text]="chat.when | shortWhen | uppercase " class="body time " [class.time-unread]="chat.unread> 0"></Label>
+        <GridLayout (tap)="goToChat(chat.rid)" rows=" auto, auto" columns="auto, *, auto" class="list-group-item">
+            <Image row="0" col="0" rowSpan="2" [src]="chat.contact.avatar" class="thumb"></Image>
+            <Label row="0" col="1" [text]="chat.contact.name"></Label>
+            <StackLayout row="1" col="1" orientation="horizontal">
+                <Label *ngIf="chat.fromMe && chat.status == 'sent'" text="&#xf00c;" class="grey check fas"></Label>
+                <Label *ngIf="chat.fromMe && (chat.status == 'received' || chat.status == 'seen')" text="&#xf560;" class="grey check fas" [class.blue]="chat.status == 'seen'"></Label>
+                <Label class="grey" [text]=" chat.text"></Label>
+            </StackLayout>
+            <Label row="0" col="2" [text]="chat.when | shortWhen | uppercase" class="body time" [class.time-unread]="chat.unread> 0"></Label>
             <StackLayout row="1" col="2" orientation="horizontal" class="m-x-auto">
-                <Label *ngIf="chat.unread > 0" [text]="chat.unread" class="body unread"></Label>
+                <Label *ngIf="chat.unread > 0" [text]="chat.unread" class="unread"></Label>
             </StackLayout>
         </GridLayout>
     </ng-template>

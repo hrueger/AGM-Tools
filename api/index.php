@@ -201,7 +201,12 @@ if (isset($_POST["sendChatAttachment"])) {
 
 			if (!move_uploaded_file($_FILES["attachment"]["tmp_name"], $path)) {
 				die("Die Datei konnte nicht hochgeladen werden, weil ".$_FILES["attachment"]["error"]);
-			}
+            }
+            
+            
+            $dest = "/var/www/html/AGM-Tools/data/attachments/" . pathinfo($path)["filename"] . ".thumbnail." . pathinfo($path)["extension"];
+            makeThumb($path, $dest);
+
             $name = $db->real_escape_string($name);
             $rid = $_POST["sendChatAttachment"];
             chatSendMessage(array(
@@ -215,9 +220,19 @@ if (isset($_POST["sendChatAttachment"])) {
 }
 
 if (isset($_GET["getAttachment"])) {
+
+    /*$src = "/var/www/html/AGM-Tools/data/attachments/" . explode("/", $_GET["getAttachment"])[0];
+    $dest = "/var/www/html/AGM-Tools/data/attachments/" . pathinfo($src)["filename"] . ".thumbnail." . pathinfo($src)["extension"];
+    makeThumbnail($src, $dest);
+    die();*/
+
     $db = connect();
     $prepath = getSetting($db, "SETTING_FILES_DIRECT_PATH");
     $file = $prepath . "/attachments/" . explode("/", $_GET["getAttachment"])[0];
+    if (isset($_GET["thumbnail"])) {
+        $file = $prepath . "/attachments/" . pathinfo($file)["filename"] . ".thumbnail." . pathinfo($file)["extension"];
+    }
+    
     if (file_exists($file)) {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $header = finfo_file($finfo, $file);
@@ -226,6 +241,79 @@ if (isset($_GET["getAttachment"])) {
         exit;
     }
 }
+
+
+
+function makeThumbnail($original_file, $destination_file, $square_size = 250){
+    // get width and height of original image
+    $imagedata = getimagesize($original_file);
+    $original_width = $imagedata[0];	
+    $original_height = $imagedata[1];
+    
+    if($original_width > $original_height){
+        $new_height = $square_size;
+        $new_width = $new_height*($original_width/$original_height);
+    }
+    if($original_height > $original_width){
+        $new_width = $square_size;
+        $new_height = $new_width*($original_height/$original_width);
+    }
+    if($original_height == $original_width){
+        $new_width = $square_size;
+        $new_height = $square_size;
+    }
+    
+    $new_width = round($new_width);
+    $new_height = round($new_height);
+    
+    // load the image
+    if(substr_count(strtolower($original_file), ".jpg") or substr_count(strtolower($original_file), ".jpeg")){
+        $original_image = imagecreatefromjpeg($original_file);
+    }
+    if(substr_count(strtolower($original_file), ".gif")){
+        $original_image = imagecreatefromgif($original_file);
+    }
+    if(substr_count(strtolower($original_file), ".png")){
+        $original_image = imagecreatefrompng($original_file);
+    }
+    
+    $smaller_image = imagecreatetruecolor($new_width, $new_height);
+    $square_image = imagecreatetruecolor($square_size, $square_size);
+    
+    imagecopyresampled($smaller_image, $original_image, 0, 0, 0, 0, $new_width, $new_height, $original_width, $original_height);
+    
+    if($new_width>$new_height){
+        $difference = $new_width-$new_height;
+        $half_difference =  round($difference/2);
+        imagecopyresampled($square_image, $smaller_image, 0-$half_difference+1, 0, 0, 0, $square_size+$difference, $square_size, $new_width, $new_height);
+    }
+    if($new_height>$new_width){
+        $difference = $new_height-$new_width;
+        $half_difference =  round($difference/2);
+        imagecopyresampled($square_image, $smaller_image, 0, 0-$half_difference+1, 0, 0, $square_size, $square_size+$difference, $new_width, $new_height);
+    }
+    if($new_height == $new_width){
+        imagecopyresampled($square_image, $smaller_image, 0, 0, 0, 0, $square_size, $square_size, $new_width, $new_height);
+    }
+    
+    // save the smaller image
+    if(substr_count(strtolower($destination_file), ".jpg")){
+        imagejpeg($square_image,$destination_file,100);
+    }
+    if(substr_count(strtolower($destination_file), ".gif")){
+        imagegif($square_image,$destination_file);
+    }
+    if(substr_count(strtolower($destination_file), ".png")){
+        imagepng($square_image,$destination_file,9);
+    }
+
+    imagedestroy($original_image);
+    imagedestroy($smaller_image);
+    imagedestroy($square_image);
+
+}
+
+
 
 $data = file_get_contents('php://input');
 @$data = json_decode($data);
@@ -1042,7 +1130,7 @@ function chatGetContacts() {
     $result = array();
     $userid = $db->real_escape_string(getSession("userid"));
 	//var_dump( $db->query("(SELECT id FROM receivers WHERE members=$userid)")->fetch_all());
-	$res = $db->query("SELECT r.name, r.id as rid, r.members, r.type, messages.message, users.username as sendername, `timestamp` FROM receivers as r LEFT JOIN messages ON messages.id = (
+	$res = $db->query("SELECT r.name, r.id as rid, r.members, r.type, messages.message, messages.status, IF(messages.sender='$userid','true','false') AS `fromMe`, users.username as sendername, `timestamp` FROM receivers as r LEFT JOIN messages ON messages.id = (
         SELECT id FROM messages
         
 		WHERE 
@@ -1069,7 +1157,8 @@ function chatGetContacts() {
 	if ($res) {
 		$res = $res->fetch_all(MYSQLI_ASSOC);
 	} else {
-		$res = array();
+        $res = array();
+        echo $db->error;
 	}
 
     require_once("./vendor/autoload.php");
@@ -1091,13 +1180,23 @@ function chatGetContacts() {
                 $cuid = $db->real_escape_string(getCurrentUserId());
 
                 // nachrichten empfangen machen
-                if (!$db->query("UPDATE messages SET `status` = 'received' WHERE `sender`=(SELECT members FROM receivers WHERE `id` = '$rid') AND `status`='sent' AND `receiver` = (SELECT id FROM receivers WHERE `members` = '$cuid')")) {
+                if (!$db->query("UPDATE messages SET `status` = 'received' WHERE `sender`=(SELECT members FROM receivers WHERE `id` = '$rid' AND `type`='private') AND `status`='sent' AND `receiver` = (SELECT id FROM receivers WHERE `members` = '$cuid' AND `type`='private')")) {
                 //if ($res = $db->query("SELECT members FROM receivers WHERE `id` = '$rid'")) {
                     dieWithMessage("Datenbankfehler: ".$db->error);
                 }
                 
 
-                $numberUnread = $db->query("SELECT COUNT(*) FROM messages WHERE receiver=$rid AND ");
+                $numberUnread = $db->query("SELECT COUNT(*) as numberUnread FROM messages WHERE `sender`=(SELECT members FROM receivers WHERE `id` = '$rid' AND `type`='private') AND `receiver` = (SELECT id FROM receivers WHERE `members` = '$cuid' AND `type`='private') AND `status` = 'received'");
+                if ($numberUnread) {
+                    $numberUnread = $numberUnread->fetch_all(MYSQLI_ASSOC);
+                    if ($numberUnread && isset($numberUnread[0]) && isset($numberUnread[0]["numberUnread"])) {
+                        $numberUnread = intval($numberUnread[0]["numberUnread"]);
+                    } else {
+                        $numberUnread = 0;
+                    }
+                } else {
+                    echo $db->error;
+                }
 
 				$result[] = array(
                     "contact" => array(
@@ -1105,11 +1204,11 @@ function chatGetContacts() {
                         "name" => htmlspecialchars($line["name"])
                     ),
                     "lastseen" => "noch unbekannt",
-                    "type" => "DIRECT",
                     "when" => $line["timestamp"],
-                    "muted" => false,
-                    "unread" => 0,
+                    "unread" => $numberUnread,
                     "text" => [htmlspecialchars($latestmessage)],
+                    "fromMe" => ($line["fromMe"] == "true" ? true : false),
+                    "status" => $line["status"],
                     "rid" => $line["rid"],
                 );
 			}
@@ -1134,10 +1233,10 @@ function chatGetContacts() {
                         "avatar" => $avatar->__toString(),
                         "name" => htmlspecialchars($line["name"])
                     ),
-                    "lastseen" => "noch unbekannt",
-                    "type" => "DIRECT",
+                    "lastseen" => "Mitgliederliste...",//$membersList,
                     "when" => $line["timestamp"],
-                    "muted" => false,
+                    "fromMe" => ($line["fromMe"] == "true" ? true : false),
+                    "status" => $line["status"],
                     "unread" => 0,
                     "text" => [htmlspecialchars($latestmessage)],
                     "rid" => $line["rid"]

@@ -12,6 +12,10 @@
     font-size: 20;
 }
 
+.grey {
+    color: rgb(143, 143, 143);
+}
+
 .unread {
     text-align: center;
     min-width: 20;
@@ -33,6 +37,14 @@ $lightgreen: #25d366;
     }
     color: rgb(143, 143, 143);
     font-size: 12;
+}
+
+.check.blue {
+    color: #52c5f7;
+}
+
+.check {
+    margin-right: 5;
 }
 
 
