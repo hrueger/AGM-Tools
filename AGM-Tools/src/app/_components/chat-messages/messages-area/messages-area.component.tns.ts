@@ -8,8 +8,10 @@ import {
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
+import { PageChangeEventData } from "nativescript-image-swipe";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
+import { Page } from "tns-core-modules/ui/page/page";
 import config from "../../../_config/config";
 import { Message } from "../../../_models/message.model";
 import { AuthenticationService } from "../../../_services/authentication.service";
@@ -28,12 +30,35 @@ export class MessagesAreaComponent implements OnInit {
     @Input() public messageSent;
     @Input() public receiverId: number;
     @ViewChild("messagesListView", { static: false }) public messagesListView: ElementRef;
-    constructor(private pushService: PushService, private authServcie: AuthenticationService) {
+    public allImageSources: any[] = [];
+    public showingMedia: boolean = false;
+    public currentImageName: string;
+    public currentImageDate: string;
+    public currentImageIndex: number;
+    constructor(private pushService: PushService, private authServcie: AuthenticationService, private page: Page) {
 
     }
-    public getImageSrc(src) {
-        return config.apiUrl + "?getAttachment=" + src + "&token=" + this.authServcie.currentUserValue.token;
+    public getImageSrc(imageName, thumbnail = true) {
+        return config.apiUrl +
+            "?getAttachment=" +
+            imageName +
+            "&token=" +
+            this.authServcie.currentUserValue.token +
+            (thumbnail ? "&thumbnail" : "");
     }
+
+    public onPageChanged(e: PageChangeEventData) {
+        this.currentImageName = (
+            this.allImageSources[e.page].sender ==
+                this.authServcie.currentUserValue.firstName + " " + this.authServcie.currentUserValue.lastName ?
+                "Ich" :
+                this.allImageSources[e.page].sender);
+        this.currentImageDate = this.allImageSources[e.page].date;
+    }
+    public downloadCurrentImage() {
+        alert("Herunterladen von Bildern in die Gallerie wird noch nicht unterstützt!");
+    }
+
     public newMessageFromPushService(data: any) {
         if (data.action == "newMessage") {
             const message = {
@@ -52,6 +77,53 @@ export class MessagesAreaComponent implements OnInit {
         } else {
             console.log(data);
         }
+    }
+
+    public scrollFromImageToBottom() {
+        this.scrollToBottom(this.messagesListView.nativeElement);
+        setTimeout(() => {
+            this.scrollToBottom(this.messagesListView.nativeElement);
+        }, 300);
+    }
+
+    public displayImage(messageIndex) {
+        const that = this;
+        if (this.allImageSources.length == 0) {
+            this.messages.forEach((msg) => {
+                if (msg.imageSrc) {
+                    that.allImageSources.push({
+                        date: msg.created,
+                        name: msg.imageSrc,
+                        sender: msg.sendername,
+                        src: that.getImageSrc(msg.imageSrc, false),
+                    });
+                }
+            });
+        }
+        this.currentImageIndex = this.allImageSources.findIndex((img) =>
+            img.name == that.messages.getItem(messageIndex).imageSrc);
+        this.showingMedia = true;
+        this.page.actionBarHidden = true;
+        this.currentImageName = (
+            this.allImageSources[this.currentImageIndex].sender ==
+                this.authServcie.currentUserValue.firstName + " " + this.authServcie.currentUserValue.lastName ?
+                "Ich" :
+                this.allImageSources[this.currentImageIndex].sender);
+        this.currentImageDate = this.allImageSources[this.currentImageIndex].date;
+    }
+
+    public back(): void {
+        this.showingMedia = false;
+        this.page.actionBarHidden = false;
+        this.currentImageName = "";
+        this.currentImageDate = "";
+    }
+
+    public test(): void {
+        this.showingMedia = false;
+        this.page.actionBarHidden = false;
+        this.currentImageName = "";
+        this.currentImageDate = "";
     }
 
     public scrollToBottom(lv: ListView) {

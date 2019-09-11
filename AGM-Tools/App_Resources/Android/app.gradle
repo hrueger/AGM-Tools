@@ -5,11 +5,15 @@
 //	compile 'com.android.support:recyclerview-v7:+'
 //}
 
+dependencies {
+  compile 'com.android.support:multidex:1.0.0'
+}
+
 android {  
   defaultConfig {  
     generatedDensities = []
     applicationId = "de.multimediaag.agmtools" 
-    
+    multiDexEnabled true
     //override supported platforms
     // ndk {
     //       abiFilters.clear()

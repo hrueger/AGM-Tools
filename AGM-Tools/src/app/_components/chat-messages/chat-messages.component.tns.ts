@@ -10,8 +10,13 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as camera from "nativescript-camera";
-import { PhotoEditor, PhotoEditorControl } from "nativescript-photo-editor";
-
+import * as contacts from "nativescript-contacts";
+import {
+    AudioPickerOptions, FilePickerOptions, ImagePickerOptions,
+    Mediafilepicker, VideoPickerOptions,
+} from "nativescript-mediafilepicker";
+import * as permissions from "nativescript-permissions";
+import { PhotoEditor } from "nativescript-photo-editor";
 import { from } from "rxjs";
 import { filter } from "rxjs/operators";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
@@ -21,8 +26,11 @@ import config from "../../_config/config";
 import { Chat } from "../../_models/chat.model";
 import { Contact } from "../../_models/contact.model";
 import { Message } from "../../_models/message.model";
+import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
+
+declare var android: any;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,6 +64,7 @@ export class ChatMessagesComponent
         private cdr: ChangeDetectorRef,
         private route: ActivatedRoute,
         private authService: AuthenticationService,
+        private alertService: AlertService,
     ) { }
 
     public toggleAttachmentDialog() {
@@ -71,7 +80,6 @@ export class ChatMessagesComponent
             function success() {
                 camera.takePicture({ saveToGallery: false }).
                     then((imageAsset) => {
-                        console.log("picture taken", imageAsset);
                         const source = new ImageSource();
                         source.fromAsset(imageAsset)
                             .then((imageSource) => {
@@ -144,15 +152,16 @@ export class ChatMessagesComponent
 
                                     }
                                 }).catch((e) => {
-                                    console.error(e);
+                                    that.alertService.error("Folgender Fehler ist aufgetreten: " + e);
                                 });
                             });
                     }).catch((err) => {
-                        console.log("Error -> " + err.message);
+                        that.alertService.error("Folgender Fehler ist aufgetreten: " + err.message);
                     });
             },
             function failure() {
-                console.log("no permission");
+                that.alertService.error("Leider kann AGM-Tools ohne diese\
+                Berechtigungen kein Bild versenden. Bitte versuche es erneut!");
             },
         );
     }
@@ -163,10 +172,35 @@ export class ChatMessagesComponent
         alert("Noch nicht implementiert!");
     }
     public sendLocation() {
-        alert("Noch nicht implementiert!");
+        alert("Leider wird das nicht unterstützt. Den Button gibts nur für die Ästhetik ;-)");
     }
     public sendContact() {
-        alert("Noch nicht implementiert!");
+        permissions.requestPermissions([android.Manifest.permission.GET_ACCOUNTS,
+            android.Manifest.permission.WRITE_CONTACTS, android.Manifest.permission.CAMERA])
+            .then(() => {
+                contacts.getContact().then((args) => {
+                    /// Returns args:
+                    /// args.data: Generic cross platform JSON object
+                    /// args.reponse: "selected" or "cancelled" depending on wheter the user selected a contact.
+
+                    if (args.response === "selected") {
+                        const contact = args.data; // See data structure below
+
+                        // lets say you wanted to grab first name and last name
+                        console.log(contact.name.given + " " + contact.name.family);
+
+                        // lets say you want to get the phone numbers
+                        contact.phoneNumbers.forEach(function (phone) {
+                            console.log(phone.value);
+                        });
+
+                        // lets say you want to get the addresses
+                        contact.postalAddresses.forEach(function (address) {
+                            console.log(address.location.street);
+                        });
+                    }
+                });
+            });
     }
 
     public sendMessage() {
@@ -278,20 +312,17 @@ export class ChatMessagesComponent
 }
 
 function progressHandler(e) {
-    console.log("uploaded this: " + e.currentBytes + " / " + e.totalBytes);
+    //
 }
 function errorHandler(e) {
-    // console.log("received " + e.responseCode + " code.");
-    // let serverResponse = e.response;
     alert("Die Datei konnte nicht erfolgreich hochgeladen werden, Fehlercode " + e.responseCode);
 }
 function respondedHandler(e) {
     // console.log("received " + e.responseCode + " code. Server sent: " + e.data);
 }
 function completeHandler(e) {
-    console.log("received " + e.responseCode + " code");
-    let serverResponse = e.response;
+    //
 }
 function cancelledHandler(e) {
-    console.log("upload cancelled");
+    //
 }

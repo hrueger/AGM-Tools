@@ -1,13 +1,10 @@
 {
-  "android": {
-    "v8Flags": "--expose_gc"
-  },
-  "main": "main.ns.js",
-  "name": "migration-ng",
-  "version": "4.1.0",
-  "dependencies": {
-    "ftp": "^0.3.10",
-    "ssh2": "^0.8.4",
-    "ssh2-sftp-client": "^2.5.0"
-  }
+    "android": {
+        "v8Flags": "--expose_gc",
+        "maxLogcatObjectSize": "1048576"
+    },
+    "main": "main.ns.js",
+    "name": "migration-ng",
+    "version": "4.1.0",
+    "dependencies": {}
 }

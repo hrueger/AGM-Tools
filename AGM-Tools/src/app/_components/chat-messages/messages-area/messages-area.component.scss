@@ -7,6 +7,9 @@
         .message-bubble {
             margin: 10 15 0 0;
             padding: 0;
+            &.image {
+                width: 70%;
+            }
             &.myself {
                 align-self: flex-end;
                 margin-right: 0;
@@ -72,6 +75,8 @@
         }
     }
 }
+
+
 /*.messages-area {
     .message-bubble {
         flex-direction: column;

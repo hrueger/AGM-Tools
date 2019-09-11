@@ -1,35 +1,11 @@
-<ListView (loaded)="listviewLoaded($event)" #messagesListView separatorColor="transparent" class="messages-area" [items]="messages">
+<ListView (loaded)="listviewLoaded($event)" [visibility]="(showingMedia ? 'collapse' : 'visible')" #messagesListView separatorColor="transparent" class="messages-area" [items]="messages">
     <ng-template let-message="item" let-index="index">
-        <!--<GridLayout rows="auto" [columns]="message.system ? '*, auto, *' : (message.fromMe ? '*, auto' : 'auto, *')">
-            <StackLayout
-            row="0"
-            [col]="message.system ? '1' : (message.fromMe ? '1' : '0')"
-            
-            cornerRadius="20"
-            class="message-bubble"
-            [class.continuation]="isContinuation(index)"
-            [class.fromMe]="message.fromMe"
-            [horizontalAlignment]="message.fromMe ? 'right' : 'left'"
-            [class.system]="message.system">
-            
-                <Label class="sendername" *ngIf="!isContinuation(index) && !message.system && !message.fromMe" [text]="' ' + message.sendername"></Label>
-                
-                <Label class="message-text" [text]="message.text" textWrap="true"></Label>
-                
-                <GridLayout *ngIf="!message.system" class="meta" rows="auto" columns="auto, auto">
-                    <Label row="0" col="0" [text]="message.created | date: 'shortTime'" class="time"></Label>
-                    <Label row="0" col="1" *ngIf="message.fromMe && isNotSent(message)" text="&#xf017;" class="check fas"></Label>
-                    <Label row="0" col="1" *ngIf="message.fromMe && isSent(message)" text="&#xf00c;" class="check fas"></Label>
-                    <Label row="0" col="1" *ngIf="message.fromMe && isDefault(message)" text="&#xf560;" class="check fas" [class.blue]="isViewed(message)"></Label>
-                </GridLayout>
-            </StackLayout>
-        </GridLayout>-->
         <FlexboxLayout class="messages">
-            <StackLayout [shadow]="2" cornerRadius="20" class="message-bubble" [class.continuation]="isContinuation(index)" [class.myself]="message.fromMe" [class.system]="message.system">
+            <StackLayout [shadow]="2" cornerRadius="20" [class.image]="message.imageSrc" class="message-bubble" [class.continuation]="isContinuation(index)" [class.myself]="message.fromMe" [class.system]="message.system">
                 <FlexboxLayout class="message-bubble-content">
                     <StackLayout>
                         <Label class="sendername" *ngIf="!isContinuation(index) && !message.system && !message.fromMe" [text]="' ' + message.sendername"></Label>
-                        <Image class="message-text" *ngIf="message.imageSrc" [src]="getImageSrc(message.imageSrc)">
+                        <Image class="message-text" (loaded)="scrollFromImageToBottom()" (tap)="displayImage(index)" *ngIf="message.imageSrc" [src]="getImageSrc(message.imageSrc)">
                         </Image>
                         <Label class="message-text" *ngIf="!message.imageSrc" [text]="message.text" textWrap="true"></Label>
 
@@ -46,3 +22,17 @@
         </FlexboxLayout>
     </ng-template>
 </ListView>
+
+<StackLayout *ngIf="showingMedia">
+    <GridLayout rows="36" columns="auto,*,auto" class="action-bar p-10">
+        <Button text="&#xf060;" class="fas no-border round" row="0" col="0" (tap)="test()">
+        </Button>
+        <StackLayout row="0" col="1">
+            <Label [text]="currentImageName" class="text-center action-bar-title"></Label>
+            <Label [text]="'am ' + (currentImageDate | date:'fullDate') + ', um ' + (currentImageDate | date:'shortTime') + ' Uhr'" class="text-center action-bar-small"></Label>
+        </StackLayout>
+        <Button row="0" col="2" text="&#xf019;" class="fas no-border round" (tap)="downloadCurrentImage()"></Button>
+    </GridLayout>
+    <ImageSwipe [items]="allImageSources" imageUrlProperty="src" (pageChanged)="onPageChanged($event)" [pageNumber]="currentImageIndex" backgroundColor="#000000">
+    </ImageSwipe>
+</StackLayout>
