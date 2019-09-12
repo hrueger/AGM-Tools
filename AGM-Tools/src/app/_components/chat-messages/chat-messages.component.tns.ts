@@ -6,11 +6,12 @@ import {
     Input,
     OnInit,
     ViewChild,
+    ViewContainerRef,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as camera from "nativescript-camera";
-import * as contacts from "nativescript-contacts";
 import {
     AudioPickerOptions, FilePickerOptions, ImagePickerOptions,
     Mediafilepicker, VideoPickerOptions,
@@ -22,6 +23,7 @@ import { filter } from "rxjs/operators";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { knownFolders, path } from "tns-core-modules/file-system/file-system";
 import { ImageSource } from "tns-core-modules/image-source/image-source";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 import config from "../../_config/config";
 import { Chat } from "../../_models/chat.model";
 import { Contact } from "../../_models/contact.model";
@@ -29,6 +31,7 @@ import { Message } from "../../_models/message.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
+import { ContactPickerComponent } from "../_modals/contact-picker.modal.tns";
 
 declare var android: any;
 
@@ -65,6 +68,8 @@ export class ChatMessagesComponent
         private route: ActivatedRoute,
         private authService: AuthenticationService,
         private alertService: AlertService,
+        private modal: ModalDialogService,
+        private vcRef: ViewContainerRef,
     ) { }
 
     public toggleAttachmentDialog() {
@@ -72,9 +77,11 @@ export class ChatMessagesComponent
     }
 
     public sendDocument() {
+        this.toggleAttachmentDialog();
         alert("Noch nicht implementiert!");
     }
     public sendPicture() {
+        this.toggleAttachmentDialog();
         const that = this;
         camera.requestPermissions().then(
             function success() {
@@ -107,7 +114,7 @@ export class ChatMessagesComponent
                                             imageSrc: this.inputMessage,
                                             sendername: "",
                                             sent: "notsent",
-                                            type: "image",
+                                            text: "Bild wird hochgeladen...",
                                         };
                                         this.messages.push(message);
                                         this.remoteService
@@ -115,11 +122,7 @@ export class ChatMessagesComponent
                                                 message: this.inputMessage,
                                                 rid: this.receiverId,
                                             })
-                                            .subscribe((data) => {
-                                                message = this.messages.pop();
-                                                message.sent = "sent";
-                                                this.messages.push(message);
-                                            });*/
+                                            .subscribe();*/
 
                                         const url = config.apiUrl + "?token=" +
                                             that.authService.currentUserValue.token.toString();
@@ -166,18 +169,51 @@ export class ChatMessagesComponent
         );
     }
     public sendGallery() {
+        this.toggleAttachmentDialog();
         alert("Noch nicht implementiert!");
     }
     public sendAudio() {
+        this.toggleAttachmentDialog();
         alert("Noch nicht implementiert!");
     }
     public sendLocation() {
+        this.toggleAttachmentDialog();
         alert("Leider wird das nicht unterstützt. Den Button gibts nur für die Ästhetik ;-)");
     }
     public sendContact() {
-        permissions.requestPermissions([android.Manifest.permission.GET_ACCOUNTS,
-            android.Manifest.permission.WRITE_CONTACTS, android.Manifest.permission.CAMERA])
-            .then(() => {
+        this.toggleAttachmentDialog();
+        const options = {
+            context: {},
+            fullscreen: true,
+            viewContainerRef: this.vcRef,
+        };
+        this.modal.showModal(ContactPickerComponent, options).then((newNotification) => {
+            if (newNotification) {
+                this.remoteService
+                    .getNoCache("notificationsNewNotification", {
+                        content: newNotification.content,
+                        headline: newNotification.headline,
+                        receivers: newNotification.receivers,
+                        type: newNotification.importance,
+                    })
+                    .subscribe((data) => {
+                        if (data && data.status == true) {
+                            this.alertService.success(
+                                "Benachrichtigung erfolgreich gesendet!",
+                            );
+                            this.remoteService
+                                .get("notificationsGetNotifications")
+                                .subscribe((res) => {
+                                    this.notifications = res;
+                                });
+                        }
+                    });
+            }
+        });
+        /*permissions.requestPermissions([
+            android.Manifest.permission.READ_CONTACTS,
+            android.Manifest.permission.WRITE_CONTACTS,
+        ]).then(() => {
                 contacts.getContact().then((args) => {
                     /// Returns args:
                     /// args.data: Generic cross platform JSON object
@@ -185,22 +221,45 @@ export class ChatMessagesComponent
 
                     if (args.response === "selected") {
                         const contact = args.data; // See data structure below
-
-                        // lets say you wanted to grab first name and last name
-                        console.log(contact.name.given + " " + contact.name.family);
-
-                        // lets say you want to get the phone numbers
-                        contact.phoneNumbers.forEach(function (phone) {
-                            console.log(phone.value);
-                        });
-
-                        // lets say you want to get the addresses
-                        contact.postalAddresses.forEach(function (address) {
-                            console.log(address.location.street);
+                        dialogs.confirm({
+                            cancelButtonText: "Abbrechen",
+                            cancelable: true,
+                            message: "Soll dieser Kontakt wirklich gesendet werden?",
+                            okButtonText: "Senden",
+                            title: contact.name.given,
+                        }).then((result: boolean) => {
+                            const contactToSend = {
+                                name: contact.name.given,
+                                number: contact.phoneNumbers[0].value,
+                            };
+                            if (result) {
+                                let message: Message = {
+                                    chat: null,
+                                    contactSrc: contactToSend,
+                                    created: Date.now(),
+                                    fromMe: true,
+                                    sendername: "",
+                                    sent: "notsent",
+                                    text: "",
+                                };
+                                this.messages.push(message);
+                                this.remoteService
+                                    .getNoCache("chatSendMessage", {
+                                        contactSrc: contactToSend,
+                                        message: this.inputMessage,
+                                        rid: this.receiverId,
+                                    })
+                                    .subscribe((data) => {
+                                        message = this.messages.pop();
+                                        message.sent = "sent";
+                                        this.messages.push(message);
+                                        this.cdr.detectChanges();
+                                    });
+                            }
                         });
                     }
                 });
-            });
+            });*/
     }
 
     public sendMessage() {
