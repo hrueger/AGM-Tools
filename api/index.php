@@ -1307,6 +1307,7 @@ function chatGetMessages($data) {
         $status = $line["status"];
         $imageSrc = $line["imageSrc"];
         $attachmentSrc = $line["attachmentSrc"];
+        $contactSrc = unserialize($line["contactSrc"]);
         
 		if ($type == "group" && $line["sender"] == $myID) {
 
@@ -1357,7 +1358,7 @@ function chatGetMessages($data) {
 
 		$time = $line["timestamp"];
 		
-		$ret[] = array("id"=> uniqid(), "fromMe" => $alt, "sendername" => $name, "attachmentSrc" => $attachmentSrc, "imageSrc" => $imageSrc, "text" => $message, "sent" => $status, "created" => $time);
+		$ret[] = array("id"=> uniqid(), "fromMe" => $alt, "sendername" => $name, "attachmentSrc" => $attachmentSrc, "contactSrc" => $contactSrc, "imageSrc" => $imageSrc, "text" => $message, "sent" => $status, "created" => $time);
 
 
 
@@ -1419,14 +1420,22 @@ function chatSendMessage($data) {
         $data["imageSrc"] = "";
     }
     $imageSrc = $db->real_escape_string($data["imageSrc"]);
+
     if (!isset($data["attachmentSrc"])) {
         $data["attachmentSrc"] = "";
     }
     $attachmentSrc = $db->real_escape_string($data["attachmentSrc"]);
 
+    if (!isset($data["contactSrc"])) {
+        $contactSrc = "";
+    } else {
+        $contactSrc = $db->real_escape_string(serialize($data["contactSrc"]));
+    }
+    
+
     $data["message"] = $db->real_escape_string($data["message"]);
     $data["rid"] = $db->real_escape_string($data["rid"]);
-    $res = $db->query("INSERT INTO messages (`message`, sender, `timestamp`, receiver, `status`, `imageSrc`, `attachmentSrc`) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 'sent', '$imageSrc', '$attachmentSrc')");
+    $res = $db->query("INSERT INTO messages (`message`, sender, `timestamp`, receiver, `status`, `imageSrc`, `attachmentSrc`, `contactSrc`) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 'sent', '$imageSrc', '$attachmentSrc', '$contactSrc')");
 	if (!$res) {
 		dieWithMessage($db->error);
     }

@@ -22,7 +22,7 @@ export class ContactPickerComponent {
     }
 
     public ngOnInit() {
-        const desiredFields: string[] = ["display_name", "thumbnail"]; // fields to fetch from contacts
+        const desiredFields: string[] = ["display_name", "phone", "thumbnail"];
         getContactsWorker(desiredFields).then((result) => {
             this.contacts = result;
         });

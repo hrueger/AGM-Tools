@@ -66,6 +66,7 @@ import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
+import { ContactPickerComponent } from "./_components/_modals/contact-picker.modal.tns";
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
 
 @NgModule({
@@ -95,6 +96,7 @@ registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swip
         DoneComponent,
         NewUserModalComponent,
         EditUserModalComponent,
+        ContactPickerComponent,
         NewNotificationModalComponent,
         NewCalendarEventModalComponent,
         NewProjectModalComponent,
@@ -106,6 +108,7 @@ registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swip
         NewNotificationModalComponent,
         NewCalendarEventModalComponent,
         NewProjectModalComponent,
+        ContactPickerComponent,
     ],
     imports: [
         NativeScriptModule,

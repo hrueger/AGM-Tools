@@ -11,4 +11,5 @@ export class Message {
     public system?: boolean;
     public imageSrc?: string;
     public attachmentSrc?: string;
+    public contactSrc?: any;
 }

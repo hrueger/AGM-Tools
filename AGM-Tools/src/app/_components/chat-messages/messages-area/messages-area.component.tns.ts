@@ -9,14 +9,18 @@ import {
     ViewChild,
 } from "@angular/core";
 import { PageChangeEventData } from "nativescript-image-swipe";
+import * as permissions from "nativescript-permissions";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Page } from "tns-core-modules/ui/page/page";
 import config from "../../../_config/config";
 import { Message } from "../../../_models/message.model";
+import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { PushService } from "../../../_services/push.service.tns";
 
+declare var android: any;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     moduleId: module.id,
@@ -35,7 +39,10 @@ export class MessagesAreaComponent implements OnInit {
     public currentImageName: string;
     public currentImageDate: string;
     public currentImageIndex: number;
-    constructor(private pushService: PushService, private authServcie: AuthenticationService, private page: Page) {
+    constructor(private pushService: PushService,
+                private authService: AuthenticationService,
+                private page: Page,
+                private alertService: AlertService) {
 
     }
     public getImageSrc(imageName, thumbnail = true) {
@@ -43,14 +50,14 @@ export class MessagesAreaComponent implements OnInit {
             "?getAttachment=" +
             imageName +
             "&token=" +
-            this.authServcie.currentUserValue.token +
+            this.authService.currentUserValue.token +
             (thumbnail ? "&thumbnail" : "");
     }
 
     public onPageChanged(e: PageChangeEventData) {
         this.currentImageName = (
             this.allImageSources[e.page].sender ==
-                this.authServcie.currentUserValue.firstName + " " + this.authServcie.currentUserValue.lastName ?
+                this.authService.currentUserValue.firstName + " " + this.authService.currentUserValue.lastName ?
                 "Ich" :
                 this.allImageSources[e.page].sender);
         this.currentImageDate = this.allImageSources[e.page].date;
@@ -86,6 +93,52 @@ export class MessagesAreaComponent implements OnInit {
         }, 300);
     }
 
+    public addContact(contact: { name: string, number: string }) {
+        alert("Aus technischen Gründen gerade deaktiviert, alle meine Kontakte waren weg ;-)");
+        return;
+        const newString: string = "Neuer Kontakt";
+        const updateString: string = "Vorhandenen aktualisieren";
+        dialogs.action({
+            actions: [newString, updateString],
+            cancelButtonText: "Abbrechen",
+            message: contact.name + " hinzufügen",
+        }).then((result) => {
+            if (result == newString) {
+                permissions.requestPermissions([
+                    android.Manifest.permission.READ_CONTACTS,
+                    android.Manifest.permission.WRITE_CONTACTS,
+                ]).then(() => {
+                    const newContact = new contacts.Contact();
+                    newContact.name.given = contact.name;
+                    newContact.phoneNumbers.push({
+                        label: contacts.KnownLabel.MAIN,
+                        value: contact.number,
+                    });
+                    newContact.save();
+                    this.alertService.success("Kontakt erfolgreich gespeichert!");
+                });
+            } else if (result == updateString) {
+                permissions.requestPermissions([
+                    android.Manifest.permission.READ_CONTACTS,
+                    android.Manifest.permission.WRITE_CONTACTS,
+                ]).then(() => {
+                    contacts.getContact().then((response) => {
+                        if (response.response === "selected") {
+                            const cntct = response.data;
+                            cntct.name.given = contact.name;
+                            cntct.phoneNumbers.push({
+                                label: contacts.KnownLabel.MAIN,
+                                value: contact.number,
+                            });
+                            cntct.save();
+                            this.alertService.success("Kontakt erfolgreich aktualisiert!");
+                        }
+                    });
+                });
+            }
+        });
+    }
+
     public displayImage(messageIndex) {
         const that = this;
         if (this.allImageSources.length == 0) {
@@ -106,7 +159,7 @@ export class MessagesAreaComponent implements OnInit {
         this.page.actionBarHidden = true;
         this.currentImageName = (
             this.allImageSources[this.currentImageIndex].sender ==
-                this.authServcie.currentUserValue.firstName + " " + this.authServcie.currentUserValue.lastName ?
+                this.authService.currentUserValue.firstName + " " + this.authService.currentUserValue.lastName ?
                 "Ich" :
                 this.allImageSources[this.currentImageIndex].sender);
         this.currentImageDate = this.allImageSources[this.currentImageIndex].date;

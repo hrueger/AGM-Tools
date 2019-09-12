@@ -71,6 +71,18 @@
                         }
                     }
                 }
+                .contact {
+                    padding: 5;
+                    .image {
+                        margin: 5;
+                    }
+                    .name {
+                        font-size: 20;
+                        color: #52c5f7;
+                        font-weight: bold;
+                    }
+                    .number {}
+                }
             }
         }
     }
