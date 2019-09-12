@@ -187,27 +187,9 @@ export class ChatMessagesComponent
             fullscreen: true,
             viewContainerRef: this.vcRef,
         };
-        this.modal.showModal(ContactPickerComponent, options).then((newNotification) => {
-            if (newNotification) {
-                this.remoteService
-                    .getNoCache("notificationsNewNotification", {
-                        content: newNotification.content,
-                        headline: newNotification.headline,
-                        receivers: newNotification.receivers,
-                        type: newNotification.importance,
-                    })
-                    .subscribe((data) => {
-                        if (data && data.status == true) {
-                            this.alertService.success(
-                                "Benachrichtigung erfolgreich gesendet!",
-                            );
-                            this.remoteService
-                                .get("notificationsGetNotifications")
-                                .subscribe((res) => {
-                                    this.notifications = res;
-                                });
-                        }
-                    });
+        this.modal.showModal(ContactPickerComponent, options).then((contact) => {
+            if (contact) {
+                
             }
         });
         /*permissions.requestPermissions([

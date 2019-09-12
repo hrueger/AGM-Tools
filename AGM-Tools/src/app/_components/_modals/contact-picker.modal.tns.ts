@@ -17,8 +17,9 @@ export class ContactPickerComponent {
     public constructor(private params: ModalDialogParams) {
     }
 
-    public close() {
-        //
+    public onContactSelect(contact: any) {
+        console.dir(contact);
+        this.params.closeCallback(contact);
     }
 
     public ngOnInit() {
