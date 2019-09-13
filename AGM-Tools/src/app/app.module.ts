@@ -46,6 +46,8 @@ import { ProjectsComponent } from "./_components/projects/projects.component";
 import { SettingsComponent } from "./_components/settings/settings.component";
 import { SidebarComponent } from "./_components/sidebar/sidebar.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
+import { TourComponent } from "./_components/tour/tour.component";
+import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
@@ -56,8 +58,6 @@ import { NavbarService } from "./_services/navbar.service";
 import { PushService } from "./_services/push.service";
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
-import { TourComponent } from './_components/tour/tour.component';
-import { UpdaterComponent } from './updater/updater.component';
 
 registerLocaleData(localeDe);
 

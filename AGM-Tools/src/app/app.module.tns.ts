@@ -56,18 +56,18 @@ import { FormBuilder } from "@angular/forms";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { PickerModule } from "nativescript-emoji-picker";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker";
+import { ContactPickerComponent } from "./_components/_modals/contact-picker.modal.tns";
 import { EditUserModalComponent } from "./_components/_modals/edit-user.modal.tns";
 import { NewCalendarEventModalComponent } from "./_components/_modals/new-calendar-event.modal.tns";
 import { NewNotificationModalComponent } from "./_components/_modals/new-notification.modal.tns";
 import { NewProjectModalComponent } from "./_components/_modals/new-project.modal.tns";
 import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns";
 import { TourComponent } from "./_components/tour/tour.component";
+import { UpdaterComponent } from "./_components/updater/updater.component";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
-import { ContactPickerComponent } from "./_components/_modals/contact-picker.modal.tns";
-import { UpdaterComponent } from './updater/updater.component';
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
 
 @NgModule({

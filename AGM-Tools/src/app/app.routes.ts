@@ -15,6 +15,7 @@ import { ProjectsComponent } from "./_components/projects/projects.component";
 import { SettingsComponent } from "./_components/settings/settings.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
 import { TourComponent } from "./_components/tour/tour.component";
+import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { AuthGuard } from "./_guards/auth.guard";
 
@@ -92,6 +93,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         component: AboutComponent,
         path: "about",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: UpdaterComponent,
+        path: "updater",
     },
 
     /* Authentication paths*/

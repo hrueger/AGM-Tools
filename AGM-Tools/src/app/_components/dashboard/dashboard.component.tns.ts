@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { RouterExtensions } from "nativescript-angular/router";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -24,16 +25,18 @@ export class DashboardComponent implements OnInit {
     public version: string;
     public notifications: any[] = [];
     public cfalertDialog: CFAlertDialog;
-    gotSpaceChartData: boolean;
-    gotWhatsNew: boolean;
-    gotVersion: boolean;
-    gotDates: boolean;
-    gotNotifications: boolean;
+    public gotSpaceChartData: boolean;
+    public gotWhatsNew: boolean;
+    public gotVersion: boolean;
+    public gotDates: boolean;
+    public gotNotifications: boolean;
+    public gotUpdates: boolean;
 
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
         private pushService: PushService,
+        private router: RouterExtensions,
     ) {
         this.cfalertDialog = new CFAlertDialog();
     }
@@ -80,6 +83,13 @@ export class DashboardComponent implements OnInit {
         this.remoteService.get("dashboardGetVersion").subscribe((data) => {
             this.version = data;
             this.gotVersion = true;
+            this.checkForRefreshDone(obj);
+        });
+        this.remoteService.get("dashboardGetUpdates").subscribe((data) => {
+            if (data.update) {
+                this.router.navigate(["updater"]);
+            }
+            this.gotUpdates = true;
             this.checkForRefreshDone(obj);
         });
         this.remoteService
