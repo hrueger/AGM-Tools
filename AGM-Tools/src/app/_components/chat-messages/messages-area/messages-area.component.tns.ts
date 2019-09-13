@@ -8,10 +8,9 @@ import {
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
+import * as clipboard from "nativescript-clipboard";
 import { PageChangeEventData } from "nativescript-image-swipe";
-import * as permissions from "nativescript-permissions";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
-import * as dialogs from "tns-core-modules/ui/dialogs";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Page } from "tns-core-modules/ui/page/page";
 import config from "../../../_config/config";
@@ -94,49 +93,9 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public addContact(contact: { name: string, number: string }) {
-        alert("Aus technischen Gründen gerade deaktiviert, alle meine Kontakte waren weg ;-)");
-        return;
-        const newString: string = "Neuer Kontakt";
-        const updateString: string = "Vorhandenen aktualisieren";
-        dialogs.action({
-            actions: [newString, updateString],
-            cancelButtonText: "Abbrechen",
-            message: contact.name + " hinzufügen",
-        }).then((result) => {
-            if (result == newString) {
-                permissions.requestPermissions([
-                    android.Manifest.permission.READ_CONTACTS,
-                    android.Manifest.permission.WRITE_CONTACTS,
-                ]).then(() => {
-                    const newContact = new contacts.Contact();
-                    newContact.name.given = contact.name;
-                    newContact.phoneNumbers.push({
-                        label: contacts.KnownLabel.MAIN,
-                        value: contact.number,
-                    });
-                    newContact.save();
-                    this.alertService.success("Kontakt erfolgreich gespeichert!");
-                });
-            } else if (result == updateString) {
-                permissions.requestPermissions([
-                    android.Manifest.permission.READ_CONTACTS,
-                    android.Manifest.permission.WRITE_CONTACTS,
-                ]).then(() => {
-                    contacts.getContact().then((response) => {
-                        if (response.response === "selected") {
-                            const cntct = response.data;
-                            cntct.name.given = contact.name;
-                            cntct.phoneNumbers.push({
-                                label: contacts.KnownLabel.MAIN,
-                                value: contact.number,
-                            });
-                            cntct.save();
-                            this.alertService.success("Kontakt erfolgreich aktualisiert!");
-                        }
-                    });
-                });
-            }
-        });
+        clipboard.setText(contact.number).then(() => {
+            alert("Die Nummer wurde kopiert. Fügen Sie jetzt den Kontakt in Ihrem Adressbuc hinzu!");
+        })
     }
 
     public displayImage(messageIndex) {

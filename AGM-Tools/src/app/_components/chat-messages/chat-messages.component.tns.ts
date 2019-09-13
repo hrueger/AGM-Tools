@@ -189,59 +189,45 @@ export class ChatMessagesComponent
         };
         this.modal.showModal(ContactPickerComponent, options).then((contact) => {
             if (contact) {
-                
-            }
-        });
-        /*permissions.requestPermissions([
-            android.Manifest.permission.READ_CONTACTS,
-            android.Manifest.permission.WRITE_CONTACTS,
-        ]).then(() => {
-                contacts.getContact().then((args) => {
-                    /// Returns args:
-                    /// args.data: Generic cross platform JSON object
-                    /// args.reponse: "selected" or "cancelled" depending on wheter the user selected a contact.
 
-                    if (args.response === "selected") {
-                        const contact = args.data; // See data structure below
-                        dialogs.confirm({
-                            cancelButtonText: "Abbrechen",
-                            cancelable: true,
-                            message: "Soll dieser Kontakt wirklich gesendet werden?",
-                            okButtonText: "Senden",
-                            title: contact.name.given,
-                        }).then((result: boolean) => {
-                            const contactToSend = {
-                                name: contact.name.given,
-                                number: contact.phoneNumbers[0].value,
-                            };
-                            if (result) {
-                                let message: Message = {
-                                    chat: null,
-                                    contactSrc: contactToSend,
-                                    created: Date.now(),
-                                    fromMe: true,
-                                    sendername: "",
-                                    sent: "notsent",
-                                    text: "",
-                                };
+                dialogs.confirm({
+                    cancelButtonText: "Abbrechen",
+                    cancelable: true,
+                    message: "Soll dieser Kontakt wirklich gesendet werden?",
+                    okButtonText: "Senden",
+                    title: contact.display_name,
+                }).then((result: boolean) => {
+                    const contactToSend = {
+                        name: contact.display_name,
+                        number: contact.phone[0].number,
+                    };
+                    if (result) {
+                        let message: Message = {
+                            chat: null,
+                            contactSrc: contactToSend,
+                            created: Date.now(),
+                            fromMe: true,
+                            sendername: "",
+                            sent: "notsent",
+                            text: "",
+                        };
+                        this.messages.push(message);
+                        this.remoteService
+                            .getNoCache("chatSendMessage", {
+                                contactSrc: contactToSend,
+                                message: "Kontakt",
+                                rid: this.receiverId,
+                            })
+                            .subscribe((data) => {
+                                message = this.messages.pop();
+                                message.sent = "sent";
                                 this.messages.push(message);
-                                this.remoteService
-                                    .getNoCache("chatSendMessage", {
-                                        contactSrc: contactToSend,
-                                        message: this.inputMessage,
-                                        rid: this.receiverId,
-                                    })
-                                    .subscribe((data) => {
-                                        message = this.messages.pop();
-                                        message.sent = "sent";
-                                        this.messages.push(message);
-                                        this.cdr.detectChanges();
-                                    });
-                            }
-                        });
+                                this.cdr.detectChanges();
+                            });
                     }
                 });
-            });*/
+            }
+        });
     }
 
     public sendMessage() {

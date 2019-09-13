@@ -7,13 +7,13 @@
                         <Label class="sendername" *ngIf="!isContinuation(index) && !message.system && !message.fromMe" [text]="' ' + message.sendername"></Label>
                         <Image class="message-text" (loaded)="scrollFromImageToBottom()" (tap)="displayImage(index)" *ngIf="message.imageSrc" [src]="getImageSrc(message.imageSrc)">
                         </Image>
-                        <GridLayout *ngIf="message.contactSrc" rows="auto, auto, auto" columns="auto, auto" class="contact">
+                        <GridLayout *ngIf="message.contactSrc" rows="auto, auto" columns="auto, auto, auto" class="contact">
                             <Image row="0" col="0" class="image" rowspan="2" src="~/assets/attachment/contact.png"></Image>
                             <Label row="0" col="1" class="name" [text]="message.contactSrc.name"></Label>
                             <Label row="1" col="1" class="number" [text]="message.contactSrc.number"></Label>
-                            <Button row="2" col="1" text="Hinzufügen" class="btn btn-primary" (tap)="addContact(message.contactSrc)"></Button>
+                            <Button row="0" col="2" rowspan="2" text="&#xf0c5;" width="40" height="40" color="#19a9e7" borderColor="transparent" class="fas no-border round" (tap)="addContact(message.contactSrc)"></Button>
                         </GridLayout>
-                        <Label class="message-text" *ngIf="!message.imageSrc" [text]="message.text" textWrap="true"></Label>
+                        <Label class="message-text" *ngIf="!message.imageSrc && !message.contactSrc" [text]="message.text" textWrap="true"></Label>
 
                     </StackLayout>
 

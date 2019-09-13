@@ -5,12 +5,13 @@
         <Label text="Kontakt auswählen" class="text-center action-bar-title" row="0" col="1"></Label>
     </GridLayout>
 
-    <ListView row="1" [items]="contacts">
+    <ListView row="1" [items]="contacts" #contactsList>
         <ng-template let-item="item" let-index="index">
-            <GridLayout rows="auto" columns="55 *" class="list-item" (tap)="onContactSelect(item)">
-                <Image row="0" col="0" *ngIf="item.thumbnail" [src]="item.thumbnail" class="thumbnail"></Image>
-                <Label row="0" col="0" *ngIf="!item.thumbnail" text="&#xf007;" class="fas thumbnail-awesome"></Label>
+            <GridLayout rows="auto, auto" columns="55 *" class="list-item" (tap)="onContactSelect(item)">
+                <Image row="0" col="0" rowspan="2" *ngIf="item.thumbnail" [src]="item.thumbnail" class="thumbnail"></Image>
+                <Label row="0" col="0" rowspan="2" *ngIf="!item.thumbnail" [text]="getInitialsFromName(item.display_name)" [backgroundColor]="getRandomColor()" class="thumbnail-awesome"></Label>
                 <Label row="0" col="1" [text]="item.display_name" class="contact-name"></Label>
+                <Label row="1" col="1" [text]="item.phone[0].number" class="contact-number"></Label>
             </GridLayout>
         </ng-template>
     </ListView>
