@@ -57,6 +57,7 @@ import { PushService } from "./_services/push.service";
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
 import { TourComponent } from './_components/tour/tour.component';
+import { UpdaterComponent } from './updater/updater.component';
 
 registerLocaleData(localeDe);
 
@@ -88,6 +89,7 @@ registerLocaleData(localeDe);
         DoneComponent,
         FileUploadComponent,
         TourComponent,
+        UpdaterComponent,
     ],
     imports: [
         AngularFireDatabaseModule,
