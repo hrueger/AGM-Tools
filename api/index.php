@@ -242,6 +242,26 @@ if (isset($_GET["getAttachment"])) {
     }
 }
 
+if (isset($_GET["downloadMobileLatest"])) {
+    $db = connect();
+    $ret = array();
+    $res = $db->query("SELECT `version` FROM changelogs ORDER BY `version` DESC LIMIT 1");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    $v = $res[0]["version"];
+    $file = "./releases/mobile/".$v.".apk";
+    if (is_file($file)) {
+        header("Content-Type: application/vnd.android.package-archive");
+        header("Content-Disposition: attachment; filename=\"AGM-Tools_$v.apk\"");
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        die();
+    } else {
+        echo "<h1>Datei nicht gefunden...</h1>";
+        echo "<p>Debug Info: $file</p>";
+        die();
+    }
+}
+
 
 
 function makeThumbnail($original_file, $destination_file, $square_size = 250){
@@ -360,7 +380,10 @@ if ($data) {
                 break;
             case "dashboardMakeNotificationSeen":
                 dashboardMakeNotificationSeen($args);
-                break;    
+                break;
+            case "dashboardGetUpdates":
+                dashboardGetUpdates($args);
+                break;
             
             case "usersGetUsers":
                 usersGetUsers();
@@ -712,6 +735,20 @@ function dashboardGetNotifications() {
            
     //dieWithMessage("Es wurden keine Termine gefunden!".$db->error);
 }
+
+function dashboardGetUpdates($data) {
+    $db = connect();
+    $ret = array();
+    $res = $db->query("SELECT `version` FROM changelogs ORDER BY `version` DESC LIMIT 1");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    $v = $res[0]["version"];
+    if (version_compare($data["version"], $v, '<')) {
+        die(json_encode(array("update" => true)));
+    } else {
+        die(json_encode(array("update" => false)));
+    }
+}
+
 
 function usersGetUsers() {
     $db = connect();

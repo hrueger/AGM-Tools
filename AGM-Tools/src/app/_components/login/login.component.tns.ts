@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import * as appversion from "nativescript-appversion";
 import { connectionType, getConnectionType } from "tns-core-modules/connectivity";
 import { Animation } from "tns-core-modules/ui/animation";
 import { View } from "tns-core-modules/ui/core/view";
@@ -17,6 +18,7 @@ export class LoginComponent {
   public username: string = "";
   public password: string = "";
   public isAuthenticating = false;
+  public versionLabelText: string = "";
 
   @ViewChild("initialContainer", { static: false }) public initialContainer: ElementRef;
   @ViewChild("mainContainer", { static: false }) public mainContainer: ElementRef;
@@ -32,8 +34,12 @@ export class LoginComponent {
 
   public ngOnInit() {
     this.page.actionBarHidden = true;
+    const version = appversion.getVersionNameSync();
+    const parts = version.split(".");
+    // tslint:disable-next-line: radix
+    const date = parts[2] + "." + parts[1] + "." + (2016 + parseInt(parts[0])).toString();
+    this.versionLabelText = `Version ${version} vom ${date}`;
   }
-
 
   public focusPassword() {
     this.passwordEl.nativeElement.focus();

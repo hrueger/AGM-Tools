@@ -1,10 +1,8 @@
 {
     "android": {
-        "v8Flags": "--expose_gc",
-        "maxLogcatObjectSize": "1048576"
+        "v8Flags": "--expose_gc"
     },
     "main": "main.ns.js",
     "name": "migration-ng",
-    "version": "4.1.0",
     "dependencies": {}
 }

@@ -22,100 +22,36 @@
 </FlexboxLayout>-->
 <GridLayout>
 
-    <GridLayout #background
-      scaleX="1.4"
-      scaleY="1.4"
-      class="background"
-      (loaded)="startBackgroundAnimation(background)"></GridLayout>
-  
-    <GridLayout rows="auto, auto, auto, auto, *, auto" columns="*" #initialContainer
-      class="initial-container">
-      
-      <Label
-        col="0"
-        row="0"
-        text="AGM-TOOLS"
-        class="initial-label"></Label>
-      <Label
-        col="0"
-        row="1"
-        text="Version 0.0.1 vom 04.09.2019"
-        class="version-label"></Label>
-      
-      <Button
-        text="Login"
-        col="0"
-        row="2"
-        (tap)="showMainContent()"
-        class="initial-button"></Button>
-      <Button
-        text="Take a Tour"
-        col="0"
-        row="3"
-        pageTransition="fade"
-        [nsRouterLink]="['/tour']"
-        class="initial-button"></Button>
-      <Image
-        col="0"
-        row="5"
-        src="~/assets/logo/logo3.png"
-        stretch="none"
-        class="initial-logo"></Image>
+    <GridLayout #background scaleX="1.4" scaleY="1.4" class="background" (loaded)="startBackgroundAnimation(background)"></GridLayout>
+
+    <GridLayout rows="auto, auto, auto, auto, *, auto" columns="*" #initialContainer class="initial-container">
+
+        <Label col="0" row="0" text="AGM-TOOLS" class="initial-label"></Label>
+        <Label col="0" row="1" [text]="versionLabelText" class="version-label"></Label>
+
+        <Button text="Login" col="0" row="2" (tap)="showMainContent()" class="initial-button"></Button>
+        <Button text="Take a Tour" col="0" row="3" pageTransition="fade" [nsRouterLink]="['/tour']" class="initial-button"></Button>
+        <Image col="0" row="5" src="~/assets/logo/logo3.png" stretch="none" class="initial-logo"></Image>
     </GridLayout>
-  
-    <StackLayout #mainContainer
-      class="main-container">
-      <Label
-        class="main-label"
-        text="AGM-TOOLS"></Label>
-  
-      <GridLayout #formControls
-        class="form-controls"
-        rows="auto, auto"
-        translateY="50">
-        <TextField
-          hint="Benutzername"
-          returnKeyType="next"
-          (returnPress)="focusPassword()"
-          [(ngModel)]="username"
-          [isEnabled]="!isAuthenticating"
-          autocorrect="false"
-          autocapitalizationType="none"
-          [class.light]="!isLoggingIn"
-          row="0"></TextField>
-        <TextField #passwordField
-          hint="Passwort"
-          secure="true"
-          returnKeyType="done"
-          (returnPress)="submit()"
-          [(ngModel)]="password"
-          [isEnabled]="!isAuthenticating"
-          [class.light]="!isLoggingIn"
-          row="1"></TextField>
-  
-        <ActivityIndicator
-          [busy]="isAuthenticating"
-          rowSpan="2"></ActivityIndicator>
-      </GridLayout>
-  
-      <Button
-        text="Login"
-        [isEnabled]="!isAuthenticating"
-        class="submit-button"
-        (tap)="submit()"></Button>
-  
-      <Label
-        class="forgot-password-label"
-        text="Passwort vergessen?"
-        (tap)="forgotPassword()"></Label>
+
+    <StackLayout #mainContainer class="main-container">
+        <Label class="main-label" text="AGM-TOOLS"></Label>
+
+        <GridLayout #formControls class="form-controls" rows="auto, auto" translateY="50">
+            <TextField hint="Benutzername" returnKeyType="next" (returnPress)="focusPassword()" [(ngModel)]="username" [isEnabled]="!isAuthenticating" autocorrect="false" autocapitalizationType="none" [class.light]="!isLoggingIn" row="0"></TextField>
+            <TextField #passwordField hint="Passwort" secure="true" returnKeyType="done" (returnPress)="submit()" [(ngModel)]="password" [isEnabled]="!isAuthenticating" [class.light]="!isLoggingIn" row="1"></TextField>
+
+            <ActivityIndicator [busy]="isAuthenticating" rowSpan="2"></ActivityIndicator>
+        </GridLayout>
+
+        <Button text="Login" [isEnabled]="!isAuthenticating" class="submit-button" (tap)="submit()"></Button>
+
+        <Label class="forgot-password-label" text="Passwort vergessen?" (tap)="forgotPassword()"></Label>
     </StackLayout>
-  
+
     <!-- The fruit logo that appears within the container -->
-    <AbsoluteLayout #logoContainer
-      class="logo-container">
-      <Image
-        src="~/assets/logo/logo.png"
-        stretch="none"></Image>
+    <AbsoluteLayout #logoContainer class="logo-container">
+        <Image src="~/assets/logo/logo.png" stretch="none"></Image>
     </AbsoluteLayout>
-  
-  </GridLayout>
+
+</GridLayout>

@@ -1,1 +1,11 @@
-<Button text="updater works!" class="btn btn-primary"></Button>
+<ActionBar class="action-bar">
+    <Label class="action-bar-title" text="Update verfügbar!"></Label>
+</ActionBar>
+
+<ScrollView>
+    <GridLayout rows="auto, auto, auto" columns="*">
+        <Label class="info" row="0" col="0" horizontalAlignment="center" textWrap="true" text="Dieses Update muss installiert werden, bevor Sie AGM-Tools weiter verwenden können. Über den Button unten können Sie den Browser öffnen und die neue Installationsdatei herunterladen."></Label>
+        <Label class="info" row="1" col="0" horizontalAlignment="center" textWrap="true" text="Sobald der Download abgeschlossen ist, klicken Sie die herunterladene Datei bei den Benachrichtigungen an und folgen den Installationsanweisungen."></Label>
+        <Button col="0" class="downloadBtn" row="2" horizontalAlignment="center" (tap)="downloadUpdate()" text="Jetzt herunterladen"></Button>
+    </GridLayout>
+</ScrollView>

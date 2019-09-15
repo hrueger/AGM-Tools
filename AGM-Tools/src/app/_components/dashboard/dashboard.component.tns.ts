@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
+import * as appversion from "nativescript-appversion";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -31,6 +32,7 @@ export class DashboardComponent implements OnInit {
     public gotDates: boolean;
     public gotNotifications: boolean;
     public gotUpdates: boolean;
+    public currentVersion: string;
 
     constructor(
         private remoteService: RemoteService,
@@ -47,6 +49,8 @@ export class DashboardComponent implements OnInit {
    }
 
     public ngOnInit() {
+
+        this.currentVersion = appversion.getVersionNameSync();
         this.getData();
         this.pushService.init();
     }
@@ -85,7 +89,7 @@ export class DashboardComponent implements OnInit {
             this.gotVersion = true;
             this.checkForRefreshDone(obj);
         });
-        this.remoteService.get("dashboardGetUpdates").subscribe((data) => {
+        this.remoteService.get("dashboardGetUpdates", {version: this.currentVersion}).subscribe((data) => {
             if (data.update) {
                 this.router.navigate(["updater"]);
             }
