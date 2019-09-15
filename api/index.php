@@ -1264,6 +1264,39 @@ function chatGetContacts() {
                 //if ($res = $db->query("SELECT members FROM receivers WHERE `id` = '$rid'")) {
                     dieWithMessage("Datenbankfehler: ".$res->fetch_all(MYSQLI_ASSOC)[0]["members"]);
                 }*/
+                $rid = $db->real_escape_string($line["rid"]);
+                $status = $db->query("SELECT id, `status` FROM messages WHERE `sender`!='$userid' AND `receiver` = $rid");
+                if ($status) {
+                    $status = $status->fetch_all(MYSQLI_ASSOC);
+                    if ($status) {
+                        $numberUnread = 0;
+                        foreach($status as $messageStatus) {
+                            $mid = $messageStatus["id"];
+                            $messageStatus = @unserialize($messageStatus["status"]);
+                            if ($messageStatus) {
+                                if (isset($messageStatus["received"]) && !in_array($userid, $messageStatus["received"])) {
+                                    $messageStatus["received"][] = $userid;
+                                    $id = $db->real_escape_string($mid);
+                                    $newStatus = $db->real_escape_string(serialize($messageStatus));
+                                    if(!$db->query("UPDATE messages SET `status` = '$newStatus' WHERE id=$id")) {
+                                        echo $db->error;
+                                        echo "\n\n\n"."UPDATE messages SET `status` = '$newStatus' WHERE id=$id"."\n\n";
+                                    }
+                                }
+                                if (isset($messageStatus["seen"]) && !in_array($userid, $messageStatus["seen"])) {
+                                    $numberUnread++;
+                                }
+                            } else {
+                                $numberUnread++;
+                            }
+                        }
+                    } else {
+                        $numberUnread = 0;
+                        echo $db->error;
+                    }
+                } else {
+                    echo $db->error;
+                }
 
 				$result[] = array(
                     "contact" => array(
@@ -1274,7 +1307,7 @@ function chatGetContacts() {
                     "when" => $line["timestamp"],
                     "fromMe" => ($line["fromMe"] == "true" ? true : false),
                     "status" => $line["status"],
-                    "unread" => 0,
+                    "unread" => $numberUnread,
                     "text" => [htmlspecialchars($latestmessage)],
                     "rid" => $line["rid"]
                 );
