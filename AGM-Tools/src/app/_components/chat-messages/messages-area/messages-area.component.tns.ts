@@ -18,8 +18,8 @@ import { Message } from "../../../_models/message.model";
 import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { PushService } from "../../../_services/push.service.tns";
+import { RemoteService } from "../../../_services/remote.service";
 
-declare var android: any;
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     moduleId: module.id,
@@ -40,8 +40,8 @@ export class MessagesAreaComponent implements OnInit {
     public currentImageIndex: number;
     constructor(private pushService: PushService,
                 private authService: AuthenticationService,
-                private page: Page,
-                private alertService: AlertService) {
+                private remoteService: RemoteService,
+                private page: Page) {
 
     }
     public getImageSrc(imageName, thumbnail = true) {
@@ -67,19 +67,22 @@ export class MessagesAreaComponent implements OnInit {
 
     public newMessageFromPushService(data: any) {
         if (data.action == "newMessage") {
-            const message = {
-                chat: null,
-                created: Date.now(),
-                fromMe: data.fromMe,
-                sendername: (data.fromMe ? "" : data.data.sender),
-                sent: "notsent",
-                text: data.data.body,
-            };
-            this.messages.push(message);
-            this.scrollToBottom(this.messagesListView.nativeElement);
-            setTimeout(() => {
+            if (data.data.data.chatID == this.receiverId) {
+                this.remoteService.getNoCache("chatMarkAsRead", { message: data.data.data.messageId }).subscribe();
+                const message = {
+                    chat: null,
+                    created: Date.now(),
+                    fromMe: data.fromMe,
+                    sendername: (data.fromMe ? "" : data.data.data.sender),
+                    sent: "notsent",
+                    text: data.data.body,
+                };
+                this.messages.push(message);
                 this.scrollToBottom(this.messagesListView.nativeElement);
-            }, 300);
+                setTimeout(() => {
+                    this.scrollToBottom(this.messagesListView.nativeElement);
+                }, 300);
+            }
         } else {
             console.log(data);
         }
@@ -95,7 +98,7 @@ export class MessagesAreaComponent implements OnInit {
     public addContact(contact: { name: string, number: string }) {
         clipboard.setText(contact.number).then(() => {
             alert("Die Nummer wurde kopiert. Fügen Sie jetzt den Kontakt in Ihrem Adressbuc hinzu!");
-        })
+        });
     }
 
     public displayImage(messageIndex) {

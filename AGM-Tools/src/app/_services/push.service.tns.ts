@@ -5,7 +5,6 @@ import { Message, messaging } from "nativescript-plugin-firebase/messaging";
 import { Subject } from "rxjs";
 import * as applicationSettings from "tns-core-modules/application-settings";
 import { alert, confirm } from "tns-core-modules/ui/dialogs";
-import { MessagesAreaComponent } from "../_components/chat-messages/messages-area/messages-area.component.tns";
 import { RemoteService } from "./remote.service";
 
 @Injectable({
@@ -166,6 +165,8 @@ export class PushService {
     }
 
     private handleNewChatMessage(message: Message): number {
+        console.log(message.data.messageId);
+        this.remoteService.getNoCache("chatMarkAsReceived", { message: message.data.messageId }).subscribe();
         this.chatActionSubject.next({
             action: "newMessage",
             data: message,
@@ -215,6 +216,9 @@ export class PushService {
                                 body: message,
                             },
                         });
+                        that.remoteService.getNoCache("chatMarkAsRead", {
+                            message: message.data.messageId,
+                        }).subscribe();
                     } else if (data.event == "input") {
                         this.remoteService
                             .getNoCache("chatSendMessage", {
@@ -265,13 +269,13 @@ export class PushService {
 
     private registerOnReceivedCallback2() {
         messaging.registerForPushNotifications({
+            onMessageReceivedCallback: (message: Message) => {
+                this.messageRecieved(message);
+            },
             onPushTokenReceivedCallback: (token: string): void => {
                 // tslint:disable-next-line: no-console
                 console.log(">>>> Firebase plugin received a push token: " + token);
                 this.remoteService.getNoCache("updatePushToken", { pushToken: token }).subscribe();
-            },
-            onMessageReceivedCallback: (message: Message) => {
-                this.messageRecieved(message);
             },
             showNotifications: true,
             showNotificationsWhenInForeground: false,

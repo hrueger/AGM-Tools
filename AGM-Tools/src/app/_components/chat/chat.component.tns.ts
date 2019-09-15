@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { NavbarService } from "../../_services/navbar.service";
-import { RemoteService } from "../../_services/remote.service";
 import { PushService } from "../../_services/push.service.tns";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
     selector: "app-chat",

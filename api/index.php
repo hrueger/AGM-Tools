@@ -437,6 +437,12 @@ if ($data) {
             case "chatSendMessage":
                 chatSendMessage($args);
                 break; 
+            case "chatMarkAsRead":
+                chatMarkAsRead($args);
+                break; 
+            case "chatMarkAsReceived":
+                chatMarkAsReceived($args);
+                break; 
 
             case "filesGetFolder":
                 filesGetFolder($args);
@@ -1506,7 +1512,8 @@ function chatSendMessage($data) {
     $data["message"] = $db->real_escape_string($data["message"]);
     $data["rid"] = $db->real_escape_string($data["rid"]);
     $res = $db->query("INSERT INTO messages (`message`, sender, `timestamp`, receiver, `status`, `imageSrc`, `attachmentSrc`, `contactSrc`) VALUES ('" . $data["message"] . "', '" . getCurrentuserId() . "', now(), '" . $data["rid"] . "', 'sent', '$imageSrc', '$attachmentSrc', '$contactSrc')");
-	if (!$res) {
+    $messageId = $db->insert_id;
+    if (!$res) {
 		dieWithMessage($db->error);
     }
     $name = getCurrentUserName();
@@ -1521,7 +1528,8 @@ function chatSendMessage($data) {
 
 		$retdata = [];
 		$retdata["chatID"] = $senderid;
-		$retdata['action'] = 'newMessage';
+        $retdata['action'] = 'newMessage';
+        $retdata["messageId"] = $messageId;
         $retdata["sender"] = $name;
         $retdata["body"] = $data["message"];
         $pushToken = getPushTokenFromUserId($receivers[0]);
@@ -1537,6 +1545,7 @@ function chatSendMessage($data) {
 		$retdata = [];
 		$retdata["chatID"] = $data["rid"];
 		$retdata['action'] = 'newMessage';
+        $retdata["messageId"] = $messageId;
 		$retdata["sender"] = $name;
         $retdata["body"] = $data["message"];
         
@@ -1553,6 +1562,86 @@ function chatSendMessage($data) {
 	}
 	return;
 }
+
+function chatMarkAsRead($data) {
+    $myId = getCurrentUserId();
+    $db = connect();
+    $mid = $db->real_escape_string($data["message"]);
+    $res = $db->query("SELECT messages.status, receivers.type FROM messages JOIN receivers on messages.receiver = receivers.id WHERE messages.id = $mid")->fetch_all(MYSQLI_ASSOC)[0];
+    if ($res) {
+        if ($res["type"] == "private" && ($res["status"] == "received" || $res["status"] == "sent")) {
+            $result = $db->query("UPDATE messages SET `status` = 'seen' WHERE id = $mid");
+            if (!$result) {
+                echo $db->error;
+            }
+        } else if ($res["type"] == "group") {
+            $status = $res["status"];
+			if (!$status) {
+				$status = [];
+				$status["seen"] = [];
+				$status["received"] = [];
+			} else if (!empty($status)) {
+				@$status = unserialize($status);
+				if (!$status) {
+					$status = [];
+					$status["received"] = [];
+					$status["seen"] = [];
+				}
+			}
+			if (!in_array($myID, $status["seen"])) {
+				$status["seen"][] = $myID;
+            }
+            if (!in_array($myID, $status["received"])) {
+				$status["received"][] = $myID;
+			}
+			$status = $db->real_escape_string(serialize($status));
+			$mID = $db->real_escape_string($line["id"]);
+			$db->query("UPDATE `messages` SET `status` = '$status' WHERE `id` = $mID");
+
+        } else {
+            dieWithMessage("Das dürfte niemals passieren...");
+        }
+    }
+}
+
+function chatMarkAsReceived($data) {
+    $myId = getCurrentUserId();
+    $db = connect();
+    $mid = $db->real_escape_string($data["message"]);
+    $res = $db->query("SELECT messages.status, receivers.type FROM messages JOIN receivers on messages.receiver = receivers.id WHERE messages.id = $mid")->fetch_all(MYSQLI_ASSOC)[0];
+    if ($res) {
+        if ($res["type"] == "private" && $res["status"] != "seen") {
+            $result = $db->query("UPDATE messages SET `status` = 'received' WHERE id = $mid");
+            if (!$result) {
+                echo $db->error;
+            }
+        } else if ($res["type"] == "group") {
+            $status = $res["status"];
+			if (!$status) {
+				$status = [];
+				$status["seen"] = [];
+				$status["received"] = [];
+			} else if (!empty($status)) {
+				@$status = unserialize($status);
+				if (!$status) {
+					$status = [];
+					$status["received"] = [];
+					$status["seen"] = [];
+				}
+			}
+            if (!in_array($myID, $status["received"])) {
+				$status["received"][] = $myID;
+			}
+			$status = $db->real_escape_string(serialize($status));
+			$mID = $db->real_escape_string($line["id"]);
+			$db->query("UPDATE `messages` SET `status` = '$status' WHERE `id` = $mID");
+
+        } else {
+            dieWithMessage("Das dürfte niemals passieren...");
+        }
+    }
+}
+
 
 function filesGetFolder($data) {
     $db = connect();
