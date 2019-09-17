@@ -41,13 +41,13 @@
         <FlexboxLayout row="1" class="message-box mobile">
             <FlexboxLayout class="text-area">
                 <Button (tap)="toggleEmojiPicker()" text="&#xf580;" class="no-border fas icon"></Button>
-                <TextView #inputMessageField (tap)="showKeyboard()" hint="Nachricht" [(ngModel)]="inputMessage" class="text-view"></TextView>
+                <EmojiPicker #inputMessageField hint="Nachricht" class="text-view"></EmojiPicker>
                 <Button text="&#xf030;" (tap)="sendPicture()" class="no-border fas icon"></Button>
                 <Button text="&#xf0c6;" (tap)="toggleAttachmentDialog()" class="no-border fas icon"></Button>
             </FlexboxLayout>
             <Button text="&#xf1d8;" (tap)="sendMessage()" class="fas icon send"></Button>
         </FlexboxLayout>
-        <emoji-picker (emojiClick)="onEmojiClick($event)" (backspaceClick)="onBackspaceClick()" [showEmojiPicker]="showEmojiPicker">
-        </emoji-picker>
+        <!--<emoji-picker (emojiClick)="onEmojiClick($event)" (backspaceClick)="onBackspaceClick()" [showEmojiPicker]="showEmojiPicker">
+        </emoji-picker>-->
     </GridLayout>
 </GridLayout>

@@ -58,7 +58,6 @@ export class ChatMessagesComponent
     public dialogOpen: boolean = false;
     public unread: number;
     public messages: ObservableArray<Message> = new ObservableArray<Message>(0);
-    public inputMessage: string;
 
     @ViewChild("inputMessageField", { static: false }) public inputMessageField: ElementRef;
     constructor(
@@ -237,12 +236,12 @@ export class ChatMessagesComponent
             fromMe: true,
             sendername: "",
             sent: "notsent",
-            text: this.inputMessage,
+            text: this.inputMessageField.nativeElement.text,
         };
         this.messages.push(message);
         this.remoteService
             .getNoCache("chatSendMessage", {
-                message: this.inputMessage,
+                message: this.inputMessageField.nativeElement.text,
                 rid: this.receiverId,
             })
             .subscribe((data) => {
@@ -252,7 +251,7 @@ export class ChatMessagesComponent
                 // console.log(this.messages);
                 this.cdr.detectChanges();
             });
-        this.inputMessage = "";
+        this.inputMessageField.nativeElement.text = "";
     }
 
     public ngOnInit() {
@@ -274,19 +273,6 @@ export class ChatMessagesComponent
                     });
             });
         });
-    }
-
-    public onEmojiClick(emoji: string) {
-        // @ts-ignore
-        this.inputMessage = (this.inputMessage ? this.inputMessage : "") + String.fromCodePoint("0x" + emoji);
-        // console.log(this.inputMessageField.nativeElement.android.setSelection);
-        if (this.inputMessageField.nativeElement.android) {
-            setTimeout(() => {
-                this.inputMessageField.nativeElement.android.setSelection(
-                    this.inputMessageField.nativeElement.android.length(),
-                );
-            }, 0);
-        }
     }
 
     public getMessages(receiverId) {
@@ -312,28 +298,7 @@ export class ChatMessagesComponent
     }
 
     public toggleEmojiPicker() {
-        if (this.showEmojiPicker) {
-            this.showEmojiPicker = false;
-            this.inputMessageField.nativeElement.focus();
-        } else {
-            this.showEmojiPicker = true;
-            this.inputMessageField.nativeElement.dismissSoftInput();
-        }
-    }
-    public showKeyboard() {
-        this.showEmojiPicker = false;
-    }
-
-    public onBackspaceClick() {
-        this.inputMessage = (this.inputMessage ? this.inputMessage.slice(0, -1) : "");
-        // console.log(this.inputMessageField.nativeElement.android.setSelection);
-        if (this.inputMessageField.nativeElement.android) {
-            setTimeout(() => {
-                this.inputMessageField.nativeElement.android.setSelection(
-                    this.inputMessageField.nativeElement.android.length(),
-                );
-            }, 0);
-        }
+        this.inputMessageField.nativeElement.togglePopup();
     }
 
 }
