@@ -38,6 +38,7 @@ export class MessagesAreaComponent implements OnInit {
     public currentImageName: string;
     public currentImageDate: string;
     public currentImageIndex: number;
+    public shouldScrollWhenImageLoaded: boolean = true;
     constructor(private pushService: PushService,
                 private authService: AuthenticationService,
                 private remoteService: RemoteService,
@@ -88,11 +89,13 @@ export class MessagesAreaComponent implements OnInit {
         }
     }
 
-    public scrollFromImageToBottom() {
-        this.scrollToBottom(this.messagesListView.nativeElement);
-        setTimeout(() => {
+    public imageLoaded() {
+        if (this.shouldScrollWhenImageLoaded) {
             this.scrollToBottom(this.messagesListView.nativeElement);
-        }, 300);
+            setTimeout(() => {
+                this.scrollToBottom(this.messagesListView.nativeElement);
+            }, 300);
+        }
     }
 
     public addContact(contact: { name: string, number: string }) {
@@ -150,6 +153,9 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public ngOnInit() {
+        setTimeout(() => {
+            this.shouldScrollWhenImageLoaded = false;
+        }, 1000);
         this.pushService.reregisterCallbacks();
         this.pushService.getChatActions().subscribe((data) => {
             this.newMessageFromPushService(data);
