@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
     public refresh(event) {
         const pullRefresh = event.object;
         this.getData(pullRefresh);
-   }
+    }
 
     public ngOnInit() {
 
@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit {
             this.gotVersion = true;
             this.checkForRefreshDone(obj);
         });
-        this.remoteService.get("dashboardGetUpdates", {version: this.currentVersion}).subscribe((data) => {
+        this.remoteService.get("dashboardGetUpdates", { version: this.currentVersion }).subscribe((data) => {
             if (data.update) {
                 this.router.navigate(["updater"]);
             }
@@ -134,7 +134,7 @@ export class DashboardComponent implements OnInit {
                             textColor: "#eee",
                         }],
                         dialogStyle: CFAlertStyle.NOTIFICATION,
-                        message: notification.content + "\n\n" + notification.sender + " am " +
+                        message: notification.content.replace("<br>", "\n") + "\n\n" + notification.sender + " am " +
                             notification.date + " um " + notification.time + " Uhr",
                         onDismiss: (dialog) => { /* dismiss */ },
                         title: type + notification.headline,
