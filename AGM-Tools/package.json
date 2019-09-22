@@ -99,7 +99,7 @@
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "0.13.4",
-        "@angular/cli": "^7.3.9",
+        "@angular/cli": "^8.3.3",
         "@angular/compiler-cli": "8.0.0",
         "@nativescript/schematics": "^0.5.2",
         "@types/jasmine": "~3.3.12",

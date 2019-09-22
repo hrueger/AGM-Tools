@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectorRef, Component, ViewEncapsulation, ViewChild } from "@angular/core";
 import {
     AgendaService,
     DayService,
@@ -11,6 +11,7 @@ import {
 import { L10n, loadCldr } from "@syncfusion/ej2-base";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { AlertService } from "../../_services/alert.service";
 
 L10n.load({
     de: {
@@ -145,9 +146,9 @@ loadCldr(
     ],
 })
 export class CalendarComponent {
-    public requesting: boolean = false;
-    // public data: object[] = [];
+    @ViewChild("calendar", {static: false}) public calendar;
     public weekFirstDay: number = 1;
+    public showCalendar = false;
     public selectedDate: Date = new Date();
     public eventSettings: EventSettingsModel = {
         dataSource: [],
@@ -168,20 +169,17 @@ export class CalendarComponent {
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
-        private cdr: ChangeDetectorRef,
+        private alertService: AlertService,
     ) { }
 
     public ngOnInit() {
         this.navbarService.setHeadline("Kalender");
         this.remoteService.get("calendarGetDates").subscribe((dates) => {
-            if (this.requesting == false) {
-                this.requesting = true;
+            if (dates) {
+                this.eventSettings.dataSource = [];
                 for (const date of dates) {
                     // @ts-ignore
                     this.eventSettings.dataSource.push({
-                        //    "FREQ=DAILY;INTERVAL=1;COUNT=5",
-                        // RecurrenceID: 10,
-                        // RecurrenceRule:
                         Description: date.description,
                         EndTime: new Date(date.endDate),
                         EndTimezone: "Europe/Berlin",
@@ -193,9 +191,60 @@ export class CalendarComponent {
                         Subject: date.headline,
                     });
                 }
+                if (this.showCalendar) {
+                    this.showCalendar = false;
+                    const that = this;
+                    window.setTimeout(() => {
+                        that.showCalendar = true
+                    }, 50);
+                } else {
+                    this.showCalendar = true;
+                }
             }
-            this.cdr.detectChanges();
-            // console.log(this.data);
         });
+    }
+
+    public onChange(ev) {
+        if (ev) {
+            switch (ev.requestType) {
+                case "eventCreated":
+                    this.remoteService
+                    .getNoCache("calendarNewEvent", {
+                        description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
+                        endDate: ev.data.EndTime.toISOString(),
+                        headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
+                        important: true,
+                        location: ev.data.Location ? ev.data.Location : "Kein Ort angegeben",
+                        startDate: ev.data.StartTime.toISOString(),
+                    })
+                    .subscribe((data) => {
+                        if (data && data.status == true) {
+                            this.alertService.success(
+                                "Termin erfolgreich gespeichert!",
+                            );
+                        }
+                    });
+                case "eventChanged":
+                        this.remoteService
+                        .getNoCache("calendarUpdateEvent", {
+                            id: ev.data.Id,
+                            description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
+                            endDate: ev.data.EndTime.toISOString(),
+                            headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
+                            important: true,
+                            location: ev.data.Location ? ev.data.Location : "Kein Ort angegeben",
+                            startDate: ev.data.StartTime.toISOString(),
+                        })
+                        .subscribe((data) => {
+                            if (data && data.status == true) {
+                                this.alertService.success(
+                                    "Termin erfolgreich aktualisiert!",
+                                );
+                            }
+                        });
+                default:
+                    console.log(ev);
+            }
+        }
     }
 }

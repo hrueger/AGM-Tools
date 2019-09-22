@@ -404,6 +404,9 @@ if ($data) {
             case "calendarNewEvent":
                 calendarNewEvent($args);
                 break;
+            case "calendarUpdateEvent":
+                calendarUpdateEvent($args);
+                break;
 
             case "projectsGetProjects":
                 projectsGetProjects();
@@ -1073,6 +1076,51 @@ function calendarNewEvent($data) {
 			/////////////////////////
 		} else {
 			dieWithMessage("Termin nicht gespeichert, nicht alle Daten wurden angegeben!".print_r($data, true));
+		}
+}
+
+function calendarUpdateEvent($data) {
+    $db = connect();
+    if (
+			isset($data["id"]) &&
+			isset($data["startDate"]) &&
+			isset($data["endDate"]) &&
+			isset($data["headline"]) &&
+			isset($data["description"]) &&
+			isset($data["location"]) &&
+			!empty(trim($data["id"])) &&
+			!empty(trim($data["startDate"])) &&
+			!empty(trim($data["endDate"])) &&
+			!empty(trim($data["headline"])) &&
+			!empty(trim($data["location"])) &&
+			!empty(trim($data["description"]))
+		) {
+
+			////////////////////////
+			$important = $data["important"];
+
+			$startDate = date("Y-m-d H:i", strtotime($data["startDate"]));
+			$endDate = date("Y-m-d H:i", strtotime($data["endDate"]));
+			$headline = $db->real_escape_string($data["headline"]);
+			$location = $db->real_escape_string($data["location"]);
+			$description = $db->real_escape_string($data["description"]);
+			$id = $db->real_escape_string($data["id"]);
+			$author = getCurrentUserID();
+
+			$sql = "UPDATE `dates` SET `startDate`='$startDate', `endDate`='$endDate', `headline`='$headline', `description`='$description', `location`='$location' WHERE id = $id;";
+
+			$result = $db->query($sql);
+
+
+			if ($result) {
+				
+				die(json_encode(array("status"=> true)));
+					
+			} else {
+				dieWithMessage("Termin nicht aktualisiert!" . $db->error);
+			}
+		} else {
+			dieWithMessage("Termin nicht gespeichert, nicht alle Daten wurden angegeben! ".print_r($data, true));
 		}
 }
 

@@ -1,13 +1,3 @@
-<div class="alert alert-info">
-    <b>Achtung:</b><br />Bis jetzt funktioniert das Speichern neuer Elemente im
-    Kalender noch nicht. Bei Bedarf bitte melden!
-</div>
-<ejs-schedule
-    width="100%"
-    height="calc( 100vh - 200px)"
-    [selectedDate]="selectedDate"
-    [eventSettings]="eventSettings"
-    locale="de"
-    #calendar
-    [firstDayOfWeek]="weekFirstDay"
-></ejs-schedule>
+<ejs-schedule *ngIf="showCalendar" width="100%" height="calc( 100vh - 100px)" [selectedDate]="selectedDate" [eventSettings]="eventSettings" locale="de" #calendar [firstDayOfWeek]="weekFirstDay" (actionBegin)="onChange($event)" (actionComplete)="onChange($event)"
+    (actionFailure)="onChange($event)" (cellClick)="onChange($event)" (cellDoubleClick)="onChange($event)" (created)="onChange($event)" (drag)="onChange($event)" (dragStart)="onChange($event)" (dragStop)="onChange($event)" (eventClick)="onChange($event)"
+    (resizeStart)="onChange($event)" (resizeStop)="onChange($event)" (select)="onChange($event)"></ejs-schedule>
