@@ -1,4 +1,4 @@
-@import "~nativescript-theme-core/css/core.light.css";
+@import "~nativescript-theme-core/css/core.css";
 
 /*@import "./custom.css";*/
 
@@ -17,12 +17,10 @@
 .dialog {
     visibility: collapse;
     opacity: 0;
-}
-
-.dialog {
+    
     background-color: white;
     border-radius: 8;
-    
+
 }
 
 

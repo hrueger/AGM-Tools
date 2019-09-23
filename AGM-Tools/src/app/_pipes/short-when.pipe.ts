@@ -1,9 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Inject, LOCALE_ID, Pipe, PipeTransform } from "@angular/core";
 
-import * as isToday from "date-fns/is_today";
-import * as isYesterday from "date-fns/is_yesterday";
-import * as parse from "date-fns/parse";
+import { isToday, isYesterday, parse } from "date-fns";
 
 @Pipe({
     name: "shortWhen",
@@ -11,8 +9,9 @@ import * as parse from "date-fns/parse";
 })
 export class ShortWhenPipe implements PipeTransform {
 
-    public transform(value: number | string | Date): string {
+    public transform(value: string): string {
         const datePipe = new DatePipe("de-DE");
+        // @ts-ignore
         const parsedDate = parse(value);
 
         if (isToday(parsedDate)) {
