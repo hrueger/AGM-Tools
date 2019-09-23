@@ -23,6 +23,11 @@ export class ChatComponent {
         this.chats = [];
     }
 
+    public getInitials(name: string) {
+        const initials = name.match(/\b\w/g) || [];
+        return ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
+    }
+
     public newMessageFromPushService(data: any) {
         if (data.action == "newMessage") {
             let index = null;

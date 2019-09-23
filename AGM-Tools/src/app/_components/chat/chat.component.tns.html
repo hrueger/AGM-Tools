@@ -3,7 +3,10 @@
 <ListView #chatsListView [items]="chats" id="chats" class="list-group">
     <ng-template let-chat="item" let-index="index">
         <GridLayout (tap)="goToChat(chat.rid)" rows=" auto, auto" columns="auto, *, auto" class="list-group-item">
-            <Image row="0" col="0" rowSpan="2" [src]="chat.contact.avatar" class="thumb"></Image>
+
+            <!--<Image row="0" col="0" rowSpan="2" [src]="chat.contact.avatar" class="thumb"></Image>-->
+            <LetterAvatar row="0" col="0" rowspan="2" [text]="getInitials(chat.contact.name)" class="thumb"></LetterAvatar>
+
             <Label row="0" col="1" [text]="chat.contact.name"></Label>
             <StackLayout row="1" col="1" orientation="horizontal">
                 <Label *ngIf="chat.fromMe && chat.status == 'sent'" text="&#xf00c;" class="grey check fas"></Label>
