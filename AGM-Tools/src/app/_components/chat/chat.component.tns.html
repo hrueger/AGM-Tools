@@ -7,8 +7,8 @@
             <!--<Image row="0" col="0" rowSpan="2" [src]="chat.contact.avatar" class="thumb"></Image>-->
             <LetterAvatar row="0" col="0" rowspan="2" [text]="getInitials(chat.contact.name)" class="thumb"></LetterAvatar>
 
-            <Label row="0" col="1" [text]="chat.contact.name"></Label>
-            <StackLayout row="1" col="1" orientation="horizontal">
+            <Label row="0" col="1" [text]="chat.contact.name" marginRight="10"></Label>
+            <StackLayout row="1" col="1" orientation="horizontal"  marginRight="10">
                 <Label *ngIf="chat.fromMe && chat.status == 'sent'" text="&#xf00c;" class="grey check fas"></Label>
                 <Label *ngIf="chat.fromMe && (chat.status == 'received' || chat.status == 'seen')" text="&#xf560;" class="grey check fas" [class.blue]="chat.status == 'seen'"></Label>
                 <Label class="grey" [text]=" chat.text"></Label>
