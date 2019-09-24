@@ -4,8 +4,25 @@
 
 <ScrollView>
     <GridLayout rows="auto, auto, auto" columns="*">
-        <Label class="info" row="0" col="0" horizontalAlignment="center" textWrap="true" text="Dieses Update muss installiert werden, bevor Sie AGM-Tools weiter verwenden können. Über den Button unten können Sie den Browser öffnen und die neue Installationsdatei herunterladen."></Label>
-        <Label class="info" row="1" col="0" horizontalAlignment="center" textWrap="true" text="Sobald der Download abgeschlossen ist, klicken Sie die herunterladene Datei bei den Benachrichtigungen an und folgen den Installationsanweisungen."></Label>
-        <Button col="0" class="downloadBtn" row="2" horizontalAlignment="center" (tap)="downloadUpdate()" text="Jetzt herunterladen"></Button>
+        <Label *ngIf="!downloading" class="info" row="0" col="0" horizontalAlignment="center" textWrap="true" text="Dieses Update muss installiert werden, bevor Sie AGM-Tools weiter verwenden können. Über den Button unten können Sie den Browser öffnen und die neue Installationsdatei herunterladen."></Label>
+        <Label *ngIf="!downloading" class="info" row="1" col="0" horizontalAlignment="center" textWrap="true" text="Sobald der Download abgeschlossen ist, klicken Sie die herunterladene Datei bei den Benachrichtigungen an und folgen den Installationsanweisungen."></Label>
+        <Label *ngIf="downloading" class="info" row="1" col="0" horizontalAlignment="center" textWrap="true" text="Update wird heruntergeladen. Bitte warten..."></Label>
+        <Button *ngIf="!downloading" col="0" class="downloadBtn" row="2" horizontalAlignment="center" (tap)="downloadUpdate()" text="Jetzt herunterladen"></Button>
+        <AnimatedCircle
+            col="0"
+            row="2"
+            *ngIf="downloading"
+            backgroundColor="transparent"
+            width="200"
+            height="200"
+            rimColor="#e8e8e8"
+            barColor="#2b669a"
+            fillColor="#fff"
+            clockwise="true"
+            rimWidth="15"
+            [progress]="currentProgress"
+            [text]="currentProgressText"
+            textSize="5"
+            textColor="#d4d4d4"></AnimatedCircle>
     </GridLayout>
 </ScrollView>

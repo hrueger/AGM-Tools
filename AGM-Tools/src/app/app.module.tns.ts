@@ -70,6 +70,7 @@ import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
+registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
 
 @NgModule({
     bootstrap: [AppComponent],
