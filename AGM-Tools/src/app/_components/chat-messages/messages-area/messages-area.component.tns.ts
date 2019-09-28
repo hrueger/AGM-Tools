@@ -40,9 +40,9 @@ export class MessagesAreaComponent implements OnInit {
     public currentImageIndex: number;
     public shouldScrollWhenImageLoaded: boolean = true;
     constructor(private pushService: PushService,
-                private authService: AuthenticationService,
-                private remoteService: RemoteService,
-                private page: Page) {
+        private authService: AuthenticationService,
+        private remoteService: RemoteService,
+        private page: Page) {
 
     }
     public getImageSrc(imageName, thumbnail = true) {
@@ -100,7 +100,7 @@ export class MessagesAreaComponent implements OnInit {
 
     public addContact(contact: { name: string, number: string }) {
         clipboard.setText(contact.number).then(() => {
-            alert("Die Nummer wurde kopiert. Fügen Sie jetzt den Kontakt in Ihrem Adressbuc hinzu!");
+            alert("Die Nummer wurde kopiert. Fügen Sie jetzt den Kontakt in Ihrem Adressbuch hinzu!");
         });
     }
 
