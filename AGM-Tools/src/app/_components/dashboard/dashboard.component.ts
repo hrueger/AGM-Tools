@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit {
     public cellSpacing: any;
     public version: string;
     public notifications: any[] = [];
+    public showDashboardLayout: boolean = false;
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
@@ -71,6 +72,9 @@ export class DashboardComponent implements OnInit {
             .subscribe((data) => {
                 this.notifications = data.notifications;
             });
+        window.setInterval(() => {
+            this.showDashboardLayout = true;
+        }, 300);
     }
 
     public makeNotificationSeen(notification) {

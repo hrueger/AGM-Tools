@@ -10,7 +10,7 @@
 
 
 <div class="control-section">
-    <ejs-dashboardlayout id='defaultLayout' [allowDragging]="false" [allowFloating]="false" [columns]="3" #defaultLayout [cellSpacing]='cellSpacing'>
+    <ejs-dashboardlayout [style.visibility]="showDashboardLayout ? 'visible' : 'hidden'" id='defaultLayout' [allowDragging]="false" [allowFloating]="false" [columns]="3" #defaultLayout [cellSpacing]='cellSpacing'>
         <div class="e-panel" data-row="0" data-col="0" data-sizeX="1" data-sizeY="1">
             <div class="card">
                 <div class="card-header">
