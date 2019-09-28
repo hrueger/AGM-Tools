@@ -40,7 +40,8 @@
                             "src/manifest.json"
                         ],
                         "styles": [
-                            "src/styles.scss"
+                            "src/styles.scss",
+                            "./node_modules/ngx-lightbox/lightbox.css"
                         ],
                         "scripts": ["node_modules/chart.js/dist/Chart.bundle.min.js"]
                     },

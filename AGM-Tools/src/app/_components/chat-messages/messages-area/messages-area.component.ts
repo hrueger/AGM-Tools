@@ -7,7 +7,10 @@ import {
     OnInit,
     SimpleChanges,
 } from "@angular/core";
+import { Lightbox } from "ngx-lightbox";
+import config from "../../../_config/config";
 import { Message } from "../../../_models/message.model";
+import { AuthenticationService } from "../../../_services/authentication.service";
 import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
@@ -21,14 +24,45 @@ export class MessagesAreaComponent implements OnInit {
     @Input() public messages: Message[];
     @Input() public messageSent: Event;
     @Input() public receiverId: number;
+    public allImageSources: any = [];
 
     constructor(
         private remoteService: RemoteService,
         private cdr: ChangeDetectorRef,
+        private authService: AuthenticationService,
+        private lightbox: Lightbox,
     ) { }
 
     public ngOnInit() {
         this.messages = this.messages.slice(0, 50);
+    }
+
+    public displayImage(messageIndex) {
+        const that = this;
+        if (this.allImageSources.length == 0) {
+            this.messages.forEach((msg) => {
+                if (msg.imageSrc) {
+                    const date = new Date(msg.created);
+                    const datestr = `am ${that.pad(date.getDay())}.${that.pad(date.getMonth())}.${date.getFullYear()} um ${that.pad(date.getHours())}:${that.pad(date.getMinutes())} Uhr`;
+                    that.allImageSources.push({
+                        caption: `${msg.sendername} ${datestr}`,
+                        name: msg.imageSrc,
+                        src: that.getImageSrc(msg.imageSrc, false),
+                    });
+                }
+            });
+        }
+        const index = this.allImageSources.findIndex((img) => img.name == that.messages[messageIndex].imageSrc);
+        this.lightbox.open(this.allImageSources, index);
+    }
+
+    public getImageSrc(imageName, thumbnail = true) {
+        return config.apiUrl +
+            "?getAttachment=" +
+            imageName +
+            "&token=" +
+            this.authService.currentUserValue.token +
+            (thumbnail ? "&thumbnail" : "");
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -99,5 +133,11 @@ export class MessagesAreaComponent implements OnInit {
     public isViewed(message: Message) {
         // tslint:disable-next-line: radix
         return message.sent === "seen";
+    }
+
+    private pad(num, size = 2) {
+        let s = num + "";
+        while (s.length < size) { s = "0" + s; }
+        return s;
     }
 }

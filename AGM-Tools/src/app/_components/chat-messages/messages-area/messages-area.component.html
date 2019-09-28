@@ -19,7 +19,26 @@
                 <p *ngIf="!isContinuation(idx)" class="name alt">
                     {{ message.sendername }}
                 </p>
-                <p class="message">{{ message.text }}</p>
+
+                <img class="message message-image" (click)="displayImage(idx)" *ngIf="message.imageSrc" [src]="getImageSrc(message.imageSrc)">
+
+                <table *ngIf="message.contactSrc" class="contact">
+                    <tr>
+                        <td rowspan="2"><img class="contact image" src="assets/attachment/contact.png"></td>
+                        <td>
+                            <p class="name">{{message.contactSrc.name}}</p>
+                        </td>
+                        <td rowspan="2"><button width="40px" height="40px" class="contact-copy-btn btn" (click)="addContact(message.contactSrc)"><i class="fas fa-copy"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="number">{{message.contactSrc.number}}</p>
+                        </td>
+                    </tr>
+                </table>
+                <p class="message" *ngIf="!message.imageSrc && !message.contactSrc">{{ message.text }}</p>
+
+
                 <div *ngIf="message.fromMe" class="addon fa" [innerHtml]="getIcon(message)" [class.blue]="isViewed(message)"></div>
                 <span class="timestamp">
                     {{ message.created | date: "shortTime" }}

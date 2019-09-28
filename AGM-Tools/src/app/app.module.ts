@@ -8,8 +8,8 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFireMessagingModule } from "@angular/fire/messaging";
-import { FormsModule } from "@angular/forms";
 import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
@@ -25,6 +25,7 @@ import { ChartsModule } from "ng2-charts";
 import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 import { AvatarModule } from "ngx-avatar";
 import { ContextMenuModule } from "ngx-contextmenu";
+import { LightboxModule } from "ngx-lightbox";
 import { ToastrModule } from "ngx-toastr";
 import { environment } from "../environments/environment";
 import { AboutComponent } from "./_components/about/about.component";
@@ -105,6 +106,7 @@ registerLocaleData(localeDe);
         BrowserModule,
         HttpClientModule,
         NgbModule,
+        LightboxModule,
         BrowserModule,
         ReactiveFormsModule,
         HttpClientModule,
