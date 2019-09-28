@@ -1,9 +1,4 @@
-<button
-    id="newBtn"
-    type="button"
-    class="btn btn-primary"
-    (click)="openNewModal(newNotificationModal)"
->
+<button id="newBtn" type="button" class="btn btn-primary" (click)="openNewModal(newNotificationModal)">
     Neue Benachrichtigung
 </button>
 <br /><br />
@@ -26,25 +21,14 @@
                     </span>
                 </td>
                 <td>{{ notification.headline }}</td>
-                <td>{{ notification.content }}</td>
+                <td [innerHTML]="notification.content | safe:'html'"></td>
                 <td>
-                    <span
-                        *ngFor="let user of notification.seen"
-                        class="text-success"
-                        >{{ user }}<br
-                    /></span>
+                    <span *ngFor="let user of notification.seen" class="text-success">{{ user }}<br /></span>
 
-                    <span
-                        *ngFor="let user of notification.notseen"
-                        class="text-danger"
-                        >{{ user }}<br
-                    /></span>
+                    <span *ngFor="let user of notification.notseen" class="text-danger">{{ user }}<br /></span>
                 </td>
                 <td>
-                    <button
-                        class="btn btn-link"
-                        (click)="deleteNotification(notification)"
-                    >
+                    <button class="btn btn-link" (click)="deleteNotification(notification)">
                         Löschen
                     </button>
                 </td>
@@ -56,10 +40,8 @@
 <br />
 <br />
 <p>
-    <small
-        ><b>Wichtig:</b> es werden nur diejenigen Benachrichtigungen angezeigt,
-        die von Ihnen erstellt worden sind.</small
-    >
+    <small><b>Wichtig:</b> es werden nur diejenigen Benachrichtigungen angezeigt,
+        die von Ihnen erstellt worden sind.</small>
 </p>
 
 <ng-template #newNotificationModal let-modal>
@@ -67,12 +49,7 @@
         <h4 class="modal-title" id="modal-basic-title">
             Neue Benachrichtigung
         </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -83,47 +60,24 @@
         <form [formGroup]="newNotificationForm">
             <div class="form-group">
                 <label for="headline">Thema: </label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="headline"
-                    formControlName="headline"
-                    placeholder="Thema"
-                />
+                <input type="text" class="form-control" id="headline" formControlName="headline" placeholder="Thema" />
             </div>
             <br />
             <div class="form-group">
                 <label for="content">Nachricht: </label>
-                <textarea
-                    class="form-control"
-                    formControlName="content"
-                    id="content"
-                    placeholder="Nachricht"
-                ></textarea>
+                <textarea class="form-control" formControlName="content" id="content" placeholder="Nachricht"></textarea>
             </div>
             <br />
             <div class="form-group">
                 <label for="receivers" class="">Empfänger:</label>
-                <select
-                    multiple
-                    class="custom-select"
-                    formControlName="receivers"
-                >
-                    <option
-                        *ngFor="let user of allusers"
-                        value="{{ user.id }}"
-                        >{{ user.username }}</option
-                    >
+                <select multiple class="custom-select" formControlName="receivers">
+                    <option *ngFor="let user of allusers" value="{{ user.id }}">{{ user.username }}</option>
                 </select>
             </div>
             <br />
             <div class="form-group">
                 <label for="importance">Thema: </label>
-                <select
-                    class="form-control"
-                    id="type"
-                    formControlName="importance"
-                >
+                <select class="form-control" id="type" formControlName="importance">
                     <option value="1">Erfolg</option>
                     <option value="2">Information</option>
                     <option value="3">Warnung</option>
@@ -134,15 +88,11 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button
-            type="button"
-            class="btn btn-success"
-            (click)="
+        <button type="button" class="btn btn-success" (click)="
                 !newNotificationForm.invalid
                     ? modal.close('Save click')
                     : (invalidMessage = true)
-            "
-        >
+            ">
             Senden
         </button>
     </div>

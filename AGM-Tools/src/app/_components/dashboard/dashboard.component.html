@@ -2,7 +2,8 @@
     <button (click)="makeNotificationSeen(notification)" type="button" class="seen btn btn-primary  float-right btn-lg">
         Gelesen
     </button>
-    <strong>{{ notification.headline }}</strong> {{ notification.content }}
+    <strong>{{ notification.headline }}</strong>
+    <div [innerHTML]="notification.content | safe:'html'"></div>
     <br /><br /><small><b>{{ notification.sender }}</b> am {{ notification.date }} um
         {{ notification.time }} Uhr</small>
 </div>

@@ -14,8 +14,8 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
-import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
 import { DashboardLayoutModule } from "@syncfusion/ej2-angular-layouts";
 import { AccordionModule } from "@syncfusion/ej2-angular-navigations";
@@ -52,6 +52,7 @@ import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
+import { SafePipe } from "./_pipes/safe.pipe";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
@@ -67,6 +68,7 @@ registerLocaleData(localeDe);
     declarations: [
         AppComponent,
         LoginComponent,
+        SafePipe,
         DashboardComponent,
         UsersComponent,
         ChatComponent,
