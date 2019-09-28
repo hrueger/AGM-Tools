@@ -55,6 +55,7 @@ registerElement("CarouselItem", () => CarouselItem);
 import { FormBuilder } from "@angular/forms";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { EmojiPickerModule } from "nativescript-emoji-picker/angular";
+import { LetterAvatarModule } from "nativescript-letter-avatar/angular";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker";
 import { ContactPickerComponent } from "./_components/_modals/contact-picker.modal.tns";
 import { EditUserModalComponent } from "./_components/_modals/edit-user.modal.tns";
@@ -69,6 +70,7 @@ import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
+registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -123,6 +125,7 @@ registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swip
         NativeScriptUIChartModule,
         NativeScriptUIDataFormModule,
         NativeScriptUIGaugeModule,
+        LetterAvatarModule,
         AvatarModule,
         EmojiPickerModule,
     ],

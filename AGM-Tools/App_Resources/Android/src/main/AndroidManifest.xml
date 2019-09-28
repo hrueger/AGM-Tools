@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android" package="__PACKAGE__" android:versionCode="30915" android:versionName="3.09.15">
     <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" />
-    <uses-sdk android:minSdkVersion="18" android:targetSdkVersion="__APILEVEL__" />
+    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="__APILEVEL__" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -16,5 +17,16 @@
             </intent-filter>
         </activity>
         <activity android:name="com.tns.ErrorReportActivity" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="de.multimediaag.agmtools.fileprovider"
+            android:exported="false"
+            tools:replace="android:authorities"
+            android:grantUriPermissions="true">
+            <meta-data
+                tools:replace="android:resource"
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
     </application>
 </manifest>

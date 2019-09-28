@@ -17,12 +17,10 @@
 .dialog {
     visibility: collapse;
     opacity: 0;
-}
-
-.dialog {
+    
     background-color: white;
     border-radius: 8;
-    
+
 }
 
 

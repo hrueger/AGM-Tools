@@ -2,6 +2,7 @@ import { Component, ElementRef } from "@angular/core";
 import { OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
+import { Downloader } from "nativescript-downloader";
 import {
     DrawerTransitionBase,
     RadSideDrawer,
@@ -47,12 +48,13 @@ export class AppComponent {
     }
 
     public logout() {
-        this.rSideDrawer.nativeElement.toggleDrawerState();
+        this.hideDrawer();
         this.authenticationService.logout();
         this.router.navigate(["/login"]);
     }
     public ngOnInit() {
         this.psideDrawerTransition = new SlideInOnTopTransition();
+        Downloader.init();
     }
     public hideDrawer(): void {
         this.rSideDrawer.nativeElement.toggleDrawerState();

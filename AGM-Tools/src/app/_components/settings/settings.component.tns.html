@@ -1,2 +1,10 @@
 <navbar headline="Einstellungen"></navbar>
-<Label textWrap="true" text="Settings Page" class="h2 description-label"></Label>
+<ListView #settingListView [items]="settings">
+    <ng-template let-setting="item" let-i="index" >
+        <GridLayout (tap)="goTo(setting)" rows="auto, auto" columns="auto, *" class="list-group-item">
+            <Label row="0" col="0" rowspan="2" class="fas icon" [text]="getIcon(setting.icon)"></Label>
+            <Label class="list-group-heading" row="0" col="1" [text]="setting.name"></Label>
+            <Label row="1" col="1" class="body" [text]="setting.name"></Label>
+        </GridLayout>
+    </ng-template>
+</ListView>
