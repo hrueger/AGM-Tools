@@ -10,6 +10,7 @@ import {
 import { Lightbox } from "ngx-lightbox";
 import config from "../../../_config/config";
 import { Message } from "../../../_models/message.model";
+import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { RemoteService } from "../../../_services/remote.service";
 
@@ -31,10 +32,24 @@ export class MessagesAreaComponent implements OnInit {
         private cdr: ChangeDetectorRef,
         private authService: AuthenticationService,
         private lightbox: Lightbox,
+        private alertService: AlertService,
     ) { }
 
     public ngOnInit() {
         this.messages = this.messages.slice(0, 50);
+    }
+
+    public addContact(contact) {
+        const el = document.createElement("textarea");
+        el.value = contact.number;
+        // @ts-ignore
+        el.style = { position: "absolute", left: "-9999px" };
+        el.setAttribute("readonly", "");
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        this.alertService.success("Die Nummer wurde in die Zwischenablage kopiert!");
     }
 
     public displayImage(messageIndex) {
