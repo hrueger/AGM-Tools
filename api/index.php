@@ -407,6 +407,9 @@ if ($data) {
             case "calendarUpdateEvent":
                 calendarUpdateEvent($args);
                 break;
+            case "calendarRemoveEvent":
+                calendarRemoveEvent($args);
+                break;
 
             case "projectsGetProjects":
                 projectsGetProjects();
@@ -1050,17 +1053,18 @@ function calendarNewEvent($data) {
 			$sql = "INSERT INTO `dates` (`id`, `startDate`, `endDate`, `headline`, `description`, `location`, `creator`) VALUES
 					(NULL, '$startDate', '$endDate', '$headline', '$description', '$location', '$author');";
 
-			$result = $db->query($sql);
+            $result = $db->query($sql);
+            $id = $db->insert_id;
 
 
-			if ($result) {
+			if ($result && $id) {
 				if ($important) {
 					$users = array_keys(getUserIdArray($db));
 					$receivers = implode("-", $users);
 					$result = $db->query("INSERT INTO `notifications` (`id`, `receivers`, `sender`, `headline`, `content`, `type`, `seen`, `date`) VALUES
 									(NULL, '$receivers', '$author', 'Neuer Termin: $headline', 'Es wurde ein neuer Termin hinzugefügt: $description <br>vom $startDate Uhr bis zum $endDate Uhr', '2', '0', NOW())");
 					if ($result) {
-						die(json_encode(array("status"=> true)));
+						die(json_encode(array("status"=> true, "id" => $id)));
 					} else {
 						dieWithMessage("Termin nicht gespeichert!" . $db->error);
 					}
@@ -1121,6 +1125,28 @@ function calendarUpdateEvent($data) {
 			}
 		} else {
 			dieWithMessage("Termin nicht gespeichert, nicht alle Daten wurden angegeben! ".print_r($data, true));
+		}
+}
+
+function calendarRemoveEvent($data) {
+    $db = connect();
+    if (isset($data["id"]) && !empty(trim($data["id"]))) {
+			
+			$id = $db->real_escape_string($data["id"]);
+			
+
+			$sql = "DELETE FROM dates WHERE id='$id'";
+
+			$result = $db->query($sql);
+			if ($result) {
+				
+				die(json_encode(array("status"=> true)));
+					
+			} else {
+				dieWithMessage("Termin nicht gelöscht! " . $db->error);
+			}
+		} else {
+			dieWithMessage("Termin nicht gelöscht, nicht alle Daten wurden angegeben! ".print_r($data, true));
 		}
 }
 

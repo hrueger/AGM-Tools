@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewEncapsulation, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from "@angular/core";
 import {
     AgendaService,
     DayService,
@@ -9,9 +9,9 @@ import {
     WorkWeekService,
 } from "@syncfusion/ej2-angular-schedule";
 import { L10n, loadCldr } from "@syncfusion/ej2-base";
+import { AlertService } from "../../_services/alert.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
-import { AlertService } from "../../_services/alert.service";
 
 L10n.load({
     de: {
@@ -146,7 +146,7 @@ loadCldr(
     ],
 })
 export class CalendarComponent {
-    @ViewChild("calendar", {static: false}) public calendar;
+    @ViewChild("calendar", { static: false }) public calendar;
     public weekFirstDay: number = 1;
     public showCalendar = false;
     public selectedDate: Date = new Date();
@@ -166,6 +166,7 @@ export class CalendarComponent {
             // recurrenceID: { name: "RecurrenceID" }
         },
     };
+    public idsToReplace: any = [];
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
@@ -195,7 +196,7 @@ export class CalendarComponent {
                     this.showCalendar = false;
                     const that = this;
                     window.setTimeout(() => {
-                        that.showCalendar = true
+                        that.showCalendar = true;
                     }, 50);
                 } else {
                     this.showCalendar = true;
@@ -209,25 +210,7 @@ export class CalendarComponent {
             switch (ev.requestType) {
                 case "eventCreated":
                     this.remoteService
-                    .getNoCache("calendarNewEvent", {
-                        description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
-                        endDate: ev.data.EndTime.toISOString(),
-                        headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
-                        important: true,
-                        location: ev.data.Location ? ev.data.Location : "Kein Ort angegeben",
-                        startDate: ev.data.StartTime.toISOString(),
-                    })
-                    .subscribe((data) => {
-                        if (data && data.status == true) {
-                            this.alertService.success(
-                                "Termin erfolgreich gespeichert!",
-                            );
-                        }
-                    });
-                case "eventChanged":
-                        this.remoteService
-                        .getNoCache("calendarUpdateEvent", {
-                            id: ev.data.Id,
+                        .getNoCache("calendarNewEvent", {
                             description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
                             endDate: ev.data.EndTime.toISOString(),
                             headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
@@ -238,13 +221,69 @@ export class CalendarComponent {
                         .subscribe((data) => {
                             if (data && data.status == true) {
                                 this.alertService.success(
-                                    "Termin erfolgreich aktualisiert!",
+                                    "Termin erfolgreich gespeichert!",
                                 );
+                                this.idsToReplace.push(
+                                    {
+                                        // @ts-ignore
+                                        bad: this.eventSettings.dataSource.find((e) => e.Id == ev.data.Id).Id,
+                                        good: data.id,
+                                    },
+                                );
+                                console.log(this.idsToReplace);
                             }
                         });
+                case "eventChanged":
+                    const id = this.getRealId(ev.data.Id);
+                    if (id != null) {
+                        this.remoteService
+                            .getNoCache("calendarUpdateEvent", {
+                                description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
+                                endDate: ev.data.EndTime.toISOString(),
+                                headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
+                                id,
+                                important: true,
+                                location: ev.data.Location ? ev.data.Location : "Kein Ort angegeben",
+                                startDate: ev.data.StartTime.toISOString(),
+                            })
+                            .subscribe((data) => {
+                                if (data && data.status == true) {
+                                    this.alertService.success(
+                                        "Termin erfolgreich aktualisiert!",
+                                    );
+                                }
+                            });
+                    }
+                case "eventRemoved":
+                    const evId = this.getRealId(ev.data[0].Id);
+                    if (evId != null) {
+                        this.remoteService
+                            .getNoCache("calendarRemoveEvent", {
+                                id: evId,
+                            })
+                            .subscribe((data) => {
+                                if (data && data.status == true) {
+                                    this.alertService.success(
+                                        "Termin erfolgreich gelöscht!",
+                                    );
+                                }
+                            });
+                    }
                 default:
                     console.log(ev);
             }
         }
+    }
+
+    private getRealId(id: string) {
+        if (id.indexOf(",") != -1) {
+            const index = this.idsToReplace.findIndex((e) => e.bad == id);
+            if (index != -1) {
+                id = this.idsToReplace[index].good;
+            } else {
+                id = null;
+            }
+        }
+        return id;
     }
 }
