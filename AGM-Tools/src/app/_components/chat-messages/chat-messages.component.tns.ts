@@ -230,28 +230,30 @@ export class ChatMessagesComponent
     }
 
     public sendMessage() {
-        let message: Message = {
-            chat: null,
-            created: Date.now(),
-            fromMe: true,
-            sendername: "",
-            sent: "notsent",
-            text: this.inputMessageField.nativeElement.text,
-        };
-        this.messages.push(message);
-        this.remoteService
-            .getNoCache("chatSendMessage", {
-                message: this.inputMessageField.nativeElement.text,
-                rid: this.receiverId,
-            })
-            .subscribe((data) => {
-                message = this.messages.pop();
-                message.sent = "sent";
-                this.messages.push(message);
-                // console.log(this.messages);
-                this.cdr.detectChanges();
-            });
-        this.inputMessageField.nativeElement.text = "";
+        if (this.inputMessageField.nativeElement.text && this.inputMessageField.nativeElement.text != "") {
+            let message: Message = {
+                chat: null,
+                created: Date.now(),
+                fromMe: true,
+                sendername: "",
+                sent: "notsent",
+                text: this.inputMessageField.nativeElement.text,
+            };
+            this.messages.push(message);
+            this.remoteService
+                .getNoCache("chatSendMessage", {
+                    message: this.inputMessageField.nativeElement.text,
+                    rid: this.receiverId,
+                })
+                .subscribe((data) => {
+                    message = this.messages.pop();
+                    message.sent = "sent";
+                    this.messages.push(message);
+                    // console.log(this.messages);
+                    this.cdr.detectChanges();
+                });
+            this.inputMessageField.nativeElement.text = "";
+        }
     }
 
     public ngOnInit() {
