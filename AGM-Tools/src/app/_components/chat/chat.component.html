@@ -1,40 +1,17 @@
 <div class="browser">
-    <nav
-        class="col-md-2 offset-md-2 contactsidebar sidebar"
-    >
+    <nav class="col-md-2 offset-md-2 contactsidebar sidebar">
         <div class="sidebar-sticky notoppadding">
             <ul class="nav" id="contacts">
-                <li
-                    [class.active]="currentRid == chat.rid"
-                    class="contact nav-item"
-                    *ngFor="let chat of chats"
-                    (click)="goToChat(chat.rid)"
-                >
-                    <a
-                        ><img
-                            class="avatar float-left"
-                            [src]="chat.contact.avatar"
-                        />
+                <li [class.active]="currentRid == chat.rid" class="contact nav-item" *ngFor="let chat of chats" (click)="goToChat(chat.rid)">
+                    <a><img class="avatar float-left" [src]="chat.contact.avatar" />
                         <div class="contactinfo">
-                            <p
-                                *ngIf="chat.when"
-                                class="date float-right"
-                                [class.time-unread]="chat.unread > 0"
-                            >
-                                {{
-                                    chat.when
-                                        | date: "yyyy-MM-dd"
-                                        | shortWhen
-                                        
-                                }}
+                            <p *ngIf="chat.when" class="date float-right" [class.time-unread]="chat.unread > 0">
+                                {{ chat.when | date: "yyyy-MM-dd" | shortWhen }}
                             </p>
 
                             {{ chat.contact.name }}
                             <p class="latestmessage">{{ chat.text }}</p>
-                            <span
-                                class="badge badge-newMes"
-                                *ngIf="chat.unread > 0"
-                                >{{ chat.unread }}</span
+                            <span class="badge badge-newMes" *ngIf="chat.unread > 0">{{ chat.unread }}</span
                             >
                         </div>
                     </a>
@@ -42,8 +19,9 @@
             </ul>
         </div>
     </nav>
-    <div class="main-messages">
-        <chat-messages [inputReceiverId]="currentRid" class=""></chat-messages>
-    </div>
+    
+</div>
+<div class="col-md-8 offset-md-4 sidebar main-messages">
+    <chat-messages [inputReceiverId]="currentRid" class=""></chat-messages>
 </div>
 <div class="bgimg"></div>

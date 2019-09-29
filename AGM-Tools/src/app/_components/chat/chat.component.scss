@@ -70,8 +70,10 @@ $lightgreen: #25d366;
     padding-top: 44px;
 }
 
-.browser .main-messages {
-    margin-left: 317px;
+.main-messages {
+    overflow-y: scroll;
+    height: 100vh;
+    margin-top: 45px;
 }
 
 .browser .active {
