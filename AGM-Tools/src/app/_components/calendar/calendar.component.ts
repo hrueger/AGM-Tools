@@ -12,6 +12,7 @@ import { L10n, loadCldr } from "@syncfusion/ej2-base";
 import { AlertService } from "../../_services/alert.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { ActivatedRoute } from "@angular/router";
 
 L10n.load({
     de: {
@@ -167,9 +168,11 @@ export class CalendarComponent {
         },
     };
     public idsToReplace: any = [];
+    public eventToNavigateTo = null;
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
+        private route: ActivatedRoute,
         private alertService: AlertService,
     ) { }
 
@@ -191,6 +194,9 @@ export class CalendarComponent {
                         StartTimezone: "Europe/Berlin",
                         Subject: date.headline,
                     });
+                    if (date.id == this.eventToNavigateTo) {
+                        this.selectedDate = new Date(date.startDate);
+                    }
                 }
                 if (this.showCalendar) {
                     this.showCalendar = false;
@@ -202,6 +208,9 @@ export class CalendarComponent {
                     this.showCalendar = true;
                 }
             }
+        });
+        this.route.params.subscribe((params) => {
+            this.eventToNavigateTo = params.index;
         });
     }
 

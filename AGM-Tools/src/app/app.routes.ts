@@ -74,6 +74,11 @@ export const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
+        component: CalendarComponent,
+        path: "calendar/:index",
+    },
+    {
+        canActivate: [AuthGuard],
         component: ProjectsComponent,
         path: "projects",
     },

@@ -61,7 +61,7 @@
                 </div>
                 <div class="card-body dates">
                     <ol class="datelist">
-                        <li *ngFor="let date of dates">
+                        <li *ngFor="let date of dates" class="event" routerLink="/calendar/{{date.id}}">
                             <span class="headline">{{date.name}}</span>
                             <span class="date">ab dem {{ date.weekday }}, {{ date.date }} um {{ date.starttime }} Uhr</span>
                             <span class="countdown">noch {{ date.countdown }}</span>
