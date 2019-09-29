@@ -59,12 +59,13 @@
                 <div class="card-header">
                     Nächste Termine
                 </div>
-                <div class="card-body">
-                    <ol>
+                <div class="card-body dates">
+                    <ol class="datelist">
                         <li *ngFor="let date of dates">
-                            am {{ date.weekday }}, {{ date.date }} um {{ date.starttime }} Uhr<br /><b>
-                                noch {{ date.countdown }}</b>
-                            <br /><span class="headline">Filmen der zu Ehrenden</span>
+                            <span class="headline">{{date.name}}</span>
+                            <span class="date">ab dem {{ date.weekday }}, {{ date.date }} um {{ date.starttime }} Uhr</span>
+                            <span class="countdown">noch {{ date.countdown }}</span>
+                            <br />
                         </li>
                     </ol>
                 </div>

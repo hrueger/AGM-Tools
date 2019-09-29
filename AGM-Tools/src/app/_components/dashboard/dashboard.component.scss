@@ -60,3 +60,25 @@
     padding-left: 50px;
     margin-bottom: 15px;
 }
+
+.datelist {
+    font-size: 1.4em;
+    span {
+        display: block;
+    }
+    .headline {
+        text-decoration: underline;
+    }
+    .countdown {
+        color: #2b669a;
+        font-size: 0.8em;
+    }
+    .date {
+        font-size: 0.8em;
+    }
+}
+
+.card-body.dates {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
