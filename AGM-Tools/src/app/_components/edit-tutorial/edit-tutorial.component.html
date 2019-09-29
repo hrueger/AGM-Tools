@@ -27,7 +27,8 @@
 </div>
 
 <div class="mycard" *ngFor="let step of tutorial.steps; let index = index">
-    <h3>Schritt {{index}}: <i>{{step.title}}</i></h3>
+    <h3 class="d-inline">Schritt {{index + 1}}: <i>{{step.title}}</i></h3>
+    <button class="d-inline btn btn-link" (click)="deleteStep(index)">Schritt löschen</button>
     <div class="form-group">
         <label for="title">Titel: </label>
         <input type="text" class="form-control" [(ngModel)]="step.title" placeholder="Titel des Tutorials" />
@@ -37,7 +38,45 @@
         <label for="description">Inhalt: </label>
         <textarea class="form-control" [(ngModel)]="step.content" placeholder="Kurze Beschreibung des Inhalts"></textarea>
     </div>
-    <button type="button" class="btn btn-success" (click)="updateStep(step)">
+    <div>
+        <h6>Bild 1:</h6>
+        <span *ngIf="step.uploadingImage1">Hochladen...</span>
+        <img *ngIf="step.image1" [src]="getSrc(step.image1)" alt="Bild">
+        <button *ngIf="step.image1" class="btn btn-link" (click)="deleteImage(index, 1)">Bild löschen</button>
+        <div *ngIf="!step.image1" class="form-group">
+            <div class="custom-file">
+                <input type="file" (change)="uploadImage($event.target.files, index, 1)" class="custom-file-input" id="customFile">
+                <label class="custom-file-label">Bild hochladen</label>
+            </div>
+        </div>
+        <h6>Bild 2:</h6>
+        <span *ngIf="step.uploadingImage2">Hochladen...</span>
+        <img *ngIf="step.image2" [src]="getSrc(step.image2)" alt="Bild">
+        <button *ngIf="step.image2" class="btn btn-link" (click)="deleteImage(index, 2)">Bild löschen</button>
+
+        <div *ngIf="!step.image2" class="form-group">
+            <div class="custom-file">
+                <input type="file" (change)="uploadImage($event.target.files, index, 2)" class="custom-file-input" id="customFile">
+                <label class="custom-file-label">Bild hochladen</label>
+            </div>
+        </div>
+        <h6>Bild 3:</h6>
+        <span *ngIf="step.uploadingImage3">Hochladen...</span>
+        <img *ngIf="step.image3" [src]="getSrc(step.image3)" alt="Bild">
+        <button *ngIf="step.image3" class="btn btn-link" (click)="deleteImage(index, 3)">Bild löschen</button>
+
+        <div *ngIf="!step.image3" class="form-group">
+            <div class="custom-file">
+                <input type="file" (change)="uploadImage($event.target.files, index, 3)" class="custom-file-input" id="customFile">
+                <label class="custom-file-label">Bild hochladen</label>
+            </div>
+        </div>
+    </div>
+
+</div>
+<button type="button" class="btn btn-primary" (click)="addStep()">
+        Schritt hinzufügen
+    </button> &nbsp;
+<button type="button" class="btn btn-success" (click)="updateSteps()">
     Speichern
 </button>
-</div>

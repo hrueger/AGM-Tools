@@ -95,6 +95,21 @@ export class RemoteService {
                 catchError(this.handleError<any>(action, false)),
             );
     }
+    public uploadTutorialFileNoCache(file: any): Observable<any> {
+        this.log("uploading file " + file.name);
+        const formData: FormData = new FormData();
+        formData.append("uploadTutorialFile", file, file.name);
+        formData.append("uploadTutorialFile", "true");
+        return this.http
+            .post<any>(`${config.apiUrl}`, formData)
+            .pipe(
+                tap((_) =>
+                    this.log("uploading file " + file.name),
+                ),
+                catchError(this.handleError<any>("fileUpload", false)),
+            );
+    }
+
     private handleError<T>(operation = "operation", result?: T) {
         return (error: any): Observable<T> => {
             // tslint:disable-next-line: no-console

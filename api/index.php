@@ -219,6 +219,25 @@ if (isset($_POST["sendChatAttachment"])) {
     }
 }
 
+if (isset($_POST["uploadTutorialFile"])) {
+    if (isset($_FILES["uploadTutorialFile"])) {
+        $db = connect();
+
+        $path_parts = @pathinfo($_FILES["uploadTutorialFile"]["name"]);
+        $extension = $path_parts['extension'];
+        $name = uniqid() . $extension;
+        $path = getSetting($db, "SETTING_FILES_DIRECT_PATH");
+        $path = $path . "/tutorialFiles/$name";
+
+        if (!move_uploaded_file($_FILES["uploadTutorialFile"]["tmp_name"], $path)) {
+            dieWithMessage("Die Datei konnte nicht hochgeladen werden, weil ".$_FILES["uploadTutorialFile"]["error"]);
+        }
+        
+        die(json_encode(array("status" => true, "image" => $name)));
+    }
+}
+
+
 if (isset($_GET["getAttachment"])) {
 
     /*$src = "/var/www/html/AGM-Tools/data/attachments/" . explode("/", $_GET["getAttachment"])[0];
@@ -233,6 +252,19 @@ if (isset($_GET["getAttachment"])) {
         $file = $prepath . "/attachments/" . pathinfo($file)["filename"] . ".thumbnail." . pathinfo($file)["extension"];
     }
     
+    if (file_exists($file)) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $header = finfo_file($finfo, $file);
+        header("Content-Type: $header");
+        readfile($file);
+        exit;
+    }
+}
+
+if (isset($_GET["getTutorialFile"])) {
+    $db = connect();
+    $prepath = getSetting($db, "SETTING_FILES_DIRECT_PATH");
+    $file = $prepath . "/tutorialFiles/" . explode("/", $_GET["getTutorialFile"])[0];
     if (file_exists($file)) {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $header = finfo_file($finfo, $file);
@@ -1878,6 +1910,22 @@ function tutorialsUpdateStep($data) {
         $image3 = $db->real_escape_string($data["image3"]);
 
         $result = $db->query("UPDATE `tutorialsteps` SET `title`='$title', `content`='$content', `image1`='$image1', `image2`='$image2', `image3`='$image3' WHERE `id`='$id'");
+        if($result) {
+            die(json_encode(array("status" => true)));
+        } else {
+            dieWithMessage("Fehler: ".$db->error);
+    }
+	} else {
+		dieWithMessage("Nicht alle Daten angebenen!");
+		
+	}
+}
+function tutorialsDeleteStep($data) {
+    $db = connect();
+    if (isset($data["id"]) &&
+    !empty(trim($data["id"])) ) {
+        $id = $db->real_escape_string($data["id"]);
+        $result = $db->query("DELETE FROM tutorialsteps WHERE id='$id'");
         if($result) {
             die(json_encode(array("status" => true)));
         } else {

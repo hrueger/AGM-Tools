@@ -1,0 +1,13 @@
+.mycard {
+    padding: 40px;
+    width: 45%;
+    float: left;
+    border: 1px solid #d6d6d6;
+    border-radius: 5;
+    margin: 10px;
+}
+
+.img-fluid {
+    cursor: pointer;
+    margin-bottom: 3px;
+}
