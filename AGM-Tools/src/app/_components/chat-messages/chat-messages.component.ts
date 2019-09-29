@@ -44,6 +44,7 @@ export class ChatMessagesComponent
     // chats: Chat[];
 
     public messageGotToSend: Event;
+    private scrolledToBottom: boolean = false;
 
     constructor(
         private remoteService: RemoteService,
@@ -76,7 +77,9 @@ export class ChatMessagesComponent
         element.scrollIntoView(false);
     }
     public ngAfterViewChecked() {
-        this.scrollToBottom();
+        if (this.scrolledToBottom == false) {
+            this.scrollToBottom();
+        }
     }
     public ngOnChanges(data) {
         if (data.inputReceiverId && data.inputReceiverId.currentValue) {
