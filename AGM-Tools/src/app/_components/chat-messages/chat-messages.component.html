@@ -1,30 +1,29 @@
 <div *ngIf="chat && messages">
     <div class="messages-header col-md-8">
         <img [src]="chat.contact.avatar" class="messages-header thumb" />
-        <span class="messages-header title">{{ chat.contact.name }}</span
-        ><br />
-        <span class="messages-header subtitle"
-            >zuletzt online {{ chat.contact.lastseen }}</span
-        >
+        <span class="messages-header title">{{ chat.contact.name }}</span><br />
+        <span class="messages-header subtitle">zuletzt online {{ chat.contact.lastseen }}</span>
     </div>
 
     <div class="bgimg messages" #messagesConatiner>
         <div>
-            <ns-messages-area
-                [messageSent]="messageGotToSend"
-                [messages]="messages"
-                [receiverId]="receiverId"
-                class="messages-area"
-            ></ns-messages-area>
+            <ns-messages-area [messageSent]="messageGotToSend" [messages]="messages" [receiverId]="receiverId" class="messages-area"></ns-messages-area>
         </div>
         <div>
-            <ns-message-box
-                class="col-md-8 message-box"
-                (messageSent)="messageSentFromChild($event)"
-            ></ns-message-box>
+            <ns-message-box class="col-md-8 message-box" (messageSent)="messageSentFromChild($event)"></ns-message-box>
         </div>
     </div>
 </div>
-<div *ngIf="!chat || !messages">
-    <h2>Bitte einen Chat auswählen</h2>
+<div *ngIf="!chat || !messages" class="plcaeholderMessage">
+    <div class="new">
+        <h4>Schon gewusst?</h4>
+        <p>Du kannst jetzt im Chat auch</p>
+        <ul>
+            <li>Bilder</li>
+            <li>Kontakte</li>
+            <li>Dateien</li>
+            <li>und Emojis</li>
+        </ul>
+        <p>verschicken!</p>
+    </div>
 </div>
