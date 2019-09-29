@@ -450,6 +450,31 @@ if ($data) {
                 chatMarkAsReceived($args);
                 break; 
 
+            case "tutorialsGetTutorials":
+                tutorialsGetTutorials($args);
+                break;
+            case "tutorialsGetTutorial":
+                tutorialsGetTutorial($args);
+                break;
+            case "tutorialsNewTutorial":
+                tutorialsNewTutorial($args);
+                break;
+            case "tutorialsUpdateTutorial":
+                tutorialsUpdateTutorial($args);
+                break;
+            case "tutorialsDeleteTutorial":
+                tutorialsDeleteTutorial($args);
+                break;
+            case "tutorialsAddStep":
+                tutorialsAddStep($args);
+                break;
+            case "tutorialsUpdateStep":
+                tutorialsUpdateStep($args);
+                break;
+            case "tutorialsDeleteStep":
+                tutorialsDeleteStep($args);
+                break;
+
             case "filesGetFolder":
                 filesGetFolder($args);
                 break;
@@ -1716,6 +1741,153 @@ function chatMarkAsReceived($data) {
     }
 }
 
+
+function tutorialsGetTutorials($data) {
+    $db = connect();
+    $usernames = getUserIdArray($db);
+    $myID = getCurrentuserId();
+    $res = $db->query("SELECT * FROM tutorials");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    $ret = array();
+    foreach ($res as $line) {
+        $ret[] = array(
+            "id" => $line["id"],
+            "title" => $line["title"],
+            "description" => $line["description"],
+            "author" => $line["author"],
+            "date" => $line["date"],
+            "editable" => ($line["author"] == $myID));
+        
+    }
+    die(json_encode($ret));
+}
+function tutorialsNewTutorial($data) {
+    $db = connect();
+    if (isset($data["title"]) &&
+		isset($data["description"]) &&
+		!empty(trim($data["title"])) &&
+		!empty(trim($data["description"])) ) {
+
+			$title = $db->real_escape_string($data["title"]);
+			$description = $db->real_escape_string($data["description"]);
+			$author = $db->real_escape_string(getCurrentUserId());
+
+			$result = $db->query("INSERT INTO `tutorials` (`id`, `title`, `description`, `author`, `date`) VALUES
+								(NULL, '$title', '$description', '$author', NOW())");
+			if($result) {
+				die(json_encode(array("status" => true)));
+			} else {
+				dieWithMessage("Fehler: ".$db->error);
+				
+		}
+	} else {
+		dieWithMessage("Nicht alle Daten angebenen!");
+	}
+}
+function tutorialsUpdateTutorial($data) {
+    $db = connect();
+    if (isset($data["id"]) &&
+    isset($data["description"]) &&
+    isset($data["title"]) &&
+    !empty(trim($data["id"])) &&
+    !empty(trim($data["title"])) &&
+    !empty(trim($data["description"])) ) {
+
+        $title = $db->real_escape_string($data["title"]);
+        $id = $db->real_escape_string($data["id"]);
+        $description = $db->real_escape_string($data["description"]);
+
+        $result = $db->query("UPDATE `tutorials` SET `title`='$title', `description`='$description', `date`=NOW() WHERE `id`='$id'");
+        if($result) {
+            die(json_encode(array("status" => true)));
+        } else {
+            dieWithMessage("Fehler: ".$db->error);
+    }
+	} else {
+		dieWithMessage("Nicht alle Daten angebenen!");
+		
+	}
+}
+function tutorialsDeleteTutorial($data) {
+    
+}
+function tutorialsGetTutorial($data) {
+    $db = connect();
+    $usernames = getUserIdArray($db);
+    $myID = getCurrentuserId();
+    $id = (isset($data["id"]) ? $db->real_escape_string($data["id"]):dieWithMessage("Nicht alle Daten wurden angebenen!"));
+    $res = $db->query("SELECT * FROM tutorials WHERE `id` = '$id'");
+    $res = $res->fetch_all(MYSQLI_ASSOC);
+    $steps = $db->query("SELECT * FROM tutorialsteps WHERE `tutorial` = '$id'");
+    $steps = $steps->fetch_all(MYSQLI_ASSOC);
+    
+    $tutorialSteps = [];
+    foreach ($steps as $step) {
+        $tutorialSteps[] = array(
+            "id" => $step["id"],
+            "title" => $step["title"],
+            "content" => $step["content"],
+            "image1" => $step["image1"],
+            "image2" => $step["image2"],
+            "image3" => $step["image3"]
+            );
+        
+    }
+
+    foreach ($res as $line) {
+        $ret = array(
+            "id" => $line["id"],
+            "title" => $line["title"],
+            "description" => $line["description"],
+            "author" => $line["author"],
+            "date" => $line["date"],
+            "steps" => $tutorialSteps
+            );
+        
+    }
+    die(json_encode($ret));
+}
+
+function tutorialsAddStep($data) {
+    $db = connect();
+    $id = (isset($data["id"]) ? $db->real_escape_string($data["id"]):dieWithMessage("Nicht alle Daten wurden angebenen!"));
+    $res = $db->query("INSERT INTO `tutorialsteps` (`id`, `tutorial`, `title`, `content`, `image1`, `image2`, `image3`) VALUES (NULL, '$id', 'Unbenannter Schritt', '', '', '', '');");
+    if($res) {
+        die(json_encode(array("status" => true)));
+    } else {
+        dieWithMessage("Fehler: ".$db->error);  
+    }
+}
+function tutorialsUpdateStep($data) {
+    $db = connect();
+    if (isset($data["id"]) &&
+    isset($data["content"]) &&
+    isset($data["title"]) &&
+    isset($data["image1"]) &&
+    isset($data["image2"]) &&
+    isset($data["image3"]) &&
+    !empty(trim($data["id"])) &&
+    !empty(trim($data["title"])) &&
+    !empty(trim($data["content"])) ) {
+
+        $title = $db->real_escape_string($data["title"]);
+        $id = $db->real_escape_string($data["id"]);
+        $content = $db->real_escape_string($data["content"]);
+        $image1 = $db->real_escape_string($data["image1"]);
+        $image2 = $db->real_escape_string($data["image2"]);
+        $image3 = $db->real_escape_string($data["image3"]);
+
+        $result = $db->query("UPDATE `tutorialsteps` SET `title`='$title', `content`='$content', `image1`='$image1', `image2`='$image2', `image3`='$image3' WHERE `id`='$id'");
+        if($result) {
+            die(json_encode(array("status" => true)));
+        } else {
+            dieWithMessage("Fehler: ".$db->error);
+    }
+	} else {
+		dieWithMessage("Nicht alle Daten angebenen!");
+		
+	}
+}
 
 function filesGetFolder($data) {
     $db = connect();

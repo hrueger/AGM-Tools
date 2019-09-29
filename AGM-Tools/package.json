@@ -41,6 +41,7 @@
         "@syncfusion/ej2-angular-navigations": "^17.2.49",
         "@syncfusion/ej2-angular-popups": "^17.2.47",
         "@syncfusion/ej2-angular-schedule": "^17.2.49",
+        "@syncfusion/ej2-layouts": "^17.2.49",
         "ajv": "^6.10.2",
         "angularx-flatpickr": "^6.1.1",
         "bootstrap": "^4.3.1",

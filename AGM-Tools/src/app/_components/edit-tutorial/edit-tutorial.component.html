@@ -1,0 +1,43 @@
+<div class="mycard top">
+    <h3>Allgemeines</h3>
+    <div *ngIf="invalidMessage" class="alert alert-danger">
+        <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+    </div>
+    <form [formGroup]="tutorialForm">
+        <div class="form-group">
+            <label for="title">Titel: </label>
+            <input type="text" class="form-control" id="title" formControlName="title" placeholder="Titel des Tutorials" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="description">Beschreibung: </label>
+            <textarea class="form-control" id="description" formControlName="description" placeholder="Kurze Beschreibung des Inhalts"></textarea>
+        </div>
+    </form>
+    <button type="button" class="btn btn-primary" (click)="addStep()">
+        Schritt hinzufügen
+    </button> &nbsp;
+    <button type="button" class="btn btn-success" (click)="
+        !tutorialForm.invalid
+            ? updateGeneral()
+            : (invalidMessage = true)
+    ">
+    Speichern
+</button>
+</div>
+
+<div class="mycard" *ngFor="let step of tutorial.steps; let index = index">
+    <h3>Schritt {{index}}: <i>{{step.title}}</i></h3>
+    <div class="form-group">
+        <label for="title">Titel: </label>
+        <input type="text" class="form-control" [(ngModel)]="step.title" placeholder="Titel des Tutorials" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="description">Inhalt: </label>
+        <textarea class="form-control" [(ngModel)]="step.content" placeholder="Kurze Beschreibung des Inhalts"></textarea>
+    </div>
+    <button type="button" class="btn btn-success" (click)="updateStep(step)">
+    Speichern
+</button>
+</div>

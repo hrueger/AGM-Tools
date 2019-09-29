@@ -63,7 +63,10 @@ import { NewCalendarEventModalComponent } from "./_components/_modals/new-calend
 import { NewNotificationModalComponent } from "./_components/_modals/new-notification.modal.tns";
 import { NewProjectModalComponent } from "./_components/_modals/new-project.modal.tns";
 import { NewUserModalComponent } from "./_components/_modals/new-user.modal.tns";
+import { EditTutorialComponent } from "./_components/edit-tutorial/edit-tutorial.component";
 import { TourComponent } from "./_components/tour/tour.component";
+import { TutorialComponent } from "./_components/tutorial/tutorial.component";
+import { TutorialsComponent } from "./_components/tutorials/tutorials.component";
 import { UpdaterComponent } from "./_components/updater/updater.component";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
@@ -105,6 +108,9 @@ registerElement("AnimatedCircle", () => require("nativescript-animated-circle").
         NewProjectModalComponent,
         TourComponent,
         UpdaterComponent,
+        TutorialsComponent,
+        TutorialComponent,
+        EditTutorialComponent,
     ],
     entryComponents: [
         NewUserModalComponent,

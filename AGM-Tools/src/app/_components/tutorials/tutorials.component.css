@@ -1,0 +1,25 @@
+.tutorialholder {
+    padding-top: 30px;
+}
+
+.e-card-header-title {
+    font-size: 20px;
+    border-bottom: 1px solid rgb(238, 238, 238);
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.e-card-actions {
+    border-top: 1px solid rgb(238, 238, 238);
+}
+
+.e-card-actions button {
+    float: right;
+    margin: 5px;
+    margin-top: 10px;
+}
+
+.e-card-content {
+    padding-bottom: 20px;
+    cursor: pointer;
+}

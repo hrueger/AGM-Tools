@@ -18,7 +18,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
 import { DashboardLayoutModule } from "@syncfusion/ej2-angular-layouts";
-import { AccordionModule } from "@syncfusion/ej2-angular-navigations";
+import { AccordionModule, TabModule } from "@syncfusion/ej2-angular-navigations";
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
 import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { ChartsModule } from "ng2-charts";
@@ -38,6 +38,7 @@ import { ChatComponent } from "./_components/chat/chat.component";
 import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
 import { DashboardComponent } from "./_components/dashboard/dashboard.component";
 import { DoneComponent } from "./_components/done/done.component";
+import { EditTutorialComponent } from './_components/edit-tutorial/edit-tutorial.component';
 import { FileUploadComponent } from "./_components/file-upload/file-upload.component";
 import { FilesComponent } from "./_components/files/files.component";
 import { LoginComponent } from "./_components/login/login.component";
@@ -48,6 +49,8 @@ import { SettingsComponent } from "./_components/settings/settings.component";
 import { SidebarComponent } from "./_components/sidebar/sidebar.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
 import { TourComponent } from "./_components/tour/tour.component";
+import { TutorialComponent } from './_components/tutorial/tutorial.component';
+import { TutorialsComponent } from "./_components/tutorials/tutorials.component";
 import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
@@ -93,6 +96,9 @@ registerLocaleData(localeDe);
         FileUploadComponent,
         TourComponent,
         UpdaterComponent,
+        TutorialsComponent,
+        TutorialComponent,
+        EditTutorialComponent,
     ],
     imports: [
         AngularFireDatabaseModule,
@@ -106,6 +112,7 @@ registerLocaleData(localeDe);
         BrowserAnimationsModule,
         DashboardLayoutModule,
         BrowserModule,
+        TabModule,
         HttpClientModule,
         NgbModule,
         LightboxModule,

@@ -1,0 +1,48 @@
+<button class="btn btn-primary" (click)="newTutorial(newTutorialModal)">Neues Tutorial</button>
+
+<div class="tutorialholder">
+    <div class="e-card tutorial-card" style="max-width:400px" *ngFor="let tutorial of tutorials">
+        <div class="e-card-header-title" routerLink="/tutorial/{{tutorial.id}}">{{tutorial.title}}</div>
+        <div class="e-card-content" routerLink="/tutorial/{{tutorial.id}}">
+            {{tutorial.description}}
+        </div>
+        <div class="e-card-actions" *ngIf="tutorial.editable">
+            <button class="e-card-btn" routerLink="/editTutorial/{{tutorial.id}}"><i class="far fa-edit"></i></button>
+        </div>
+    </div>
+</div>
+
+<ng-template #newTutorialModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Neues Tutorial</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="invalidMessage" class="alert alert-danger">
+            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+        </div>
+        <form [formGroup]="newTutorialForm">
+            <div class="form-group">
+                <label for="title">Titel: </label>
+                <input type="text" class="form-control" id="title" formControlName="title" placeholder="Titel des Tutorials" />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="description">Beschreibung: </label>
+                <textarea class="form-control" id="description" formControlName="description" placeholder="Kurze Beschreibung des Inhalts"></textarea>
+            </div>
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="
+                !newTutorialForm.invalid
+                    ? modal.close('Save click')
+                    : (invalidMessage = true)
+            ">
+            Erstellen
+        </button>
+    </div>
+</ng-template>

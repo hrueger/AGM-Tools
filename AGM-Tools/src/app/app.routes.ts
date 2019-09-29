@@ -18,6 +18,9 @@ import { TourComponent } from "./_components/tour/tour.component";
 import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { AuthGuard } from "./_guards/auth.guard";
+import { TutorialsComponent } from "./_components/tutorials/tutorials.component";
+import { TutorialComponent } from "./_components/tutorial/tutorial.component";
+import { EditTutorialComponent } from "./_components/edit-tutorial/edit-tutorial.component";
 
 export const routes: Routes = [
     {
@@ -43,6 +46,21 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         component: ChatMessagesComponent,
         path: "chat-messages/:index",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: TutorialsComponent,
+        path: "tutorials",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: TutorialComponent,
+        path: "tutorial/:index",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: EditTutorialComponent,
+        path: "editTutorial/:index",
     },
     {
         canActivate: [AuthGuard],

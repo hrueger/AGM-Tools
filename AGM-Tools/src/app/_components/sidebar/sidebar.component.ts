@@ -10,6 +10,7 @@ export class SidebarComponent {
         { name: "Dashboard", icon: "tachometer-alt", target: "dashboard" },
         { name: "Benutzer", icon: "user", target: "users" },
         { name: "Chat", icon: "comments", target: "chat" },
+        { name: "Tutorials", icon: "book", target: "tutorials" },
         {
             icon: "envelope",
             name: "Benachrichtigungen",
