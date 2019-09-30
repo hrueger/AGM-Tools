@@ -1,10 +1,20 @@
-<navbar headline="Einstellungen"></navbar>
-<ListView #settingListView [items]="displayItems">
-    <ng-template let-setting="item" let-i="index" >
-        <GridLayout (tap)="goTo(i)" rows="auto, auto" columns="auto, *" class="list-group-item">
-            <Label row="0" col="0" rowspan="2" class="fas icon" [text]="getIcon(setting.icon)"></Label>
-            <Label class="list-group-heading" row="0" col="1" [text]="setting.name"></Label>
-            <Label row="1" col="1" class="body" [text]="setting.name"></Label>
-        </GridLayout>
-    </ng-template>
-</ListView>
+<StackLayout>
+    <GridLayout rows="36" columns="36,*,36" class="action-bar p-10">
+        <Button [text]="sub ? '&#xf060;' : '&#xf0c9;'" class="fas no-border round" row="0" col="0" (tap)="sub ? back() : onDrawerButtonTap()">
+        </Button>
+        <Label row="0" col="1" [text]="currentHeadline" class="text-center action-bar-title"></Label>
+    </GridLayout>
+    
+    
+    <ListView #settingListView [items]="displayItems" *ngIf="!displayingFull">
+        <ng-template let-setting="item" let-i="index" >
+            <GridLayout (tap)="goTo(i)" rows="auto, auto" [columns]="setting.type=='switch'?'70, *, auto':'70,*'" class="list-group-item">
+                <Label row="0" col="0" rowspan="2" class="fas icon" [text]="getIcon(setting.icon)"></Label>
+                <Label class="list-group-heading" row="0" col="1" [text]="setting.name"></Label>
+                <Label row="1" col="1" class="body" textWrap="true" [text]="setting.description"></Label>
+                <Switch [checked]="setting.value" *ngIf="setting.type=='switch'" (checkedChange)="updateSwitch(i)" row="0" rowspan="2" col="3"></Switch>
+            </GridLayout>
+        </ng-template>
+    </ListView>
+    <WebView row="1" #myWebView *ngIf="displayingFull && displayingFull.type=='switch'" [src]="displayingFull.value"></WebView>
+</StackLayout>
