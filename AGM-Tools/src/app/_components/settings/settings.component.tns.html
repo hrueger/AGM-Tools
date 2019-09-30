@@ -1,7 +1,7 @@
 <navbar headline="Einstellungen"></navbar>
-<ListView #settingListView [items]="settings">
+<ListView #settingListView [items]="displayItems">
     <ng-template let-setting="item" let-i="index" >
-        <GridLayout (tap)="goTo(setting)" rows="auto, auto" columns="auto, *" class="list-group-item">
+        <GridLayout (tap)="goTo(i)" rows="auto, auto" columns="auto, *" class="list-group-item">
             <Label row="0" col="0" rowspan="2" class="fas icon" [text]="getIcon(setting.icon)"></Label>
             <Label class="list-group-heading" row="0" col="1" [text]="setting.name"></Label>
             <Label row="1" col="1" class="body" [text]="setting.name"></Label>
