@@ -80,7 +80,9 @@ export class TutorialComponent implements OnInit {
   }
 
   private gotNewTutorialData(tutorial: any) {
+    if (tutorial) {
+      this.navbarService.setHeadline(`Tutorial: ${tutorial.title}`);
+    }
     this.tutorial = tutorial;
-    this.navbarService.setHeadline(`Tutorial: ${tutorial.title}`);
   }
 }
