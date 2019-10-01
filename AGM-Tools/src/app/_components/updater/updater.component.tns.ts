@@ -19,7 +19,8 @@ export class UpdaterComponent implements OnInit {
   public downloading: boolean = false;
   public currentProgress: number = 0;
   public currentProgressText: string = "0%";
-  public downloadDone: boolean = false;;
+  public downloadDone: boolean = false;
+  private completedPath = "";
 
   constructor(private alertService: AlertService, private zone: NgZone) {}
 
@@ -34,7 +35,6 @@ export class UpdaterComponent implements OnInit {
     const downloader = new Downloader();
     const dest = android.os.Environment.getExternalStoragePublicDirectory(
         android.os.Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-    console.log(dest);
 
     permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Herunterladen eines Updates")
         .then(() => {
@@ -58,39 +58,8 @@ export class UpdaterComponent implements OnInit {
             })
             .then((completed: DownloadEventData) => {
               this.zone.run(() => {
-                console.log(`${completed.path}`);
-                /*const intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
-                const apkFile = new java.io.File(completed.path);
-                const fileUri = androidx.core.content.FileProvider.getUriForFile(
-                  this, application.android.context.getPackageName() + ".provider", apkFile);
-
-                intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
-                intent.setFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                application.android.startActivity(intent);
-
-                */
-                const saveFile = new java.io.File(completed.path);
-                console.log(saveFile.length());
-                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
-                  console.log(1);
-                  saveFile.setReadable(true, false);
-                  const intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
-                  // tslint:disable-next-line: no-bitwise
-                  intent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
-                  intent.setDataAndType(java.net.Uri.fromFile(saveFile), "application/vnd.android.package-archive");
-                  application.android.foregroundActivity.startActivity(intent);
-                } else {
-                  console.log(2);
-                  const intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
-                  const fileUri = androidx.core.content.FileProvider.getUriForFile(application.android.context,
-                          "de.multimediaag.agmtools.provider",
-                          saveFile);
-                  intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
-                  intent.setFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                  application.android.foregroundActivity.startActivity(intent);
-                  this.downloadDone = true;
-                }
+                this.completedPath = completed.path;
+                this.createIntent();
               });
             })
             .catch((error) => {
@@ -98,8 +67,25 @@ export class UpdaterComponent implements OnInit {
               console.error(error.message);
             });
          });
-
-      /*utils.openUrl(`${config.apiUrl}?downloadMobileLatest`);*/
     }
 
+  public createIntent() {
+    const saveFile = new java.io.File(this.completedPath);
+    if (android.os.Build.VERSION.SDK_INT < 24) { // nougat
+      saveFile.setReadable(true, false);
+      const intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+      // tslint:disable-next-line: no-bitwise
+      intent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+        | android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+      intent.setDataAndType(android.net.Uri.fromFile(saveFile), "application/vnd.android.package-archive");
+      application.android.foregroundActivity.startActivity(intent);
+    } else {
+      const intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
+      const fileUri = androidx.core.content.FileProvider.getUriForFile(application.android.context, "de.multimediaag.agmtools.provider", saveFile);
+      intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
+      intent.setFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION);
+      application.android.foregroundActivity.startActivity(intent);
+    }
+    this.downloadDone = true;
+  }
 }

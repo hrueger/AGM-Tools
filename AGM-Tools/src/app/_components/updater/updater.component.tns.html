@@ -8,23 +8,10 @@
         <Label *ngIf="!downloading" class="info" row="1" col="0" horizontalAlignment="center" textWrap="true" text="Sobald der Download abgeschlossen ist, klicken Sie die herunterladene Datei bei den Benachrichtigungen an und folgen den Installationsanweisungen."></Label>
         <Label *ngIf="downloading && !downloadDone" class="info" row="1" col="0" horizontalAlignment="center" textWrap="true" text="Update wird heruntergeladen. Bitte warten..."></Label>
         <Label *ngIf="downloading && downloadDone" class="info" row="1" col="0" horizontalAlignment="center" textWrap="true" text="Es sollte sich nun ein neues Fenster geöffnent haben. Sollte dies nicht funktionieren, navigiere bitte zu deinen Downloads und installiere das heruntergeladene Update von dort."></Label>
+        <Button *ngIf="downloading && downloadDone" col="0" class="downloadBtn" row="2" horizontalAlignment="center" (tap)="createIntent()" text="Nochmal versuchen"></Button>
         <Button *ngIf="!downloading" col="0" class="downloadBtn" row="2" horizontalAlignment="center" (tap)="downloadUpdate()" text="Jetzt herunterladen"></Button>
-        <AnimatedCircle
-            col="0"
-            row="2"
-            *ngIf="downloading && !downloadDone"
-            backgroundColor="transparent"
-            width="200"
-            height="200"
-            rimColor="#e8e8e8"
-            barColor="#2b669a"
-            fillColor="#fff"
-            clockwise="true"
-            rimWidth="15"
-            [progress]="currentProgress"
-            [text]="currentProgressText"
-            textSize="5"
-            textColor="#d4d4d4"></AnimatedCircle>
-        
+        <AnimatedCircle col="0" row="2" *ngIf="downloading && !downloadDone" backgroundColor="transparent" width="200" height="200" rimColor="#e8e8e8" barColor="#2b669a" fillColor="#fff" clockwise="true" rimWidth="15" [progress]="currentProgress" [text]="currentProgressText"
+            textSize="5" textColor="#d4d4d4"></AnimatedCircle>
+
     </GridLayout>
 </ScrollView>
