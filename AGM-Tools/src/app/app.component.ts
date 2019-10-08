@@ -12,6 +12,8 @@ import { PushService } from "./_services/push.service";
 export class AppComponent {
     public currentUser: User;
     public pushMessage: any;
+    public showNav: boolean = false;
+    public navToHide: boolean = false;
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
@@ -31,5 +33,8 @@ export class AppComponent {
         this.pushService.requestPermission(userId);
         this.pushService.receiveMessage();
         this.pushMessage = this.pushService.currentMessage;
+    }
+    public hideNav() {
+        this.navToHide = !this.navToHide;
     }
 }

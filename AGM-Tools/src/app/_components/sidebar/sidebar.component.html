@@ -1,4 +1,4 @@
-<nav class="col-md-2 d-none d-md-block bg-dark sidebar">
+<nav class="col-md-2 d-md-block bg-dark sidebar" [class.d-none]="!showNav">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
             <li class="nav-item" *ngFor="let navLink of navLinks">
@@ -6,6 +6,7 @@
                     class="nav-link"
                     routerLinkActive="active"
                     routerLink="{{ navLink.target }}"
+                    (click)="hideNav()"
                 >
                     <i class="fa fa-{{ navLink.icon }}"></i>
                     {{ navLink.name }}

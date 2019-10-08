@@ -2,6 +2,7 @@
   color: white;
   text-align: left;
   display: block;
+  margin-left: 1rem;
 }
 
 .navbar-right {
@@ -18,9 +19,12 @@
   padding-top: 5px;
   padding-bottom: 5px;
   font-size: 1.5rem;
+  margin-right: 0px;
 }
-
 
 .action-bar-title {
   color: white;
+}
+.navbar {
+  z-index: 1300;
 }

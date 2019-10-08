@@ -105,7 +105,7 @@ registerLocaleData(localeDe);
         AngularFireAuthModule,
         AngularFireMessagingModule,
         AngularFireModule.initializeApp(environment.firebase),
-        RouterModule.forRoot(routes, { useHash: true, enableTracing: true }),
+        RouterModule.forRoot(routes, { useHash: true, enableTracing: false }),
         ContextMenuModule.forRoot({
             useBootstrap4: true,
         }),

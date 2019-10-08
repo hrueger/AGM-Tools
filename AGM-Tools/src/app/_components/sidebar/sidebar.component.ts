@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 @Component({
     selector: "app-sidebar",
@@ -6,6 +6,8 @@ import { Component, OnInit } from "@angular/core";
     templateUrl: "./sidebar.component.html",
 })
 export class SidebarComponent {
+    @Input() public changed: any;
+    public showNav: boolean = true;
     public navLinks = [
         { name: "Dashboard", icon: "tachometer-alt", target: "dashboard" },
         { name: "Benutzer", icon: "user", target: "users" },
@@ -28,5 +30,12 @@ export class SidebarComponent {
         { name: "Fertig", icon: "check", target: "done" },
         { name: "Client-Software", icon: "mobile", target: "clientsoftware" },
     ];
+
+    public hideNav() {
+        this.showNav = false;
+    }
+    public ngOnChanges(changes) {
+        this.showNav = !this.showNav;
+    }
 
 }

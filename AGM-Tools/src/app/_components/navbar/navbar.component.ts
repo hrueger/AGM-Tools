@@ -2,7 +2,11 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    EventEmitter,
+    Input,
     OnInit,
+    Output,
+    SimpleChanges,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../../_services/authentication.service";
@@ -15,6 +19,7 @@ import { NavbarService } from "../../_services/navbar.service";
 })
 export class NavbarComponent {
     public headline: string = "Nix";
+    @Output() public toggleNav = new EventEmitter<any>();
 
     constructor(
         private router: Router,
@@ -39,5 +44,10 @@ export class NavbarComponent {
             // tslint:disable-next-line: no-empty
         } finally {
         }
+    }
+    public toggleNavOnMobile(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.toggleNav.emit(Math.random());
     }
 }
