@@ -3,7 +3,8 @@ name: Lint
 on: [push]
 
 jobs:
-  build:
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -12,6 +13,8 @@ jobs:
       with:
         node-version: 10
     - name: Install dependencies
+      working-directory: AGM-Tools
       run: npm i
     - name: Lint
+      working-directory: AGM-Tools
       run: npm run lint
