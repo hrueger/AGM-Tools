@@ -2,12 +2,11 @@ name: Build
 
 on: [push]
 
-strategy:
-  matrix:
-    os: [windows-latest, ubuntu-latest, macOS-latest]
-
 jobs:
-  - build_web:
+  build_web:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macOS-latest]
     name: Web on ${{matrix.os}}
     runs-on: ${{matrix.os}}
     steps:
@@ -22,7 +21,10 @@ jobs:
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:web
-  - build_android:
+  build_android:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macOS-latest]
     name: Android on ${{matrix.os}}
     runs-on: ${{matrix.os}}
     steps:
