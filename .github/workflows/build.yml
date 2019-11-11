@@ -26,10 +26,10 @@ jobs:
       run: echo export const environment = {firebase:{apiKey:"", appId:"",authDomain:"",databaseURL:"",messagingSenderId:"",projectId:"agm-tools",storageBucket:"",},production:true}; >> ./src/environments/environment.prod.ts
     - name: Display Config
       working-directory: AGM-Tools
-      run: more environments\environment.ts
+      run: more environments\\environment.ts
     - name: Display Config
       working-directory: AGM-Tools
-      run: more environments\environment.prod.ts
+      run: more environments\\environment.prod.ts
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:web
@@ -62,6 +62,12 @@ jobs:
     - name: Create prod environment
       working-directory: AGM-Tools
       run: echo export const environment = {firebase:{apiKey:"", appId:"",authDomain:"",databaseURL:"",messagingSenderId:"",projectId:"agm-tools",storageBucket:"",},production:true}; >> ./src/environments/environment.prod.ts
+    - name: Display Config
+      working-directory: AGM-Tools
+      run: more environments\\environment.ts
+    - name: Display Config
+      working-directory: AGM-Tools
+      run: more environments\\environment.prod.ts
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:android
