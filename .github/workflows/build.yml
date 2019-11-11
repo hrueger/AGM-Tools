@@ -22,17 +22,16 @@ jobs:
       working-directory: AGM-Tools
       run: npm run build:web
   build_android:
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest, macOS-latest]
-    name: Android on ${{matrix.os}}
-    runs-on: ${{matrix.os}}
+    name: Android on Windows
+    runs-on: [windows-latest]
     steps:
     - uses: actions/checkout@v1
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
         node-version: 10
+    - name: Setup windows build tools
+      run: powershell @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://www.nativescript.org/setup/win'))"
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
