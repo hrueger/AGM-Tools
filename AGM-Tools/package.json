@@ -17,7 +17,8 @@
         "serve:web": "ng serve",
         "serve:android": "tns run android --bundle",
         "serve:ios": "tns run ios --bundle",
-        "lint": "ng lint"
+        "lint": "ng lint",
+        "createFilesWithApiKeys": "node createFilesWithApiKeys.js"
     },
     "private": true,
     "dependencies": {
