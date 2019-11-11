@@ -37,8 +37,9 @@ jobs:
     - name: Setup Android SDK
       run: choco install android-sdk -y
     - name: Setup platform tools
-      run: powershell "%ANDROID_HOME%/tools/bin/sdkmanager platform-tools platforms;android-28 build-tools;28.0.3"
-      # extras;android;m2repository extras;google;m2repository
+      run: powershell "%ANDROID_HOME%/tools/bin/sdkmanager platform-tools platforms;android-28 build-tools;28.0.3 extras;android;m2repository extras;google;m2repository"
+    - name: Install Nativescript CLI
+      run: npm i -g nativescript
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
