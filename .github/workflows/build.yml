@@ -30,8 +30,15 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 10
-    - name: Setup Nativescript
-      run: powershell @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://www.nativescript.org/setup/win'))"
+    - name: Setup Chocolatey
+      run: powershell @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))"
+    - name: Setup JDK
+      run: powershell choco install adoptopenjdk --version 8.192 
+    - name: Setup Android SDK
+      run: choco install android-sdk -y
+    - name: Setup platform tools
+      run: powershell "%ANDROID_HOME%/tools/bin/sdkmanager platform-tools platforms;android-28 build-tools;28.0.3"
+      # extras;android;m2repository extras;google;m2repository
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
