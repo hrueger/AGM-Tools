@@ -8,6 +8,7 @@ import { ChatComponent } from "./_components/chat/chat.component";
 import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
 import { DashboardComponent } from "./_components/dashboard/dashboard.component";
 import { DoneComponent } from "./_components/done/done.component";
+import { EditTutorialComponent } from "./_components/edit-tutorial/edit-tutorial.component";
 import { FilesComponent } from "./_components/files/files.component";
 import { LoginComponent } from "./_components/login/login.component";
 import { NotificationsComponent } from "./_components/notifications/notifications.component";
@@ -15,12 +16,11 @@ import { ProjectsComponent } from "./_components/projects/projects.component";
 import { SettingsComponent } from "./_components/settings/settings.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
 import { TourComponent } from "./_components/tour/tour.component";
+import { TutorialComponent } from "./_components/tutorial/tutorial.component";
+import { TutorialsComponent } from "./_components/tutorials/tutorials.component";
 import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { AuthGuard } from "./_guards/auth.guard";
-import { TutorialsComponent } from "./_components/tutorials/tutorials.component";
-import { TutorialComponent } from "./_components/tutorial/tutorial.component";
-import { EditTutorialComponent } from "./_components/edit-tutorial/edit-tutorial.component";
 
 export const routes: Routes = [
     {
