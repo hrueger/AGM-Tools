@@ -31,7 +31,7 @@ jobs:
       with:
         node-version: 10
     - name: Setup Chocolatey
-      run: powershell @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
+      run: powershell \"@powershell -NoProfile -ExecutionPolicy unrestricted -Command \"iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))\" && SET PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin\"
     - name: Setup JDK
       run: powershell choco install adoptopenjdk --version 8.192 
     - name: Setup Android SDK
