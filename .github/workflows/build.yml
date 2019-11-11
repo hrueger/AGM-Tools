@@ -39,7 +39,7 @@ jobs:
     - name: Setup Android SDK
       run: choco install android-sdk -y
     - name: Setup platform tools
-      run: "%ANDROID_HOME%\tools\bin\sdkmanager" emulator platform-tools platforms;android-28 build-tools;28.0.3 extras;android;m2repository extras;google;m2repository
+      run: "%ANDROID_HOME%/tools/bin/sdkmanager emulator platform-tools platforms;android-28 build-tools;28.0.3 extras;android;m2repository extras;google;m2repository"
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
