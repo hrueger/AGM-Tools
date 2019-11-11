@@ -601,13 +601,15 @@ function authenticate($data) {
                         $db->query($sql);
                         //echo $sql;
 
-
+                        $parts = explode(" ", $res["username"]);
+                        $firstname = $parts[0];
+                        $lastname = isset($parts[1]) ? $parts[1] : "";
                         
                         $ret = array(
                             "id" => $res["id"],
                             "username" => $res["username"],
-                            "firstName" => explode(" ", $res["username"])[0],
-                            "lastName" => explode(" ", $res["username"])[1],
+                            "firstName" => $firstname,
+                            "lastName" => $lastname,
                             "email" => $res["email"],
                             "token" => $token
                             
