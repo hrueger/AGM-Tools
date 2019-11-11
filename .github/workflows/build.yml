@@ -18,18 +18,9 @@ jobs:
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
-    - name: Create dev environment
+    - name: Run create environment script
       working-directory: AGM-Tools
-      run: echo export const environment = {firebase:{apiKey:"", appId:"",authDomain:"",databaseURL:"",messagingSenderId:"",projectId:"agm-tools",storageBucket:"",},production:false}; >> ./src/environments/environment.ts
-    - name: Create prod environment
-      working-directory: AGM-Tools
-      run: echo export const environment = {firebase:{apiKey:"", appId:"",authDomain:"",databaseURL:"",messagingSenderId:"",projectId:"agm-tools",storageBucket:"",},production:true}; >> ./src/environments/environment.prod.ts
-    - name: Display Config
-      working-directory: AGM-Tools
-      run: more src\\environments\\environment.ts
-    - name: Display Config
-      working-directory: AGM-Tools
-      run: more src\\environments\\environment.prod.ts
+      run: npm run createFilesWithApiKeys
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:web
@@ -56,18 +47,9 @@ jobs:
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
-    - name: Create dev environment
+    - name: Run create environment script
       working-directory: AGM-Tools
-      run: echo export const environment = {firebase:{apiKey:"", appId:"",authDomain:"",databaseURL:"",messagingSenderId:"",projectId:"agm-tools",storageBucket:"",},production:false}; >> ./src/environments/environment.ts
-    - name: Create prod environment
-      working-directory: AGM-Tools
-      run: echo export const environment = {firebase:{apiKey:"", appId:"",authDomain:"",databaseURL:"",messagingSenderId:"",projectId:"agm-tools",storageBucket:"",},production:true}; >> ./src/environments/environment.prod.ts
-    - name: Display Config
-      working-directory: AGM-Tools
-      run: more src\\environments\\environment.ts
-    - name: Display Config
-      working-directory: AGM-Tools
-      run: more src\\environments\\environment.prod.ts
+      run: npm run createFilesWithApiKeys
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:android
