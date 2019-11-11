@@ -1,0 +1,39 @@
+name: Build
+
+on: [push]
+
+strategy:
+  matrix:
+    os: [windows-latest, ubuntu-latest, macOS-latest]
+
+jobs:
+  - build_web:
+    name: Web on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10
+    - name: Install dependencies
+      working-directory: AGM-Tools
+      run: npm i
+    - name: Build
+      working-directory: AGM-Tools
+      run: npm run build:web
+  - build_android:
+    name: Android on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10
+    - name: Install dependencies
+      working-directory: AGM-Tools
+      run: npm i
+    - name: Build
+      working-directory: AGM-Tools
+      run: npm run build:android
