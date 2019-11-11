@@ -6,7 +6,7 @@ namespace AGMToolsFS
 {
     public class PartialHttpStream : Stream, IDisposable
     {
-        private const int CacheLen = 1024*1024*64;
+        private const int CacheLen = 1024*1024*1024;
 
         // Cache for short requests.
         private readonly byte[] cache;

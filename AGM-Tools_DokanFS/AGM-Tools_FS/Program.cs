@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using DokanNet;
+using DokanNet.Logging;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using FileAccess = DokanNet.FileAccess;
@@ -281,11 +282,8 @@ namespace AGMToolsFS
 
         private Dictionary<int, byte[]> _fileCache = new Dictionary<int, byte[]>();
 
-        private BlockingCollection<byte[]> _downloadChunks = new BlockingCollection<byte[]>();
-        private Thread _downloadTask;
         private Stream _currentStream;
-        private string _lastFilename;
-        private int _totalBytesRead;
+        private string _currentFileName;
 
         public NtStatus ReadFile(
             string filename,
@@ -313,32 +311,6 @@ namespace AGMToolsFS
                     var type = item.finfo.Attributes == FileAttributes.Normal ? "file" : "folder";
                     var url = $"{this.apiUrl}?get={item.id}&type={type}&token={this.userToken}&download";
 
-
-
-
-                    //// Starte Download im Hintergrund
-                    //if (this._downloadTask == null)
-                    //{
-
-                    //    this._downloadTask = new Thread(new ParameterizedThreadStart(this.StartDownloadAsync));
-                    //    this._downloadTask.Start(url);
-                    //}
-
-                    //if (!this._downloadTask.IsAlive)
-                    //{
-                    //    this._downloadTask = null;
-                    //}
-
-                    //foreach (var chunk in this._downloadChunks.GetConsumingEnumerable())
-                    //{
-                    //    using (var stream = new MemoryStream(chunk))
-                    //    {
-                    //        stream.Position = offset;
-                    //        readBytes = stream.Read(buffer, 0, buffer.Length);
-                    //    }
-                    //    return DokanResult.Success;
-                    //}
-
                     // Geht aber nicht mit großen Dateien
 
                     /*if (!this._fileCache.ContainsKey(item.id))
@@ -347,27 +319,23 @@ namespace AGMToolsFS
                     }*/
 
                     //var fileContent = this._fileCache[item.id];
-                    
-                    this._currentStream = new PartialHttpStream(url);
-                    
-                    this._currentStream.Position = offset;
+
+                    if (this._currentStream == null ||
+                        this._currentStream.Position != offset ||
+                        this._currentFileName == null ||
+                        this._currentFileName != filename)
+                    {
+                        this._currentStream = new PartialHttpStream(url);
+                        this._currentStream.Position = offset;
+                        this._currentFileName = filename;
+                    }
+
                     readBytes = this._currentStream.Read(buffer, 0, buffer.Length);
                     
 
 
                     return DokanResult.Success;
 
-                    //if (this._currentStream == null || filename != this._lastFilename)
-                    //{
-                    //    this._currentStream?.Dispose();
-
-                    //    this._currentStream = this.GetStream(url);
-                    //    this._lastFilename = filename;
-                    //}
-
-
-                    //readBytes = this._currentStream.Read(buffer, 0, buffer.Length);
-                    //return DokanResult.Success;
                 }
             }
             else
@@ -378,9 +346,10 @@ namespace AGMToolsFS
             return DokanResult.Error;
         }
 
-        private Stream GetStream(string url)
+        private Stream GetStream(string url, long position)
         {
             HttpWebRequest req = HttpWebRequest.CreateHttp(url);
+            req.AddRange(position);
             HttpWebResponse response;
             try
             {
@@ -394,62 +363,6 @@ namespace AGMToolsFS
             }
             
             return response.GetResponseStream();
-        }
-
-        private void StartDownloadAsync(object state)
-        {
-            var url = (string)state;
-
-            // Häppchenweise die Datei laden und in BlockingCollection ablegen
-            //Create a stream for the file
-            Stream stream = null;
-
-            //This controls how many bytes to read at a time and send to the client
-            int bytesToRead = 4096;
-
-            // Buffer to read bytes in chunk size specified above
-            byte[] buffer = new Byte[bytesToRead];
-
-            // The number of bytes read
-            try
-            {
-                //Create a WebRequest to get the file
-                HttpWebRequest fileReq = (HttpWebRequest)HttpWebRequest.Create(url);
-
-                //Create a response for this request
-                HttpWebResponse fileResp = (HttpWebResponse)fileReq.GetResponse();
-
-                if (fileReq.ContentLength > 0)
-                {
-                    fileResp.ContentLength = fileReq.ContentLength;
-                }
-
-                //Get the Stream returned from the response
-                stream = fileResp.GetResponseStream();
-
-                // prepare the response to the client. resp is the client Response
-
-
-                int length;
-                do
-                {
-                    // Read data into the buffer.
-                    length = stream.Read(buffer, 0, bytesToRead);
-                    this._downloadChunks.Add(buffer);
-
-                    //Clear the buffer
-                    buffer = new Byte[bytesToRead];
-
-                } while (length > 0); //Repeat until no data is read
-            }
-            finally
-            {
-                if (stream != null)
-                {
-                    //Close the input stream
-                    stream.Close();
-                }
-            }
         }
 
         public NtStatus SetEndOfFile(string filename, long length, DokanFileInfo info)
@@ -502,9 +415,9 @@ namespace AGMToolsFS
             DokanFileInfo info)
         {
             var data = this.GetWebAPI("dashboardGetSpaceChartData");
-            freeBytesAvailable = (data[0] - data[2]) * 1024*1024;
-            totalBytes = data[0] * 1024*1024;
-            totalFreeBytes = (data[0] - data[2]) * 1024*1024;
+            freeBytesAvailable = data[0] * 1024*1024;
+            totalBytes = (data[0] + data[2]) * 1024*1024;
+            totalFreeBytes = data[0] * 1024*1024;
             return DokanResult.Success;
         }
 
@@ -532,8 +445,8 @@ namespace AGMToolsFS
         public NtStatus GetFileSecurity(string fileName, out FileSystemSecurity security, AccessControlSections sections,
             DokanFileInfo info)
         {
-            security = null;
-            return DokanResult.NotImplemented;
+            security = File.GetAccessControl(@"C:\Users\Hannes\Downloads\test.txt");
+            return DokanResult.Success;
         }
 
         public NtStatus SetFileSecurity(string fileName, FileSystemSecurity security, AccessControlSections sections,
@@ -573,7 +486,7 @@ namespace AGMToolsFS
             try
             {
                 var rfs = new AGMFS();
-                rfs.Mount("a:\\", DokanOptions.FixedDrive);
+                rfs.Mount("a:\\", DokanOptions.FixedDrive, new NullLogger());
                 Console.WriteLine(@"Success");
             }
             catch (DokanException ex)
