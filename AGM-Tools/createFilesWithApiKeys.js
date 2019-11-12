@@ -8,16 +8,18 @@ const files = {
 };
 var args = process.argv.slice(2);
 counter = 0;
+console.log(args);
 for (key in files) {
     if (!fs.existsSync(key)) {
+        var value = files[key];
         if (args[counter]) {
-            files[key] = Buffer.from(args[counter], 'base64').toString('ascii');
+            value = Buffer.from(args[counter], 'base64').toString('ascii');
         }
-        fs.writeFileSync(key, files[key]);
+        fs.writeFileSync(key, value);
         console.info("File", key, "created, please insert your credentials there!");
-        console.log("Written: ", files[key]);
+        console.log("Written: ", value);
     } else {
         console.info("File", key, "skipped, as it already exists!");
     }
-    counter = counter++;
+    counter = counter + 1;
 }
