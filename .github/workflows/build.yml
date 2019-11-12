@@ -1,0 +1,55 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build_web:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macOS-latest]
+    name: Web on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10
+    - name: Install dependencies
+      working-directory: AGM-Tools
+      run: npm i
+    - name: Run create environment script
+      working-directory: AGM-Tools
+      run: npm run createFilesWithApiKeys '${{ secrets.environment_ts_value }}' '${{ secrets.environment_prod_ts_value }}' '${{ secrets.firebase_messaging_sw_js_value }}' '${{ secrets.google_services_json_value }}'
+    - name: Build
+      working-directory: AGM-Tools
+      run: npm run build:web
+  build_android:
+    name: Android on Windows
+    runs-on: [windows-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10
+    - name: Setup Chocolatey
+      run: powershell @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))"
+    - name: Setup JDK
+      run: powershell choco install adoptopenjdk --version 8.192 
+    - name: Setup Android SDK
+      run: choco install android-sdk -y
+    - name: Setup platform tools
+      run: powershell "%ANDROID_HOME%/tools/bin/sdkmanager platform-tools platforms;android-28 build-tools;28.0.3"
+      # extras;android;m2repository extras;google;m2repository
+    - name: Install Nativescript CLI
+      run: npm i -g nativescript
+    - name: Install dependencies
+      working-directory: AGM-Tools
+      run: npm i
+    - name: Run create environment script
+      working-directory: AGM-Tools
+      run: npm run createFilesWithApiKeys '${{ secrets.environment_ts_value }}' '${{ secrets.environment_prod_ts_value }}' '{{ secrets.firebase_messaging_sw_js_value }}' '${{ secrets.google_services_json_value }}'
+    - name: Build
+      working-directory: AGM-Tools
+      run: npm run build:android

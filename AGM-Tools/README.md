@@ -1,1 +1,0 @@
-Build for docker: `npm run build`

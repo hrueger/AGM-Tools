@@ -11,12 +11,14 @@
     },
     "version": "3.09.22",
     "scripts": {
-        "ng": "ng",
-        "start": "ng serve",
-        "build": "ng build --prod --base-href / & rmdir dist\\agmtools\\assets\\emoji-picker-icons /Q /S & rmdir dist\\agmtools\\assets\\emoji-picker-emojis /Q /S",
+        "build:web": "ng build --prod --base-href /",
+        "build:android": "tns build android",
+        "build:ios": "tns build ios",
+        "serve:web": "ng serve",
+        "serve:android": "tns run android --bundle",
+        "serve:ios": "tns run ios --bundle",
         "lint": "ng lint",
-        "android": "tns run android --bundle",
-        "ios": "tns run ios --bundle"
+        "createFilesWithApiKeys": "node createFilesWithApiKeys.js"
     },
     "private": true,
     "dependencies": {

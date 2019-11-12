@@ -62,7 +62,7 @@ export class EditTutorialComponent implements OnInit {
             });
         }
       });
-      this.updateSteps();
+    this.updateSteps();
   }
 
   public addStep() {

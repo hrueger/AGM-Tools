@@ -6,7 +6,6 @@ import config from "../../_config/config";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
-import { messageType } from "tns-core-modules/trace/trace";
 
 @Component({
   selector: "app-tutorial",

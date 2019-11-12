@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import {
     AgendaService,
     DayService,
@@ -12,7 +13,6 @@ import { L10n, loadCldr } from "@syncfusion/ej2-base";
 import { AlertService } from "../../_services/alert.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
-import { ActivatedRoute } from "@angular/router";
 
 L10n.load({
     de: {
@@ -239,6 +239,7 @@ export class CalendarComponent {
                                         good: data.id,
                                     },
                                 );
+                                // tslint:disable-next-line: no-console
                                 console.log(this.idsToReplace);
                             }
                         });
@@ -279,6 +280,7 @@ export class CalendarComponent {
                             });
                     }
                 default:
+                    // tslint:disable-next-line: no-console
                     console.log(ev);
             }
         }

@@ -14,7 +14,7 @@ export class TutorialsComponent implements OnInit {
   public newTutorialForm: FormGroup;
   public title: string;
   public description: string;
-  public invalidMessage: boolean; 
+  public invalidMessage: boolean;
   public tutorials = [];
 
   constructor(private navbarService: NavbarService,
