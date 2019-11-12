@@ -20,7 +20,7 @@ jobs:
       run: npm i
     - name: Run create environment script
       working-directory: AGM-Tools
-      run: npm run createFilesWithApiKeys
+      run: npm run createFilesWithApiKeys '${{ secrets.environment_ts_value }}' '${{ secrets.environment_prod_ts_value }}' '${{ secrets.firebase_messaging_sw_js_value }}' '${{ secrets.google_services_json_value }}'
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:web
@@ -49,7 +49,7 @@ jobs:
       run: npm i
     - name: Run create environment script
       working-directory: AGM-Tools
-      run: npm run createFilesWithApiKeys
+      run: npm run createFilesWithApiKeys '${{ secrets.environment_ts_value }}' '${{ secrets.environment_prod_ts_value }}' '{{ secrets.firebase_messaging_sw_js_value }}' '${{ secrets.google_services_json_value }}'
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:android
