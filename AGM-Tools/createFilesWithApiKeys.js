@@ -15,6 +15,7 @@ for (key in files) {
         }
         fs.writeFileSync(key, files[key]);
         console.info("File", key, "created, please insert your credentials there!");
+        console.log("Written: ", files[key]);
     } else {
         console.info("File", key, "skipped, as it already exists!");
     }
