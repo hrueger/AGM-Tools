@@ -21,6 +21,11 @@
         "createFilesWithApiKeys": "node createFilesWithApiKeys.js"
     },
     "private": true,
+    "greenkeeper": {
+        "ignore": [
+            "typescript"
+        ]
+    },
     "dependencies": {
         "@angular/animations": "~8.2.8",
         "@angular/cdk": "~8.2.1",
