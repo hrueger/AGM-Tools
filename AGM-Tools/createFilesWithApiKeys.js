@@ -11,7 +11,7 @@ counter = 0;
 for (key in files) {
     if (!fs.existsSync(key)) {
         if (args[counter]) {
-            files[key] = args[counter];
+            files[key] = Buffer.from(args[counter], 'base64').toString('ascii');
         }
         fs.writeFileSync(key, files[key]);
         console.info("File", key, "created, please insert your credentials there!");
