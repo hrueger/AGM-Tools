@@ -29,4 +29,4 @@ With native apps for web, mobile and Desktop*!
 4. Type `npm serve:web` or `npm serve:android` to start your dev session with LiveSync!
 5. Before creating a pull request be sure to check for linting errors with `npm run lint`
 
-* in developement
+*in developement
