@@ -2,6 +2,7 @@
 
 [![Production build](https://github.com/hrueger/AGM-Tools/workflows/Build/badge.svg)](https://github.com/hrueger/AGM-Tools/actions)
 [![Lint](https://github.com/hrueger/AGM-Tools/workflows/Lint/badge.svg)](https://github.com/hrueger/AGM-Tools/actions)
+[![Greenkeeper badge](https://badges.greenkeeper.io/hrueger/AGM-Tools.svg)](https://greenkeeper.io/)
 [![License](https://img.shields.io/badge/License-MIT-blue)](./LICENSE.md)
 [![GitHub last commit](https://img.shields.io/github/last-commit/hrueger/AGM-Tools?color=brightgreen)](https://github.com/hrueger/AGM-Tools/commits)
 [![Maintenance](https://img.shields.io/maintenance/yes/2019)](https://github.com/hrueger/AGM-Tools/commits)
