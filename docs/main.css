@@ -1,0 +1,52 @@
+/* Space out content a bit */
+.container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .bgimg {
+    background-image: url(./header.jpg);
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+  
+  .fullheight {
+    min-height: 100vh;
+  }
+  
+  .bg-darkblue {
+      background-color: #2b669a;
+  }
+  
+  .footer {
+    padding: 3px;
+    color: white;
+  }
+  
+  @media screen and (min-width: 768px) {
+    .header,
+    .marketing,
+    .footer {
+      padding-right: 0;
+      padding-left: 0;
+    }
+    .header {
+      margin-bottom: 30px;
+    }
+    .jumbotron {
+      border-bottom: 0;
+    }
+  }
+  
+  .footer {
+    padding: 10px !important;
+    text-align: center;
+  }
+
+  hr {
+    width: 50px;
+    background-color: #2b669a;
+    height: 3px;
+  }
+  
