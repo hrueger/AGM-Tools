@@ -7,7 +7,7 @@ import {
     Validators,
 } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import config from "../../_config/config";
+import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NavbarService } from "../../_services/navbar.service";
@@ -48,7 +48,7 @@ export class TemplatesComponent implements OnInit {
     }
     public show(template, content) {
         this.imgUrl =
-            config.apiUrl +
+            environment.apiUrl +
             "getTemplate.php?tid=" +
             template.id +
             "&token=" +
@@ -83,7 +83,7 @@ export class TemplatesComponent implements OnInit {
                     );
                     this.httpClient
                         .post(
-                            config.apiUrl,
+                            environment.apiUrl,
 
                             this.toFormData(this.newTemplateForm.value),
                         )

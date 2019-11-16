@@ -5,6 +5,7 @@ import * as application from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
 import config from "../../_config/config";
 import { AlertService } from "../../_services/alert.service";
+import { environment } from "../../../environments/environment";
 declare var android;
 declare var androidx;
 declare var java;
@@ -41,7 +42,7 @@ export class UpdaterComponent implements OnInit {
           const imageDownloaderId = downloader.createDownload({
             fileName: `AGM-Tools_update_${Math.round(Math.random() * 100000000)}.apk`,
             path: dest,
-            url: `${config.apiUrl}?downloadMobileLatest`,
+            url: `${environment.apiUrl}?downloadMobileLatest`,
           });
           this.downloading = true;
           downloader

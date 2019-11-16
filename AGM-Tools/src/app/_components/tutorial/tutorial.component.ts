@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, ParamMap, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Lightbox } from "ngx-lightbox";
-import { switchMap } from "rxjs/operators";
-import config from "../../_config/config";
+import { environment } from "../../../environments/environment";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
@@ -32,7 +31,7 @@ export class TutorialComponent implements OnInit {
     });
   }
   public getSrc(img) {
-    return config.apiUrl +
+    return environment.apiUrl +
       "?getTutorialFile=" +
       img +
       "&token=" +

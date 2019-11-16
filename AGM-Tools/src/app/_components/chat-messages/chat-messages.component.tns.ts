@@ -24,7 +24,7 @@ import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { knownFolders, path } from "tns-core-modules/file-system/file-system";
 import { ImageSource } from "tns-core-modules/image-source/image-source";
 import * as dialogs from "tns-core-modules/ui/dialogs";
-import config from "../../_config/config";
+import { environment } from "../../../environments/environment";
 import { Chat } from "../../_models/chat.model";
 import { Contact } from "../../_models/contact.model";
 import { Message } from "../../_models/message.model";
@@ -123,7 +123,7 @@ export class ChatMessagesComponent
                                             })
                                             .subscribe();*/
 
-                                        const url = config.apiUrl + "?token=" +
+                                        const url = environment.apiUrl + "?token=" +
                                             that.authService.currentUserValue.token.toString();
                                         const name = pathDest.substr(pathDest.lastIndexOf("/") + 1);
 

@@ -10,7 +10,7 @@ static listAll = async (req: Request, res: Response) => {
   //Get users from database
   const userRepository = getRepository(User);
   const users = await userRepository.find({
-    select: ["id", "username", "role"] //We dont want to send the passwords on response
+    select: ["id", "username", "usergroup", "email"]
   });
 
   //Send the users object
@@ -25,7 +25,7 @@ static getOneById = async (req: Request, res: Response) => {
   const userRepository = getRepository(User);
   try {
     const user = await userRepository.findOneOrFail(id, {
-      select: ["id", "username", "role"] //We dont want to send the password on response
+      select: ["id", "username", "email", "usergroup"] //We dont want to send the password on response
     });
   } catch (error) {
     res.status(404).send("User not found");
@@ -34,11 +34,11 @@ static getOneById = async (req: Request, res: Response) => {
 
 static newUser = async (req: Request, res: Response) => {
   //Get parameters from the body
-  let { username, password, role } = req.body;
+  let { username, password, usergroup } = req.body;
   let user = new User();
   user.username = username;
   user.password = password;
-  user.role = role;
+  user.usergroup = usergroup;
 
   //Validade if the parameters are ok
   const errors = await validate(user);
@@ -55,7 +55,7 @@ static newUser = async (req: Request, res: Response) => {
   try {
     await userRepository.save(user);
   } catch (e) {
-    res.status(409).send("username already in use");
+    res.status(409).send("Username already in use");
     return;
   }
 

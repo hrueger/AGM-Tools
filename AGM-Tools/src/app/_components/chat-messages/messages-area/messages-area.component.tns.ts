@@ -13,7 +13,7 @@ import { PageChangeEventData } from "nativescript-image-swipe";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Page } from "tns-core-modules/ui/page/page";
-import config from "../../../_config/config";
+import { environment } from "../../../../environments/environment";
 import { Message } from "../../../_models/message.model";
 import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
@@ -40,13 +40,13 @@ export class MessagesAreaComponent implements OnInit {
     public currentImageIndex: number;
     public shouldScrollWhenImageLoaded: boolean = true;
     constructor(private pushService: PushService,
-        private authService: AuthenticationService,
-        private remoteService: RemoteService,
-        private page: Page) {
+                private authService: AuthenticationService,
+                private remoteService: RemoteService,
+                private page: Page) {
 
     }
     public getImageSrc(imageName, thumbnail = true) {
-        return config.apiUrl +
+        return environment.apiUrl +
             "?getAttachment=" +
             imageName +
             "&token=" +
@@ -85,6 +85,7 @@ export class MessagesAreaComponent implements OnInit {
                 }, 300);
             }
         } else {
+            // tslint:disable-next-line: no-console
             console.log(data);
         }
     }

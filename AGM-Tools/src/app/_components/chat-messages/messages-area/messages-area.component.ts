@@ -8,7 +8,7 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { Lightbox } from "ngx-lightbox";
-import config from "../../../_config/config";
+import { environment } from "../../../../environments/environment";
 import { Message } from "../../../_models/message.model";
 import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
@@ -72,7 +72,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getImageSrc(imageName, thumbnail = true) {
-        return config.apiUrl +
+        return environment.apiUrl +
             "?getAttachment=" +
             imageName +
             "&token=" +

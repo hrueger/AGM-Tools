@@ -1,7 +1,7 @@
 import { Component, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import config from "../../_config/config";
+import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NavbarService } from "../../_services/navbar.service";
@@ -135,7 +135,7 @@ export class EditTutorialComponent implements OnInit {
   }
 
   public getSrc(img) {
-    return config.apiUrl +
+    return environment.apiUrl +
       "?getTutorialFile=" +
       img +
       "&token=" +

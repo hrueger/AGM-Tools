@@ -11,7 +11,7 @@ class AuthController {
     //Check if username and password are set
     let { username, password } = req.body;
     if (!(username && password)) {
-      res.status(400).send();
+      res.status(400).end(JSON.stringify({error: "Benutzername oder Passwort leer!"}));
     }
 
     //Get user from database
@@ -20,12 +20,17 @@ class AuthController {
     try {
       user = await userRepository.findOneOrFail({ where: { username } });
     } catch (error) {
-      res.status(401).send();
+      res.status(401).end(JSON.stringify({message: "Falscher Benutzername!"}));
+    }
+
+    if (!user) {
+      res.status(401).end(JSON.stringify({message: "Falscher Benutzername!"}));
+      return;
     }
 
     //Check if encrypted password match
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
-      res.status(401).send();
+      res.status(401).end(JSON.stringify({message: "Falsches Passwort!"}));
       return;
     }
 
@@ -36,8 +41,13 @@ class AuthController {
       { expiresIn: "1h" }
     );
 
+    const response = {
+      ...user,
+      token,
+    }
+
     //Send the jwt in the response
-    res.send(token);
+    res.send(response);
   };
 
   static changePassword = async (req: Request, res: Response) => {

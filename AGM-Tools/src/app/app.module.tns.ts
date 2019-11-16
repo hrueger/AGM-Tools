@@ -38,7 +38,6 @@ import { SidebarComponent } from "./_components/sidebar/sidebar.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
-import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { NavbarService } from "./_services/navbar.service";
 import { AppComponent } from "./app.component";
@@ -74,6 +73,12 @@ import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
 registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
+import { JwtModule } from "@auth0/angular-jwt";
+import { getString, setString } from "tns-core-modules/application-settings";
+
+export function getJWT() {
+    return getString("jwt_token", "");
+}
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -123,6 +128,11 @@ registerElement("AnimatedCircle", () => require("nativescript-animated-circle").
     imports: [
         NativeScriptModule,
         NativeScriptRouterModule.forRoot(routes),
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: getJWT,
+            },
+        }),
         NativeScriptHttpClientModule,
         NativeScriptFormsModule,
         NativeScriptUISideDrawerModule,
@@ -148,7 +158,6 @@ registerElement("AnimatedCircle", () => require("nativescript-animated-circle").
             provide: LOCALE_ID,
             useValue: "de-DE",
         },
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     ],
     schemas: [NO_ERRORS_SCHEMA],

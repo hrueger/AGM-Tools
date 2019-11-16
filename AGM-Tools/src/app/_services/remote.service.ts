@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { catchError, first, tap } from "rxjs/operators";
-import config from "../_config/config";
+import { environment } from "../../environments/environment";
 import { AlertService } from "./alert.service";
 import { CacheService } from "./cache.service";
 
@@ -23,7 +23,7 @@ export class RemoteService {
         let echtDaten = false;
         // console.log("hole internetdaten");
         this.http
-            .post<any>(`${config.apiUrl}`, {
+            .post<any>(`${environment.apiUrl}`, {
                 action,
                 args,
             })
@@ -79,7 +79,7 @@ export class RemoteService {
             JSON.stringify(args),
         );
         return this.http
-            .post<any>(`${config.apiUrl}`, {
+            .post<any>(`${environment.apiUrl}`, {
                 action,
                 args,
             })
@@ -101,7 +101,7 @@ export class RemoteService {
         formData.append("uploadTutorialFile", file, file.name);
         formData.append("uploadTutorialFile", "true");
         return this.http
-            .post<any>(`${config.apiUrl}`, formData)
+            .post<any>(`${environment.apiUrl}`, formData)
             .pipe(
                 tap((_) =>
                     this.log("uploading file " + file.name),

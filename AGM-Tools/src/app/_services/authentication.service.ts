@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import config from "../_config/config";
+import { environment } from "../../environments/environment";
 import { User } from "../_models/user.model";
 
 const httpOptions = {
@@ -32,12 +32,10 @@ export class AuthenticationService {
     }
 
     public login(username: string, password: string) {
-        const action = "authenticate";
         return this.http
             .post<any>(
-                `${config.apiUrl}`,
+                `${environment.apiUrl}auth/login`,
                 {
-                    action,
                     password,
                     username,
                 },
@@ -53,6 +51,7 @@ export class AuthenticationService {
                             "currentUser",
                             JSON.stringify(user),
                         );
+                        sessionStorage.setItem("jwt_token", user.token);
                         this.currentUserSubject.next(user);
                     }
 

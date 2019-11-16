@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import config from "../_config/config";
 import { User } from "../_models/user.model";
+import { environment } from "../../environments/environment";
 require("nativescript-localstorage");
 
 const httpOptions = {
@@ -37,7 +38,7 @@ export class AuthenticationService {
 
         return this.http
             .post<any>(
-                `${config.apiUrl}`,
+                `${environment.apiUrl}`,
                 {
                     action,
                     password,

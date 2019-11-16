@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { EmitType, L10n } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
-import config from "../../_config/config";
+import { environment } from "../../../environments/environment";
 import { Project } from "../../_models/project.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
@@ -28,7 +28,7 @@ export class FilesComponent implements OnInit {
     public imageSource: string;
     public pid: number;
     public settings = {
-        chunkSize: 1024 * 1024, saveUrl: config.apiUrl +
+        chunkSize: 1024 * 1024, saveUrl: environment.apiUrl +
             "resumableUploadHandler.php",
     };
 
@@ -186,7 +186,7 @@ export class FilesComponent implements OnInit {
     public getSrc() {
         const file = this.currentPath[this.currentPath.length - 1];
         return (
-            config.apiUrl +
+            environment.apiUrl +
             "?get=" +
             file.id +
             "&type=file" +
@@ -254,7 +254,7 @@ export class FilesComponent implements OnInit {
     }
     public download(item) {
         window.open(
-            config.apiUrl +
+            environment.apiUrl +
             "?get=" +
             item.id +
             "&type=" +
@@ -273,7 +273,7 @@ export class FilesComponent implements OnInit {
             .getNoCache("filesCreateShare", { type: item.type, fid: item.id })
             .subscribe((data) => {
                 if (data.status == true) {
-                    this.shareLink = config.apiUrl + "share/?l=" + data.link;
+                    this.shareLink = environment.apiUrl + "share/?l=" + data.link;
                 }
             });
     }

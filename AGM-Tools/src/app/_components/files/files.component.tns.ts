@@ -18,7 +18,7 @@ import { EventData, View } from "tns-core-modules/ui/core/view";
 import * as dialog from "tns-core-modules/ui/dialogs";
 import { layout } from "tns-core-modules/utils/utils";
 import { openUrl } from "tns-core-modules/utils/utils";
-import config from "../../_config/config";
+import { environment } from "../../../environments/environment";
 import { Project } from "../../_models/project.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
@@ -162,7 +162,7 @@ export class FilesComponent implements OnInit {
     }
     public getSrc() {
         const file = this.currentPath[this.currentPath.length - 1];
-        const path = config.apiUrl +
+        const path = environment.apiUrl +
             "?get=" +
             file.id +
             "&type=file" +
@@ -265,7 +265,7 @@ export class FilesComponent implements OnInit {
 
     }
     public download(item) {
-        const url = config.apiUrl +
+        const url = environment.apiUrl +
             "?get=" +
             item.id +
             "&type=" +
@@ -282,7 +282,7 @@ export class FilesComponent implements OnInit {
             .getNoCache("filesCreateShare", { type: item.type, fid: item.id })
             .subscribe((data) => {
                 if (data.status == true) {
-                    const shareLink = config.apiUrl + "share/?l=" + data.link;
+                    const shareLink = environment.apiUrl + "share/?l=" + data.link;
                     const cfalertDialog = new CFAlertDialog();
                     const options: DialogOptions = {
                         buttons: [{

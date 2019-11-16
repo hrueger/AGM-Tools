@@ -13,6 +13,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
+import { JwtModule } from "@auth0/angular-jwt";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
@@ -54,7 +55,6 @@ import { TutorialsComponent } from "./_components/tutorials/tutorials.component"
 import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
-import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { SafePipe } from "./_pipes/safe.pipe";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
@@ -65,6 +65,10 @@ import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
 
 registerLocaleData(localeDe);
+
+export function getJWT() {
+    return sessionStorage.getItem("jwt_token");
+}
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -109,6 +113,11 @@ registerLocaleData(localeDe);
         ContextMenuModule.forRoot({
             useBootstrap4: true,
         }),
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: getJWT,
+            },
+        }),
         BrowserAnimationsModule,
         DashboardLayoutModule,
         BrowserModule,
@@ -143,7 +152,6 @@ registerLocaleData(localeDe);
             provide: LOCALE_ID,
             useValue: "de-DE",
         },
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     ],
 })
