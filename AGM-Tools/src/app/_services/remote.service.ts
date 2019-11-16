@@ -16,27 +16,26 @@ export class RemoteService {
         private cacheService: CacheService,
     ) { }
 
-    public get(action: string, ...args: any): Observable<any> {
+    public get(path: string, args: any): Observable<any> {
         // var action = "dashboardGetSpaceChartData";
         const subject = new BehaviorSubject(null);
         let cacheData = null;
         let echtDaten = false;
         // console.log("hole internetdaten");
         this.http
-            .post<any>(`${environment.apiUrl}`, {
-                action,
-                args,
+            .post<any>(`${environment.apiUrl}${path}`, {
+                ...args,
             })
             .pipe(
                 tap((_) =>
                     this.log(
                         "fetched " +
-                        action +
+                        path +
                         " with data " +
                         JSON.stringify(args),
                     ),
                 ),
-                catchError(this.handleError<any>(action, false)),
+                catchError(this.handleError<any>(path, false)),
             )
             .subscribe((data) => {
                 // console.log("internetdaten bekommen");
@@ -45,7 +44,7 @@ export class RemoteService {
                     // console.log("Echte Daten: " + data);
                     if (data) {
                         subject.next(data);
-                        this.cacheService.put(data, action, args);
+                        this.cacheService.put(data, path, args);
                     } else {
                         this.alertService.snackbar("Offline-Modus (Daten können veraltet sein)");
                     }
@@ -59,7 +58,7 @@ export class RemoteService {
             });
         // console.log("hole cachedaten");
         this.cacheService
-            .get(action, args)
+            .get(path, args)
 
             .subscribe((d) => {
                 // console.log("cacheDaten bekommen");
@@ -71,28 +70,27 @@ export class RemoteService {
             });
         return subject.asObservable();
     }
-    public getNoCache(action: string, ...args: any): Observable<any> {
+    public getNoCache(path: string, args: any): Observable<any> {
         this.log(
             "fetching " +
-            action +
+            path +
             " with data " +
             JSON.stringify(args),
         );
         return this.http
-            .post<any>(`${environment.apiUrl}`, {
-                action,
-                args,
+            .post<any>(`${environment.apiUrl}${path}`, {
+                ...args,
             })
             .pipe(
                 tap((_) =>
                     this.log(
                         "fetched " +
-                        action +
+                        path +
                         " with data " +
                         JSON.stringify(args),
                     ),
                 ),
-                catchError(this.handleError<any>(action, false)),
+                catchError(this.handleError<any>(path, false)),
             );
     }
     public uploadTutorialFileNoCache(file: any): Observable<any> {

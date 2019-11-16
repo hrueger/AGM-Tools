@@ -9,13 +9,13 @@ import {
     ManyToMany,
     OneToMany
   } from "typeorm";
-  import { Length, IsNotEmpty } from "class-validator";
   import * as bcrypt from "bcryptjs";
 import { Usergroup } from "./Usergroup";
 import { Project } from "./Project";
 import { Notification } from "./Notification";
 import { Template } from "./Template";
 import { Tutorial } from "./Tutorial";
+import { Event } from "./Event";
   
   @Entity()
   @Unique(["username"])
@@ -57,6 +57,9 @@ import { Tutorial } from "./Tutorial";
 
     @OneToMany((type) => Tutorial, (tutorial) => tutorial.creator)
     tutorials: Tutorial[];
+
+    @OneToMany((type) => Event, (event) => event.creator)
+    events: Event[];
   
     hashPassword() {
       this.password = bcrypt.hashSync(this.password, 8);

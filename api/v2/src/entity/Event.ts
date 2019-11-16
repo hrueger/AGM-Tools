@@ -2,7 +2,7 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
-    Unique,
+    ManyToOne,
   } from "typeorm";
 import { User } from "./User";
   
@@ -26,6 +26,6 @@ import { User } from "./User";
     @Column()
     end: Date;
 
-    @Column()
+    @ManyToOne((type) => User, (user) => user.events)
     creator: User;
   }
