@@ -4,10 +4,18 @@ import {
     Column,
     Unique,
     CreateDateColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
+    ManyToOne,
+    ManyToMany,
+    OneToMany
   } from "typeorm";
   import { Length, IsNotEmpty } from "class-validator";
   import * as bcrypt from "bcryptjs";
+import { Usergroup } from "./Usergroup";
+import { Project } from "./Project";
+import { Notification } from "./Notification";
+import { Template } from "./Template";
+import { Tutorial } from "./Tutorial";
   
   @Entity()
   @Unique(["username"])
@@ -16,16 +24,19 @@ import {
     id: number;
   
     @Column()
-    @Length(4, 20)
     username: string;
+
+    @Column()
+    email: string;
   
     @Column()
-    @Length(4, 100)
     password: string;
   
-    @Column()
-    @IsNotEmpty()
-    role: string;
+    @ManyToOne((type) => Usergroup, (usergroup) => usergroup.users)
+    usergroup: Usergroup;
+
+    @ManyToMany((type) => Project, (project) => project.users)
+    projects: Project[];
   
     @Column()
     @CreateDateColumn()
@@ -34,6 +45,18 @@ import {
     @Column()
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @ManyToMany((type) => Notification, (notification) => notification.receivers)
+    receivedNotifications: Notification[];
+
+    @OneToMany((type) => Notification, (notification) => notification.creator)
+    sentNotifications: Notification[];
+
+    @OneToMany((type) => Template, (template) => template.creator)
+    templates: Template[];
+
+    @OneToMany((type) => Tutorial, (tutorial) => tutorial.creator)
+    tutorials: Tutorial[];
   
     hashPassword() {
       this.password = bcrypt.hashSync(this.password, 8);
