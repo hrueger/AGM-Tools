@@ -1,11 +1,10 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import * as localStorage from "nativescript-localstorage";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import config from "../_config/config";
-import { User } from "../_models/user.model";
 import { environment } from "../../environments/environment";
-require("nativescript-localstorage");
+import { User } from "../_models/user.model";
 
 const httpOptions = {
     headers: new HttpHeaders({
