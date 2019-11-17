@@ -94,7 +94,7 @@ export class FilesComponent implements OnInit {
         });
 
         // console.log("Headline change requested");
-        this.remoteService.get("projectsGetProjects").subscribe((data) => {
+        this.remoteService.get("post", "projectsGetProjects").subscribe((data) => {
             this.projects = data;
         });
         this.newFolderForm = this.fb.group({
@@ -167,7 +167,7 @@ export class FilesComponent implements OnInit {
     public navigate(item) {
         // console.log(this.currentPath);
         this.remoteService
-            .get("filesGetFolder", {
+            .get("post", "filesGetFolder", {
                 fid: item.id,
                 pid: this.pid,
             })
@@ -200,7 +200,7 @@ export class FilesComponent implements OnInit {
             .result.then(
                 (result) => {
                     this.remoteService
-                        .getNoCache("filesNewFolder", {
+                        .getNoCache("post", "filesNewFolder", {
                             fid: this.currentPath[this.currentPath.length - 1].id,
                             name: this.newFolderForm.get("newFolderName").value,
                             pid: this.pid,
@@ -240,7 +240,7 @@ export class FilesComponent implements OnInit {
     }
     public toggleTag(tagid, item) {
         this.remoteService
-            .getNoCache("filesToggleTag", {
+            .getNoCache("post", "filesToggleTag", {
                 fid: item.id,
                 tagid,
                 type: item.type,
@@ -270,7 +270,7 @@ export class FilesComponent implements OnInit {
             .open(shareModal)
             .result.then();
         this.remoteService
-            .getNoCache("filesCreateShare", { type: item.type, fid: item.id })
+            .getNoCache("post", "filesCreateShare", { type: item.type, fid: item.id })
             .subscribe((data) => {
                 if (data.status == true) {
                     this.shareLink = environment.apiUrl + "share/?l=" + data.link;
@@ -283,7 +283,7 @@ export class FilesComponent implements OnInit {
             .open(renameModal)
             .result.then((result) => {
                 this.remoteService
-                    .getNoCache("filesRename", {
+                    .getNoCache("post", "filesRename", {
                         fid: item.id,
                         name: this.renameItemForm.get("renameItemName").value,
                         type: item.type,
@@ -299,7 +299,8 @@ export class FilesComponent implements OnInit {
     }
     public delete(item) {
         if (confirm("Soll dieses Element wirklich gelöscht werden?")) {
-            this.remoteService.getNoCache("filesDelete", { type: item.type, fid: item.id }).subscribe((data) => {
+            this.remoteService.getNoCache("post", "filesDelete",
+                { type: item.type, fid: item.id }).subscribe((data) => {
                 if (data.status == true) {
                     this.alertService.success("Das Element wurde erfolgreich gelöscht.");
                     this.reloadHere();

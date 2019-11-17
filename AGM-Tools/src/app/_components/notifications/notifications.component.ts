@@ -32,7 +32,7 @@ export class NotificationsComponent implements OnInit {
     public ngOnInit() {
         this.navbarService.setHeadline("Benachrichtigungen");
         this.remoteService
-            .get("notificationsGetNotifications")
+            .get("post", "notificationsGetNotifications")
             .subscribe((data) => {
                 this.notifications = data;
             });
@@ -42,7 +42,7 @@ export class NotificationsComponent implements OnInit {
             importance: [this.importance, [Validators.required]],
             receivers: [this.receivers, [Validators.required]],
         });
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
+        this.remoteService.get("post", "usersGetUsers").subscribe((data) => {
             this.allusers = data;
         });
     }
@@ -54,7 +54,7 @@ export class NotificationsComponent implements OnInit {
                     this.invalidMessage = false;
 
                     this.remoteService
-                        .getNoCache("notificationsNewNotification", {
+                        .getNoCache("post", "notificationsNewNotification", {
                             content: this.newNotificationForm.get("content").value,
                             headline: this.newNotificationForm.get("headline").value,
                             receivers: this.newNotificationForm.get("receivers").value,
@@ -66,7 +66,7 @@ export class NotificationsComponent implements OnInit {
                                     "Benachrichtigung erfolgreich erstellt!",
                                 );
                                 this.remoteService
-                                    .get("notificationsGetNotifications")
+                                    .get("post", "notificationsGetNotifications")
                                     .subscribe((res) => {
                                         this.notifications = res;
                                     });
@@ -81,7 +81,7 @@ export class NotificationsComponent implements OnInit {
             true
         ) {
             this.remoteService
-                .getNoCache("notificationsDeleteNotification", {
+                .getNoCache("post", "notificationsDeleteNotification", {
                     id: notification.id,
                 })
                 .subscribe((data) => {
@@ -90,7 +90,7 @@ export class NotificationsComponent implements OnInit {
                             "Benachrichtigung erfolgreich gelöscht",
                         );
                         this.remoteService
-                            .get("notificationsGetNotifications")
+                            .get("post", "notificationsGetNotifications")
                             .subscribe((res) => {
                                 this.notifications = res;
                             });

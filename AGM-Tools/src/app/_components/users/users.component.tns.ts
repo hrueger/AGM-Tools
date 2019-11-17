@@ -39,7 +39,7 @@ export class UsersComponent implements OnInit {
     ) { }
 
     public ngOnInit() {
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
+        this.remoteService.get("post", "usersGetUsers").subscribe((data) => {
             this.users = data;
         });
     }
@@ -59,7 +59,7 @@ export class UsersComponent implements OnInit {
         this.modal.showModal(NewUserModalComponent, options).then((newUser) => {
             if (newUser) {
                 this.remoteService
-                    .getNoCache("usersNewUser", {
+                    .getNoCache("post", "usersNewUser", {
                         email: newUser.email,
                         pw: newUser.password,
                         pw2: newUser.password2,
@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit {
                                 "Benutzer erfolgreich erstellt",
                             );
                             this.remoteService
-                                .get("usersGetUsers")
+                                .get("post", "usersGetUsers")
                                 .subscribe((res) => {
                                     this.users = res;
                                 });
@@ -97,7 +97,7 @@ export class UsersComponent implements OnInit {
         this.modal.showModal(EditUserModalComponent, options).then((newUser) => {
             if (newUser) {
                 this.remoteService
-                    .getNoCache("usersEditCurrentUser", {
+                    .getNoCache("post", "usersEditCurrentUser", {
                         "email": newUser.email,
                         "id": this.authService.currentUserValue.id,
                         "pw-new": newUser.password1,
@@ -111,7 +111,7 @@ export class UsersComponent implements OnInit {
                                 "Eigene Daten erfolgreich geändert!",
                             );
                             this.remoteService
-                                .get("usersGetUsers")
+                                .get("post", "usersGetUsers")
                                 .subscribe((res) => {
                                     this.users = res;
                                 });
@@ -138,7 +138,7 @@ export class UsersComponent implements OnInit {
         const onYesPressed = (response) => {
             this.usersListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
-                .getNoCache("usersDeleteUser", {
+                .getNoCache("post", "usersDeleteUser", {
                     id: uid,
                 })
                 .subscribe((data) => {
@@ -147,7 +147,7 @@ export class UsersComponent implements OnInit {
                             "Benutzer erfolgreich gelöscht",
                         );
                         this.remoteService
-                            .get("usersGetUsers")
+                            .get("post", "usersGetUsers")
                             .subscribe((res) => {
                                 this.users = res;
                             });

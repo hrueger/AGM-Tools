@@ -55,22 +55,22 @@ export class DashboardComponent implements OnInit {
     }
 
     public initChart() {
-        this.remoteService.get("dashboardGetSpaceChartData").subscribe((data) => {
+        this.remoteService.get("get", "dashboard/spaceChartData").subscribe((data) => {
             this.spaceChartData = [data];
         });
-        this.remoteService.get("dashboardGetWhatsnew").subscribe((data) => {
+        this.remoteService.get("get", "dashboard/whatsnew").subscribe((data) => {
             this.whatsnew = data;
         });
-        this.remoteService.get("dashboardGetDates").subscribe((data) => {
+        this.remoteService.get("get", "dashboard/events").subscribe((data) => {
             this.dates = data;
         });
-        this.remoteService.get("dashboardGetVersion").subscribe((data) => {
+        this.remoteService.get("get", "dashboard/version").subscribe((data) => {
             this.version = data;
         });
         this.remoteService
-            .getNoCache("dashboardGetNotifications")
+            .getNoCache("get", "dashboard/notification/")
             .subscribe((data) => {
-                this.notifications = data.notifications;
+                this.notifications = data;
             });
         window.setInterval(() => {
             this.showDashboardLayout = true;
@@ -79,12 +79,9 @@ export class DashboardComponent implements OnInit {
 
     public makeNotificationSeen(notification) {
         this.remoteService
-            .getNoCache("dashboardMakeNotificationSeen", {
-                id: notification.id,
-            })
+            .getNoCache("post", `dashboard/notifications/${notification.id}`)
             .subscribe((data) => {
                 if (data.status == true) {
-                    // console.log(true);
                     this.notifications = this.notifications.filter(
                         (obj) => obj.id !== notification.id,
                     );

@@ -36,7 +36,7 @@ export class TemplatesComponent implements OnInit {
     ) { }
     public ngOnInit() {
         this.navbarService.setHeadline("Vorlagen");
-        this.remoteService.get("templatesGetTemplates").subscribe((data) => {
+        this.remoteService.get("post", "templatesGetTemplates").subscribe((data) => {
             this.templates = data;
         });
         this.newTemplateForm = new FormGroup({

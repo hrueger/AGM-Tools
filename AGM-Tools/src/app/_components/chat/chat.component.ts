@@ -19,7 +19,7 @@ export class ChatComponent {
 
     public ngOnInit() {
         this.navbarService.setHeadline("Chat");
-        this.remoteService.get("chatGetContacts").subscribe((chats) => {
+        this.remoteService.get("post", "chatGetContacts").subscribe((chats) => {
             this.chats = chats;
         });
     }

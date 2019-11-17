@@ -212,7 +212,7 @@ export class ChatMessagesComponent
                         };
                         this.messages.push(message);
                         this.remoteService
-                            .getNoCache("chatSendMessage", {
+                            .getNoCache("post", "chatSendMessage", {
                                 contactSrc: contactToSend,
                                 message: "Kontakt",
                                 rid: this.receiverId,
@@ -241,7 +241,7 @@ export class ChatMessagesComponent
             };
             this.messages.push(message);
             this.remoteService
-                .getNoCache("chatSendMessage", {
+                .getNoCache("post", "chatSendMessage", {
                     message: this.inputMessageField.nativeElement.text,
                     rid: this.receiverId,
                 })
@@ -259,7 +259,7 @@ export class ChatMessagesComponent
     public ngOnInit() {
         this.route.params.subscribe((params) => {
             this.receiverId = +params.index;
-            this.remoteService.get("chatGetContacts").subscribe((chats) => {
+            this.remoteService.get("post", "chatGetContacts").subscribe((chats) => {
                 // this.chats = chats;
                 from(chats)
                     .pipe(
@@ -279,7 +279,7 @@ export class ChatMessagesComponent
 
     public getMessages(receiverId) {
         this.remoteService
-            .get("chatGetMessages", { rid: receiverId })
+            .get("post", "chatGetMessages", { rid: receiverId })
             .subscribe((data) => {
                 if (data != null) {
                     this.messages.length = 0;

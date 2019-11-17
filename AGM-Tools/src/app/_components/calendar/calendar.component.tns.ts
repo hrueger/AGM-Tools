@@ -104,7 +104,7 @@ export class CalendarComponent {
     }
 
     public ngOnInit() {
-        this.remoteService.get("calendarGetDates").subscribe(
+        this.remoteService.get("post", "calendarGetDates").subscribe(
             (data) => {
                 this.gotNewCalendarData(data, true);
             },
@@ -149,7 +149,7 @@ export class CalendarComponent {
             if (newCalendarEvent) {
 
                 this.remoteService
-                    .getNoCache("calendarNewEvent", {
+                    .getNoCache("post", "calendarNewEvent", {
                         description: newCalendarEvent.description,
                         endDate: newCalendarEvent.endDate.toString(),
                         headline: newCalendarEvent.title,
@@ -163,7 +163,7 @@ export class CalendarComponent {
                                 "Termin erfolgreich gespeichert!",
                             );
                             this.remoteService
-                                .get("calendarGetDates")
+                                .get("post", "calendarGetDates")
                                 .subscribe((res) => {
                                     this.gotNewCalendarData(res);
                                 });

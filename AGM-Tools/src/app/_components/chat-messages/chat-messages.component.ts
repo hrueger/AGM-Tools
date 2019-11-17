@@ -84,7 +84,7 @@ export class ChatMessagesComponent
     public ngOnChanges(data) {
         if (data.inputReceiverId && data.inputReceiverId.currentValue) {
             this.receiverId = data.inputReceiverId.currentValue;
-            this.remoteService.get("chatGetContacts").subscribe((chats) => {
+            this.remoteService.get("post", "chatGetContacts").subscribe((chats) => {
                 // this.chats = chats;
                 from(chats)
                     .pipe(
@@ -107,7 +107,7 @@ export class ChatMessagesComponent
     }
     public getMessages(receiverId) {
         this.remoteService
-            .get("chatGetMessages", { rid: receiverId })
+            .get("post", "chatGetMessages", { rid: receiverId })
             .subscribe((data) => {
                 if (data != null) {
                     this.messages = data;

@@ -39,10 +39,10 @@ export class ProjectsComponent implements OnInit {
     ) { this.multiSelect = new MultiSelect(); }
 
     public ngOnInit() {
-        this.remoteService.get("projectsGetProjects").subscribe((data) => {
+        this.remoteService.get("post", "projectsGetProjects").subscribe((data) => {
             this.projects = data;
         });
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
+        this.remoteService.get("post", "usersGetUsers").subscribe((data) => {
             this.allusers = data;
         });
 
@@ -56,7 +56,7 @@ export class ProjectsComponent implements OnInit {
         this.modal.showModal(NewProjectModalComponent, options).then((newProject) => {
             if (newProject) {
                 this.remoteService
-                    .getNoCache("projectsNewProject", {
+                    .getNoCache("post", "projectsNewProject", {
                         description: newProject.description,
                         members: newProject.members,
                         name: newProject.name,
@@ -66,7 +66,7 @@ export class ProjectsComponent implements OnInit {
                             this.alertService.success(
                                 "Projekt erfolgreich erstellt!",
                             );
-                            this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                            this.remoteService.get("post", "projectsGetProjects").subscribe((res) => {
                                 this.projects = res;
                             });
                         }
@@ -121,14 +121,14 @@ export class ProjectsComponent implements OnInit {
                 this.zone.run(() => {
                     this.membersToAdd = selectedItems;
                     if (this.membersToAdd.length) {
-                        this.remoteService.getNoCache("projectsAddMembers", {
+                        this.remoteService.getNoCache("post", "projectsAddMembers", {
                             members: this.membersToAdd,
                             project: id,
                         }).subscribe((data) => {
                             this.alertService.success(
                                 "Mitglieder erfolgreich hinzugefügt!",
                             );
-                            this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                            this.remoteService.get("post", "projectsGetProjects").subscribe((res) => {
                                 this.projects = res;
                             });
                         });
@@ -152,7 +152,7 @@ export class ProjectsComponent implements OnInit {
         const onYesPressed = (response) => {
             this.projectsListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
-                .getNoCache("projectsDeleteProject", {
+                .getNoCache("post", "projectsDeleteProject", {
                     id,
                 })
                 .subscribe((data) => {
@@ -160,7 +160,7 @@ export class ProjectsComponent implements OnInit {
                         this.alertService.success(
                             "Projekt erfolgreich gelöscht",
                         );
-                        this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                        this.remoteService.get("post", "projectsGetProjects").subscribe((res) => {
                             this.projects = res;
                         });
                     }

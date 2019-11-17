@@ -25,7 +25,7 @@ export class TutorialComponent implements OnInit {
   public ngOnInit() {
     this.navbarService.setHeadline("Tutorial");
     this.route.params.subscribe((params) => {
-      this.remoteService.get("tutorialsGetTutorial", { id: params.index }).subscribe((tutorial) => {
+      this.remoteService.get("post", "tutorialsGetTutorial", { id: params.index }).subscribe((tutorial) => {
         this.gotNewTutorialData(tutorial);
       });
     });

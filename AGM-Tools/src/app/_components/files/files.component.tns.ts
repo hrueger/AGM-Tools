@@ -70,7 +70,7 @@ export class FilesComponent implements OnInit {
     public ngOnInit() {
         this.navbarService.setHeadline("Dateien");
 
-        this.remoteService.get("projectsGetProjects").subscribe((data) => {
+        this.remoteService.get("post", "projectsGetProjects").subscribe((data) => {
             this.projects = data;
         });
     }
@@ -135,7 +135,7 @@ export class FilesComponent implements OnInit {
     public navigate(item) {
         // console.log(this.currentPath);
         this.remoteService
-            .get("filesGetFolder", {
+            .get("post", "filesGetFolder", {
                 fid: item.id,
                 pid: this.pid,
             })
@@ -183,7 +183,7 @@ export class FilesComponent implements OnInit {
         }).then((r) => {
             if (r.result) {
                 that.remoteService
-                    .getNoCache("filesNewFolder", {
+                    .getNoCache("post", "filesNewFolder", {
                         fid: that.currentPath[that.currentPath.length - 1].id,
                         name: r.text,
                         pid: that.pid,
@@ -244,7 +244,7 @@ export class FilesComponent implements OnInit {
                 items: allTagNames,
                 onClick: (dialogInterface, index) => {
                     this.remoteService
-                        .getNoCache("filesToggleTag", {
+                        .getNoCache("post", "filesToggleTag", {
                             fid: item.id,
                             tagid: this.tags[index].id,
                             type: item.type,
@@ -279,7 +279,7 @@ export class FilesComponent implements OnInit {
 
     public share(item) {
         this.remoteService
-            .getNoCache("filesCreateShare", { type: item.type, fid: item.id })
+            .getNoCache("post", "filesCreateShare", { type: item.type, fid: item.id })
             .subscribe((data) => {
                 if (data.status == true) {
                     const shareLink = environment.apiUrl + "share/?l=" + data.link;
@@ -323,7 +323,7 @@ export class FilesComponent implements OnInit {
         }).then((r) => {
             if (r.result) {
                 that.remoteService
-                    .getNoCache("filesRename", { type: item.type, fid: item.id, name: r.text })
+                    .getNoCache("post", "filesRename", { type: item.type, fid: item.id, name: r.text })
                     .subscribe((data) => {
                         if (data.status == true) {
                             that.alertService.success("Das Element wurde erfolgreich umbenannt.");
@@ -336,7 +336,7 @@ export class FilesComponent implements OnInit {
     }
     public delete(item) {
         if (confirm("Soll dieses Element wirklich gelöscht werden?")) {
-            this.remoteService.getNoCache("filesDelete", { type: item.type, fid: item.id }).subscribe((data) => {
+            this.remoteService.getNoCache("post", "filesDelete", { type: item.type, fid: item.id }).subscribe((data) => {
                 if (data.status == true) {
                     this.alertService.success("Das Element wurde erfolgreich gelöscht.");
                     // this.reloadHere();

@@ -29,7 +29,7 @@ export class NotificationsComponent implements OnInit {
 
     public ngOnInit() {
         this.remoteService
-            .get("notificationsGetNotifications")
+            .get("post", "notificationsGetNotifications")
             .subscribe((data) => {
                 this.notifications = data;
             });
@@ -44,7 +44,7 @@ export class NotificationsComponent implements OnInit {
         this.modal.showModal(NewNotificationModalComponent, options).then((newNotification) => {
             if (newNotification) {
                 this.remoteService
-                    .getNoCache("notificationsNewNotification", {
+                    .getNoCache("post", "notificationsNewNotification", {
                         content: newNotification.content,
                         headline: newNotification.headline,
                         receivers: newNotification.receivers,
@@ -56,7 +56,7 @@ export class NotificationsComponent implements OnInit {
                                 "Benachrichtigung erfolgreich gesendet!",
                             );
                             this.remoteService
-                                .get("notificationsGetNotifications")
+                                .get("post", "notificationsGetNotifications")
                                 .subscribe((res) => {
                                     this.notifications = res;
                                 });
@@ -82,7 +82,7 @@ export class NotificationsComponent implements OnInit {
         const onYesPressed = (response) => {
             this.notificationsListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
-                .getNoCache("notificationsDeleteNotification", {
+                .getNoCache("post", "notificationsDeleteNotification", {
                     id,
                 })
                 .subscribe((data) => {
@@ -90,7 +90,7 @@ export class NotificationsComponent implements OnInit {
                         this.alertService.success(
                             "Benachrichtigungs erfolgreich gelöscht",
                         );
-                        this.remoteService.get("notificationsGetNotifications").subscribe((res) => {
+                        this.remoteService.get("post", "notificationsGetNotifications").subscribe((res) => {
                             this.notifications = res;
                         },
                         );

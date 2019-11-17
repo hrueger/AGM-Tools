@@ -99,7 +99,7 @@ export class MessagesAreaComponent implements OnInit {
             };
             this.messages.push(message);
             this.remoteService
-                .getNoCache("chatSendMessage", {
+                .getNoCache("post", "chatSendMessage", {
                     message: changes.messageSent.currentValue,
                     rid: this.receiverId,
                 })

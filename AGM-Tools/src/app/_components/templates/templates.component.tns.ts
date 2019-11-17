@@ -31,7 +31,7 @@ export class TemplatesComponent implements OnInit {
     public pageNumber: number;
     public templatesToShow: any[] = [];
     public currentTemplateName: string;
-    currentTemplateDescription: any;
+    public currentTemplateDescription: any;
 
     constructor(
         private remoteService: RemoteService,
@@ -43,7 +43,7 @@ export class TemplatesComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.remoteService.get("templatesGetTemplates").subscribe((data) => {
+        this.remoteService.get("post", "templatesGetTemplates").subscribe((data) => {
             this.templates = data;
             this.templatesToShow = [];
             this.templates.forEach((template) => {
@@ -138,7 +138,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
         const onYesPressed = (response) => {
             this.templatesListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
-                .getNoCache("templatesDeleteTemplate", {
+                .getNoCache("post", "templatesDeleteTemplate", {
                     id: uid,
                 })
                 .subscribe((data) => {
@@ -147,7 +147,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
                             "Vorlage erfolgreich gelöscht",
                         );
                         this.remoteService
-                            .get("templatesGetTemplates")
+                            .get("post", "templatesGetTemplates")
                             .subscribe((res) => {
                                 this.templates = res;
                             });

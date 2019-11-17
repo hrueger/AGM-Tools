@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit {
         this.gotVersion = false;
         this.gotDates = false;
         this.gotNotifications = false;
-        this.remoteService.get("dashboardGetSpaceChartData").subscribe((data) => {
+        this.remoteService.get("post", "dashboardGetSpaceChartData").subscribe((data) => {
             // console.log("Bekommene Daten: " + data);
             // console.log(data);
             if (data) {
@@ -74,22 +74,22 @@ export class DashboardComponent implements OnInit {
             this.checkForRefreshDone(obj);
 
         });
-        this.remoteService.get("dashboardGetWhatsnew").subscribe((data) => {
+        this.remoteService.get("post", "dashboardGetWhatsnew").subscribe((data) => {
             this.whatsnew = data;
             this.gotWhatsNew = true;
             this.checkForRefreshDone(obj);
         });
-        this.remoteService.get("dashboardGetDates").subscribe((data) => {
+        this.remoteService.get("post", "dashboardGetDates").subscribe((data) => {
             this.dates = data;
             this.gotDates = true;
             this.checkForRefreshDone(obj);
         });
-        this.remoteService.get("dashboardGetVersion").subscribe((data) => {
+        this.remoteService.get("post", "dashboardGetVersion").subscribe((data) => {
             this.version = data;
             this.gotVersion = true;
             this.checkForRefreshDone(obj);
         });
-        this.remoteService.get("dashboardGetUpdates", { version: this.currentVersion }).subscribe((data) => {
+        this.remoteService.get("post", "dashboardGetUpdates", { version: this.currentVersion }).subscribe((data) => {
             if (data.update) {
                 this.router.navigate(["updater"]);
             }
@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit {
             this.checkForRefreshDone(obj);
         });
         this.remoteService
-            .getNoCache("dashboardGetNotifications")
+            .getNoCache("post", "dashboardGetNotifications")
             .subscribe((data) => {
                 this.gotNotifications = true;
                 this.checkForRefreshDone(obj);
@@ -125,7 +125,7 @@ export class DashboardComponent implements OnInit {
                             buttonStyle: CFAlertActionStyle.POSITIVE,
                             onClick: (response) => {
                                 this.remoteService
-                                    .getNoCache("dashboardMakeNotificationSeen", {
+                                    .getNoCache("post", "dashboardMakeNotificationSeen", {
                                         id: notification.id,
                                     })
                                     .subscribe();

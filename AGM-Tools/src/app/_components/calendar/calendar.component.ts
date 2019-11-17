@@ -178,7 +178,7 @@ export class CalendarComponent {
 
     public ngOnInit() {
         this.navbarService.setHeadline("Kalender");
-        this.remoteService.get("calendarGetDates").subscribe((dates) => {
+        this.remoteService.get("post", "calendarGetDates").subscribe((dates) => {
             if (dates) {
                 this.eventSettings.dataSource = [];
                 for (const date of dates) {
@@ -219,7 +219,7 @@ export class CalendarComponent {
             switch (ev.requestType) {
                 case "eventCreated":
                     this.remoteService
-                        .getNoCache("calendarNewEvent", {
+                        .getNoCache("post", "calendarNewEvent", {
                             description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
                             endDate: ev.data.EndTime.toISOString(),
                             headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
@@ -247,7 +247,7 @@ export class CalendarComponent {
                     const id = this.getRealId(ev.data.Id);
                     if (id != null) {
                         this.remoteService
-                            .getNoCache("calendarUpdateEvent", {
+                            .getNoCache("post", "calendarUpdateEvent", {
                                 description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
                                 endDate: ev.data.EndTime.toISOString(),
                                 headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
@@ -268,7 +268,7 @@ export class CalendarComponent {
                     const evId = this.getRealId(ev.data[0].Id);
                     if (evId != null) {
                         this.remoteService
-                            .getNoCache("calendarRemoveEvent", {
+                            .getNoCache("post", "calendarRemoveEvent", {
                                 id: evId,
                             })
                             .subscribe((data) => {

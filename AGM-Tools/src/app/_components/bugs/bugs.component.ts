@@ -26,7 +26,7 @@ export class BugsComponent implements OnInit {
         private navbarService: NavbarService,
     ) { }
     public ngOnInit() {
-        this.remoteService.get("bugsGetBugs").subscribe((data) => {
+        this.remoteService.get("post", "bugsGetBugs").subscribe((data) => {
             this.bugs = data;
         });
         this.navbarService.setHeadline("Fehler / Verbesserungen");
@@ -45,7 +45,7 @@ export class BugsComponent implements OnInit {
                     this.invalidMessage = false;
 
                     this.remoteService
-                        .getNoCache("bugsNewBug", {
+                        .getNoCache("post", "bugsNewBug", {
                             description: this.newBugForm.get("description").value,
                             headline: this.newBugForm.get("headline").value,
                             place: this.newBugForm.get("place").value,
@@ -57,7 +57,7 @@ export class BugsComponent implements OnInit {
                                     "Fehler / Verbesserungsvorschlag erfolgreich erstellt!",
                                 );
                                 this.remoteService
-                                    .get("bugsGetBugs")
+                                    .get("post", "bugsGetBugs")
                                     .subscribe((res) => {
                                         this.bugs = res;
                                     });
@@ -74,7 +74,7 @@ export class BugsComponent implements OnInit {
             ) == true
         ) {
             this.remoteService
-                .getNoCache("bugsDeleteBug", {
+                .getNoCache("post", "bugsDeleteBug", {
                     id: bug.id,
                 })
                 .subscribe((data) => {
@@ -83,7 +83,7 @@ export class BugsComponent implements OnInit {
                             "Fehler / Verbesserungsvorschlag erfolgreich gelöscht",
                         );
                         this.remoteService
-                            .get("bugsGetBugs")
+                            .get("post", "bugsGetBugs")
                             .subscribe((res) => {
                                 this.bugs = res;
                             });

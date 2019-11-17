@@ -69,7 +69,7 @@ export class MessagesAreaComponent implements OnInit {
     public newMessageFromPushService(data: any) {
         if (data.action == "newMessage") {
             if (data.data.data.chatID == this.receiverId) {
-                this.remoteService.getNoCache("chatMarkAsRead", { message: data.data.data.messageId }).subscribe();
+                this.remoteService.getNoCache("post", "chatMarkAsRead", { message: data.data.data.messageId }).subscribe();
                 const message = {
                     chat: null,
                     created: Date.now(),

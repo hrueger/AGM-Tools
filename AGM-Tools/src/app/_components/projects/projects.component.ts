@@ -35,10 +35,10 @@ export class ProjectsComponent implements OnInit {
 
     public ngOnInit() {
         this.navbarService.setHeadline("Projekte");
-        this.remoteService.get("projectsGetProjects").subscribe((data) => {
+        this.remoteService.get("post", "projectsGetProjects").subscribe((data) => {
             this.projects = data;
         });
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
+        this.remoteService.get("post", "usersGetUsers").subscribe((data) => {
             this.allusers = data;
         });
         this.newProjectForm = this.fb.group({
@@ -55,7 +55,7 @@ export class ProjectsComponent implements OnInit {
                     this.invalidMessage = false;
 
                     this.remoteService
-                        .getNoCache("projectsNewProject", {
+                        .getNoCache("post", "projectsNewProject", {
                             description: this.newProjectForm.get("description").value,
                             members: this.newProjectForm.get("members").value,
                             name: this.newProjectForm.get("name").value,

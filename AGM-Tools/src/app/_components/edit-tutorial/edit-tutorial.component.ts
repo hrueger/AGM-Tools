@@ -35,7 +35,7 @@ export class EditTutorialComponent implements OnInit {
     });
     this.navbarService.setHeadline("Tutorial");
     this.route.params.subscribe((params) => {
-      this.remoteService.get("tutorialsGetTutorial", { id: params.index }).subscribe((tutorial) => {
+      this.remoteService.get("post", "tutorialsGetTutorial", { id: params.index }).subscribe((tutorial) => {
         this.gotNewTutorialData(tutorial);
       });
     });
@@ -45,7 +45,7 @@ export class EditTutorialComponent implements OnInit {
     this.invalidMessage = false;
 
     this.remoteService
-      .getNoCache("tutorialsUpdateTutorial", {
+      .getNoCache("post", "tutorialsUpdateTutorial", {
         description: this.tutorialForm.get("description").value,
         id: this.tutorial.id,
         title: this.tutorialForm.get("title").value,
@@ -56,7 +56,7 @@ export class EditTutorialComponent implements OnInit {
             "Änderungen erfolgreich gespeichert",
           );
           this.remoteService
-            .get("tutorialsGetTutorial", {id: this.tutorial.id})
+            .get("post", "tutorialsGetTutorial", {id: this.tutorial.id})
             .subscribe((tutorial) => {
               this.gotNewTutorialData(tutorial);
             });
@@ -67,7 +67,7 @@ export class EditTutorialComponent implements OnInit {
 
   public addStep() {
     this.remoteService
-      .getNoCache("tutorialsAddStep", {
+      .getNoCache("post", "tutorialsAddStep", {
         id: this.tutorial.id,
       })
       .subscribe((data) => {
@@ -76,7 +76,7 @@ export class EditTutorialComponent implements OnInit {
             "Schritt erfolgreich hinzugefügt",
           );
           this.remoteService
-            .get("tutorialsGetTutorial", {id: this.tutorial.id})
+            .get("post", "tutorialsGetTutorial", {id: this.tutorial.id})
             .subscribe((tutorial) => {
               this.tutorial = tutorial;
               this.tutorialForm.get("description").setValue(tutorial.description);
@@ -89,7 +89,7 @@ export class EditTutorialComponent implements OnInit {
   public updateSteps() {
     this.tutorial.steps.forEach((step) => {
       this.remoteService
-        .getNoCache("tutorialsUpdateStep", {
+        .getNoCache("post", "tutorialsUpdateStep", {
           content: step.content,
           id: step.id,
           image1: step.image1,
@@ -145,7 +145,7 @@ export class EditTutorialComponent implements OnInit {
   public deleteStep(index) {
     if (confirm("Soll dieser Schritt wirklich gelöscht werden?")) {
       this.remoteService
-        .getNoCache("tutorialsDeleteStep", {
+        .getNoCache("post", "tutorialsDeleteStep", {
           id: this.tutorial.steps[index].id,
         })
         .subscribe((data) => {

@@ -16,17 +16,12 @@ export class RemoteService {
         private cacheService: CacheService,
     ) { }
 
-    public get(path: string, args: any): Observable<any> {
-        // var action = "dashboardGetSpaceChartData";
+    public get(type: "get" | "post" | "put" | "delete", path: string, args?: any): Observable<any> {
         const subject = new BehaviorSubject(null);
         let cacheData = null;
         let echtDaten = false;
-        // console.log("hole internetdaten");
-        this.http
-            .post<any>(`${environment.apiUrl}${path}`, {
-                ...args,
-            })
-            .pipe(
+        const req = this.getRequest(type, path, args);
+        req.pipe(
                 tap((_) =>
                     this.log(
                         "fetched " +
@@ -70,17 +65,15 @@ export class RemoteService {
             });
         return subject.asObservable();
     }
-    public getNoCache(path: string, args: any): Observable<any> {
+
+    public getNoCache(type, path: string, args?: any): Observable<any> {
         this.log(
             "fetching " +
             path +
             " with data " +
             JSON.stringify(args),
         );
-        return this.http
-            .post<any>(`${environment.apiUrl}${path}`, {
-                ...args,
-            })
+        return this.getRequest(type, path, args)
             .pipe(
                 tap((_) =>
                     this.log(
@@ -106,6 +99,32 @@ export class RemoteService {
                 ),
                 catchError(this.handleError<any>("fileUpload", false)),
             );
+    }
+
+    private getRequest(type: string, path: string, args: any) {
+        let req;
+        if (type == "get") {
+            req = this.http
+                .get<any>(`${environment.apiUrl}${path}`, {
+                    ...args,
+                });
+        } else if (type == "post") {
+            req = this.http
+                .post<any>(`${environment.apiUrl}${path}`, {
+                    ...args,
+                });
+        } else if (type == "put") {
+            req = this.http
+                .put<any>(`${environment.apiUrl}${path}`, {
+                    ...args,
+                });
+        } else if (type == "delete") {
+            req = this.http
+                .delete<any>(`${environment.apiUrl}${path}`, {
+                    ...args,
+                });
+        }
+        return req;
     }
 
     private handleError<T>(operation = "operation", result?: T) {

@@ -80,7 +80,7 @@ export class NewProjectModalComponent {
 
     public constructor(private params: ModalDialogParams, private remoteService: RemoteService, private zone: NgZone) {
         this.multiSelect = new MultiSelect();
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
+        this.remoteService.get("post", "usersGetUsers").subscribe((data) => {
             data.forEach((user) => {
                 this.users.push({ name: user.username, id: user.id });
             });
