@@ -82,9 +82,7 @@ export class FilesComponent implements OnInit {
             this.navigate(item);
         } else {
             this.viewFile = true;
-            this.imageSource =
-                "https://agmtools.allgaeu-gymnasium.de/AGM-Tools/getFile.php?fid=" +
-                item.id;
+            this.imageSource = `${environment.apiUrl}getFile.php?fid=${item.id}`;
 
         }
     }

@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { Page } from "tns-core-modules/ui/page";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: "app-settings",
@@ -88,7 +89,7 @@ export class SettingsComponent implements OnInit {
           icon: 0xf070,
           name: "OpenSource Lizenzen",
           type: "webview",
-          value: "https://agmtools.allgaeu-gymnasium.de/AGM-Tools/3rdpartylicenses.txt",
+          value: `${environment.apiUrl}3rdpartylicenses.txt`,
         },
         {
           description: "",

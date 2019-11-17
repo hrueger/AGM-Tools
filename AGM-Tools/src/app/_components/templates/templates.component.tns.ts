@@ -17,6 +17,7 @@ import { Page } from "tns-core-modules/ui/page/page";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
+import { environment } from "../../../environments/environment";
 
 @Component({
     selector: "app-templates",
@@ -49,7 +50,7 @@ export class TemplatesComponent implements OnInit {
             this.templates.forEach((template) => {
                 this.templatesToShow.push({
                     // credit: template.type,
-                    imageUrl: `https://agmtools.allgaeu-gymnasium.de/AGM-Tools_NEU_API/\
+                    imageUrl: `${environment.apiUrl}\
 getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.token}`,
                     // summary: template.description,
                     // title: template.name,
