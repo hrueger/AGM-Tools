@@ -77,8 +77,6 @@ export class DashboardComponent implements OnInit {
         }, 300);
     }
 
-    
-
     public updateChart() {
         this.remoteService
             .getNoCache("post", "dashboard/spaceChartData")
