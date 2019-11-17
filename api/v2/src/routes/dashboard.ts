@@ -5,6 +5,7 @@ import { checkJwt } from "../middlewares/checkJwt";
 const router = Router();
 
 router.get("/spaceChartData", [checkJwt], DashboardController.spaceChartData);
+router.post("/spaceChartData", [checkJwt], DashboardController.updateSpaceChartData);
 router.get("/whatsnew", [checkJwt], DashboardController.whatsnew);
 router.get("/events", [checkJwt], DashboardController.events);
 router.get("/version", [checkJwt], DashboardController.version);

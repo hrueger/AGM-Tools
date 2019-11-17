@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
 
     public initChart() {
         this.remoteService.get("get", "dashboard/spaceChartData").subscribe((data) => {
-            this.spaceChartData = [data];
+            this.setSpaceChartData(data);
         });
         this.remoteService.get("get", "dashboard/whatsnew").subscribe((data) => {
             this.whatsnew = data;
@@ -77,6 +77,16 @@ export class DashboardComponent implements OnInit {
         }, 300);
     }
 
+    
+
+    public updateChart() {
+        this.remoteService
+            .getNoCache("post", "dashboard/spaceChartData")
+            .subscribe((data) => {
+                this.setSpaceChartData(data);
+            });
+    }
+
     public makeNotificationSeen(notification) {
         this.remoteService
             .getNoCache("post", `dashboard/notifications/${notification.id}`)
@@ -87,5 +97,9 @@ export class DashboardComponent implements OnInit {
                     );
                 }
             });
+    }
+
+    private setSpaceChartData(data: any) {
+        this.spaceChartData = [data.free, data.system, data.used];
     }
 }

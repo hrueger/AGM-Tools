@@ -22,8 +22,7 @@
                         <canvas baseChart [data]="spaceChartData" [labels]="spaceChartLabels" [chartType]="spaceChartType" [colors]="spaceChartColors" [options]="spaceChartOptions">
                         </canvas>
                     </div>
-                    <!--<button class="btn btn-primary" (click)="updateChart()">-->
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" (click)="updateChart()">
                         Aktualisieren
                     </button>
                 </div>
@@ -43,8 +42,8 @@
                             <div>
                                 <div>
                                     <ul>
-                                        <li *ngFor="let news of version.news">
-                                            {{ news }}
+                                        <li *ngFor="let change of version.changes">
+                                            {{ change }}
                                         </li>
                                     </ul>
                                 </div>

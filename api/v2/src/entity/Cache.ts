@@ -3,6 +3,7 @@ import {
     PrimaryGeneratedColumn,
     Column,
     Unique,
+    UpdateDateColumn,
   } from "typeorm";
   
   @Entity()
@@ -16,4 +17,8 @@ import {
 
     @Column()
     value: string;
+
+    @Column()
+    @UpdateDateColumn()
+    updatedAt: Date;
   }
