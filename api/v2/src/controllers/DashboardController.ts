@@ -1,45 +1,44 @@
 import { Request, Response } from "express";
-import { getRepository, MoreThan } from "typeorm";
 import * as getFolderSize from "get-folder-size";
+import { getRepository, MoreThan } from "typeorm";
+import config from "../config/config";
 import { Cache } from "../entity/Cache";
 import { Event } from "../entity/Event";
 import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
-import config from "../config/config";
 
 class DashboardController {
-  static whatsnew = async (req: Request, res: Response) => {
+
+  public static whatsnew = async (req: Request, res: Response) => {
     res.send([{
+      changes: ["New v2 API!", "really cool!"],
       id: 0,
       version: "latest",
-      changes: ["New v2 API!", "really cool!"],
     }]);
   }
-  static events = async (req: Request, res: Response) => {
+  public static events = async (req: Request, res: Response) => {
     const eventRepository = getRepository(Event);
     const events = await eventRepository.find({
       select: ["creator", "headline", "start", "id", "location"],
       where: {
+        limit: 5.,
+        order: { start: "ASC"},
         start: MoreThan(Date.now()),
-        order: {
-          start: "ASC"
-        },
-        limit: 5.
       },
     });
     res.send(events);
   }
-  static version = async (req: Request, res: Response) => {
+  public static version = async (req: Request, res: Response) => {
     res.send({
-      version: "latest ;-)"
+      version: "latest ;-)",
     });
   }
-  static notifications = async (req: Request, res: Response) => {
+  public static notifications = async (req: Request, res: Response) => {
     const userRepository = getRepository(User);
     try {
       const notifications = await userRepository.find({
-        select: ["receivedNotifications"],
         relations: ["notification"],
+        select: ["receivedNotifications"],
         where: {
           start: MoreThan(Date.now()),
         },
@@ -48,19 +47,23 @@ class DashboardController {
     } catch {
       res.send([]);
     }
-    
+
   }
-  static notificationSeen = async (req: Request, res: Response) => {
+  public static notificationSeen = async (req: Request, res: Response) => {
     res.send("hi");
   }
-  static spaceChartData = async (req: Request, res: Response) => {
+  public static spaceChartData = async (req: Request, res: Response) => {
     await DashboardController.sendSpaceChartData(res);
-  };
+  }
 
-  static updateSpaceChartData = async (req: Request, res: Response) => {
+  public static updateSpaceChartData = async (req: Request, res: Response) => {
     await DashboardController.sendSpaceChartData(res, true);
-  };
+  }
 
+  public static daysBetween(d1: Date, d2: Date) {
+    const diff = Math.abs(d1.getTime() - d2.getTime());
+    return diff / (1000 * 60 * 60 * 24);
+  }
   private static async sendSpaceChartData(res: Response, update = false) {
     const cacheRepository = getRepository(Cache);
     let diskSpaceUsed = await cacheRepository.findOne({
@@ -68,42 +71,32 @@ class DashboardController {
         name: "DiskSpaceUsed",
       },
     });
-    if (update || !diskSpaceUsed || !diskSpaceUsed.value || DashboardController.daysBetween(diskSpaceUsed.updatedAt, new Date()) > config.cacheExpireDays) {
-      console.log("--- not from cache served");
+    if (update || !diskSpaceUsed || !diskSpaceUsed.value ||
+        DashboardController.daysBetween(diskSpaceUsed.updatedAt, new Date()) > config.cacheExpireDays) {
       const size = await new Promise<number>((resolve, reject) => {
-        getFolderSize(config.storagePath, (err, size) => {
+        getFolderSize(config.storagePath, (err, s) => {
           if (err) {
             reject(err);
-          }
-          else {
-            resolve(size);
+          } else {
+            resolve(s);
           }
         });
       });
       diskSpaceUsed = {
-        value: size.toString(),
         id: (diskSpaceUsed && diskSpaceUsed.id ? diskSpaceUsed.id : undefined),
         name: "DiskSpaceUsed",
         updatedAt: new Date(),
+        value: size.toString(),
       };
       cacheRepository.save(diskSpaceUsed);
     }
-    else {
-      console.log("--- served from cache");
-    }
-    console.log("spaceChartData with", diskSpaceUsed);
     res.send({
-      system: 0,
-      used: Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
       free: (config.avalibleDiskSpaceInGB * 1024) - Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
+      system: 0,
       total: config.avalibleDiskSpaceInGB * 1024,
+      used: Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
     });
   }
-
-  static daysBetween(d1: Date, d2: Date) {
-    var diff = Math.abs(d1.getTime() - d2.getTime());
-    return diff / (1000 * 60 * 60 * 24);
-  };
 }
 
 export default DashboardController;

@@ -1,73 +1,73 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    Unique,
-    CreateDateColumn,
-    UpdateDateColumn,
-    ManyToOne,
-    ManyToMany,
-    OneToMany
-  } from "typeorm";
   import * as bcrypt from "bcryptjs";
-import { Usergroup } from "./Usergroup";
-import { Project } from "./Project";
-import { Notification } from "./Notification";
-import { Template } from "./Template";
-import { Tutorial } from "./Tutorial";
-import { Event } from "./Event";
-  
+  import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    Unique,
+    UpdateDateColumn,
+  } from "typeorm";
+  import { Event } from "./Event";
+  import { Notification } from "./Notification";
+  import { Project } from "./Project";
+  import { Template } from "./Template";
+  import { Tutorial } from "./Tutorial";
+  import { Usergroup } from "./Usergroup";
+
   @Entity()
   @Unique(["username"])
   export class User {
     @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    username: string;
+    public id: number;
 
     @Column()
-    email: string;
-  
+    public username: string;
+
     @Column()
-    password: string;
-  
+    public email: string;
+
+    @Column()
+    public password: string;
+
     @ManyToOne((type) => Usergroup, (usergroup) => usergroup.users)
-    usergroup: Usergroup;
+    public usergroup: Usergroup;
 
     @ManyToMany((type) => Project, (project) => project.users)
-    projects: Project[];
-  
+    public projects: Project[];
+
     @Column()
     @CreateDateColumn()
-    createdAt: Date;
-  
+    public createdAt: Date;
+
     @Column()
     @UpdateDateColumn()
-    updatedAt: Date;
+    public updatedAt: Date;
 
     @ManyToMany((type) => Notification, (notification) => notification.receivers)
-    receivedNotifications: Notification[];
+    public receivedNotifications: Notification[];
 
     @OneToMany((type) => Notification, (notification) => notification.creator)
-    sentNotifications: Notification[];
+    public sentNotifications: Notification[];
 
     @OneToMany((type) => Template, (template) => template.creator)
-    templates: Template[];
+    public templates: Template[];
 
     @OneToMany((type) => Tutorial, (tutorial) => tutorial.creator)
-    tutorials: Tutorial[];
+    public tutorials: Tutorial[];
 
     @OneToMany((type) => Event, (event) => event.creator)
-    events: Event[];
-  
-    hashPassword() {
+    public events: Event[];
+
+    public hashPassword() {
       this.password = bcrypt.hashSync(this.password, 8);
     }
-  
-    checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
+
+    public checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
         if (unencryptedPassword) {
-            return bcrypt.compareSync(unencryptedPassword, this.password)
+            return bcrypt.compareSync(unencryptedPassword, this.password);
         } else {
             return false;
         }

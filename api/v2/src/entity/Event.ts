@@ -1,31 +1,31 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
+    Entity,
     ManyToOne,
+    PrimaryGeneratedColumn,
   } from "typeorm";
 import { User } from "./User";
-  
-  @Entity()
+
+@Entity()
   export class Event {
     @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    headline: string;
+    public id: number;
 
     @Column()
-    description: string;
+    public headline: string;
 
     @Column()
-    location: string;
+    public description: string;
 
     @Column()
-    start: Date;
+    public location: string;
 
     @Column()
-    end: Date;
+    public start: Date;
+
+    @Column()
+    public end: Date;
 
     @ManyToOne((type) => User, (user) => user.events)
-    creator: User;
+    public creator: User;
   }

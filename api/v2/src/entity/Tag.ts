@@ -1,31 +1,31 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    ManyToOne,
+    Entity,
     ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
   } from "typeorm";
-import { Folder } from "./Folder";
 import { File } from "./File";
-  
-  @Entity()
+import { Folder } from "./Folder";
+
+@Entity()
   export class Tag {
     @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    name: string;
+    public id: number;
 
     @Column()
-    color: string;
+    public name: string;
 
     @Column()
-    textColor: string;
+    public color: string;
+
+    @Column()
+    public textColor: string;
 
     @ManyToMany((type) => Folder, (folder) => folder.tags)
-    folders: Folder[];
+    public folders: Folder[];
 
     @ManyToMany((type) => File, (file) => file.tags)
-    files: File[];
+    public files: File[];
   }

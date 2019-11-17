@@ -3,6 +3,24 @@ name: Build
 on: [push]
 
 jobs:
+  build_api:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macOS-latest]
+    name: API on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10
+    - name: Install dependencies
+      working-directory: api/v2
+      run: npm i
+    - name: Build
+      working-directory: api/v2
+      run: npm run build
   build_web:
     strategy:
       matrix:

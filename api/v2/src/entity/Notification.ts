@@ -1,31 +1,31 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    ManyToOne,
+    Entity,
     ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
   } from "typeorm";
 import { User } from "./User";
-  
-  @Entity()
+
+@Entity()
   export class Notification {
     @PrimaryGeneratedColumn()
-    id: number;
+    public id: number;
 
     @Column()
-    headline: string;
+    public headline: string;
 
     @Column()
-    content: string;
+    public content: string;
 
     @ManyToMany((type) => User, (user) => user.receivedNotifications)
-    receivers: User[];
+    public receivers: User[];
 
     @ManyToOne((type) => User, (user) => user.sentNotifications)
-    creator: User;
+    public creator: User;
 
     @Column()
     @CreateDateColumn()
-    createdAt: Date;
+    public createdAt: Date;
   }

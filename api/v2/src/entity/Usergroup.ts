@@ -1,47 +1,47 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
-    OneToMany
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
   } from "typeorm";
 import { User } from "./User";
-  
-  @Entity()
+
+@Entity()
   export class Usergroup {
     @PrimaryGeneratedColumn()
-    id: number;
-  
+    public id: number;
+
     @Column()
-    name: string;
+    public name: string;
 
     @OneToMany((type) => User, (user) => user.usergroup)
-    users: User[];
+    public users: User[];
 
     /* Permissions */
     @Column()
-    REMOVE_FILE: boolean;
-    
-    @Column()
-    CREATE_USER: boolean;
-    
-    @Column()
-    EDIT_USER: boolean;
-    
-    @Column()
-    DELETE_USER: boolean;
+    public REMOVE_FILE: boolean;
 
     @Column()
-    EDIT_GLOBAL_SETTINGS: boolean;
-    
+    public CREATE_USER: boolean;
+
     @Column()
-    REMOVE_DATE: boolean;
-    
+    public EDIT_USER: boolean;
+
     @Column()
-    CREATE_PROJECT: boolean;
-    
+    public DELETE_USER: boolean;
+
     @Column()
-    ADD_USER_TO_PROJECT: boolean;
-    
+    public EDIT_GLOBAL_SETTINGS: boolean;
+
     @Column()
-    REMOVE_PROJECT: boolean;
+    public REMOVE_DATE: boolean;
+
+    @Column()
+    public CREATE_PROJECT: boolean;
+
+    @Column()
+    public ADD_USER_TO_PROJECT: boolean;
+
+    @Column()
+    public REMOVE_PROJECT: boolean;
   }

@@ -1,33 +1,33 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    ManyToOne,
+    Entity,
     ManyToMany,
+    ManyToOne,
     OneToMany,
+    PrimaryGeneratedColumn,
   } from "typeorm";
-import { User } from "./User";
 import { TutorialStep } from "./TutorialStep";
-  
-  @Entity()
+import { User } from "./User";
+
+@Entity()
   export class Tutorial {
     @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    title: string;
+    public id: number;
 
     @Column()
-    description: string;
+    public title: string;
+
+    @Column()
+    public description: string;
 
     @OneToMany((type) => TutorialStep, (step) => step.tutorial)
-    steps: TutorialStep[];
+    public steps: TutorialStep[];
 
     @ManyToOne((type) => User, (user) => user.tutorials)
-    creator: User;
+    public creator: User;
 
     @Column()
     @CreateDateColumn()
-    createdAt: Date;
+    public createdAt: Date;
   }

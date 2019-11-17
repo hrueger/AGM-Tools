@@ -1,36 +1,36 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    ManyToOne,
+    Entity,
     ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
   } from "typeorm";
 import { Folder } from "./Folder";
 import { Project } from "./Project";
 import { Tag } from "./Tag";
-  
-  @Entity()
+
+@Entity()
   export class File {
     @PrimaryGeneratedColumn()
-    id: number;
-  
+    public id: number;
+
     @ManyToOne((type) => Project, (project) => project.files)
-    project: Project;
+    public project: Project;
 
     @ManyToOne((type) => Folder, (folder) => folder.files)
-    folder: Folder;
+    public folder: Folder;
 
     @ManyToMany((type) => Tag, (tag) => tag.files)
-    tags: Tag[];
+    public tags: Tag[];
 
     @Column()
-    name: string;
+    public name: string;
 
     @Column()
-    shareLink: string;
+    public shareLink: string;
 
     @Column()
     @CreateDateColumn()
-    createdAt: Date;
+    public createdAt: Date;
   }

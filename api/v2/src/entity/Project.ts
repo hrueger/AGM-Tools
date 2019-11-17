@@ -1,33 +1,33 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
+    Entity,
+    ManyToMany,
     ManyToOne,
     OneToMany,
-    ManyToMany,
+    PrimaryGeneratedColumn,
   } from "typeorm";
 import { File } from "./File";
-import { User } from "./User";
 import { Folder } from "./Folder";
-  
-  @Entity()
+import { User } from "./User";
+
+@Entity()
   export class Project {
     @PrimaryGeneratedColumn()
-    id: number;
-  
+    public id: number;
+
     @ManyToMany((type) => User, (user) => user.projects)
-    users: User[];
+    public users: User[];
 
     @Column()
-    name: string;
+    public name: string;
 
     @Column()
-    description: string;
+    public description: string;
 
     @OneToMany((type) => File, (file) => file.project)
-    files: File[];
+    public files: File[];
 
     @OneToMany((type) => Folder, (folder) => folder.project)
-    folders: Folder[];
+    public folders: Folder[];
   }

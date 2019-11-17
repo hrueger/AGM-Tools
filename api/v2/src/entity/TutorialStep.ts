@@ -1,35 +1,34 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    ManyToOne,
+    Entity,
     ManyToMany,
+    ManyToOne,
     OneToMany,
+    PrimaryGeneratedColumn,
   } from "typeorm";
-import { User } from "./User";
 import { Tutorial } from "./Tutorial";
-  
-  @Entity()
+
+@Entity()
   export class TutorialStep {
     @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    title: string;
+    public id: number;
 
     @Column()
-    content: string;
+    public title: string;
 
     @Column()
-    image1: string;
+    public content: string;
 
     @Column()
-    image2: string;
+    public image1: string;
 
     @Column()
-    image3: string;
+    public image2: string;
+
+    @Column()
+    public image3: string;
 
     @ManyToOne((type) => Tutorial, (tutorial) => tutorial.steps)
-    tutorial: Tutorial;
+    public tutorial: Tutorial;
   }

@@ -1,34 +1,34 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    ManyToOne,
+    Entity,
     ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
   } from "typeorm";
 import { User } from "./User";
-  
-  @Entity()
+
+@Entity()
   export class Template {
     @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    name: string;
+    public id: number;
 
     @Column()
-    description: string;
+    public name: string;
 
     @Column()
-    fileName: string;
+    public description: string;
 
     @Column()
-    group: string;
+    public fileName: string;
+
+    @Column()
+    public group: string;
 
     @ManyToOne((type) => User, (user) => user.templates)
-    creator: User;
+    public creator: User;
 
     @Column()
     @CreateDateColumn()
-    createdAt: Date;
+    public createdAt: Date;
   }

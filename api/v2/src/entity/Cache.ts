@@ -1,24 +1,24 @@
 import {
+    Column,
     Entity,
     PrimaryGeneratedColumn,
-    Column,
     Unique,
     UpdateDateColumn,
   } from "typeorm";
-  
-  @Entity()
+
+@Entity()
   @Unique(["name"])
   export class Cache {
     @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    name: string;
+    public id: number;
 
     @Column()
-    value: string;
+    public name: string;
+
+    @Column()
+    public value: string;
 
     @Column()
     @UpdateDateColumn()
-    updatedAt: Date;
+    public updatedAt: Date;
   }
