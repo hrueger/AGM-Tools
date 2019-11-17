@@ -34,7 +34,7 @@ import { User } from "./User";
     public EDIT_GLOBAL_SETTINGS: boolean;
 
     @Column()
-    public REMOVE_DATE: boolean;
+    public REMOVE_EVENT: boolean;
 
     @Column()
     public CREATE_PROJECT: boolean;

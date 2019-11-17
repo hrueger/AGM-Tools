@@ -23,17 +23,18 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Benutzergruppe</th>
-                <th>Löschen</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let user of users">
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.groupname }}</td>
+                <!--<ng-template #tipContent>Darf:<br> <b>{{user.usergroup.name}}</b>!</ng-template> [ngbTooltip]="tipContent" -->
+                <td><span>{{ user.usergroup.name }}</span></td>
 
                 <td>
-                    <button class="btn btn-link" (click)="deleteUser(user)">
+                    <button class="btn text-danger btn-link" (click)="deleteUser(user)">
                         Löschen
                     </button>
                 </td>
@@ -170,11 +171,9 @@
                     placeholder="Altes Passwort"
                 />
             </div>
-            <div class="alert alert-info alert-dismissible">
-                <button class="close" data-dismiss="alert" aria-label="close">
-                    ×</button
-                >Bitte bei Änderungen immer das alte Passwort zusätzlich
-                angeben!
+            <div class="alert alert-info">
+                Bei Änderungen muss immer das alte Passwort zusätzlich
+                angeben werden!
             </div>
             <br />
             <div class="form-group">

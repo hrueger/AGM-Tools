@@ -57,7 +57,7 @@ export class MessagesAreaComponent implements OnInit {
     public onPageChanged(e: PageChangeEventData) {
         this.currentImageName = (
             this.allImageSources[e.page].sender ==
-                this.authService.currentUserValue.firstName + " " + this.authService.currentUserValue.lastName ?
+                this.authService.currentUserValue.username ?
                 "Ich" :
                 this.allImageSources[e.page].sender);
         this.currentImageDate = this.allImageSources[e.page].date;
@@ -125,7 +125,7 @@ export class MessagesAreaComponent implements OnInit {
         this.page.actionBarHidden = true;
         this.currentImageName = (
             this.allImageSources[this.currentImageIndex].sender ==
-                this.authService.currentUserValue.firstName + " " + this.authService.currentUserValue.lastName ?
+                this.authService.currentUserValue.username ?
                 "Ich" :
                 this.allImageSources[this.currentImageIndex].sender);
         this.currentImageDate = this.allImageSources[this.currentImageIndex].date;

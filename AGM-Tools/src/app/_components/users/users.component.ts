@@ -63,9 +63,7 @@ export class UsersComponent implements OnInit {
         this.editUserForm
             .get("editUserName")
             .setValue(
-                this.authService.currentUserValue.firstName +
-                " " +
-                this.authService.currentUserValue.lastName,
+                this.authService.currentUserValue.username,
             );
         this.editUserForm
             .get("editUserEmail")
@@ -107,25 +105,24 @@ export class UsersComponent implements OnInit {
             .result.then(
                 (result) => {
                     this.invalidMessage = false;
-                    const pwnew1val = "";
-                    /*if (this.editUserForm.get("editUserPassword1")) {
+                    let pwnew1val = "";
+                    if (this.editUserForm.get("editUserPassword1")) {
                         pwnew1val = this.editUserForm.get("editUserPassword1")
                             .value;
-                    } */
-                    const pwnew2val = "";
-                    /*if (this.editUserForm.get("editUserPassword1")) {
+                    }
+                    let pwnew2val = "";
+                    if (this.editUserForm.get("editUserPassword1")) {
                         pwnew2val = this.editUserForm.get("editUserPassword2")
                             .value;
-                    }*/
+                    }
                     this.remoteService
                         .getNoCache("post", "user/editCurrent", {
-                            "email": this.editUserForm.get("editUserEmail").value,
-                            "id": this.authService.currentUserValue.id,
-                            "pw-new": pwnew1val,
-                            "pw-new2": pwnew2val,
-                            "pw-old": this.editUserForm.get(
+                            email: this.editUserForm.get("editUserEmail").value,
+                            pwNew: pwnew1val,
+                            pwNew2: pwnew2val,
+                            pwOld: this.editUserForm.get(
                                 "editUserPasswordOld").value,
-                            "username": this.editUserForm.get("editUserName")
+                            username: this.editUserForm.get("editUserName")
                                 .value,
                         })
                         .subscribe((data) => {

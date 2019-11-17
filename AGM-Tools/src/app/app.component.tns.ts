@@ -35,8 +35,9 @@ export class AppComponent {
             if (x) {
                 this.currentUser = x;
                 this.useremail = x.email;
-                this.username = x.firstName + " " + x.lastName;
-                this.initials = x.firstName.charAt(0) + " " + x.lastName.charAt(0);
+                this.username = x.username;
+                const a = x.username.split(" ");
+                this.initials = (a.length == 1 ? a[0].charAt(0) : a[0].charAt(0) + a[a.length - 1].charAt(0));
             } else {
                 this.currentUser = new User();
                 this.useremail = "Email";
