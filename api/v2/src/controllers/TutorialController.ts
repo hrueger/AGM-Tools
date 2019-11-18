@@ -2,11 +2,11 @@ import { validate } from "class-validator";
 import { Request, Response } from "express";
 import { FindOperator, getRepository } from "typeorm";
 
+import * as path from "path";
+import config from "../config/config";
 import { Tutorial } from "../entity/Tutorial";
 import { TutorialStep } from "../entity/TutorialStep";
 import { User } from "../entity/User";
-import * as path from "path";
-import config from "../config/config";
 
 class TutorialController {
   public static listAll = async (req: Request, res: Response) => {
@@ -191,7 +191,6 @@ class TutorialController {
   }
 
   public static viewImage = async (req: Request, res: Response) => {
-    console.log(path.join(config.tutorialFilesStoragePath, path.basename(req.params.filename)), path.basename(req.params.filename));
     res.sendFile(path.join(config.tutorialFilesStoragePath, path.basename(req.params.filename)));
   }
 }
