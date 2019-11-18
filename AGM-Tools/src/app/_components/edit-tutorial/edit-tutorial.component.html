@@ -23,7 +23,7 @@
             : (invalidMessage = true)
     ">
     Speichern
-</button>
+    </button>
 </div>
 
 <div class="mycard" *ngFor="let step of tutorial.steps; let index = index">
@@ -72,11 +72,13 @@
             </div>
         </div>
     </div>
-
 </div>
-<button type="button" class="btn btn-primary" (click)="addStep()">
+
+<div class="mycard">
+    <button type="button" class="btn btn-primary" (click)="addStep()">
         Schritt hinzufügen
     </button> &nbsp;
-<button type="button" class="btn btn-success" (click)="updateSteps()">
-    Speichern
-</button>
+    <button type="button" class="btn btn-success" (click)="updateSteps()">
+        Speichern
+    </button>
+</div>

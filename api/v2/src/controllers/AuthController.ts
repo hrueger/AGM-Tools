@@ -50,6 +50,7 @@ class AuthController {
     res.send(response);
   }
 
+  /*
   public static changePassword = async (req: Request, res: Response) => {
     // Get ID from JWT
     const id = res.locals.jwtPayload.userId;
@@ -87,6 +88,6 @@ class AuthController {
     userRepository.save(user);
 
     res.status(204).send();
-  }
+  } */
 }
 export default AuthController;

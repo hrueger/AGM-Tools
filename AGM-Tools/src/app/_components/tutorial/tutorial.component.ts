@@ -25,17 +25,13 @@ export class TutorialComponent implements OnInit {
   public ngOnInit() {
     this.navbarService.setHeadline("Tutorial");
     this.route.params.subscribe((params) => {
-      this.remoteService.get("post", "tutorialsGetTutorial", { id: params.index }).subscribe((tutorial) => {
+      this.remoteService.get("get", `tutorial/${params.index}`).subscribe((tutorial) => {
         this.gotNewTutorialData(tutorial);
       });
     });
   }
   public getSrc(img) {
-    return environment.apiUrl +
-      "?getTutorialFile=" +
-      img +
-      "&token=" +
-      this.authService.currentUserValue.token;
+    return `${environment.apiUrl}tutorial/image/${img}`;
   }
   public getContent(content: string) {
     return content.replace("\n", "<br>");

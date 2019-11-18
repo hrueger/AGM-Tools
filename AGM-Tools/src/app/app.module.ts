@@ -115,7 +115,6 @@ export function getJWT() {
         }),
         JwtModule.forRoot({
             config: {
-                headerName: "auth",
                 tokenGetter: getJWT,
                 whitelistedDomains: ["localhost:3000"],
             },

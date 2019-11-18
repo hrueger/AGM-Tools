@@ -1,6 +1,7 @@
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as express from "express";
+import * as fileUpload from "express-fileupload";
 import * as helmet from "helmet";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
@@ -14,6 +15,9 @@ createConnection()
     const app = express();
 
     // Call midlewares
+    app.use(fileUpload({
+      debug: true,
+    }));
     app.use(cors());
     app.use(helmet());
     app.use(bodyParser.json());

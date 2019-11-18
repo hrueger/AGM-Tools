@@ -30,4 +30,6 @@ import { User } from "./User";
     @Column()
     @CreateDateColumn()
     public createdAt: Date;
+
+    public editable?: boolean;
   }

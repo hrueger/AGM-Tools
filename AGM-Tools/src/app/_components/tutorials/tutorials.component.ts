@@ -25,7 +25,7 @@ export class TutorialsComponent implements OnInit {
 
   public ngOnInit() {
     this.remoteService
-    .get("post", "tutorialsGetTutorials")
+    .get("get", "tutorial/")
     .subscribe((res) => {
       this.tutorials = res;
     });
@@ -44,7 +44,7 @@ export class TutorialsComponent implements OnInit {
           this.invalidMessage = false;
 
           this.remoteService
-            .getNoCache("post", "tutorialsNewTutorial", {
+            .getNoCache("post", "tutorial/", {
               description: this.newTutorialForm.get("description").value,
               title: this.newTutorialForm.get("title").value,
             })
@@ -54,7 +54,7 @@ export class TutorialsComponent implements OnInit {
                   "Tutorial erfolgreich erstellt",
                 );
                 this.remoteService
-                  .get("post", "tutorialsGetTutorials")
+                  .get("get", "tutorial/")
                   .subscribe((res) => {
                     this.tutorials = res;
                   });

@@ -35,7 +35,7 @@ export class EditTutorialComponent implements OnInit {
     });
     this.navbarService.setHeadline("Tutorial");
     this.route.params.subscribe((params) => {
-      this.remoteService.get("post", "tutorialsGetTutorial", { id: params.index }).subscribe((tutorial) => {
+      this.remoteService.get("get", `tutorial/${params.index}`).subscribe((tutorial) => {
         this.gotNewTutorialData(tutorial);
       });
     });
@@ -43,11 +43,9 @@ export class EditTutorialComponent implements OnInit {
 
   public updateGeneral() {
     this.invalidMessage = false;
-
     this.remoteService
-      .getNoCache("post", "tutorialsUpdateTutorial", {
+      .getNoCache("post", `tutorial/${this.tutorial.id}`, {
         description: this.tutorialForm.get("description").value,
-        id: this.tutorial.id,
         title: this.tutorialForm.get("title").value,
       })
       .subscribe((data) => {
@@ -56,7 +54,7 @@ export class EditTutorialComponent implements OnInit {
             "Änderungen erfolgreich gespeichert",
           );
           this.remoteService
-            .get("post", "tutorialsGetTutorial", {id: this.tutorial.id})
+            .get("get", `tutorial/${this.tutorial.id}`)
             .subscribe((tutorial) => {
               this.gotNewTutorialData(tutorial);
             });
@@ -67,16 +65,14 @@ export class EditTutorialComponent implements OnInit {
 
   public addStep() {
     this.remoteService
-      .getNoCache("post", "tutorialsAddStep", {
-        id: this.tutorial.id,
-      })
+      .getNoCache("post", `tutorial/${this.tutorial.id}/step`)
       .subscribe((data) => {
         if (data && data.status == true) {
           this.alertService.success(
             "Schritt erfolgreich hinzugefügt",
           );
           this.remoteService
-            .get("post", "tutorialsGetTutorial", {id: this.tutorial.id})
+            .get("get", `tutorial/${this.tutorial.id}`)
             .subscribe((tutorial) => {
               this.tutorial = tutorial;
               this.tutorialForm.get("description").setValue(tutorial.description);
@@ -89,9 +85,8 @@ export class EditTutorialComponent implements OnInit {
   public updateSteps() {
     this.tutorial.steps.forEach((step) => {
       this.remoteService
-        .getNoCache("post", "tutorialsUpdateStep", {
+        .getNoCache("post", `tutorial/${this.tutorial.id}/step/${step.id}`, {
           content: step.content,
-          id: step.id,
           image1: step.image1,
           image2: step.image2,
           image3: step.image3,
@@ -110,44 +105,39 @@ export class EditTutorialComponent implements OnInit {
     );
   }
 
-  public uploadImage(files, i, n) {
+  public uploadImage(files, stepIdx, n) {
     if (n == 1) {
-      this.tutorial.steps[i].uploadingImage1 = true;
+      this.tutorial.steps[stepIdx].uploadingImage1 = true;
     } else if (n == 2) {
-      this.tutorial.steps[i].uploadingImage2 = true;
+      this.tutorial.steps[stepIdx].uploadingImage2 = true;
     } else {
-      this.tutorial.steps[i].uploadingImage3 = true;
+      this.tutorial.steps[stepIdx].uploadingImage3 = true;
     }
-    this.remoteService.uploadTutorialFileNoCache(files.item(0)).subscribe((data) => {
+    this.remoteService.uploadFile(`tutorial/${this.tutorial.id}/step/${stepIdx}/image`,
+    "file", files.item(0)).subscribe((data) => {
       if (data.status == true) {
         if (n == 1) {
-          this.tutorial.steps[i].uploadingImage1 = false;
-          this.tutorial.steps[i].image1 = data.image;
+          this.tutorial.steps[stepIdx].uploadingImage1 = false;
+          this.tutorial.steps[stepIdx].image1 = data.image;
         } else if (n == 2) {
-          this.tutorial.steps[i].uploadingImage2 = false;
-          this.tutorial.steps[i].image2 = data.image;
+          this.tutorial.steps[stepIdx].uploadingImage2 = false;
+          this.tutorial.steps[stepIdx].image2 = data.image;
         } else {
-          this.tutorial.steps[i].uploadingImage3 = false;
-          this.tutorial.steps[i].image3 = data.image;
+          this.tutorial.steps[stepIdx].uploadingImage3 = false;
+          this.tutorial.steps[stepIdx].image3 = data.image;
         }
       }
     });
   }
 
   public getSrc(img) {
-    return environment.apiUrl +
-      "?getTutorialFile=" +
-      img +
-      "&token=" +
-      this.authService.currentUserValue.token;
+    return `${environment.apiUrl}tutorial/image/${img}`;
   }
 
   public deleteStep(index) {
     if (confirm("Soll dieser Schritt wirklich gelöscht werden?")) {
       this.remoteService
-        .getNoCache("post", "tutorialsDeleteStep", {
-          id: this.tutorial.steps[index].id,
-        })
+        .getNoCache("delete", `tutorial/${this.tutorial.id}/step/${this.tutorial.steps[index].id}`)
         .subscribe((data) => {
           if (data && data.status == true) {
             this.tutorial.steps.splice(index, 1);
@@ -170,10 +160,12 @@ export class EditTutorialComponent implements OnInit {
   }
 
   private gotNewTutorialData(tutorial: any) {
-    this.tutorial = tutorial;
-    this.tutorialForm.get("description").setValue(tutorial.description);
-    this.tutorialForm.get("title").setValue(tutorial.title);
-    this.navbarService.setHeadline(`Tutorial bearbeiten: ${tutorial.title}`);
+    if (tutorial) {
+      this.tutorial = tutorial;
+      this.tutorialForm.get("description").setValue(tutorial.description);
+      this.tutorialForm.get("title").setValue(tutorial.title);
+      this.navbarService.setHeadline(`Tutorial bearbeiten: ${tutorial.title}`);
+    }
   }
 
 }

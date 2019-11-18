@@ -36,6 +36,7 @@
       "class-validator": "^0.11.0",
       "cors": "^2.8.5",
       "express": "^4.15.4",
+      "express-fileupload": "^1.1.6-alpha.6",
       "get-folder-size": "^2.0.1",
       "helmet": "^3.21.2",
       "jsonwebtoken": "^8.5.1",

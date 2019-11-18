@@ -41,7 +41,7 @@ export class RemoteService {
                         subject.next(data);
                         this.cacheService.put(data, path, args);
                     } else {
-                        this.alertService.snackbar("Offline-Modus (Daten können veraltet sein)");
+                        // ToDo this.alertService.snackbar("Offline-Modus (Daten können veraltet sein)");
                     }
 
                     // console.log("cache updated and new data served: " + data);
@@ -86,13 +86,12 @@ export class RemoteService {
                 catchError(this.handleError<any>(path, false)),
             );
     }
-    public uploadTutorialFileNoCache(file: any): Observable<any> {
+    public uploadFile(action: string, name: string, file: any): Observable<any> {
         this.log("uploading file " + file.name);
         const formData: FormData = new FormData();
-        formData.append("uploadTutorialFile", file, file.name);
-        formData.append("uploadTutorialFile", "true");
+        formData.append(name, file, file.name);
         return this.http
-            .post<any>(`${environment.apiUrl}`, formData)
+            .post<any>(`${environment.apiUrl}${action}`, formData)
             .pipe(
                 tap((_) =>
                     this.log("uploading file " + file.name),
