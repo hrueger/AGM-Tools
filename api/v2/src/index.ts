@@ -32,3 +32,5 @@ createConnection()
   })
   // tslint:disable-next-line: no-console
   .catch((error) => console.log(error));
+
+  // ToDo: jwt check in tutorial if tutorial created by that user; plural in all api requests
