@@ -20,6 +20,7 @@
    "homepage": "https://github.com/hrueger/AGM-Tools#readme",
    "devDependencies": {
       "@types/node": "^8.0.29",
+      "@types/nodemailer": "^6.2.2",
       "npx": "^10.2.0",
       "ts-node": "3.3.0",
       "tslint": "^5.20.1",
@@ -41,6 +42,7 @@
       "helmet": "^3.21.2",
       "jsonwebtoken": "^8.5.1",
       "mysql": "^2.14.1",
+      "nodemailer": "^6.3.1",
       "reflect-metadata": "^0.1.10",
       "ts-node-dev": "^1.0.0-pre.44",
       "typeorm": "0.2.20"

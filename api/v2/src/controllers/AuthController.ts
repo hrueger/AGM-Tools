@@ -1,12 +1,13 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
+import * as nodemailer from "nodemailer";
 import { getRepository } from "typeorm";
-
 import config from "../config/config";
 import { User } from "../entity/User";
 
 class AuthController {
+
   public static login = async (req: Request, res: Response) => {
     // Check if username and password are set
     const { username, password } = req.body;
@@ -48,6 +49,35 @@ class AuthController {
 
     // Send the jwt in the response
     res.send(response);
+  }
+
+  public static sendPasswordResetMail = async (req: Request, res: Response) => {
+    const userRepository = getRepository(User);
+    let user: User;
+    try {
+      user = await userRepository.findOneOrFail({where: { email: req.params.email}});
+    } catch {
+      res.status(404).send({message: "Email-Adresse nicht gefunden!"});
+      return;
+    }
+
+    const transporter = nodemailer.createTransport(config.emailSettings);
+    const mailOptions= {
+      from: '"Test Server" <test@example.com>',
+      subject: "Email Test",
+      text: "This is an email test using Mailtrap.io",
+      to: req.params.email,
+    };
+    transporter.sendMail(mailOptions, (err, info) => {
+      if(err){
+          res.status(500).send({message: "Fehler beim Senden der Email: " + err.toString()});
+          return;
+      }
+      res.send({status: true});
+    });
+  }
+  public static resetPassword = async (req: Request, res: Response) => {
+      throw new Error("Method not implemented.");
   }
 
   /*

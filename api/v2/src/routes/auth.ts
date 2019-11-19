@@ -5,5 +5,7 @@ import { checkJwt } from "../middlewares/checkJwt";
 const router = Router();
 // Login route
 router.post("/login", AuthController.login);
+router.get("/passwordReset/:email", AuthController.sendPasswordResetMail);
+router.get("/passwordReset/:email/:link", AuthController.resetPassword);
 
 export default router;
