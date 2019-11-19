@@ -176,7 +176,7 @@ class TutorialController {
     res.status(200).send({status: true});
   }
 
-  public static uploadImage = async (req: Request, res: Response) => {
+  public static uploadFile = async (req: Request, res: Response) => {
 
     // @ts-ignore
     const newFilename = `${Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)}${path.extname(req.files.file.name)}`;
@@ -190,7 +190,7 @@ class TutorialController {
     });
   }
 
-  public static viewImage = async (req: Request, res: Response) => {
+  public static viewFile = async (req: Request, res: Response) => {
     res.sendFile(path.join(config.tutorialFilesStoragePath, path.basename(req.params.filename)));
   }
 }

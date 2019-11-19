@@ -9,7 +9,7 @@ router.post("/spaceChartData", [checkJwt], DashboardController.updateSpaceChartD
 router.get("/whatsnew", [checkJwt], DashboardController.whatsnew);
 router.get("/events", [checkJwt], DashboardController.events);
 router.get("/version", [checkJwt], DashboardController.version);
-router.get("/notification/", [checkJwt], DashboardController.notifications);
-router.post("/notification/:id([0-9]+)", [checkJwt], DashboardController.notificationSeen);
+router.get("/notifications/", [checkJwt], DashboardController.notifications);
+router.post("/notifications/:id([0-9]+)", [checkJwt], DashboardController.notificationSeen);
 
 export default router;

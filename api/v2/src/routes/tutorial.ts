@@ -10,10 +10,10 @@ router.post("/", [checkJwt], TutorialController.newTutorial);
 router.get("/:id([0-9]+)", [checkJwt], TutorialController.getTutorial);
 router.post("/:id([0-9]+)", [checkJwt], TutorialController.updateTutorial);
 
-router.post("/:tutorialId([0-9]+)/step", [checkJwt], TutorialController.createStep);
-router.post("/:tutorialId([0-9]+)/step/:id([0-9]+)", [checkJwt], TutorialController.updateStep);
-router.delete("/:tutorialId([0-9]+)/step/:id([0-9]+)", [checkJwt], TutorialController.deleteStep);
-router.post("/:tutorialId([0-9]+)/step/:id([0-9]+)/image", [checkJwt], TutorialController.uploadImage);
-router.get("/image/:filename", [checkJwt], TutorialController.viewImage);
+router.post("/:tutorialId([0-9]+)/steps", [checkJwt], TutorialController.createStep);
+router.post("/:tutorialId([0-9]+)/steps/:id([0-9]+)", [checkJwt], TutorialController.updateStep);
+router.delete("/:tutorialId([0-9]+)/steps/:id([0-9]+)", [checkJwt], TutorialController.deleteStep);
+router.post("/:tutorialId([0-9]+)/steps/:id([0-9]+)/files", [checkJwt], TutorialController.uploadFile);
+router.get("/files/:filename", [checkJwt], TutorialController.viewFile);
 
 export default router;

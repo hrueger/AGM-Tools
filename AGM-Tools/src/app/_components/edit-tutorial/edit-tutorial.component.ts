@@ -35,7 +35,7 @@ export class EditTutorialComponent implements OnInit {
     });
     this.navbarService.setHeadline("Tutorial");
     this.route.params.subscribe((params) => {
-      this.remoteService.get("get", `tutorial/${params.index}`).subscribe((tutorial) => {
+      this.remoteService.get("get", `tutorials/${params.index}`).subscribe((tutorial) => {
         this.gotNewTutorialData(tutorial);
       });
     });
@@ -44,7 +44,7 @@ export class EditTutorialComponent implements OnInit {
   public updateGeneral() {
     this.invalidMessage = false;
     this.remoteService
-      .getNoCache("post", `tutorial/${this.tutorial.id}`, {
+      .getNoCache("post", `tutorials/${this.tutorial.id}`, {
         description: this.tutorialForm.get("description").value,
         title: this.tutorialForm.get("title").value,
       })
@@ -54,7 +54,7 @@ export class EditTutorialComponent implements OnInit {
             "Änderungen erfolgreich gespeichert",
           );
           this.remoteService
-            .get("get", `tutorial/${this.tutorial.id}`)
+            .get("get", `tutorials/${this.tutorial.id}`)
             .subscribe((tutorial) => {
               this.gotNewTutorialData(tutorial);
             });
@@ -65,14 +65,14 @@ export class EditTutorialComponent implements OnInit {
 
   public addStep() {
     this.remoteService
-      .getNoCache("post", `tutorial/${this.tutorial.id}/step`)
+      .getNoCache("post", `tutorials/${this.tutorial.id}/steps`)
       .subscribe((data) => {
         if (data && data.status == true) {
           this.alertService.success(
             "Schritt erfolgreich hinzugefügt",
           );
           this.remoteService
-            .get("get", `tutorial/${this.tutorial.id}`)
+            .get("get", `tutorials/${this.tutorial.id}`)
             .subscribe((tutorial) => {
               this.tutorial = tutorial;
               this.tutorialForm.get("description").setValue(tutorial.description);
@@ -85,7 +85,7 @@ export class EditTutorialComponent implements OnInit {
   public updateSteps() {
     this.tutorial.steps.forEach((step) => {
       this.remoteService
-        .getNoCache("post", `tutorial/${this.tutorial.id}/step/${step.id}`, {
+        .getNoCache("post", `tutorials/${this.tutorial.id}/steps/${step.id}`, {
           content: step.content,
           image1: step.image1,
           image2: step.image2,
@@ -113,7 +113,7 @@ export class EditTutorialComponent implements OnInit {
     } else {
       this.tutorial.steps[stepIdx].uploadingImage3 = true;
     }
-    this.remoteService.uploadFile(`tutorial/${this.tutorial.id}/step/${stepIdx}/image`,
+    this.remoteService.uploadFile(`tutorials/${this.tutorial.id}/steps/${stepIdx}/files`,
     "file", files.item(0)).subscribe((data) => {
       if (data.status == true) {
         if (n == 1) {
@@ -131,13 +131,13 @@ export class EditTutorialComponent implements OnInit {
   }
 
   public getSrc(img) {
-    return `${environment.apiUrl}tutorial/image/${img}`;
+    return `${environment.apiUrl}tutorials/files/${img}`;
   }
 
   public deleteStep(index) {
     if (confirm("Soll dieser Schritt wirklich gelöscht werden?")) {
       this.remoteService
-        .getNoCache("delete", `tutorial/${this.tutorial.id}/step/${this.tutorial.steps[index].id}`)
+        .getNoCache("delete", `tutorials/${this.tutorial.id}/steps/${this.tutorial.steps[index].id}`)
         .subscribe((data) => {
           if (data && data.status == true) {
             this.tutorial.steps.splice(index, 1);

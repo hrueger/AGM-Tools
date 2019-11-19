@@ -7,8 +7,8 @@ import user from "./user";
 const routes = Router();
 
 routes.use("/auth", auth);
-routes.use("/user", user);
+routes.use("/users", user);
 routes.use("/dashboard", dashboard);
-routes.use("/tutorial", tutorial);
+routes.use("/tutorials", tutorial);
 
 export default routes;

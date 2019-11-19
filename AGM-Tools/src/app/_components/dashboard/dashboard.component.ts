@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit {
             this.version = data;
         });
         this.remoteService
-            .getNoCache("get", "dashboard/notification/")
+            .getNoCache("get", "dashboard/notifications/")
             .subscribe((data) => {
                 this.notifications = data;
             });

@@ -40,7 +40,7 @@ export class UsersComponent implements OnInit {
 
     public ngOnInit() {
         this.navbarService.setHeadline("Benutzer");
-        this.remoteService.get("get", "user/").subscribe((data) => {
+        this.remoteService.get("get", "users/").subscribe((data) => {
             this.users = data;
         });
         this.newUserForm = this.fb.group({
@@ -78,7 +78,7 @@ export class UsersComponent implements OnInit {
                     this.invalidMessage = false;
 
                     this.remoteService
-                        .getNoCache("post", "user/", {
+                        .getNoCache("post", "users/", {
                             email: this.newUserForm.get("email").value,
                             pw: this.newUserForm.get("password1").value,
                             pw2: this.newUserForm.get("password2").value,
@@ -90,7 +90,7 @@ export class UsersComponent implements OnInit {
                                     "Benutzer erfolgreich erstellt",
                                 );
                                 this.remoteService
-                                    .get("get", "user/")
+                                    .get("get", "users/")
                                     .subscribe((res) => {
                                         this.users = res;
                                     });
@@ -116,7 +116,7 @@ export class UsersComponent implements OnInit {
                             .value;
                     }
                     this.remoteService
-                        .getNoCache("post", "user/editCurrent", {
+                        .getNoCache("post", "users/editCurrent", {
                             email: this.editUserForm.get("editUserEmail").value,
                             pwNew: pwnew1val,
                             pwNew2: pwnew2val,
@@ -131,7 +131,7 @@ export class UsersComponent implements OnInit {
                                     "Ihr Benutzer erfolgreich geändert",
                                 );
                                 this.remoteService
-                                    .get("get", "user/")
+                                    .get("get", "users/")
                                     .subscribe((res) => {
                                         this.users = res;
                                     });
@@ -144,14 +144,14 @@ export class UsersComponent implements OnInit {
     public deleteUser(user: User) {
         if (confirm("Möchten Sie diesen Nutzer wirklich löschen?") == true) {
             this.remoteService
-                .getNoCache("delete", `user/${user.id}`)
+                .getNoCache("delete", `users/${user.id}`)
                 .subscribe((data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
                             "Benutzer erfolgreich gelöscht",
                         );
                         this.remoteService
-                            .get("get", "user/")
+                            .get("get", "users/")
                             .subscribe((res) => {
                                 this.users = res;
                             });
