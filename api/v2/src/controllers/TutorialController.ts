@@ -7,6 +7,7 @@ import config from "../config/config";
 import { Tutorial } from "../entity/Tutorial";
 import { TutorialStep } from "../entity/TutorialStep";
 import { User } from "../entity/User";
+import { genID } from "../utils";
 
 class TutorialController {
   public static listAll = async (req: Request, res: Response) => {
@@ -179,7 +180,7 @@ class TutorialController {
   public static uploadFile = async (req: Request, res: Response) => {
 
     // @ts-ignore
-    const newFilename = `${Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)}${path.extname(req.files.file.name)}`;
+    const newFilename = `${genID()}${path.extname(req.files.file.name)}`;
     // @ts-ignore
     req.files.file.mv(path.join(config.tutorialFilesStoragePath, newFilename), (err) => {
       if (err) {
