@@ -125,6 +125,7 @@ export const routes: Routes = [
 
     /* Authentication paths*/
     { path: "login", component: LoginComponent },
+    { path: "resetPassword/:resetPasswordToken", component: LoginComponent },
     // otherwise redirect to home
     { path: "**", redirectTo: "/dashboard" },
 ];

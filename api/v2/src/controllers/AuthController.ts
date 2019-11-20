@@ -5,11 +5,11 @@ import * as nodemailer from "nodemailer";
 import { getRepository } from "typeorm";
 import config from "../config/config";
 import { User } from "../entity/User";
+import { genID } from "../utils";
 
 class AuthController {
 
   public static login = async (req: Request, res: Response) => {
-    // Check if username and password are set
     const { username, password } = req.body;
     if (!(username && password)) {
       res.status(400).end(JSON.stringify({error: "Benutzername oder Passwort leer!"}));
@@ -28,14 +28,10 @@ class AuthController {
       res.status(401).end(JSON.stringify({message: "Falscher Benutzername!"}));
       return;
     }
-
-    // Check if encrypted password match
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
       res.status(401).end(JSON.stringify({message: "Falsches Passwort!"}));
       return;
     }
-
-    // Sing JWT, valid for 1 hour
     const token = jwt.sign(
       { userId: user.id, username: user.username },
       config.jwtSecret,
@@ -62,14 +58,26 @@ class AuthController {
     }
 
     const transporter = nodemailer.createTransport(config.emailSettings);
-    const mailOptions= {
-      from: '"Test Server" <test@example.com>',
-      subject: "Email Test",
-      text: "This is an email test using Mailtrap.io",
+    const token = genID(32);
+    user.passwordResetToken = token;
+    try {
+      await userRepository.save(user);
+    } catch {
+      res.status(500).send({message: "Fehler beim Speichern des Tokens!"});
+      return;
+    }
+    const link = `${config.urlSettings.url}resetPassword/${token}`;
+    transporter.sendMail({
+      from: config.emailSender,
+      html: `<h1>Hi ${user.username},</h1><br>Ein Link zum Zurücksetzen des Passworts wurde angefordert. \
+      Falls dies nicht beabsichtigt war, ignorieren Sie einfach diese E-Mail. Ihr Password wird nicht geändert.<br><br>\
+      Wenn Sie ein neues Passwort setzen möchten, klicken Sie jetzt auf diesen Link:<br><br>\
+      <a href='${link}'>${link}</a><br><br><br><br>Mit freundlichen Grüßen,<br><br>Das AGM-Tools Team<br><br><br><hr>Diese Email wurde automatisch erstellt. \
+      Antworten können leider nicht bearbeitet werden!`,
+      subject: "Reset password - AGM-Tools",
       to: req.params.email,
-    };
-    transporter.sendMail(mailOptions, (err, info) => {
-      if(err){
+    }, (err) => {
+      if (err) {
           res.status(500).send({message: "Fehler beim Senden der Email: " + err.toString()});
           return;
       }
@@ -77,17 +85,9 @@ class AuthController {
     });
   }
   public static resetPassword = async (req: Request, res: Response) => {
-      throw new Error("Method not implemented.");
-  }
-
-  /*
-  public static changePassword = async (req: Request, res: Response) => {
-    // Get ID from JWT
-    const id = res.locals.jwtPayload.userId;
-
     // Get parameters from the body
-    const { oldPassword, newPassword } = req.body;
-    if (!(oldPassword && newPassword)) {
+    const { password1, password2 } = req.body;
+    if (!(password1 && password2)) {
       res.status(400).send();
     }
 
@@ -95,29 +95,25 @@ class AuthController {
     const userRepository = getRepository(User);
     let user: User;
     try {
-      user = await userRepository.findOneOrFail(id);
+      user = await userRepository.findOneOrFail({where: { passwordResetToken: req.params.resetToken}});
     } catch (id) {
-      res.status(401).send();
+      res.status(404).send({message: "Benutzer nicht gefunden, fehlerhafter Link!"});
     }
-
-    // Check if old password matchs
-    if (!user.checkIfUnencryptedPasswordIsValid(oldPassword)) {
-      res.status(401).send();
+    if (password1 != password2) {
+      res.status(401).send({message: "Die beiden Passwörter stimmen nicht überein!"});
       return;
     }
-
-    // Validate de model (password lenght)
-    user.password = newPassword;
+    user.password = password2;
+    user.passwordResetToken = "";
     const errors = await validate(user);
     if (errors.length > 0) {
       res.status(400).send(errors);
       return;
     }
-    // Hash the new password and save
     user.hashPassword();
     userRepository.save(user);
 
-    res.status(204).send();
-  } */
+    res.send({status: true});
+  }
 }
 export default AuthController;

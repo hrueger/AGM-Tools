@@ -5,7 +5,7 @@
                 <div class="headline">
                     <h2>AGM-Tools</h2>
                 </div>
-                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!resetPassword && !inputNewPassword">
                     <div class="form-group">
                         <input placeholder="Benutzername" type="text" formControlName="username" class="form-control" [ngClass]="{
                                 'is-invalid': submitted && f.username.errors
@@ -27,13 +27,93 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button [disabled]="loading" class="btn btn-primary">
+                        <button [disabled]="loading" type="button" (click)="resetPassword = true; $event.preventDefault" class="btn btn-link">
+                            Passwort vergessen
+                        </button>
+                        <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                        <button [disabled]="loading" class="float-right btn btn-primary">
                             Login
+                        </button>
+                        
+                        
+                        
+                    </div>
+                </form>
+                <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmitResetPassword()" *ngIf="resetPassword && !passwordResetSucceeded">
+                    <div class="form-group">
+                        <label>Bitte geben Sie Ihre Email-Adresse ein:</label>
+                        <input placeholder="Email-Adresse" type="text" formControlName="email" class="form-control" [ngClass]="{
+                                'is-invalid': rpSubmitted && rpf.email.errors
+                            }" />
+                        <div *ngIf="rpSubmitted && rpf.email.errors" class="invalid-feedback">
+                            <div *ngIf="rpf.email.errors.required">
+                                Dieses Feld muss ausgefüllt werden!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button [disabled]="loading" type="button" (click)="resetPassword = false; $event.preventDefault" class="btn btn-link">
+                            Zurück
+                        </button>
+                        <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                        <button [disabled]="loading" class="btn btn-primary float-right">
+                            Zurücksetzen
+                        </button>
+                    </div>
+                </form>
+                <div  *ngIf="resetPassword && passwordResetSucceeded">
+                    <div class="alert alert-success">
+                        Die Email wurde erfolgreich versandt. Bitte schauen Sie nun in Ihrem Posteingang nach und klicken Sie dann auf den gesendeten Link.
+                    </div>
+                    <button [disabled]="loading" type="button" (click)="resetPassword = false; passwordResetSucceeded = false; $event.preventDefault" class="btn btn-link">
+                        Zurück
+                    </button>
+                </div>
+
+
+                <form [formGroup]="inputNewPasswordForm" (ngSubmit)="onSubmitNewPassword()" *ngIf="inputNewPassword && !inputNewPasswordSucceeded">
+                    <div class="form-group">
+                        <label>Bitte geben Sie Ihr neues Password ein:</label>
+                        <input placeholder="Neues Passwort" type="password" formControlName="password1" class="form-control" [ngClass]="{
+                                'is-invalid': inpSubmitted && inp.password1.errors
+                            }" />
+                        <div *ngIf="inpSubmitted && inp.password1.errors" class="invalid-feedback">
+                            <div *ngIf="rpf.password2.errors.required">
+                                Dieses Feld muss ausgefüllt werden!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Passwort wiederholen:</label>
+                        <input placeholder="Passwort wiederholen" type="password" formControlName="password2" class="form-control" [ngClass]="{
+                                'is-invalid': inpSubmitted && inp.password2.errors
+                            }" />
+                        <div *ngIf="inpSubmitted && inp.password2.errors" class="invalid-feedback">
+                            <div *ngIf="rpf.password2.errors.required">
+                                Dieses Feld muss ausgefüllt werden!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button [disabled]="loading" type="button" (click)="inputNewPassword = false; $event.preventDefault" class="btn btn-link">
+                            Zurück
                         </button>
                         <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
                         />
+                        <button [disabled]="loading" class="btn btn-primary float-right">
+                            Speichern
+                        </button>
                     </div>
                 </form>
+                
+                <div  *ngIf="inputNewPassword && inputNewPasswordSucceeded">
+                    <div class="alert alert-success">
+                        Ihr Passwort wurde erfolgreich geändert.
+                    </div>
+                    <button [disabled]="loading" type="button" (click)="inputNewPassword = false; inputNewPasswordSucceeded = false; $event.preventDefault" class="btn btn-link">
+                        Zum Login
+                    </button>
+                </div>
             </div>
         </div>
     </div>

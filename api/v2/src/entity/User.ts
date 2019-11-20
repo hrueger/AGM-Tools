@@ -32,6 +32,9 @@
     @Column()
     public password: string;
 
+    @Column()
+    public passwordResetToken: string;
+
     @ManyToOne((type) => Usergroup, (usergroup) => usergroup.users)
     public usergroup: Usergroup;
 
