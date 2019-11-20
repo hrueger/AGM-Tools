@@ -178,22 +178,23 @@ export class CalendarComponent {
 
     public ngOnInit() {
         this.navbarService.setHeadline("Kalender");
-        this.remoteService.get("post", "calendarGetDates").subscribe((dates) => {
+        this.remoteService.get("get", "events/").subscribe((dates) => {
             if (dates) {
                 this.eventSettings.dataSource = [];
                 for (const date of dates) {
                     // @ts-ignore
                     this.eventSettings.dataSource.push({
                         Description: date.description,
-                        EndTime: new Date(date.endDate),
+                        EndTime: new Date(date.end),
                         EndTimezone: "Europe/Berlin",
                         Id: date.id,
                         IsAllDay: false,
                         Location: date.location,
-                        StartTime: new Date(date.startDate),
+                        StartTime: new Date(date.start),
                         StartTimezone: "Europe/Berlin",
                         Subject: date.headline,
                     });
+                    console.info("added to data source: ", this.eventSettings.dataSource);
                     if (date.id == this.eventToNavigateTo) {
                         this.selectedDate = new Date(date.startDate);
                     }
@@ -219,7 +220,7 @@ export class CalendarComponent {
             switch (ev.requestType) {
                 case "eventCreated":
                     this.remoteService
-                        .getNoCache("post", "calendarNewEvent", {
+                        .getNoCache("post", "events/", {
                             description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
                             endDate: ev.data.EndTime.toISOString(),
                             headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
@@ -247,11 +248,10 @@ export class CalendarComponent {
                     const id = this.getRealId(ev.data.Id);
                     if (id != null) {
                         this.remoteService
-                            .getNoCache("post", "calendarUpdateEvent", {
+                            .getNoCache("post", `events/${id}`, {
                                 description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
                                 endDate: ev.data.EndTime.toISOString(),
                                 headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
-                                id,
                                 important: true,
                                 location: ev.data.Location ? ev.data.Location : "Kein Ort angegeben",
                                 startDate: ev.data.StartTime.toISOString(),
@@ -265,12 +265,13 @@ export class CalendarComponent {
                             });
                     }
                 case "eventRemoved":
+                    if (!(ev && ev.data && ev.data[0] && ev.data[0].Id)) {
+                        return;
+                    }
                     const evId = this.getRealId(ev.data[0].Id);
                     if (evId != null) {
                         this.remoteService
-                            .getNoCache("post", "calendarRemoveEvent", {
-                                id: evId,
-                            })
+                            .getNoCache("delete", `events/${evId}`)
                             .subscribe((data) => {
                                 if (data && data.status == true) {
                                     this.alertService.success(
@@ -287,13 +288,11 @@ export class CalendarComponent {
     }
 
     private getRealId(id: string) {
-        if (id.indexOf(",") != -1) {
-            const index = this.idsToReplace.findIndex((e) => e.bad == id);
-            if (index != -1) {
-                id = this.idsToReplace[index].good;
-            } else {
-                id = null;
-            }
+        const index = this.idsToReplace.findIndex((e) => e.bad == id);
+        if (index != -1) {
+            id = this.idsToReplace[index].good;
+        } else {
+            id = null;
         }
         return id;
     }
