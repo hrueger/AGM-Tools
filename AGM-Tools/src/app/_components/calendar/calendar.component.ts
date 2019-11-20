@@ -194,7 +194,6 @@ export class CalendarComponent {
                         StartTimezone: "Europe/Berlin",
                         Subject: date.headline,
                     });
-                    console.info("added to data source: ", this.eventSettings.dataSource);
                     if (date.id == this.eventToNavigateTo) {
                         this.selectedDate = new Date(date.startDate);
                     }
