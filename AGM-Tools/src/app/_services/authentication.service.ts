@@ -51,13 +51,17 @@ export class AuthenticationService {
                             "currentUser",
                             JSON.stringify(user),
                         );
-                        sessionStorage.setItem("jwt_token", user.token);
+                        this.saveJwtToken(user);
                         this.currentUserSubject.next(user);
                     }
 
                     return user;
                 }),
             );
+    }
+
+    public saveJwtToken(user: User) {
+        sessionStorage.setItem("jwt_token", user.token);
     }
 
     public logout() {
