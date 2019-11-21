@@ -2,10 +2,11 @@ import { validate } from "class-validator";
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import * as nodemailer from "nodemailer";
-import { getRepository } from "typeorm";
+import { getRepository, FindOptionsUtils } from "typeorm";
 import config from "../config/config";
 import { User } from "../entity/User";
-import { genID } from "../utils";
+import { genID } from "../utils/utils";
+import { sendMail } from "../utils/mailer";
 
 class AuthController {
 
@@ -57,7 +58,6 @@ class AuthController {
       return;
     }
 
-    const transporter = nodemailer.createTransport(config.emailSettings);
     const token = genID(32);
     user.passwordResetToken = token;
     try {
@@ -67,21 +67,15 @@ class AuthController {
       return;
     }
     const link = `${config.urlSettings.url}resetPassword/${token}`;
-    transporter.sendMail({
-      from: config.emailSender,
-      html: `<h1>Hi ${user.username},</h1><br>Ein Link zum Zurücksetzen des Passworts wurde angefordert. \
-      Falls dies nicht beabsichtigt war, ignorieren Sie einfach diese E-Mail. Ihr Password wird nicht geändert.<br><br>\
-      Wenn Sie ein neues Passwort setzen möchten, klicken Sie jetzt auf diesen Link:<br><br>\
-      <a href='${link}'>${link}</a><br><br><br><br>Mit freundlichen Grüßen,<br><br>Das AGM-Tools Team<br><br><br><hr>Diese Email wurde automatisch erstellt. \
-      Antworten können leider nicht bearbeitet werden!`,
-      subject: "Reset password - AGM-Tools",
-      to: req.params.email,
-    }, (err) => {
-      if (err) {
-          res.status(500).send({message: "Fehler beim Senden der Email: " + err.toString()});
-          return;
-      }
+    sendMail(config.emailSender, req.params.email, "resetPassword", {
+      resetLink: link,
+      username: user.username,
+    }).then((info) => {
       res.send({status: true});
+    }).catch((err) => {
+      // tslint:disable-next-line: no-console
+      console.log(err);
+      res.status(500).send({message: "Fehler beim Senden der Email: " + err.toString()});
     });
   }
   public static resetPassword = async (req: Request, res: Response) => {

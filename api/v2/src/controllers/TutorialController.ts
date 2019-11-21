@@ -7,7 +7,7 @@ import config from "../config/config";
 import { Tutorial } from "../entity/Tutorial";
 import { TutorialStep } from "../entity/TutorialStep";
 import { User } from "../entity/User";
-import { genID } from "../utils";
+import { genID } from "../utils/utils";
 
 class TutorialController {
   public static listAll = async (req: Request, res: Response) => {
