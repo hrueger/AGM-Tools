@@ -21,10 +21,12 @@ export class ProjectsComponent implements OnInit {
     public projects: Project[] = [];
     public allusers: User[] = [];
     public newProjectForm: FormGroup;
+    public updateProjectForm: FormGroup;
     public name: string;
-    public members: number[];
+    public users: number[];
     public description: string;
     public invalidMessage: boolean = false;
+    public updateProjectInvalidMessage: boolean = false;
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
@@ -35,18 +37,66 @@ export class ProjectsComponent implements OnInit {
 
     public ngOnInit() {
         this.navbarService.setHeadline("Projekte");
-        this.remoteService.get("post", "projectsGetProjects").subscribe((data) => {
+        this.remoteService.get("get", "projects").subscribe((data) => {
             this.projects = data;
         });
-        this.remoteService.get("post", "usersGetUsers").subscribe((data) => {
+        this.remoteService.get("get", "users").subscribe((data) => {
             this.allusers = data;
         });
         this.newProjectForm = this.fb.group({
             description: [this.description, [Validators.required]],
-            members: [this.members, [Validators.required]],
             name: [this.name, [Validators.required]],
+            users: [this.users, [Validators.required]],
+        });
+        this.updateProjectForm = this.fb.group({
+            description: ["", [Validators.required]],
+            name: ["", [Validators.required]],
+            users: [null, [Validators.required]],
         });
     }
+
+    public delete(project) {
+        if (confirm("Soll dieses Projekt wirklich gelöscht werden?")) {
+            this.remoteService.get("delete", `projects/${project.id}`).subscribe((data) => {
+                if (data && data.status == true) {
+                    this.alertService.success("Projekt erfolgreich gelöscht!");
+                    this.remoteService.get("get", "projects").subscribe((d) => {
+                        this.projects = d;
+                    });
+                }
+            });
+        }
+    }
+
+    public update(project, modal) {
+        this.updateProjectForm.setValue({
+            description: project.description,
+            name: project.name,
+            users: project.users.map((user) => user.id),
+        });
+        this.modalService
+            .open(modal)
+            .result.then(
+                (result) => {
+                    this.updateProjectInvalidMessage = false;
+                    this.remoteService
+                        .getNoCache("post", `projects/${project.id}`, {
+                            description: this.updateProjectForm.get("description").value,
+                            name: this.updateProjectForm.get("name").value,
+                            users: this.updateProjectForm.get("users").value,
+                        })
+                        .subscribe((data) => {
+                            if (data && data.status == true) {
+                                this.alertService.success("Projekt erfolgreich aktualisiert");
+                                this.remoteService.get("get", "projects").subscribe((d) => {
+                                    this.projects = d;
+                                });
+                            }
+                        });
+                },
+            );
+    }
+
     public openNewModal(content) {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
@@ -55,17 +105,17 @@ export class ProjectsComponent implements OnInit {
                     this.invalidMessage = false;
 
                     this.remoteService
-                        .getNoCache("post", "projectsNewProject", {
+                        .getNoCache("post", "projects", {
                             description: this.newProjectForm.get("description").value,
-                            members: this.newProjectForm.get("members").value,
                             name: this.newProjectForm.get("name").value,
+                            users: this.newProjectForm.get("users").value,
                         })
                         .subscribe((data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Projekt erfolgreich erstellt, folgende Dateien wurden hinzugefügt:<br><br>" +
-                                    data.commitMessage.join("<br>"),
-                                );
+                                this.alertService.success("Projekt erfolgreich erstellt");
+                                this.remoteService.get("get", "projects").subscribe((d) => {
+                                    this.projects = d;
+                                });
                             }
                         });
                 },

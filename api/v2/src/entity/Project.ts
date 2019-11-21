@@ -1,9 +1,8 @@
 import {
     Column,
-    CreateDateColumn,
     Entity,
+    JoinTable,
     ManyToMany,
-    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
   } from "typeorm";
@@ -16,7 +15,8 @@ import { User } from "./User";
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToMany((type) => User, (user) => user.projects)
+    @ManyToMany(() => User, (user) => user.projects)
+    @JoinTable()
     public users: User[];
 
     @Column()
@@ -25,9 +25,9 @@ import { User } from "./User";
     @Column()
     public description: string;
 
-    @OneToMany((type) => File, (file) => file.project)
+    @OneToMany(() => File, (file) => file.project)
     public files: File[];
 
-    @OneToMany((type) => Folder, (folder) => folder.project)
+    @OneToMany(() => Folder, (folder) => folder.project)
     public folders: Folder[];
   }

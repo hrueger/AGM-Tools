@@ -56,6 +56,7 @@ import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { RenewJwtTokenInterceptor } from "./_helpers/renewJwtToken.interceptor";
+import { DisplayUsernamesPipe } from "./_pipes/displayUsernames.pipe";
 import { SafePipe } from "./_pipes/safe.pipe";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
@@ -77,6 +78,7 @@ export function getJWT() {
         AppComponent,
         LoginComponent,
         SafePipe,
+        DisplayUsernamesPipe,
         DashboardComponent,
         UsersComponent,
         ChatComponent,
