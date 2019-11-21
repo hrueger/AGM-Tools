@@ -1,12 +1,11 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import * as nodemailer from "nodemailer";
-import { getRepository, FindOptionsUtils } from "typeorm";
+import { getRepository } from "typeorm";
 import config from "../config/config";
 import { User } from "../entity/User";
-import { genID } from "../utils/utils";
 import { sendMail } from "../utils/mailer";
+import { genID } from "../utils/utils";
 
 class AuthController {
 
@@ -70,7 +69,7 @@ class AuthController {
     sendMail(config.emailSender, req.params.email, "resetPassword", {
       resetLink: link,
       username: user.username,
-    }).then((info) => {
+    }).then(() => {
       res.send({status: true});
     }).catch((err) => {
       // tslint:disable-next-line: no-console
