@@ -60,7 +60,7 @@ export class TutorialComponent implements OnInit {
                   src: await that.getBlob(`tutorials/files/${step.image3}`),
               });
           }
-        };
+        }
     }
     const toCompare = (n == 1 ? that.tutorial.steps[i].image1 :
       (n == 2 ? that.tutorial.steps[i].image2 : that.tutorial.steps[i].image3));
