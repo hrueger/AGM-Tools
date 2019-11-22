@@ -58,6 +58,7 @@ import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { RenewJwtTokenInterceptor } from "./_helpers/renewJwtToken.interceptor";
 import { DisplayUsernamesPipe } from "./_pipes/displayUsernames.pipe";
 import { SafePipe } from "./_pipes/safe.pipe";
+import { SecureRequestPipe } from "./_pipes/secure-request.pipe";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
@@ -106,6 +107,7 @@ export function getJWT() {
         TutorialsComponent,
         TutorialComponent,
         EditTutorialComponent,
+        SecureRequestPipe,
     ],
     imports: [
         AngularFireDatabaseModule,
@@ -126,7 +128,6 @@ export function getJWT() {
         DashboardLayoutModule,
         BrowserModule,
         TabModule,
-        HttpClientModule,
         NgbModule,
         LightboxModule,
         BrowserModule,

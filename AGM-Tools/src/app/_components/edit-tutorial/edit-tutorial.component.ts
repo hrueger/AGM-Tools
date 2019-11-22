@@ -130,10 +130,6 @@ export class EditTutorialComponent implements OnInit {
     });
   }
 
-  public getSrc(img) {
-    return `${environment.apiUrl}tutorials/files/${img}`;
-  }
-
   public deleteStep(index) {
     if (confirm("Soll dieser Schritt wirklich gelöscht werden?")) {
       this.remoteService

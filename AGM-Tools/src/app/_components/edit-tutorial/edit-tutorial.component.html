@@ -41,7 +41,7 @@
     <div>
         <h6>Bild 1:</h6>
         <span *ngIf="step.uploadingImage1">Hochladen...</span>
-        <img *ngIf="step.image1" [src]="getSrc(step.image1)" alt="Bild">
+        <img *ngIf="step.image1" [src]="'tutorials/files/' + step.image1 | secureRequest | async" alt="Bild">
         <button *ngIf="step.image1" class="btn btn-link" (click)="deleteImage(index, 1)">Bild löschen</button>
         <div *ngIf="!step.image1" class="form-group">
             <div class="custom-file">
@@ -51,7 +51,7 @@
         </div>
         <h6>Bild 2:</h6>
         <span *ngIf="step.uploadingImage2">Hochladen...</span>
-        <img *ngIf="step.image2" [src]="getSrc(step.image2)" alt="Bild">
+        <img *ngIf="step.image2" [src]="'tutorials/files/' + step.image2 | secureRequest | async" alt="Bild">
         <button *ngIf="step.image2" class="btn btn-link" (click)="deleteImage(index, 2)">Bild löschen</button>
 
         <div *ngIf="!step.image2" class="form-group">
@@ -62,7 +62,7 @@
         </div>
         <h6>Bild 3:</h6>
         <span *ngIf="step.uploadingImage3">Hochladen...</span>
-        <img *ngIf="step.image3" [src]="getSrc(step.image3)" alt="Bild">
+        <img *ngIf="step.image3" [src]="'tutorials/files/' + step.image3 | secureRequest | async" alt="Bild">
         <button *ngIf="step.image3" class="btn btn-link" (click)="deleteImage(index, 3)">Bild löschen</button>
 
         <div *ngIf="!step.image3" class="form-group">
