@@ -23,7 +23,7 @@ class DashboardController {
       where: {
         limit: 5.,
         order: { start: "ASC"},
-        start: MoreThan(Date.now()),
+        start: MoreThan(new Date().toISOString()),
       },
     });
     res.send(events);

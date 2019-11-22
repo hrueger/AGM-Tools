@@ -54,6 +54,10 @@ export class DashboardComponent implements OnInit {
         this.initChart();
     }
 
+    public getTimeDifference(time) {
+        return new Date().getTime();
+    }
+
     public initChart() {
         this.remoteService.get("get", "dashboard/spaceChartData").subscribe((data) => {
             this.setSpaceChartData(data);
@@ -63,6 +67,19 @@ export class DashboardComponent implements OnInit {
         });
         this.remoteService.get("get", "dashboard/events").subscribe((data) => {
             this.dates = data;
+            const that = this;
+            setInterval(() => {
+                for (const event of that.dates) {
+                    const d = this.dateDiff(new Date().getTime(), new Date(event.start).getTime());
+                    const a = [];
+                    if (d.months) { a.push(`${d.months} Monat${(d.months > 1 ? "e" : "")}`); }
+                    if (d.days) { a.push(`${d.days} Tag${(d.days > 1 ? "e" : "")}`); }
+                    if (d.hours) { a.push(`${d.hours} Stunde${(d.hours > 1 ? "n" : "")}`); }
+                    if (d.minutes) { a.push(`${d.minutes} Minute${(d.minutes > 1 ? "n" : "")}`); }
+                    if (d.seconds) { a.push(`${d.seconds} Sekunde${(d.seconds > 1 ? "n" : "")}`); }
+                    event.countdownTime = a.join(", ");
+                }
+            });
         });
         this.remoteService.get("get", "dashboard/version").subscribe((data) => {
             this.version = data;
@@ -99,5 +116,25 @@ export class DashboardComponent implements OnInit {
 
     private setSpaceChartData(data: any) {
         this.spaceChartData = [data.free, data.system, data.used];
+    }
+
+    private dateDiff(a, b) {
+        let delta = Math.abs(b - a) / 1000;
+        const months = Math.floor(delta / 2592000);
+        delta -= months * 2592000;
+        const days = Math.floor(delta / 86400);
+        delta -= days * 86400;
+        const hours = Math.floor(delta / 3600) % 24;
+        delta -= hours * 3600;
+        const minutes = Math.floor(delta / 60) % 60;
+        delta -= minutes * 60;
+        const seconds = Math.floor(delta % 60);
+        return {
+            days,
+            hours,
+            minutes,
+            months,
+            seconds,
+        };
     }
 }

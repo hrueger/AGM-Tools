@@ -58,15 +58,14 @@
                 <div class="card-header">
                     Nächste Termine
                 </div>
-                <div class="card-body dates">
-                    <ol class="datelist">
-                        <li *ngFor="let date of dates" class="event" routerLink="/calendar/{{date.id}}">
-                            <span class="headline">{{date.name}}</span>
-                            <span class="date">ab dem {{ date.weekday }}, {{ date.date }} um {{ date.starttime }} Uhr</span>
-                            <span class="countdown">noch {{ date.countdown }}</span>
+                <div class="card-body datelist">
+                        <div *ngFor="let event of dates" class="event" routerLink="/calendar/{{event.id}}">
+                            <span class="headline">{{event.headline}}</span>
+                            <i class="m-1 fas fa-calendar-day"></i><span class="d-inline date">ab dem {{ event.start | date:"EEEE" }}, {{ event.start | date:"shortDate" }} um {{ event.start | date:"shortTime" }} Uhr</span><br>
+                            <i class="m-1 fas fa-map-marker-alt"></i><span class="d-inline date">{{ event.location }}</span><br>
+                            <i class="m-1 fas fa-stopwatch text-primary"></i><span class="d-inline countdown">noch {{ event.countdownTime }}</span>
                             <br />
-                        </li>
-                    </ol>
+                        </div>
                 </div>
             </div>
         </div>
