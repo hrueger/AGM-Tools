@@ -1,8 +1,8 @@
 <button class="btn btn-primary" (click)="newTutorial(newTutorialModal)">Neues Tutorial</button>
 
 <div class="row mt-4">
-    <div class="col-md-4 col-sm-6 d-flex" routerLink="/tutorial/{{tutorial.id}}" *ngFor="let tutorial of tutorials">
-        <div class="card flex-fill mb-3">
+    <div class="col-md-4 col-sm-6 d-flex " routerLink="/tutorial/{{tutorial.id}}" *ngFor="let tutorial of tutorials">
+        <div class="card flex-fill mb-3" style="cursor: pointer">
             <div class="card-body">
                 <h5 class="card-title">{{tutorial.title}}</h5>
                 {{tutorial.description}}
