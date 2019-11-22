@@ -1,13 +1,16 @@
 <button class="btn btn-primary" (click)="newTutorial(newTutorialModal)">Neues Tutorial</button>
 
-<div class="tutorialholder">
-    <div class="e-card tutorial-card"  routerLink="/tutorial/{{tutorial.id}}" style="max-width:400px" *ngFor="let tutorial of tutorials">
-        <div class="e-card-header-title">{{tutorial.title}}</div>
-        <div class="e-card-content">
-            {{tutorial.description}}
-        </div>
-        <div class="e-card-actions" *ngIf="tutorial.editable">
-            <button class="e-card-btn" routerLink="/editTutorial/{{tutorial.id}}"><i class="far fa-edit"></i></button>
+<div class="row mt-4">
+    <div class="col-md-4 col-sm-6 d-flex" routerLink="/tutorial/{{tutorial.id}}" *ngFor="let tutorial of tutorials">
+        <div class="card flex-fill mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{tutorial.title}}</h5>
+                {{tutorial.description}}
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Zuletzt aktualisiert: {{ tutorial.lastUpdated }}</small>
+                <button class="float-right btn btn-primary p-1 px-2" *ngIf="tutorial.editable" routerLink="/editTutorial/{{tutorial.id}}"><i class="far fa-edit"></i></button>
+            </div>
         </div>
     </div>
 </div>
