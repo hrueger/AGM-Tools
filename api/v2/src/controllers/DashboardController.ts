@@ -7,7 +7,6 @@ import { Event } from "../entity/Event";
 import { User } from "../entity/User";
 import { howLongAgo } from "../utils/utils";
 
-
 class DashboardController {
 
   public static whatsnew = async (req: Request, res: Response) => {
