@@ -1,23 +1,8 @@
-<div *ngFor="let notification of notifications" [class]="notification.type + ' alert alert-dismissible'">
-    <button (click)="makeNotificationSeen(notification)" type="button" class="seen btn btn-primary  float-right btn-lg">
-        Gelesen
-    </button>
-    <strong>{{ notification.headline }}</strong>
-    <div [innerHTML]="notification.content | safe:'html'"></div>
-    <br /><br /><small><b>{{ notification.sender }}</b> am {{ notification.date }} um
-        {{ notification.time }} Uhr</small>
-</div>
-<div *ngIf="notifications.length > 0"><br><br><br></div>
-
-
-<div class="control-section">
-    <ejs-dashboardlayout [style.visibility]="showDashboardLayout ? 'visible' : 'hidden'" id='defaultLayout' [allowDragging]="false" [allowFloating]="false" [columns]="3" #defaultLayout [cellSpacing]='cellSpacing'>
-        <div class="e-panel" data-row="0" data-col="0" data-sizeX="1" data-sizeY="1">
-            <div class="card">
-                <div class="card-header">
-                    Verfügbarer Speicherplatz
-                </div>
-                <div class="card-body">
+<div class="row">
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body">
+                    <h5 class="card-title">Verfügbarer Speicherplatz</h5>
                     <div style="display: block">
                         <canvas baseChart [data]="spaceChartData" [labels]="spaceChartLabels" [chartType]="spaceChartType" [colors]="spaceChartColors" [options]="spaceChartOptions">
                         </canvas>
@@ -25,15 +10,59 @@
                     <button class="btn btn-primary" (click)="updateChart()">
                         Aktualisieren
                     </button>
-                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.space }}</small>
             </div>
         </div>
-        <div class="e-panel" data-row="0" data-col="1" data-sizeX="1" data-sizeY="1">
-            <div class="card">
-                <div class="card-header">
-                    What's new
+    </div>
+    
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Nachrichten</h5>
+                <div *ngFor="let notification of notifications" [class]="notification.type + ' alert alert-dismissible'">
+                    <button (click)="makeNotificationSeen(notification)" type="button" class="seen btn btn-primary  float-right btn-lg">
+                        Gelesen
+                    </button>
+                    <strong>{{ notification.headline }}</strong>
+                    <div [innerHTML]="notification.content | safe:'html'"></div>
+                    <br /><br /><small><b>{{ notification.sender }}</b> am {{ notification.date }} um
+                        {{ notification.time }} Uhr</small>
                 </div>
-                <div class="card-body">
+                <span class="text-muted" *ngIf="notifications.length == 0">Keine neuen Nachrichten!</span>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.notifications }}</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Nächste Events</h5>
+                <div class="datelist">
+                    <div *ngFor="let event of dates" class="event" routerLink="/calendar/{{event.id}}">
+                        <span class="headline">{{event.headline}}</span>
+                        <i class="m-1 fas fa-calendar-day"></i><span class="d-inline date">ab dem {{ event.start | date:"EEEE" }}, {{ event.start | date:"shortDate" }} um {{ event.start | date:"shortTime" }} Uhr</span><br>
+                        <i class="m-1 fas fa-map-marker-alt"></i><span class="d-inline date">{{ event.location }}</span><br>
+                        <i class="m-1 fas fa-stopwatch text-primary"></i><span class="d-inline countdown">noch {{ event.countdownTime }}</span>
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.events }}</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 d-flex">
+            <div class="card flex-fill mb-3">
+            <div class="card-body">
+                <h5 class="card-title">What's new</h5>
+                <div class="p-0">
                     <ejs-accordion expandMode="Single" *ngFor="let version of whatsnew">
                         <div>
                             <div>
@@ -52,23 +81,22 @@
                     </ejs-accordion>
                 </div>
             </div>
-        </div>
-        <div class="e-panel" data-row="0" data-col="2" data-sizeX="1" data-sizeY="1">
-            <div class="card">
-                <div class="card-header">
-                    Nächste Termine
-                </div>
-                <div class="card-body datelist">
-                        <div *ngFor="let event of dates" class="event" routerLink="/calendar/{{event.id}}">
-                            <span class="headline">{{event.headline}}</span>
-                            <i class="m-1 fas fa-calendar-day"></i><span class="d-inline date">ab dem {{ event.start | date:"EEEE" }}, {{ event.start | date:"shortDate" }} um {{ event.start | date:"shortTime" }} Uhr</span><br>
-                            <i class="m-1 fas fa-map-marker-alt"></i><span class="d-inline date">{{ event.location }}</span><br>
-                            <i class="m-1 fas fa-stopwatch text-primary"></i><span class="d-inline countdown">noch {{ event.countdownTime }}</span>
-                            <br />
-                        </div>
-                </div>
+            <div class="card-footer">
+                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.changelog }}</small>
+            </div>
             </div>
         </div>
-
-    </ejs-dashboardlayout>
-</div>
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Version</h5>
+                <div class="alert alert-primary">
+                    <span>{{version}}</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.version }}</small>
+            </div>
+        </div>
+    </div>
+  </div>

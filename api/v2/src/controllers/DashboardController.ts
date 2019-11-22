@@ -4,17 +4,21 @@ import { getRepository, MoreThan } from "typeorm";
 import config from "../config/config";
 import { Cache } from "../entity/Cache";
 import { Event } from "../entity/Event";
-import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
+import { howLongAgo } from "../utils/utils";
+
 
 class DashboardController {
 
   public static whatsnew = async (req: Request, res: Response) => {
-    res.send([{
-      changes: ["New v2 API!", "really cool!"],
-      id: 0,
-      version: "latest",
-    }]);
+    res.send({
+      changelog: [{
+        changes: ["New v2 API!", "really cool!"],
+        id: 0,
+        version: "latest",
+      }],
+      lastUpdated: "vor einer Woche",
+    });
   }
   public static events = async (req: Request, res: Response) => {
     const eventRepository = getRepository(Event);
@@ -26,10 +30,14 @@ class DashboardController {
         start: MoreThan(new Date().toISOString()),
       },
     });
-    res.send(events);
+    res.send({
+      events,
+      lastUpdated: "gerade eben",
+    });
   }
   public static version = async (req: Request, res: Response) => {
     res.send({
+      lastUpdated: "vor einer Woche",
       version: "latest ;-)",
     });
   }
@@ -43,9 +51,12 @@ class DashboardController {
           start: MoreThan(Date.now()),
         },
       });
-      res.send(notifications);
+      res.send({notifications, lastUpdated: "gerade eben"});
     } catch {
-      res.send([]);
+      res.send({
+        lastUpdated: "gerade eben",
+        notifications: [],
+      });
     }
 
   }
@@ -71,8 +82,9 @@ class DashboardController {
         name: "DiskSpaceUsed",
       },
     });
+    let lastUpdated;
     if (update || !diskSpaceUsed || !diskSpaceUsed.value ||
-        DashboardController.daysBetween(diskSpaceUsed.updatedAt, new Date()) > config.cacheExpireDays) {
+      DashboardController.daysBetween(diskSpaceUsed.updatedAt, new Date()) > config.cacheExpireDays) {
       const size = await new Promise<number>((resolve, reject) => {
         getFolderSize(config.storagePath, (err, s) => {
           if (err) {
@@ -89,9 +101,13 @@ class DashboardController {
         value: size.toString(),
       };
       cacheRepository.save(diskSpaceUsed);
+      lastUpdated = "gerade eben";
+    } else {
+      lastUpdated = howLongAgo(diskSpaceUsed.updatedAt);
     }
     res.send({
       free: (config.avalibleDiskSpaceInGB * 1024) - Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
+      lastUpdated,
       system: 0,
       total: config.avalibleDiskSpaceInGB * 1024,
       used: Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),

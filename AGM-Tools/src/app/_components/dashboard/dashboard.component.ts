@@ -43,7 +43,12 @@ export class DashboardComponent implements OnInit {
     public cellSpacing: any;
     public version: string;
     public notifications: any[] = [];
-    public showDashboardLayout: boolean = false;
+    public lastUpdated: any = {
+        changelog: "",
+        events: "",
+        space: "",
+        version: "",
+    };
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
@@ -61,12 +66,15 @@ export class DashboardComponent implements OnInit {
     public initChart() {
         this.remoteService.get("get", "dashboard/spaceChartData").subscribe((data) => {
             this.setSpaceChartData(data);
+            this.lastUpdated.space = data.lastUpdated;
         });
         this.remoteService.get("get", "dashboard/whatsnew").subscribe((data) => {
-            this.whatsnew = data;
+            this.whatsnew = data.changelog;
+            this.lastUpdated.changelog = data.lastUpdated;
         });
         this.remoteService.get("get", "dashboard/events").subscribe((data) => {
-            this.dates = data;
+            this.dates = data.events;
+            this.lastUpdated.events = data.lastUpdated;
             const that = this;
             setInterval(() => {
                 for (const event of that.dates) {
@@ -82,16 +90,15 @@ export class DashboardComponent implements OnInit {
             });
         });
         this.remoteService.get("get", "dashboard/version").subscribe((data) => {
-            this.version = data;
+            this.version = data.version;
+            this.lastUpdated.version = data.lastUpdated;
         });
         this.remoteService
             .getNoCache("get", "dashboard/notifications/")
             .subscribe((data) => {
-                this.notifications = data;
+                this.notifications = data.notifications;
+                this.lastUpdated.notifications = data.lastUpdated;
             });
-        window.setInterval(() => {
-            this.showDashboardLayout = true;
-        }, 300);
     }
 
     public updateChart() {
