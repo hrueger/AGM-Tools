@@ -19,6 +19,9 @@ import {
     public value: string;
 
     @Column()
-    @UpdateDateColumn()
+    public random: number;
+
+    @Column()
+    @UpdateDateColumn({update: true})
     public updatedAt: Date;
   }

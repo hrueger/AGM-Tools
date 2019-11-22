@@ -106,6 +106,7 @@ export class DashboardComponent implements OnInit {
             .getNoCache("post", "dashboard/spaceChartData")
             .subscribe((data) => {
                 this.setSpaceChartData(data);
+                this.lastUpdated.space = data.lastUpdated;
             });
     }
 

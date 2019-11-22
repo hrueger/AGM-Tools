@@ -45,7 +45,6 @@ class DashboardController {
     try {
       const notifications = await userRepository.find({
         relations: ["notification"],
-        select: ["receivedNotifications"],
         where: {
           start: MoreThan(Date.now()),
         },
@@ -96,10 +95,11 @@ class DashboardController {
       diskSpaceUsed = {
         id: (diskSpaceUsed && diskSpaceUsed.id ? diskSpaceUsed.id : undefined),
         name: "DiskSpaceUsed",
+        random: Math.random(),
         updatedAt: new Date(),
         value: size.toString(),
       };
-      cacheRepository.save(diskSpaceUsed);
+      await cacheRepository.save(diskSpaceUsed);
       lastUpdated = "gerade eben";
     } else {
       lastUpdated = howLongAgo(diskSpaceUsed.updatedAt);
