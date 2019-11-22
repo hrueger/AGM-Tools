@@ -114,14 +114,12 @@ class UserController {
     const id = req.params.id;
 
     const userRepository = getRepository(User);
-    let user: User;
     try {
-      user = await userRepository.findOneOrFail(id);
-    } catch (error) {
-      res.status(404).send({message: "Benutzer nicht gefunden!"});
+      await userRepository.delete(id);
+    } catch (e) {
+      res.status(500).send({message: "Fehler beim Löschen!"});
       return;
     }
-    userRepository.delete(id);
 
     res.status(200).send({status: true});
   }

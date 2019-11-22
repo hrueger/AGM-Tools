@@ -86,16 +86,13 @@ class ProjectController {
 
   public static deleteProject = async (req: Request, res: Response) => {
     const id = req.params.id;
-
     const projectRepository = getRepository(Project);
-    let project: Project;
     try {
-      project = await projectRepository.findOneOrFail(id);
-    } catch (error) {
-      res.status(404).send({message: "Project nicht gefunden!"});
+      await projectRepository.delete(id);
+    } catch (e) {
+      res.status(500).send({message: "Fehler beim Löschen!"});
       return;
     }
-    projectRepository.delete(id);
 
     res.status(200).send({status: true});
   }

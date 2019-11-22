@@ -82,16 +82,13 @@ class EventController {
 
   public static deleteEvent = async (req: Request, res: Response) => {
     const id = req.params.id;
-
     const eventRepository = getRepository(Event);
-    let event: Event;
     try {
-      event = await eventRepository.findOneOrFail(id);
-    } catch (error) {
-      res.status(404).send({message: "Event nicht gefunden!"});
+      await eventRepository.delete(id);
+    } catch (e) {
+      res.status(500).send({message: "Fehler beim Löschen!"});
       return;
     }
-    eventRepository.delete(id);
 
     res.status(200).send({status: true});
   }

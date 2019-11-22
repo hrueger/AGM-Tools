@@ -165,14 +165,12 @@ class TutorialController {
     const id = req.params.id;
 
     const stepRepository = getRepository(TutorialStep);
-    let step: TutorialStep;
     try {
-      step = await stepRepository.findOneOrFail(id);
-    } catch (error) {
-      res.status(404).send({message: "Schritt nicht gefunden!"});
+      await stepRepository.delete(id);
+    } catch (e) {
+      res.status(500).send({message: "Fehler beim Löschen!"});
       return;
     }
-    stepRepository.delete(id);
 
     res.status(200).send({status: true});
   }
