@@ -44,10 +44,10 @@
                 <h5 class="card-title">Nächste Events</h5>
                 <div class="datelist">
                     <div *ngFor="let event of dates" class="event" routerLink="/calendar/{{event.id}}">
-                        <span class="headline">{{event.headline}}</span>
-                        <i class="m-1 fas fa-calendar-day"></i><span class="d-inline date">ab dem {{ event.start | date:"EEEE" }}, {{ event.start | date:"shortDate" }} um {{ event.start | date:"shortTime" }} Uhr</span><br>
-                        <i class="m-1 fas fa-map-marker-alt"></i><span class="d-inline date">{{ event.location }}</span><br>
-                        <i class="m-1 fas fa-stopwatch text-primary"></i><span class="d-inline countdown">noch {{ event.countdownTime }}</span>
+                        <span class="headline">{{event.headline}}</span><br>
+                        <i class="m-1 fas fa-calendar-day"></i><span class="text-muted">ab dem {{ event.start | date:"EEEE" }}, {{ event.start | date:"shortDate" }} um {{ event.start | date:"shortTime" }} Uhr</span><br>
+                        <i class="m-1 fas fa-map-marker-alt"></i><span class="text-muted">{{ event.location }}</span><br>
+                        <i class="m-1 fas fa-stopwatch text-primary"></i><span class="text-primary">noch {{ event.countdownTime }}</span>
                         <br />
                     </div>
                 </div>
