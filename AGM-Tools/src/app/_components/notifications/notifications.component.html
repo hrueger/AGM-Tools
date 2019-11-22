@@ -77,12 +77,23 @@
             <br />
             <div class="form-group">
                 <label for="importance">Thema: </label>
-                <select class="form-control" id="type" formControlName="importance">
-                    <option value="1">Erfolg</option>
-                    <option value="2">Information</option>
-                    <option value="3">Warnung</option>
-                    <option value="4">Gefahr</option>
-                </select>
+                <div class="custom-control custom-radio bg-success py-2 px-5 my-1">
+                    <input type="radio" id="1" formControlName="importance" value="1" class="custom-control-input">
+                    <label class="custom-control-label" for="1">Erfolg</label>
+                </div>
+                <div class="custom-control custom-radio bg-info py-2 px-5 my-1">
+                    <input type="radio" id="2" formControlName="importance" value="2" class="custom-control-input">
+                    <label class="custom-control-label" for="2">Information</label>
+                </div>
+                <div class="custom-control custom-radio bg-warning py-2 px-5 my-1">
+                    <input type="radio" id="3" formControlName="importance" value="3" class="custom-control-input">
+                    <label class="custom-control-label" for="3">Warnung</label>
+                </div>
+                <div class="custom-control custom-radio bg-danger py-2 px-5 my-1">
+                    <input type="radio" id="4" formControlName="importance" value="4" class="custom-control-input">
+                    <label class="custom-control-label" for="4">Gefahr</label>
+                </div>
+                
             </div>
             <br />
         </form>
