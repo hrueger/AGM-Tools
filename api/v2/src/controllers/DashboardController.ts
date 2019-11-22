@@ -95,7 +95,7 @@ class DashboardController {
       diskSpaceUsed = {
         id: (diskSpaceUsed && diskSpaceUsed.id ? diskSpaceUsed.id : undefined),
         name: "DiskSpaceUsed",
-        random: Math.random(),
+        random: Math.floor(Math.random() * 10000),
         updatedAt: new Date(),
         value: size.toString(),
       };
