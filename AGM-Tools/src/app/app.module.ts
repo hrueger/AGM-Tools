@@ -56,6 +56,7 @@ import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { RenewJwtTokenInterceptor } from "./_helpers/renewJwtToken.interceptor";
+import { DiffPipe } from "./_pipes/diff.pipe";
 import { DisplayUsernamesPipe } from "./_pipes/displayUsernames.pipe";
 import { SafePipe } from "./_pipes/safe.pipe";
 import { SecureRequestPipe } from "./_pipes/secure-request.pipe";
@@ -66,7 +67,6 @@ import { NavbarService } from "./_services/navbar.service";
 import { PushService } from "./_services/push.service";
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
-import { DiffPipe } from "./_pipes/diff.pipe";
 
 registerLocaleData(localeDe);
 
