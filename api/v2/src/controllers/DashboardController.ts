@@ -4,6 +4,7 @@ import { getRepository, MoreThan } from "typeorm";
 import config from "../config/config";
 import { Cache } from "../entity/Cache";
 import { Event } from "../entity/Event";
+import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
 import { howLongAgo } from "../utils/utils";
 
@@ -41,26 +42,46 @@ class DashboardController {
     });
   }
   public static notifications = async (req: Request, res: Response) => {
-    const userRepository = getRepository(User);
+    const notificationRepository = getRepository(Notification);
     try {
-      const notifications = await userRepository.find({
-        relations: ["notification"],
-        where: {
-          start: MoreThan(Date.now()),
-        },
+      let notifications = await notificationRepository.find({
+        order: {createdAt: "DESC"},
+        relations: ["receivers", "creator", "seenBy"],
       });
+      notifications = notifications.filter((n) => {
+        if (!n.seenBy) {
+          return true;
+        }
+        return !n.seenBy.some((r) => {
+          return r.id === res.locals.jwtPayload.userId;
+        });
+      });
+      for (const notification of notifications) {
+        notification.howLongAgo = howLongAgo(notification.createdAt);
+      }
       res.send({notifications, lastUpdated: "gerade eben"});
-    } catch {
-      res.send({
-        lastUpdated: "gerade eben",
-        notifications: [],
-      });
+    } catch (e) {
+      res.status(500).send({message: "Fehler beim Abrufen der Nachrichten: " + e.toString()});
+      return;
     }
+  }
 
-  }
   public static notificationSeen = async (req: Request, res: Response) => {
-    res.send("hi");
+    const notificationRepository = getRepository(Notification);
+    try {
+      const notification = await notificationRepository.findOneOrFail(req.params.id);
+      if (!notification.seenBy) {
+        notification.seenBy = [];
+      }
+      notification.seenBy.push(await getRepository(User).findOneOrFail(res.locals.jwtPayload.userId));
+      await notificationRepository.save(notification);
+    } catch (e) {
+      res.status(500).send({message: "Fehler: " + e.toString()});
+      return;
+    }
+    res.send({status: true});
   }
+
   public static spaceChartData = async (req: Request, res: Response) => {
     await DashboardController.sendSpaceChartData(res);
   }

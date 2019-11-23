@@ -2,6 +2,7 @@ import { Router } from "express";
 import auth from "./auth";
 import dashboard from "./dashboard";
 import events from "./events";
+import notifications from "./notifications";
 import projects from "./projects";
 import tutorial from "./tutorial";
 import user from "./user";
@@ -14,5 +15,6 @@ routes.use("/dashboard", dashboard);
 routes.use("/tutorials", tutorial);
 routes.use("/events", events);
 routes.use("/projects", projects);
+routes.use("/notifications", notifications);
 
 export default routes;

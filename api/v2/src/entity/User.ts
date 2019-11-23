@@ -52,6 +52,9 @@
     @ManyToMany((type) => Notification, (notification) => notification.receivers)
     public receivedNotifications: Notification[];
 
+    @ManyToMany((type) => Notification, (notification) => notification.seenBy)
+    public seenNotifications: Notification[];
+
     @OneToMany((type) => Notification, (notification) => notification.creator)
     public sentNotifications: Notification[];
 

@@ -2,6 +2,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinTable,
     ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
@@ -19,8 +20,16 @@ import { User } from "./User";
     @Column()
     public content: string;
 
+    @Column()
+    public theme: string;
+
     @ManyToMany((type) => User, (user) => user.receivedNotifications)
+    @JoinTable()
     public receivers: User[];
+
+    @ManyToMany((type) => User, (user) => user.seenNotifications)
+    @JoinTable()
+    public seenBy: User[];
 
     @ManyToOne((type) => User, (user) => user.sentNotifications)
     public creator: User;
@@ -28,4 +37,6 @@ import { User } from "./User";
     @Column()
     @CreateDateColumn()
     public createdAt: Date;
+
+    public howLongAgo?: string;
   }

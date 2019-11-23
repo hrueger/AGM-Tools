@@ -73,3 +73,8 @@
     padding-bottom: 0;
     margin-bottom: 0;
 }
+
+.list-group.messages {
+    max-height: 50vh;
+    overflow-y: auto;
+}

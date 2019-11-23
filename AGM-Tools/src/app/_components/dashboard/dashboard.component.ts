@@ -94,7 +94,7 @@ export class DashboardComponent implements OnInit {
             this.lastUpdated.version = data.lastUpdated;
         });
         this.remoteService
-            .getNoCache("get", "dashboard/notifications/")
+            .get("get", "dashboard/notifications/")
             .subscribe((data) => {
                 this.notifications = data.notifications;
                 this.lastUpdated.notifications = data.lastUpdated;
@@ -110,13 +110,13 @@ export class DashboardComponent implements OnInit {
             });
     }
 
-    public makeNotificationSeen(notification) {
+    public seen(notification) {
         this.remoteService
-            .getNoCache("post", `dashboard/notifications/${notification.id}`)
+            .get("post", `dashboard/notifications/${notification.id}`)
             .subscribe((data) => {
-                if (data.status == true) {
+                if (data && data.status == true) {
                     this.notifications = this.notifications.filter(
-                        (obj) => obj.id !== notification.id,
+                        (n) => n.id !== notification.id,
                     );
                 }
             });
