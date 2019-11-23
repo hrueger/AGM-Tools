@@ -2,14 +2,14 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-body">
-                    <h5 class="card-title">Verfügbarer Speicherplatz</h5>
+                    <h5 class="card-title d-inline">Verfügbarer Speicherplatz</h5>
+                    <button class="btn btn-primary float-right px-2 py-1 m-1" (click)="updateChart()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
                     <div style="display: block">
                         <canvas baseChart [data]="spaceChartData" [labels]="spaceChartLabels" [chartType]="spaceChartType" [colors]="spaceChartColors" [options]="spaceChartOptions">
                         </canvas>
                     </div>
-                    <button class="btn btn-primary" (click)="updateChart()">
-                        Aktualisieren
-                    </button>
             </div>
             <div class="card-footer">
                 <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.space }}</small>
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                 </div>
-                <span class="text-muted" *ngIf="notifications.length == 0">Keine neuen Nachrichten!</span>
+                <span class="text-muted pl-3" *ngIf="notifications.length == 0">Keine neuen Nachrichten!</span>
             </div>
             <div class="card-footer">
                 <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.notifications }}</small>
@@ -55,6 +55,7 @@
                         <br />
                     </div>
                 </div>
+                <span class="text-muted" *ngIf="!dates || dates.length == 0">Keine anstehenden Events!</span>
             </div>
             <div class="card-footer">
                 <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.events }}</small>
