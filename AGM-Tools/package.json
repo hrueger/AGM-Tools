@@ -104,7 +104,7 @@
         "reflect-metadata": "~0.1.13",
         "rxjs": "^6.5.3",
         "rxjs-compat": "^6.5.3",
-        "tns-core-modules": "6.2.0",
+        "tns-core-modules": "6.2.2",
         "zone.js": "0.10.2"
     },
     "devDependencies": {
