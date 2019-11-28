@@ -10,8 +10,6 @@ import { AuthenticationService } from "../../_services/authentication.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
-// import { MenuItemModel, MenuEventArgs } from "@syncfusion/ej2-navigations";
-
 @Component({
     selector: "app-files",
     styleUrls: ["./files.component.scss"],
@@ -28,8 +26,7 @@ export class FilesComponent implements OnInit {
     public imageSource: string;
     public pid: number;
     public settings = {
-        chunkSize: 1024 * 1024, saveUrl: environment.apiUrl +
-            "resumableUploadHandler.php",
+        chunkSize: 1024 * 1024, saveUrl: `${environment.apiUrl}files/upload`,
     };
 
     public currentPath: any = [];
@@ -39,6 +36,7 @@ export class FilesComponent implements OnInit {
     public newFolderName: string;
     public newFolderForm: FormGroup;
     public shareLink: string = "";
+    public tags: any[] = [];
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
@@ -51,15 +49,15 @@ export class FilesComponent implements OnInit {
 
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
         // add addition data as key-value pair.
-
         args.customFormData = [
             {
                 pid: this.pid,
             },
             { fid: this.currentPath[this.currentPath.length - 1].id.toString() },
-            { token: this.authenticationService.currentUserValue.token },
 
         ];
+        console.log("header set");
+        args.currentRequest.setRequestHeader("Authorization", this.authenticationService.currentUserValue.token);
     }
     public onUploadSuccess(args: any): void {
         if (args.operation === "upload") {
@@ -94,8 +92,11 @@ export class FilesComponent implements OnInit {
         });
 
         // console.log("Headline change requested");
-        this.remoteService.get("post", "projectsGetProjects").subscribe((data) => {
+        this.remoteService.get("get", "projects").subscribe((data) => {
             this.projects = data;
+        });
+        this.remoteService.get("get", "files/tags").subscribe((data) => {
+            this.tags = data;
         });
         this.newFolderForm = this.fb.group({
             newFolderName: [this.newFolderName, [Validators.required]],
@@ -109,21 +110,17 @@ export class FilesComponent implements OnInit {
         if (!reload) {
             this.currentPath.push(item);
         }
-
-        // console.warn("Pushed folder");
-        if (item.type == "folder") {
+        if (item.isFolder) {
             this.navigate(item);
         } else {
             this.viewFile = true;
             this.imageSource = `${environment.apiUrl}getFile.php?fid=${item.id}`;
-
-            /*this.base64ImageSource = fromBase64();*/
         }
     }
     public getIcon(item: any) {
         const basepath = "assets/icons/";
         const iconPath = basepath + "extralarge/";
-        if (item.type == "folder") {
+        if (item.isFolder) {
             return basepath + "folder.png";
         } else {
             return (
@@ -163,13 +160,13 @@ export class FilesComponent implements OnInit {
         this.navigate(item);
     }
     public navigate(item) {
-        // console.log(this.currentPath);
-        this.remoteService
-            .get("post", "filesGetFolder", {
-                fid: item.id,
-                pid: this.pid,
-            })
-            .subscribe((data) => {
+        let r;
+        if (item.id == -1) {
+            r = this.remoteService.get("get", `files/projects/${this.pid}`);
+        } else {
+            r = this.remoteService.get("get", `files/${item.id}`);
+        }
+        r.subscribe((data) => {
                 if (
                     this.currentPath.length == 0 ||
                     this.currentPath[this.currentPath.length - 1].id != item.id
@@ -181,16 +178,8 @@ export class FilesComponent implements OnInit {
                 this.lastItem = item;
             });
     }
-    public getSrc() {
-        const file = this.currentPath[this.currentPath.length - 1];
-        return (
-            environment.apiUrl +
-            "?get=" +
-            file.id +
-            "&type=file" +
-            "&token=" +
-            this.authenticationService.currentUserValue.token
-        );
+    public getCurrentFileId() {
+        return this.currentPath[this.currentPath.length - 1].id;
     }
     public openNewFolderModal(content) {
         this.modalService
@@ -198,7 +187,7 @@ export class FilesComponent implements OnInit {
             .result.then(
                 (result) => {
                     this.remoteService
-                        .getNoCache("post", "filesNewFolder", {
+                        .getNoCache("post", "files", {
                             fid: this.currentPath[this.currentPath.length - 1].id,
                             name: this.newFolderForm.get("newFolderName").value,
                             pid: this.pid,
@@ -236,12 +225,10 @@ export class FilesComponent implements OnInit {
         }
         return "other";
     }
-    public toggleTag(tagid, item) {
+    public toggleTag(tagId, item) {
         this.remoteService
-            .getNoCache("post", "filesToggleTag", {
-                fid: item.id,
-                tagid,
-                type: item.type,
+            .getNoCache("post", `files/${item.id}/tags`, {
+                tagId,
             })
             .subscribe((data) => {
                 if (data.status == true) {
@@ -255,8 +242,6 @@ export class FilesComponent implements OnInit {
             environment.apiUrl +
             "?get=" +
             item.id +
-            "&type=" +
-            item.type +
             "&token=" +
             this.authenticationService.currentUserValue.token +
             "&download",
@@ -268,7 +253,7 @@ export class FilesComponent implements OnInit {
             .open(shareModal)
             .result.then();
         this.remoteService
-            .getNoCache("post", "filesCreateShare", { type: item.type, fid: item.id })
+            .getNoCache("post", "filesCreateShare", { fid: item.id })
             .subscribe((data) => {
                 if (data.status == true) {
                     this.shareLink = environment.apiUrl + "share/?l=" + data.link;
@@ -281,14 +266,12 @@ export class FilesComponent implements OnInit {
             .open(renameModal)
             .result.then((result) => {
                 this.remoteService
-                    .getNoCache("post", "filesRename", {
-                        fid: item.id,
+                    .getNoCache("post", `files/${item.id}`, {
                         name: this.renameItemForm.get("renameItemName").value,
-                        type: item.type,
                     })
                     .subscribe((data) => {
                         if (data.status == true) {
-                            this.alertService.success("Das Element wurde erfolgreich umbenannt.");
+                            this.alertService.success(`${(item.isFolder ? "Der Ordner" : "Die Datei")} wurde erfolgreich umbenannt.`);
                             this.reloadHere();
                         }
                     });
@@ -297,10 +280,9 @@ export class FilesComponent implements OnInit {
     }
     public delete(item) {
         if (confirm("Soll dieses Element wirklich gelöscht werden?")) {
-            this.remoteService.getNoCache("post", "filesDelete",
-                { type: item.type, fid: item.id }).subscribe((data) => {
+            this.remoteService.getNoCache("delete", `files/${item.id}`).subscribe((data) => {
                 if (data.status == true) {
-                    this.alertService.success("Das Element wurde erfolgreich gelöscht.");
+                    this.alertService.success(`${(item.isFolder ? "Der Ordner" : "Die Datei")} wurde erfolgreich gelöscht.`);
                     this.reloadHere();
                 }
             });

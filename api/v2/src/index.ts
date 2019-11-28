@@ -15,9 +15,7 @@ createConnection()
     const app = express();
 
     // Call midlewares
-    app.use(fileUpload({
-      debug: true,
-    }));
+    app.use(fileUpload());
     app.use(cors());
     app.use(helmet());
     app.use(bodyParser.json());

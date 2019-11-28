@@ -7,7 +7,6 @@ import {
     PrimaryGeneratedColumn,
   } from "typeorm";
 import { File } from "./File";
-import { Folder } from "./Folder";
 import { User } from "./User";
 
 @Entity()
@@ -27,7 +26,4 @@ import { User } from "./User";
 
     @OneToMany(() => File, (file) => file.project)
     public files: File[];
-
-    @OneToMany(() => Folder, (folder) => folder.project)
-    public folders: Folder[];
   }

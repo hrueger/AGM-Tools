@@ -50,7 +50,7 @@
 
 <div *ngIf="!selectProject && !viewFile">
     <div id="dropArea">
-        <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (uploading)="onFileUpload($event)">
+        <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (chunkUploading)="onFileUpload($event)" (uploading)="onFileUpload($event)">
         </ejs-uploader>
     </div>
 
@@ -62,17 +62,8 @@
             <i class="fas fa-tags"></i> Tags
         </ng-template>
         <context-menu #tagsSubMenu>
-            <ng-template contextMenuItem (execute)="toggleTag(1, $event.item)">
-                Fertig
-            </ng-template>
-            <ng-template contextMenuItem (execute)="toggleTag(4, $event.item)">
-                Zu verbessern
-            </ng-template>
-            <ng-template contextMenuItem (execute)="toggleTag(2, $event.item)">
-                In Arbeit
-            </ng-template>
-            <ng-template contextMenuItem (execute)="toggleTag(3, $event.item)">
-                Wichtig
+            <ng-template *ngFor="let tag of tags" contextMenuItem (execute)="toggleTag(tag.id, $event.item)">
+                {{ tag.name }}
             </ng-template>
         </context-menu>
         <ng-template contextMenuItem divider="true"></ng-template>
@@ -95,15 +86,6 @@
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="delete($event.item)">
             <i class="fas fa-trash"></i> Löschen
         </ng-template>
-        <!--<ng-template contextMenuItem let-item (execute)="
-                showMessage(
-                    $event.item.name + ' said: ' + $event.item.otherProperty
-                )
-            ">
-            Bye, {{ item?.name }}
-        </ng-template><ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event.item.name)">
-            Say hi!
-        </ng-template>-->
     </context-menu>
 
     <div id="files" class="table-responsive">
@@ -114,8 +96,6 @@
                     <td></td>
                     <td>Name</td>
                     <td>Tags</td>
-
-                    <td>Änderungsdatum</td>
                     <td>Erstelldatum</td>
                     <td>Größe</td>
                 </tr>
@@ -129,15 +109,14 @@
                     <td>
                         <div *ngIf="item.tags.length">
                             <div class="d-inline" *ngFor="let tag of item.tags">
-                                <span [style.color]="tag.color" [style.background-color]="
-                                        tag.backgroundColor
+                                <span [style.color]="tag.textColor" [style.background-color]="
+                                        tag.color
                                     " class="badge">{{ tag.name }}</span> &nbsp;
                             </div>
                         </div>
                     </td>
 
-                    <td>{{ item.modificationDate }}</td>
-                    <td>{{ item.creationDate }}</td>
+                    <td>{{ item.createdAt | date:"medium" }}</td>
                     <td>{{ item.size }}</td>
                 </tr>
             </tbody>
@@ -146,12 +125,12 @@
 </div>
 
 <div *ngIf="viewFile">
-    <img *ngIf="getType() == 'image'" class="previewFile img-fluid" alt="Irgendein schönes Bild, das aber leider nicht angezeigt werden kann..." [src]="getSrc()" />
+    <img *ngIf="getType() == 'image'" class="previewFile img-fluid" alt="Irgendein schönes Bild, das aber leider nicht angezeigt werden kann..." [src]="'files/' + getCurrentFileId() | secureRequest | async" />
     <video class="previewFile" controls *ngIf="getType() == 'video'">
-        <source [src]="getSrc()" type="video/mp4" />
+        <source [src]="'files/' + getCurrentFileId() | secureRequest | async" type="video/mp4" />
         Bitte verwende einen neueren Browser ;-)
     </video>
-    <ng2-pdfjs-viewer [pdfSrc]="getSrc()" *ngIf="getType() == 'pdf'"></ng2-pdfjs-viewer>
+    <ng2-pdfjs-viewer [pdfSrc]="'files/' + getCurrentFileId() | secureRequest | async" *ngIf="getType() == 'pdf'"></ng2-pdfjs-viewer>
     <div *ngIf="getType() == 'other'" class="alert alert-warning">
         Diese Datei wird leider nicht unterstützt. Wenn das gewünscht ist, gerne mich kontaktieren!
     </div>

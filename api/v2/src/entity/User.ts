@@ -11,6 +11,7 @@
     UpdateDateColumn,
   } from "typeorm";
   import { Event } from "./Event";
+  import { File } from "./File";
   import { Notification } from "./Notification";
   import { Project } from "./Project";
   import { Template } from "./Template";
@@ -66,6 +67,9 @@
 
     @OneToMany((type) => Event, (event) => event.creator)
     public events: Event[];
+
+    @OneToMany((type) => File, (file) => file.creator)
+    public files: File[];
 
     public hashPassword() {
       this.password = bcrypt.hashSync(this.password, 8);

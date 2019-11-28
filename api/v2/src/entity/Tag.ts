@@ -7,7 +7,6 @@ import {
     PrimaryGeneratedColumn,
   } from "typeorm";
 import { File } from "./File";
-import { Folder } from "./Folder";
 
 @Entity()
   export class Tag {
@@ -22,9 +21,6 @@ import { Folder } from "./Folder";
 
     @Column()
     public textColor: string;
-
-    @ManyToMany((type) => Folder, (folder) => folder.tags)
-    public folders: Folder[];
 
     @ManyToMany((type) => File, (file) => file.tags)
     public files: File[];

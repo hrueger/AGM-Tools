@@ -4,13 +4,19 @@ import {
     Entity,
     ManyToMany,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
+    Tree,
+    TreeChildren,
+    TreeParent,
+    JoinTable,
   } from "typeorm";
-import { Folder } from "./Folder";
 import { Project } from "./Project";
 import { Tag } from "./Tag";
+import { User } from "./User";
 
 @Entity()
+@Tree("materialized-path")
   export class File {
     @PrimaryGeneratedColumn()
     public id: number;
@@ -18,10 +24,17 @@ import { Tag } from "./Tag";
     @ManyToOne((type) => Project, (project) => project.files)
     public project: Project;
 
-    @ManyToOne((type) => Folder, (folder) => folder.files)
-    public folder: Folder;
+    @Column()
+    public isFolder: boolean;
+
+    @TreeParent()
+    public parent: File;
+
+    @TreeChildren()
+    public files: File[];
 
     @ManyToMany((type) => Tag, (tag) => tag.files)
+    @JoinTable()
     public tags: Tag[];
 
     @Column()
@@ -33,4 +46,7 @@ import { Tag } from "./Tag";
     @Column()
     @CreateDateColumn()
     public createdAt: Date;
+
+    @ManyToOne((type) => User, (user) => user.files)
+    public creator: User;
   }

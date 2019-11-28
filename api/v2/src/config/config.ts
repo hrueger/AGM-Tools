@@ -20,6 +20,7 @@ export default {
   },
   jwtSecret: "2384ND024nasd2uq2",
   storagePath: mainStoragePath,
+  tempFilesStoragePath: path.join(mainStoragePath, "temp"),
   tutorialFilesStoragePath: path.join(mainStoragePath, "tutorialFiles"),
   urlSettings: {
     domain,
