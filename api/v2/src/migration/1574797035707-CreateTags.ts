@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner, getRepository} from "typeorm";
+import {getRepository, MigrationInterface, QueryRunner} from "typeorm";
 import { Tag } from "../entity/Tag";
 
 export class CreateTags1574797035707 implements MigrationInterface {

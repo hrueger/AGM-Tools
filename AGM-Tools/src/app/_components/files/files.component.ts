@@ -56,7 +56,6 @@ export class FilesComponent implements OnInit {
             { fid: this.currentPath[this.currentPath.length - 1].id.toString() },
 
         ];
-        console.log("header set");
         args.currentRequest.setRequestHeader("Authorization", this.authenticationService.currentUserValue.token);
     }
     public onUploadSuccess(args: any): void {

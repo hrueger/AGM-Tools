@@ -2,6 +2,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinTable,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -9,7 +10,6 @@ import {
     Tree,
     TreeChildren,
     TreeParent,
-    JoinTable,
   } from "typeorm";
 import { Project } from "./Project";
 import { Tag } from "./Tag";

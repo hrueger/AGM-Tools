@@ -11,6 +11,6 @@ export interface RequestWithFiles extends Request {
             truncated: boolean,
             size: number,
             md5: string,
-        }
+        },
     };
 }
