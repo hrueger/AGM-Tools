@@ -23,9 +23,9 @@ import { AccordionModule, TabModule } from "@syncfusion/ej2-angular-navigations"
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
 import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { ChartsModule } from "ng2-charts";
-import { PdfJsViewerModule } from "ng2-pdfjs-viewer";
 import { AvatarModule } from "ngx-avatar";
 import { ContextMenuModule } from "ngx-contextmenu";
+import { NgxExtendedPdfViewerModule } from "ngx-extended-pdf-viewer";
 import { LightboxModule } from "ngx-lightbox";
 import { ToastrModule } from "ngx-toastr";
 import { environment } from "../environments/environment";
@@ -59,7 +59,6 @@ import { RenewJwtTokenInterceptor } from "./_helpers/renewJwtToken.interceptor";
 import { DiffPipe } from "./_pipes/diff.pipe";
 import { DisplayUsernamesPipe } from "./_pipes/displayUsernames.pipe";
 import { SafePipe } from "./_pipes/safe.pipe";
-import { SecureRequestPipe } from "./_pipes/secure-request.pipe";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
@@ -108,7 +107,6 @@ export function getJWT() {
         TutorialsComponent,
         TutorialComponent,
         EditTutorialComponent,
-        SecureRequestPipe,
         DiffPipe,
     ],
     imports: [
@@ -148,7 +146,7 @@ export function getJWT() {
         PickerModule,
         BrowserAnimationsModule,
         AccordionModule,
-        PdfJsViewerModule,
+        NgxExtendedPdfViewerModule,
         ToastrModule.forRoot(),
     ],
     providers: [

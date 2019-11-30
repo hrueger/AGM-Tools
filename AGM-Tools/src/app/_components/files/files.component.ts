@@ -21,7 +21,6 @@ export class FilesComponent implements OnInit {
     public newFolderModalInvalidMessage: boolean = false;
     public renameItemFormInvalidMessage: boolean = false;
     public selectProject: boolean = true;
-    public viewFile: boolean = false;
     public projects: Project[];
     public imageSource: string;
     public pid: number;
@@ -37,6 +36,7 @@ export class FilesComponent implements OnInit {
     public newFolderForm: FormGroup;
     public shareLink: string = "";
     public tags: any[] = [];
+    public currentFile: any;
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
@@ -105,15 +105,15 @@ export class FilesComponent implements OnInit {
         });
         // this.cdr.detectChanges();
     }
-    public goTo(item: any, reload = false) {
-        if (!reload) {
-            this.currentPath.push(item);
-        }
+    public goTo(item: any, viewFile?, reload = false) {
         if (item.isFolder) {
             this.navigate(item);
+            if (!reload) {
+                this.currentPath.push(item);
+            }
         } else {
-            this.viewFile = true;
-            this.imageSource = `${environment.apiUrl}getFile.php?fid=${item.id}`;
+            this.currentFile = item;
+            this.modalService.open(viewFile, {size: "xl", scrollable: true});
         }
     }
     public getIcon(item: any) {
@@ -142,16 +142,10 @@ export class FilesComponent implements OnInit {
         this.navigate({ id: -1, name: project.name });
     }
     public goToFiles() {
-        if (this.viewFile) {
-            this.viewFile = false;
-        }
         this.selectProject = true;
         this.currentPath = [];
     }
     public upTo(id) {
-        if (this.viewFile) {
-            this.viewFile = false;
-        }
         let item = null;
         do {
             item = this.currentPath.pop();
@@ -166,19 +160,15 @@ export class FilesComponent implements OnInit {
             r = this.remoteService.get("get", `files/${item.id}`);
         }
         r.subscribe((data) => {
-                if (
-                    this.currentPath.length == 0 ||
-                    this.currentPath[this.currentPath.length - 1].id != item.id
-                ) {
-                    this.currentPath.push(item);
-                }
-                this.items = data;
-
-                this.lastItem = item;
-            });
-    }
-    public getCurrentFileId() {
-        return this.currentPath[this.currentPath.length - 1].id;
+            if (
+                this.currentPath.length == 0 ||
+                this.currentPath[this.currentPath.length - 1].id != item.id
+            ) {
+                this.currentPath.push(item);
+            }
+            this.items = data;
+            this.lastItem = item;
+        });
     }
     public openNewFolderModal(content) {
         this.modalService
@@ -200,26 +190,25 @@ export class FilesComponent implements OnInit {
                 },
             );
     }
+
+    public getCurrentFileSrc() {
+        return `${environment.apiUrl}files/${this.currentFile.id}?authorization=${this.authenticationService.currentUserValue.token}`;
+    }
+
     public getType() {
-        const filename = this.currentPath[
-            this.currentPath.length - 1
-        ].name.toLowerCase();
-        const videoFileExtensions = ["mp4", "mov", "avi"];
-        const imageFileExtensions = ["jpg", "jpeg", "gif", "png"];
-        const pdfFileExtensions = ["pdf"];
-        for (const ext of videoFileExtensions) {
-            if (filename.endsWith(ext)) {
-                return "video";
-            }
-        }
-        for (const ext of pdfFileExtensions) {
-            if (filename.endsWith(ext)) {
-                return "pdf";
-            }
-        }
-        for (const ext of imageFileExtensions) {
-            if (filename.endsWith(ext)) {
-                return "image";
+        const filename: string = this.currentFile.name.toLowerCase();
+        const knownExtensions = {
+            audio: ["mp3", "wav", "m4a"],
+            image: ["jpg", "jpeg", "gif", "png", "svg"],
+            pdf: ["pdf"],
+            video: ["mp4", "mov", "avi"],
+
+        };
+        for (const [type, extensions] of Object.entries(knownExtensions)) {
+            for (const ext of extensions) {
+                if (filename.endsWith(ext)) {
+                    return type;
+                }
             }
         }
         return "other";
@@ -310,7 +299,7 @@ export class FilesComponent implements OnInit {
         if (this.lastItem.id == -1) {
             this.navigate({ id: -1 });
         } else {
-            this.goTo(this.lastItem, true);
+            this.goTo(this.lastItem, undefined, true);
         }
     }
 }

@@ -6,6 +6,9 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
   // Get the jwt token from the head
   let token = req.headers.authorization as string;
   if (!token) {
+    token = req.query.authorization;
+  }
+  if (!token) {
     res.status(401).send({message: "Unauthorisiert!"});
     return;
   }

@@ -16,7 +16,7 @@ class FileController {
     const project = await getRepository(Project).findOne(req.params.pid);
     let files = await getTreeRepository(File).findRoots();
     const fileIds = files.map((file) => file.id);
-    files = await getRepository(File).findByIds(fileIds, {relations: ["tags"], where: {project}});
+    files = await getRepository(File).findByIds(fileIds, {relations: ["tags", "creator"], where: {project}});
     res.send(files);
   }
 
@@ -27,7 +27,7 @@ class FileController {
       let files = await getTreeRepository(File).findDescendants(element);
       files = files.filter((file) => file.id != element.id);
       const fileIds = files.map((file) => file.id);
-      files = await getRepository(File).findByIds(fileIds, {relations: ["tags"]});
+      files = await getRepository(File).findByIds(fileIds, {relations: ["tags", "creator"]});
       res.send(files);
     } else {
       res.sendFile(await getStoragePath(element));

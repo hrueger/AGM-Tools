@@ -21,6 +21,7 @@ export class TutorialComponent implements OnInit {
               private route: ActivatedRoute,
               private http: HttpClient,
               private lightbox: Lightbox,
+              private authenticationService: AuthenticationService,
               private remoteService: RemoteService) { }
 
   public ngOnInit() {
@@ -43,21 +44,21 @@ export class TutorialComponent implements OnInit {
                 that.allImageSources.push({
                     caption: step.title,
                     name: step.image1,
-                    src: await that.getBlob(`tutorials/files/${step.image1}`),
+                    src: this.getFileSrc(step.image1),
                 });
             }
             if (step.image2) {
               that.allImageSources.push({
                   caption: step.title,
                   name: step.image2,
-                  src: await that.getBlob(`tutorials/files/${step.image2}`),
+                  src: this.getFileSrc(step.image2),
               });
             }
             if (step.image3) {
               that.allImageSources.push({
                   caption: step.title,
                   name: step.image3,
-                  src: await that.getBlob(`tutorials/files/${step.image3}`),
+                  src: this.getFileSrc(step.image3),
               });
           }
         }
@@ -71,17 +72,8 @@ export class TutorialComponent implements OnInit {
     });
   }
 
-  private async getBlob(imgSrc: string) {
-    try {
-      const imageBlob = await this.http.get(`${environment.apiUrl}${imgSrc}`, {responseType: "blob"}).toPromise();
-      const reader = new FileReader();
-      return new Promise((resolve, reject) => {
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(imageBlob);
-      });
-    } catch (e) {
-        return "assets/loading.gif";
-    }
+  public getFileSrc(file) {
+    return `${environment.apiUrl}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
   }
 
   private gotNewTutorialData(tutorial: any) {

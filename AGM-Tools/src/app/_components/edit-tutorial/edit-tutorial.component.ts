@@ -25,7 +25,7 @@ export class EditTutorialComponent implements OnInit {
               private navbarService: NavbarService,
               private fb: FormBuilder,
               private alertService: AlertService,
-              private authService: AuthenticationService,
+              private authenticationService: AuthenticationService,
               private route: ActivatedRoute) { }
 
   public ngOnInit() {
@@ -61,6 +61,10 @@ export class EditTutorialComponent implements OnInit {
         }
       });
     this.updateSteps();
+  }
+
+  public getFileSrc(file) {
+    return `${environment.apiUrl}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
   }
 
   public addStep() {

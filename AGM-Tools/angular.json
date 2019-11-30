@@ -33,8 +33,18 @@
                             },
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/ng2-pdfjs-viewer/pdfjs",
-                                "output": "/assets/pdfjs"
+                                "input": "node_modules/ngx-extended-pdf-viewer/assets/locale",
+                                "output": "/assets/locale/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/ngx-extended-pdf-viewer/assets/images",
+                                "output": "/assets/images/"
+                            },
+                            { 
+                                "glob": "pdf.worker.js",
+                                "input": "node_modules/ngx-extended-pdf-viewer/assets", 
+                                "output": "/assets/" 
                             },
                             "src/firebase-messaging-sw.js",
                             "src/manifest.json"
@@ -43,7 +53,9 @@
                             "src/styles.scss",
                             "./node_modules/ngx-lightbox/lightbox.css"
                         ],
-                        "scripts": ["node_modules/chart.js/dist/Chart.bundle.min.js"]
+                        "scripts": ["node_modules/chart.js/dist/Chart.bundle.min.js",
+                            "node_modules/ngx-extended-pdf-viewer/assets/pdf.js",
+                            "node_modules/ngx-extended-pdf-viewer/assets/viewer.js"]
                     },
                     "configurations": {
                         "production": {

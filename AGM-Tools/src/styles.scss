@@ -127,3 +127,10 @@ body {
     border-color: transparent;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
+
+    ngb-modal-backdrop {
+        z-index: 1400 !important;
+    }
+    ngb-modal-window {
+        z-index: 1500 !important;
+    }

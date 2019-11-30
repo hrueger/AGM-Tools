@@ -31,7 +31,7 @@
         </li>
     </ol>
 </div>
-<div id="projects" class="table-responsive" *ngIf="selectProject && !viewFile">
+<div id="projects" class="table-responsive" *ngIf="selectProject">
     <table id="projectChooser" class="table table-hover">
         <thead>
             <tr>
@@ -48,7 +48,7 @@
     </table>
 </div>
 
-<div *ngIf="!selectProject && !viewFile">
+<div *ngIf="!selectProject">
     <div id="dropArea">
         <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (chunkUploading)="onFileUpload($event)" (uploading)="onFileUpload($event)">
         </ejs-uploader>
@@ -101,7 +101,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items" (click)="goTo(item)" [contextMenu]="contextMenu" [contextMenuSubject]="item">
+                <tr *ngFor="let item of items" (click)="goTo(item, viewFileModal)" [contextMenu]="contextMenu" [contextMenuSubject]="item">
                     <td>
                         <img [src]="getIcon(item)" class="fileIcon" />
                     </td>
@@ -124,17 +124,31 @@
     </div>
 </div>
 
-<div *ngIf="viewFile">
-    <img *ngIf="getType() == 'image'" class="previewFile img-fluid" alt="Irgendein schönes Bild, das aber leider nicht angezeigt werden kann..." [src]="'files/' + getCurrentFileId() | secureRequest | async" />
-    <video class="previewFile" controls *ngIf="getType() == 'video'">
-        <source [src]="'files/' + getCurrentFileId() | secureRequest | async" type="video/mp4" />
-        Bitte verwende einen neueren Browser ;-)
-    </video>
-    <ng2-pdfjs-viewer [pdfSrc]="'files/' + getCurrentFileId() | secureRequest | async" *ngIf="getType() == 'pdf'"></ng2-pdfjs-viewer>
-    <div *ngIf="getType() == 'other'" class="alert alert-warning">
-        Diese Datei wird leider nicht unterstützt. Wenn das gewünscht ist, gerne mich kontaktieren!
+<ng-template #viewFileModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">{{currentFile.name}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-</div>
+    <div class="modal-body">
+        <img *ngIf="getType() == 'image'" class="previewFile img-fluid" alt="Laden..." [src]="getCurrentFileSrc()" />
+        <video class="previewFile" [attr.src]="getCurrentFileSrc()" controls *ngIf="getType() == 'video'">
+            Bitte verwende einen neueren Browser.
+        </video>
+        <audio controls [src]="getCurrentFileSrc()" *ngIf="getType() == 'audio'">
+            Bitte verwende einen neueren Browser.
+        </audio>
+        <ngx-extended-pdf-viewer *ngIf="getType() == 'pdf'" [src]="getCurrentFileSrc()" height="70vh" useBrowserLocale="true"></ngx-extended-pdf-viewer>
+        <div *ngIf="getType() == 'other'" class="alert alert-warning">
+            Diese Datei wird leider nicht unterstützt.
+        </div>
+    </div>
+    <div class="modal-footer">
+      <small>{{ currentFile.creator.username }} am {{ currentFile.createdAt | date:"medium"}}<br>
+      {{ currentFile.size }}</small>
+    </div>
+  </ng-template>
 
 <ng-template #newFolder let-modal>
     <div class="modal-header">
