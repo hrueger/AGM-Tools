@@ -195,6 +195,20 @@ export class FilesComponent implements OnInit {
         return `${environment.apiUrl}files/${this.currentFile.id}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
+    public changeCurrentFile(add: number) {
+        let idx = this.items.findIndex((i) => i.id == this.currentFile.id);
+        do {
+            idx += add;
+            if (idx >= this.items.length) {
+                idx = 0;
+            }
+            if (idx < 0) {
+                idx = this.items.length - 1;
+            }
+        } while (this.items[idx].isFolder == true);
+        this.currentFile = this.items[idx];
+    }
+
     public getType() {
         const filename: string = this.currentFile.name.toLowerCase();
         const knownExtensions = {
