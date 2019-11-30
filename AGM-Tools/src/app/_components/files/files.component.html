@@ -55,7 +55,7 @@
     </div>
 
     <context-menu #contextMenu>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item)">
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item, viewFileModal)">
             <i class="far fa-circle"></i> Öffnen
         </ng-template>
         <ng-template contextMenuItem [subMenu]="tagsSubMenu">
