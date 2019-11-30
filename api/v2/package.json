@@ -19,6 +19,7 @@
    },
    "homepage": "https://github.com/hrueger/AGM-Tools#readme",
    "devDependencies": {
+      "@types/archiver": "^3.0.0",
       "@types/email-templates": "^6.0.1",
       "@types/node": "^8.0.29",
       "@types/nodemailer": "^6.2.2",
@@ -33,6 +34,7 @@
       "@types/cors": "^2.8.6",
       "@types/helmet": "0.0.45",
       "@types/jsonwebtoken": "^8.3.5",
+      "archiver": "^3.1.1",
       "bcryptjs": "^2.4.3",
       "body-parser": "^1.18.1",
       "class-validator": "^0.11.0",

@@ -1,3 +1,4 @@
+import * as archiver from "archiver";
 import { Request, Response } from "express";
 import * as fs from "fs";
 import * as mergeFiles from "merge-files";
@@ -31,6 +32,20 @@ class FileController {
       res.send(files);
     } else {
       res.sendFile(await getStoragePath(element));
+    }
+  }
+
+  public static downloadElement = async (req: Request, res: Response) => {
+    const fileRepository = getRepository(File);
+    const element = await fileRepository.findOne(req.params.fid);
+    if (element.isFolder) {
+      const a = archiver("zip");
+      res.attachment(`${element.name}.zip`);
+      a.pipe(res);
+      a.directory(await getStoragePath(element), false);
+      await a.finalize();
+    } else {
+      res.download(await getStoragePath(element));
     }
   }
 

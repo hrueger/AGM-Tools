@@ -191,8 +191,12 @@ export class FilesComponent implements OnInit {
             );
     }
 
+    public getFileSrc(file, download = false) {
+        return `${environment.apiUrl}files/${file.id}${(download ? "/download" : "")}?authorization=${this.authenticationService.currentUserValue.token}`;
+    }
+
     public getCurrentFileSrc() {
-        return `${environment.apiUrl}files/${this.currentFile.id}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return this.getFileSrc(this.currentFile);
     }
 
     public changeCurrentFile(add: number) {
@@ -240,14 +244,7 @@ export class FilesComponent implements OnInit {
             });
     }
     public download(item) {
-        window.open(
-            environment.apiUrl +
-            "?get=" +
-            item.id +
-            "&token=" +
-            this.authenticationService.currentUserValue.token +
-            "&download",
-        );
+        window.open(this.getFileSrc(item, true));
     }
     public share(item, shareModal) {
         this.shareLink = "";
