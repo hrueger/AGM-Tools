@@ -149,9 +149,17 @@
             Diese Datei wird leider nicht unterstützt.
         </div>
     </div>
-    <div class="modal-footer">
-      <small>{{ currentFile.creator.username }} am {{ currentFile.createdAt | date:"medium"}}<br>
-      {{ currentFile.size }}</small>
+    <div class="modal-footer d-flex justify-content-between">
+        <div>
+            <button class="btn btn-primary" (click)="download(currentFile)"><i class="fas fa-download"></i></button>
+            <button class="btn btn-success mr-2" (click)="share(currentFile, shareModal)"><i class="fas fa-share-square"></i></button>
+
+            <button class="btn btn-primary" (click)="rename(currentFile)"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-success" (click)="move(currentFile)"><i class="fas fa-arrows-alt"></i></button>
+            <button class="btn btn-warning" (click)="copy(currentFile)"><i class="fas fa-arrows-alt"></i></button>
+            <button class="btn btn-danger" (click)="delete(currentFile)"><i class="fas fa-trash-alt"></i></button>
+        </div>
+        <small>{{ currentFile.creator.username }} am {{ currentFile.createdAt | date:"medium"}}<br>{{ currentFile.size }}</small>
     </div>
   </ng-template>
 
