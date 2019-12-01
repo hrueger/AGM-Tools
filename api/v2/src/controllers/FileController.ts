@@ -117,6 +117,11 @@ class FileController {
       return;
     }
     const element = await fileRepository.findOne(req.params.id);
+    const origPath = await getStoragePath(element);
+    const origParts = origPath.split(path.sep);
+    origParts[origParts.length - 1] = name;
+    const destPath = origParts.join(path.sep);
+    await fs.renameSync(origPath, destPath);
     element.name = name;
     await fileRepository.save(element);
     res.send({status: true});
