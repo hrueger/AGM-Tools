@@ -10,7 +10,7 @@
                 <th>Thema</th>
                 <th>Nachricht</th>
                 <th>Gelesen</th>
-                <th>Löschen</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -23,7 +23,7 @@
                     <span class="text-danger">{{ (notification.receivers | subtractArray: notification.seenBy) | displayUsernames }}</span>
                 </td>
                 <td>
-                    <button class="btn btn-link" (click)="deleteNotification(notification)">
+                    <button class="btn btn-link text-danger" (click)="deleteNotification(notification)">
                         Löschen
                     </button>
                 </td>
