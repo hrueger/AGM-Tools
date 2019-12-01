@@ -14,6 +14,7 @@ import { LoginComponent } from "./_components/login/login.component";
 import { NotificationsComponent } from "./_components/notifications/notifications.component";
 import { ProjectsComponent } from "./_components/projects/projects.component";
 import { SettingsComponent } from "./_components/settings/settings.component";
+import { ShareComponent } from "./_components/share/share.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
 import { TourComponent } from "./_components/tour/tour.component";
 import { TutorialComponent } from "./_components/tutorial/tutorial.component";
@@ -21,7 +22,6 @@ import { TutorialsComponent } from "./_components/tutorials/tutorials.component"
 import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { AuthGuard } from "./_guards/auth.guard";
-import { ShareComponent } from "./_components/share/share.component";
 
 export const routes: Routes = [
     {
