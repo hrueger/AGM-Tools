@@ -23,7 +23,7 @@ export class TemplatesComponent implements OnInit {
     public templates: any;
     public newTemplateForm: FormGroup;
     public name: string;
-    public type: string;
+    public group: string;
     public description: string;
     public invalidMessage: boolean = false;
     constructor(
@@ -36,23 +36,16 @@ export class TemplatesComponent implements OnInit {
     ) { }
     public ngOnInit() {
         this.navbarService.setHeadline("Vorlagen");
-        this.remoteService.get("post", "templatesGetTemplates").subscribe((data) => {
-            this.templates = data;
-        });
+        this.loadTemplates();
         this.newTemplateForm = new FormGroup({
             description: new FormControl(null, Validators.required),
             file: new FormControl(null, [Validators.required]),
+            group: new FormControl(null, Validators.required),
             name: new FormControl(null, Validators.required),
-            type: new FormControl(null, Validators.required),
         });
     }
     public show(template, content) {
-        this.imgUrl =
-            environment.apiUrl +
-            "getTemplate.php?tid=" +
-            template.id +
-            "&token=" +
-            this.authenticationService.currentUserValue.token;
+        this.imgUrl = `${environment.apiUrl}templates/${template.filename}?authorization=${this.authenticationService.currentUserValue.token}`;
         this.modalService
             .open(content, {})
             .result.then();
@@ -63,50 +56,37 @@ export class TemplatesComponent implements OnInit {
             .result.then(
                 (result) => {
                     this.invalidMessage = false;
-
-                    /*this.remoteService
-                        .getNoCache("templateNewTemplate", {
-                            name: this.newTemplateForm.get("name").value,
-                            description: this.newTemplateForm.get("description")
-                                .value,
-                            type: this.newTemplateForm.get("type").value
-                        })
-                        .subscribe(data => {
-                            if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Vorlage erfolgreich hochgeladen"
-                                );
-                            }
-                        });*/
                     this.alertService.success(
                         "Hochladen gestartet, bitte warten!",
                     );
-                    this.httpClient
-                        .post(
-                            environment.apiUrl,
-
-                            this.toFormData(this.newTemplateForm.value),
-                        )
-                        .subscribe((data) => {
-                            // @ts-ignore
-                            if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Vorlage erfolgreich hochgeladen",
-                                );
-                            }
-                        });
+                    this.remoteService.uploadFile("templates", "file", this.newTemplateForm.get("file").value, {
+                        description: this.newTemplateForm.get("description").value,
+                        group: this.newTemplateForm.get("group").value,
+                        name: this.newTemplateForm.get("name").value,
+                    }).subscribe((data) => {
+                        if (data && data.status == true) {
+                            this.alertService.success("Vorlage erfolgreich hochgeladen");
+                            this.loadTemplates();
+                        }
+                    });
                 },
             );
     }
-    public toFormData<T>(formValue: T) {
-        const formData = new FormData();
 
-        for (const key of Object.keys(formValue)) {
-            const value = formValue[key];
-            formData.append(key, value);
+    public delete(template, event) {
+        if (confirm("Soll diese Vorlage wirklich gelöscht werden?")) {
+            this.remoteService.get("delete", `templates/${template.id}`).subscribe((data) => {
+                if (data && data.status == true) {
+                    this.loadTemplates();
+                }
+            });
         }
-        formData.append("action", "templatesNewTemplate");
+        event.preventDefault();
+    }
 
-        return formData;
+    private loadTemplates() {
+        this.remoteService.get("get", "templates").subscribe((d) => {
+            this.templates = d;
+        });
     }
 }

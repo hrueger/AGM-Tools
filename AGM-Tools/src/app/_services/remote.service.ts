@@ -86,10 +86,15 @@ export class RemoteService {
                 catchError(this.handleError<any>(path, false)),
             );
     }
-    public uploadFile(action: string, name: string, file: any): Observable<any> {
+    public uploadFile(action: string, name: string, file: any, args: object = {}): Observable<any> {
         this.log("uploading file " + file.name);
         const formData: FormData = new FormData();
         formData.append(name, file, file.name);
+        for (const key in args) {
+            if (args.hasOwnProperty(key)) {
+                formData.append(key, args[key]);
+            }
+        }
         return this.http
             .post<any>(`${environment.apiUrl}${action}`, formData)
             .pipe(

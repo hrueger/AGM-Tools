@@ -6,7 +6,7 @@
     <table id="notifications" class="table table-hover table-striped">
         <thead>
             <tr>
-                <th>Typ</th>
+                <th>Gruppe</th>
                 <th>Name</th>
                 <th>Beschreibung</th>
                 <th>Löschen</th>
@@ -14,11 +14,11 @@
         </thead>
         <tbody>
             <tr *ngFor="let template of templates" (click)="show(template, showModal)">
-                <td>{{ template.type }}</td>
+                <td>{{ template.group }}</td>
                 <td>{{ template.name }}</td>
                 <td>{{ template.description }}</td>
                 <td>
-                    <button class="btn btn-link" (click)="delete(template)">
+                    <button class="btn btn-link" (click)="delete(template, $event)">
                         Löschen
                     </button>
                 </td>
@@ -101,13 +101,13 @@
             </div>
             <br />
             <div class="form-group">
-                <label for="type" class="">Typ:</label>
+                <label for="group" class="">Gruppe:</label>
                 <input
                     type="text"
                     class="form-control"
-                    id="type"
-                    formControlName="type"
-                    placeholder="Typ der Vorlage (Logo, Hintergrund, etc.)"
+                    id="group"
+                    formControlName="group"
+                    placeholder="Gruppe der Vorlage (Logo, Hintergrund, etc.)"
                 />
             </div>
             <app-file-upload

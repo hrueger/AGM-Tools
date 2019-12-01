@@ -20,7 +20,7 @@ import { User } from "./User";
     public description: string;
 
     @Column()
-    public fileName: string;
+    public filename: string;
 
     @Column()
     public group: string;
