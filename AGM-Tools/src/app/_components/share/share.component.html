@@ -1,0 +1,19 @@
+<div class="holder">
+    <main class="container text-center">
+        <img class="logo img-fluid" src="../../../assets/logo/logo3.png">
+        <div class="jumbotron bg-light mb-0">
+            <div *ngIf="file">
+                <h1>Freigabe: <i>{{file.name}}</i></h1>
+                <small></small>
+                <p class="lead">{{ (file.isFolder ? "Dieser Ordner" : "Diese Datei") }} wurde freigegeben. Laden Sie sie jetzt herunter!</p>
+                <a class="btn btn-lg m-auto btn-primary text-white" target="_blank" [href]="getSrc()">Herunterladen</a>
+            </div>
+            <div *ngIf="!file">
+                <h2>Laden...</h2>
+            </div>
+        </div>
+        <div class="bg-light p-4 mt-0">
+            <a class="text-dark" target="_blank" href="https://github.com/hrueger/AGM-Tools">&copy; Hannes Rüger, {{ year }} - <img class="githublogo img-fluid" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"></a>
+        </div>
+    </main>
+</div>

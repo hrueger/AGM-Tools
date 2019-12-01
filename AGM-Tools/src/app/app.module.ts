@@ -47,6 +47,7 @@ import { NavbarComponent } from "./_components/navbar/navbar.component";
 import { NotificationsComponent } from "./_components/notifications/notifications.component";
 import { ProjectsComponent } from "./_components/projects/projects.component";
 import { SettingsComponent } from "./_components/settings/settings.component";
+import { ShareComponent } from "./_components/share/share.component";
 import { SidebarComponent } from "./_components/sidebar/sidebar.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
 import { TourComponent } from "./_components/tour/tour.component";
@@ -108,6 +109,7 @@ export function getJWT() {
         TutorialComponent,
         EditTutorialComponent,
         DiffPipe,
+        ShareComponent,
     ],
     imports: [
         AngularFireDatabaseModule,

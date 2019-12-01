@@ -249,13 +249,12 @@ export class FilesComponent implements OnInit {
     public share(item, shareModal) {
         this.shareLink = "";
         this.modalService
-            .open(shareModal)
-            .result.then();
+            .open(shareModal);
         this.remoteService
-            .getNoCache("post", "filesCreateShare", { fid: item.id })
+            .getNoCache("post", `files/${item.id}/share`)
             .subscribe((data) => {
                 if (data.status == true) {
-                    this.shareLink = environment.apiUrl + "share/?l=" + data.link;
+                    this.shareLink = `${environment.appUrl}share/${data.link}`;
                 }
             });
     }

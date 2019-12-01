@@ -10,7 +10,7 @@ import { Project } from "../entity/Project";
 import { Tag } from "../entity/Tag";
 import { User } from "../entity/User";
 import { RequestWithFiles } from "../utils/iRequestWithFiles";
-import { deleteFolderRecursive, getStoragePath } from "../utils/utils";
+import { deleteFolderRecursive, genID, getStoragePath } from "../utils/utils";
 
 class FileController {
   public static listAll = async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ class FileController {
 
   public static showElement = async (req: Request, res: Response) => {
     const fileRepository = getRepository(File);
-    const element = await fileRepository.findOne(req.params.fid);
+    const element = await fileRepository.findOne(req.params.id);
     if (element.isFolder) {
       let files = await getTreeRepository(File).findDescendants(element);
       files = files.filter((file) => file.id != element.id);
@@ -37,15 +37,47 @@ class FileController {
 
   public static downloadElement = async (req: Request, res: Response) => {
     const fileRepository = getRepository(File);
-    const element = await fileRepository.findOne(req.params.fid);
-    if (element.isFolder) {
-      const a = archiver("zip");
-      res.attachment(`${element.name}.zip`);
-      a.pipe(res);
-      a.directory(await getStoragePath(element), false);
-      await a.finalize();
+    const element = await fileRepository.findOne(req.params.id);
+    await FileController.sendDownloadElement(element, res);
+  }
+
+  public static showShare = async (req: Request, res: Response) => {
+    const fileRepository = getRepository(File);
+    try {
+      const element = await fileRepository.find({where: {shareLink: req.params.link}});
+      if (element.length == 1) {
+        res.send(element[0]);
+      } else {
+        res.status(404).send({message: "Freigabe nicht gefunden!"});
+      }
+    } catch (e) {
+      res.status(500).send({message: "Freigabe nicht gefunden! " + e.toString()});
+    }
+  }
+
+  public static downloadShare = async (req: Request, res: Response) => {
+    const fileRepository = getRepository(File);
+    try {
+      const element = await fileRepository.find({where: {shareLink: req.params.link}});
+      if (element.length == 1) {
+        await FileController.sendDownloadElement(element[0], res);
+      } else {
+        res.status(404).send({message: "Freigabe nicht gefunden!"});
+      }
+    } catch (e) {
+      res.status(404).send({message: "Freigabe nicht gefunden!" + e.toString()});
+    }
+  }
+
+  public static share = async (req: Request, res: Response) => {
+    const fileRepository = getRepository(File);
+    const element = await fileRepository.findOne(req.params.id);
+    if (element.shareLink && element.shareLink != "") {
+      res.send({status: true, link: element.shareLink});
     } else {
-      res.download(await getStoragePath(element));
+      element.shareLink = genID(30);
+      await fileRepository.save(element);
+      res.send({status: true, link: element.shareLink});
     }
   }
 
@@ -200,6 +232,18 @@ class FileController {
       return;
     } catch (e) {
       res.status(500).send({message: "Fehler: " + e.toString() + " " + e.stack});
+    }
+  }
+
+  private static async sendDownloadElement(element: any, res: Response) {
+    if (element.isFolder) {
+      const a = archiver("zip");
+      res.attachment(`${element.name}.zip`);
+      a.pipe(res);
+      a.directory(await getStoragePath(element), false);
+      await a.finalize();
+    } else {
+      res.download(await getStoragePath(element));
     }
   }
 

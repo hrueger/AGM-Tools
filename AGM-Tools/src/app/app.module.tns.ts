@@ -75,6 +75,7 @@ registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swip
 registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
 import { JwtModule } from "@auth0/angular-jwt";
 import { getString, setString } from "tns-core-modules/application-settings";
+import { ShareComponent } from "./_components/share/share.component";
 
 export function getJWT() {
     return getString("jwt_token", "");
@@ -116,6 +117,7 @@ export function getJWT() {
         TutorialsComponent,
         TutorialComponent,
         EditTutorialComponent,
+        ShareComponent,
     ],
     entryComponents: [
         NewUserModalComponent,

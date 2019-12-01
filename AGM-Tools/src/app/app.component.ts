@@ -14,6 +14,7 @@ export class AppComponent {
     public pushMessage: any;
     public showNav: boolean = false;
     public navToHide: boolean = false;
+    public isShare: boolean;
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
@@ -33,6 +34,15 @@ export class AppComponent {
         this.pushService.requestPermission(userId);
         this.pushService.receiveMessage();
         this.pushMessage = this.pushService.currentMessage;
+        this.router.events.subscribe((event: any) => {
+            if (event.url) {
+                if (event.url.startsWith("/share/")) {
+                    this.isShare = true;
+                } else {
+                    this.isShare = false;
+                }
+            }
+        });
     }
     public hideNav() {
         this.navToHide = !this.navToHide;
