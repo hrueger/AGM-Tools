@@ -9,7 +9,6 @@ import {
 } from "@angular/core";
 import { Lightbox } from "ngx-lightbox";
 import { environment } from "../../../../environments/environment";
-import { Message } from "../../../_models/message.model";
 import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { RemoteService } from "../../../_services/remote.service";
@@ -22,9 +21,9 @@ import { RemoteService } from "../../../_services/remote.service";
     templateUrl: "./messages-area.component.html",
 })
 export class MessagesAreaComponent implements OnInit {
-    @Input() public messages: Message[];
+    @Input() public messages: any[];
     @Input() public messageSent: Event;
-    @Input() public receiverId: number;
+    @Input() public chat: any;
     public allImageSources: any = [];
 
     constructor(
@@ -57,10 +56,10 @@ export class MessagesAreaComponent implements OnInit {
         if (this.allImageSources.length == 0) {
             this.messages.forEach((msg) => {
                 if (msg.imageSrc) {
-                    const date = new Date(msg.created);
+                    const date = new Date(msg.date);
                     const datestr = `am ${that.pad(date.getDay())}.${that.pad(date.getMonth())}.${date.getFullYear()} um ${that.pad(date.getHours())}:${that.pad(date.getMinutes())} Uhr`;
                     that.allImageSources.push({
-                        caption: `${msg.sendername} ${datestr}`,
+                        caption: `${msg.sender.username} ${datestr}`,
                         name: msg.imageSrc,
                         src: that.getImageSrc(msg.imageSrc, false),
                     });
@@ -89,19 +88,22 @@ export class MessagesAreaComponent implements OnInit {
             /*if (this.messages[-1]) {
                 let chat = this.messages[-1].chat
             }*/
-            let message: Message = {
-                chat: null,
-                created: Date.now(),
+            let message = {
+                content: changes.messageSent.currentValue,
+                date: new Date(),
                 fromMe: true,
-                sendername: "",
+                id: null,
+                sender: {
+                    username: "",
+                },
                 sent: "notsent",
-                text: changes.messageSent.currentValue,
+                toProject: null,
+                toUser: null,
             };
             this.messages.push(message);
             this.remoteService
-                .getNoCache("post", "chatSendMessage", {
+                .getNoCache("post", `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}`, {
                     message: changes.messageSent.currentValue,
-                    rid: this.receiverId,
                 })
                 .subscribe((data) => {
                     message = this.messages.pop();
@@ -132,8 +134,7 @@ export class MessagesAreaComponent implements OnInit {
         );
     }
 
-    public getIcon(message: Message) {
-        // tslint:disable-next-line: radix
+    public getIcon(message) {
         switch (message.sent) {
             case "notsent":
                 return "&#xf017;";
@@ -145,8 +146,7 @@ export class MessagesAreaComponent implements OnInit {
         // return "T";
     }
 
-    public isViewed(message: Message) {
-        // tslint:disable-next-line: radix
+    public isViewed(message) {
         return message.sent === "seen";
     }
 

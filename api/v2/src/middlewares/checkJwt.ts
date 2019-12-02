@@ -19,6 +19,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
   try {
     jwtPayload = ( jwt.verify(token, config.jwtSecret) as any);
     res.locals.jwtPayload = jwtPayload;
+    res.locals.jwtPayload.userId = parseInt(res.locals.jwtPayload.userId, undefined);
   } catch (error) {
     // If token is not valid, respond with 401 (unauthorized)
     res.status(401).send({message: "Sitzung abgelaufen. Bitte erneut einloggen!", logout: true});

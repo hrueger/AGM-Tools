@@ -1,5 +1,6 @@
 import { Router } from "express";
 import auth from "./auth";
+import chat from "./chat";
 import dashboard from "./dashboard";
 import events from "./events";
 import files from "./files";
@@ -20,5 +21,6 @@ routes.use("/projects", projects);
 routes.use("/templates", templates);
 routes.use("/tutorials", tutorial);
 routes.use("/users", user);
+routes.use("/chats", chat);
 
 export default routes;

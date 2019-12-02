@@ -17,6 +17,7 @@
   import { Template } from "./Template";
   import { Tutorial } from "./Tutorial";
   import { Usergroup } from "./Usergroup";
+import { Message } from "./Message";
 
   @Entity()
   @Unique(["username"])
@@ -58,6 +59,12 @@
 
     @OneToMany((type) => Notification, (notification) => notification.creator)
     public sentNotifications: Notification[];
+
+    @OneToMany((type) => Message, (message) => message.sender)
+    public sentMessages: Message[];
+
+    @OneToMany((type) => Message, (message) => message.toUser)
+    public receivedMessages: Message[];
 
     @OneToMany((type) => Template, (template) => template.creator)
     public templates: Template[];

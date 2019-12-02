@@ -9,7 +9,7 @@ import { RemoteService } from "../../_services/remote.service";
 })
 export class ChatComponent {
     public chats = [];
-    public currentRid: number;
+    public currentChat: object;
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
@@ -19,19 +19,12 @@ export class ChatComponent {
 
     public ngOnInit() {
         this.navbarService.setHeadline("Chat");
-        this.remoteService.get("post", "chatGetContacts").subscribe((chats) => {
+        this.remoteService.get("get", "chats").subscribe((chats) => {
             this.chats = chats;
         });
     }
 
-    public goToChat(rid) {
-        /*const extras: NavigationExtras = {
-            queryParams: {
-                unread: 3
-            }
-        };*/
-        // this.router.navigate(["chat-messages", rid], extras);
-
-        this.currentRid = rid;
+    public goToChat(chat) {
+        this.currentChat = chat;
     }
 }

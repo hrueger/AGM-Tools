@@ -17,7 +17,7 @@
             </div>
             <div class="bubble" [class.alt]="message.fromMe" *ngIf="!message.system">
                 <p *ngIf="!isContinuation(idx)" class="name alt">
-                    {{ message.sendername }}
+                    {{ message.sender.username }}
                 </p>
 
                 <img class="message message-image" (click)="displayImage(idx)" *ngIf="message.imageSrc" [src]="getImageSrc(message.imageSrc)">
@@ -36,12 +36,12 @@
                         </td>
                     </tr>
                 </table>
-                <p class="message" *ngIf="!message.imageSrc && !message.contactSrc">{{ message.text }}</p>
+                <p class="message" *ngIf="!message.imageSrc && !message.contactSrc">{{ message.content }}</p>
 
 
                 <div *ngIf="message.fromMe" class="addon fa" [innerHtml]="getIcon(message)" [class.blue]="isViewed(message)"></div>
                 <span class="timestamp">
-                    {{ message.created | date: "shortTime" }}
+                    {{ message.date | date: "shortTime" }}
                 </span>
             </div>
         </div>
