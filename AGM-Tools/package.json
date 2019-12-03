@@ -41,7 +41,7 @@
         "@ctrl/ngx-emoji-mart": "1.0.3",
         "@fortawesome/fontawesome-free": "5.11.2",
         "@ng-bootstrap/ng-bootstrap": "5.1.4",
-        "@nstudio/nativescript-pulltorefresh": "1.0.1",
+        "@nstudio/nativescript-pulltorefresh": "1.1.1",
         "@nstudio/nativescript-snackbar": "^1.0.0",
         "@syncfusion/ej2-angular-inputs": "^17.2.52",
         "@syncfusion/ej2-angular-layouts": "^17.2.49",
