@@ -22,11 +22,6 @@ export class SidebarComponent {
         { name: "Projekte", icon: "folder", target: "projects" },
         { name: "Dateien", icon: "image", target: "files" },
         { name: "Vorlagen", icon: "portrait", target: "templates" },
-        {
-            icon: "bug",
-            name: "Fehler / Verbesserungen",
-            target: "bugs",
-        },
         { name: "Fertig", icon: "check", target: "done" },
         { name: "Client-Software", icon: "mobile", target: "clientsoftware" },
     ];

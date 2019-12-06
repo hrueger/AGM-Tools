@@ -1,7 +1,5 @@
 import { Routes } from "@angular/router";
-
 import { AboutComponent } from "./_components/about/about.component";
-import { BugsComponent } from "./_components/bugs/bugs.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
 import { ChatComponent } from "./_components/chat/chat.component";
@@ -92,11 +90,6 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         component: TemplatesComponent,
         path: "templates",
-    },
-    {
-        canActivate: [AuthGuard],
-        component: BugsComponent,
-        path: "bugs",
     },
     {
         canActivate: [AuthGuard],

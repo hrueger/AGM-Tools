@@ -30,7 +30,6 @@ import { LightboxModule } from "ngx-lightbox";
 import { ToastrModule } from "ngx-toastr";
 import { environment } from "../environments/environment";
 import { AboutComponent } from "./_components/about/about.component";
-import { BugsComponent } from "./_components/bugs/bugs.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
 import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
@@ -89,7 +88,6 @@ export function getJWT() {
         ProjectsComponent,
         FilesComponent,
         TemplatesComponent,
-        BugsComponent,
         ClientsoftwareComponent,
         SettingsComponent,
         AboutComponent,
