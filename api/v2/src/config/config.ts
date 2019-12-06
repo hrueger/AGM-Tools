@@ -5,8 +5,7 @@ const domain = "localhost";
 const pth = "/#/";
 const port = 4200;
 const protocoll = "http";
-const keyhalf = "AIzaSyDIJ9XX2ZvRKCJcFRrl";
-const key = keyhalf + "-lRanEtFUow4piM";
+const key = atob("QUl6YVN5RElKOVhYMlp2UktDSmNGUnJsLWxSYW5FdEZVb3c0cGlN");
 
 export default {
   avalibleDiskSpaceInGB: 300,
