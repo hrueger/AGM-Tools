@@ -1,6 +1,25 @@
 .message-box {
     padding: 5px;
+    margin-left: -3px;
 }
+
+
+.attachmentContainer {
+    max-width: 400px;
+    background-color: #ffffff;
+    div.col-4 {
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        cursor: pointer;
+        span {
+            display: block;
+            text-align: center;
+        }
+    }
+}
+
 
 .emoji-picker {
     position: absolute;
@@ -11,6 +30,7 @@
 .message-box {
     width: 100%;
     align-items: flex-end;
+    background-color: #f2f2f2;
     .icon {
         padding: 5;
         flex-grow: 0;

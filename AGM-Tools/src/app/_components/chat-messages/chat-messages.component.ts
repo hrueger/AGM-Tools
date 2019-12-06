@@ -4,11 +4,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
     Input,
     OnChanges,
-    OnInit,
-    ViewChild,
 } from "@angular/core";
 import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
@@ -26,6 +23,7 @@ export class ChatMessagesComponent
     public messages: Message[];
     public showInfoMessage: boolean = true;
     public messageGotToSend: Event;
+    public attachmentMessageGotToSend: Event;
     private scrolledToBottom: boolean = false;
 
     constructor(
@@ -36,6 +34,9 @@ export class ChatMessagesComponent
 
     public messageSentFromChild(event: Event) {
         this.messageGotToSend = event;
+    }
+    public attachmentMessageSentFromChild(event: Event) {
+        this.attachmentMessageGotToSend = event;
     }
 
     public scrollToBottom(): void {

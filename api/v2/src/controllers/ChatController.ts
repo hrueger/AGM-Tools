@@ -1,5 +1,5 @@
-import { validate } from "class-validator";
 import { Request, Response } from "express";
+import * as request from "request";
 import { Brackets, getRepository } from "typeorm";
 import { Message } from "../entity/Message";
 import { Project } from "../entity/Project";
@@ -63,16 +63,28 @@ class ChatController {
   }
 
   public static sendUserMessage = async (req: Request, res: Response) => {
-    await ChatController.sendMessage(req, res, true);
+    await ChatController.sendMessage(req, res, true, false);
   }
 
   public static sendProjectMessage = async (req: Request, res: Response) => {
-    await ChatController.sendMessage(req, res, false);
+    await ChatController.sendMessage(req, res, false, false);
   }
 
-  private static sendMessage = async (req: Request, res: Response, toUser: boolean) => {
+  public static sendAttachmentUserMessage = async (req: Request, res: Response) => {
+    await ChatController.sendMessage(req, res, true, true);
+  }
+
+  public static sendAttachmentProjectMessage = async (req: Request, res: Response) => {
+    await ChatController.sendMessage(req, res, false, true);
+  }
+
+  public static mapProxy = async (req: Request, res: Response) => {
+    request(`https://maps.googleapis.com/maps/api/staticmap?center=${req.params.location}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:%7C${req.params.location}&key=AIzaSyDIJ9XX2ZvRKCJcFRrl-lRanEtFUow4piM`).pipe(res);
+  }
+
+  private static sendMessage = async (req: Request, res: Response, toUser: boolean, withAttachment: boolean) => {
     const { message } = req.body;
-    if (!message) {
+    if (!message && !withAttachment) {
       res.status(400).send({message: "Nicht alle Daten angegeben!"});
       return;
     }
@@ -81,7 +93,15 @@ class ChatController {
       const userRepository = getRepository(User);
       const projectRepository = getRepository(Project);
       const msg = new Message();
-      msg.content = new Buffer(message).toString("base64");
+      if (!withAttachment) {
+        msg.content = new Buffer(message).toString("base64");
+      } else {
+        if (message.locationLat && message.locationLong) {
+          msg.locationLat = message.locationLat;
+          msg.locationLong = message.locationLong;
+        }
+      }
+      console.log(msg);
       msg.sender = await userRepository.findOneOrFail(res.locals.jwtPayload.userId);
       if (toUser) {
         msg.toUser = await userRepository.findOneOrFail(req.params.id);
@@ -91,7 +111,7 @@ class ChatController {
       messageRepository.save(msg);
       res.send({status: true});
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Senden der Nachricht!"});
+      res.status(500).send({message: "Fehler beim Senden der Nachricht! " + e.toString()});
       return;
     }
   }

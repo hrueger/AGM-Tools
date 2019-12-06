@@ -1,27 +1,47 @@
-<div class="message-box">
-    <!--<button class="fa icon"></button>
-    <div class="text-area">
-        <button class="fa icon emojis"></button>
-        <input [placeholder]="'Type a message'" class="text-view" />
-        <button class="fa icon attach"></button>
-        <button class="fa icon camera"></button>
+<div class="attachmentContainer" *ngIf="showAttachmentContainer">
+    <div class="row">
+        <div class="col-4" (click)="sendDocument()">
+            <img class="img-fluid" src="assets/attachment/document.png">
+            <span>Dokument</span>
+        </div>
+        <div class="col-4" (click)="sendPicture()">
+            <img class="img-fluid" src="assets/attachment/camera.png">
+            <span>Kamera</span>
+        </div>
+        <div class="col-4" (click)="sendGallery()">
+            <img class="img-fluid" src="assets/attachment/gallery.png">
+            <span>Galerie</span>
+        </div>
     </div>
-    <button class="fa separator"></button>
-    <button class="fa icon send"></button>-->
-
+    <div class="row">
+        <div class="col-4" (click)="sendAudio()">
+            <img class="img-fluid" src="assets/attachment/audio.png">
+            <span>Audio</span>
+        </div>
+        <div class="col-4" (click)="sendLocation()">
+            <img class="img-fluid" src="assets/attachment/location.png">
+            <span>Standort</span>
+        </div>
+        <div class="col-4" (click)="sendContact()">
+            <img class="img-fluid" src="assets/attachment/contact.png">
+            <span>Kontakt</span>
+        </div>    
+    </div>
+</div>
+<div class="message-box">
     <div class="input-group">
         <div class="input-group-prepend" id="button-addon3">
             <button class="far btn btn-outline-secondary" (click)="toggleEmojiPicker()" type="button">
                 &#xf580;
+            </button>
+            <button class="btn btn-outline-secondary" (click)="showAttachmentContainer = !showAttachmentContainer">
+                +
             </button>
 
             <emoji-mart showPreview="false" set="apple" class="emoji-picker" (emojiClick)="addEmoji($event)" *ngIf="showEmojiPicker" title="Pick your emoji…" [i18n]="emojiI18n"></emoji-mart>
         </div>
         <input type="text" [(ngModel)]="messageContent" class="form-control" placeholder="Nachricht" />
         <div class="input-group-append" id="button-addon4">
-            <button class="btn btn-outline-secondary" type="button">
-                +
-            </button>
             <button (click)="sendMessage()" class="fas btn btn-outline-secondary" type="button">
                 &#xf1d8;
             </button>

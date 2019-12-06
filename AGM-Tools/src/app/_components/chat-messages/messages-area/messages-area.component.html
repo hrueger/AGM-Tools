@@ -22,6 +22,8 @@
 
                 <img class="message message-image" (click)="displayImage(idx)" *ngIf="message.imageSrc" [src]="getImageSrc(message.imageSrc)">
 
+                <img class="message message-image" (click)="openLocationInNewTab(message)" *ngIf="message.locationLat && message.locationLong" [src]="getLocationImageSrc(message)">
+
                 <table *ngIf="message.contactSrc" class="contact">
                     <tr>
                         <td rowspan="2"><img class="contact image" src="assets/attachment/contact.png"></td>

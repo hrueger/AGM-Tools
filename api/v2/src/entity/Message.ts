@@ -17,6 +17,24 @@ import { User } from "./User";
     public content: string;
 
     @Column()
+    public imgSrc: string;
+
+    @Column()
+    public contactName: string;
+
+    @Column()
+    public contactNumber: string;
+
+    @Column()
+    public fileSrc: string;
+
+    @Column()
+    public locationLat: string;
+
+    @Column()
+    public locationLong: string;
+
+    @Column()
     @CreateDateColumn()
     public date: Date;
 

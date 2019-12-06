@@ -23,13 +23,14 @@ import { RemoteService } from "../../../_services/remote.service";
 export class MessagesAreaComponent implements OnInit {
     @Input() public messages: any[];
     @Input() public messageSent: Event;
+    @Input() public attachmentMessageSent: Event;
     @Input() public chat: any;
     public allImageSources: any = [];
 
     constructor(
         private remoteService: RemoteService,
         private cdr: ChangeDetectorRef,
-        private authService: AuthenticationService,
+        private authenticationService: AuthenticationService,
         private lightbox: Lightbox,
         private alertService: AlertService,
     ) { }
@@ -75,7 +76,7 @@ export class MessagesAreaComponent implements OnInit {
             "?getAttachment=" +
             imageName +
             "&token=" +
-            this.authService.currentUserValue.token +
+            this.authenticationService.currentUserValue.token +
             (thumbnail ? "&thumbnail" : "");
     }
 
@@ -85,9 +86,6 @@ export class MessagesAreaComponent implements OnInit {
             changes.messageSent.currentValue != "" &&
             changes.messageSent.currentValue != null
         ) {
-            /*if (this.messages[-1]) {
-                let chat = this.messages[-1].chat
-            }*/
             let message = {
                 content: changes.messageSent.currentValue,
                 date: new Date(),
@@ -112,11 +110,59 @@ export class MessagesAreaComponent implements OnInit {
                     // console.log(this.messages);
                     this.cdr.detectChanges();
                 });
+        } else if (
+            changes.attachmentMessageSent &&
+            changes.attachmentMessageSent.currentValue != "" &&
+            changes.attachmentMessageSent.currentValue != null
+        ) {
+            let message;
+            let data;
+            if (changes.attachmentMessageSent.currentValue.type == "location") {
+                message = {
+                    date: new Date(),
+                    fromMe: true,
+                    id: null,
+                    locationLat: changes.attachmentMessageSent.currentValue.data.coords.latitude,
+                    locationLong: changes.attachmentMessageSent.currentValue.data.coords.longitude,
+                    sender: {
+                        username: "",
+                    },
+                    sent: "notsent",
+                    toProject: null,
+                    toUser: null,
+                };
+                data = {
+                    locationLat: changes.attachmentMessageSent.currentValue.data.coords.latitude,
+                    locationLong: changes.attachmentMessageSent.currentValue.data.coords.longitude,
+                };
+            }
+            this.messages.push(message);
+            this.remoteService
+                .getNoCache("post", `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}/attachment`, {
+                    message: data,
+                })
+                .subscribe((d) => {
+                    message = this.messages.pop();
+                    message.sent = "sent";
+                    this.messages.push(message);
+                    // console.log(this.messages);
+                    this.cdr.detectChanges();
+                });
         }
     }
 
+    public getLocationImageSrc(message) {
+        return `${environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
+    }
+
+    public openLocationInNewTab(message) {
+        window.open(`https://www.google.de/maps/place/${message.locationLat},${message.locationLong}/@${message.locationLat},${message.locationLong},17z/`, "_blank");
+    }
+
     public trackByFn(index, item) {
-        return item.id;
+        if (item) {
+            return item.id;
+        }
     }
 
     public isContinuation(idx: number) {
