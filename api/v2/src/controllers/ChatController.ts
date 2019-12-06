@@ -101,7 +101,6 @@ class ChatController {
           msg.locationLong = message.locationLong;
         }
       }
-      console.log(msg);
       msg.sender = await userRepository.findOneOrFail(res.locals.jwtPayload.userId);
       if (toUser) {
         msg.toUser = await userRepository.findOneOrFail(req.params.id);
