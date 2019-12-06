@@ -81,11 +81,6 @@ $lightgreen: #25d366;
     cursor: default !important;
 }
 
-.browser .avatar {
-    width: 40px !important;
-    margin-right: 12px;
-}
-
 .browser .contactHeader {
     margin-top: 48px;
     background-color: #368e22;
@@ -105,14 +100,9 @@ $lightgreen: #25d366;
     background-color: rgba(255, 255, 255, 0.95);
 }
 
-.browser .avatar {
-    width: 30px;
-    padding-right: 4px;
-}
 
 .browser .avatar {
-    padding: 5px;
-    border-radius: 50%;
+    margin: 5px;
 }
 
 .browser #messages {
