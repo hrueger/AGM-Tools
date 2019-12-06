@@ -5,7 +5,7 @@ const domain = "localhost";
 const pth = "/#/";
 const port = 4200;
 const protocoll = "http";
-const key = atob("QUl6YVN5RElKOVhYMlp2UktDSmNGUnJsLWxSYW5FdEZVb3c0cGlN");
+const key = Buffer.from("QUl6YVN5RElKOVhYMlp2UktDSmNGUnJsLWxSYW5FdEZVb3c0cGlN", "base64").toString("ascii");
 
 export default {
   avalibleDiskSpaceInGB: 300,
