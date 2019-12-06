@@ -5,6 +5,8 @@ const domain = "localhost";
 const pth = "/#/";
 const port = 4200;
 const protocoll = "http";
+const keyhalf = "AIzaSyDIJ9XX2ZvRKCJcFRrl";
+const key = keyhalf + "-lRanEtFUow4piM";
 
 export default {
   avalibleDiskSpaceInGB: 300,
@@ -18,6 +20,7 @@ export default {
     host: "smtp.mailtrap.io",
     port: 2525,
   },
+  googleMapsApiKey: key,
   jwtSecret: "2384ND024nasd2uq2",
   storagePath: mainStoragePath,
   tempFilesStoragePath: path.join(mainStoragePath, "temp"),

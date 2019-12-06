@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as request from "request";
 import { Brackets, getRepository } from "typeorm";
+import config from "../config/config";
 import { Message } from "../entity/Message";
 import { Project } from "../entity/Project";
 import { User } from "../entity/User";
@@ -79,7 +80,7 @@ class ChatController {
   }
 
   public static mapProxy = async (req: Request, res: Response) => {
-    request(`https://maps.googleapis.com/maps/api/staticmap?center=${req.params.location}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:%7C${req.params.location}&key=AIzaSyDIJ9XX2ZvRKCJcFRrl-lRanEtFUow4piM`).pipe(res);
+    request(`https://maps.googleapis.com/maps/api/staticmap?center=${req.params.location}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:%7C${req.params.location}&key=${config.googleMapsApiKey}`).pipe(res);
   }
 
   private static sendMessage = async (req: Request, res: Response, toUser: boolean, withAttachment: boolean) => {
