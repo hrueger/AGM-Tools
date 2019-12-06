@@ -95,7 +95,7 @@ class ChatController {
       const projectRepository = getRepository(Project);
       const msg = new Message();
       if (!withAttachment) {
-        msg.content = new Buffer(message).toString("base64");
+        msg.content = Buffer.from(message).toString("base64");
       } else {
         if (message.locationLat && message.locationLong) {
           msg.locationLat = message.locationLat;
@@ -124,7 +124,7 @@ class ChatController {
 
   private static decodeMessage(messages: Message[]) {
     for (const message of messages) {
-      message.content = new Buffer(message.content, "base64").toString("utf8");
+      message.content = Buffer.from(message.content, "base64").toString("utf8");
     }
   }
 }
