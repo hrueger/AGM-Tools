@@ -21,7 +21,7 @@
     <br /><br />
     <ol class="breadcrumb">
         <li class="breadcrumb-item" [class.active]="currentPath.length == 0">
-            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goToFiles()">Dateien</a>
+            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goBackToProjects()">Dateien</a>
         </li>
         <li *ngFor="let path of currentPath; let last = last" [class.active]="last" class="breadcrumb-item">
             <a class="link" *ngIf="!last" (click)="upTo(path.id)">
