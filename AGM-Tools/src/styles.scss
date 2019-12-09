@@ -93,6 +93,17 @@ body {
     text-transform: uppercase;
 }
 
+.badge.badge-normal {
+    font-size: 100%;
+}
+
+.truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+}
+
 [role="main"] {
     padding-top: 133px;
 }

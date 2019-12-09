@@ -20,7 +20,6 @@ export class SidebarComponent {
         },
         { name: "Kalender", icon: "calendar", target: "calendar" },
         { name: "Projekte", icon: "folder", target: "projects" },
-        { name: "Dateien", icon: "image", target: "files" },
         { name: "Vorlagen", icon: "portrait", target: "templates" },
         { name: "Fertig", icon: "check", target: "done" },
         { name: "Client-Software", icon: "mobile", target: "clientsoftware" },

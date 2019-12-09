@@ -6,6 +6,8 @@ import {
     Validators,
 } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { environment } from "../../../environments/environment";
+import { AuthenticationService } from "../..//_services/authentication.service";
 import { Project } from "../../_models/project.model";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
@@ -32,6 +34,7 @@ export class ProjectsComponent implements OnInit {
         private modalService: NgbModal,
         private fb: FormBuilder,
         private alertService: AlertService,
+        private authenticationService: AuthenticationService,
         private navbarService: NavbarService,
     ) { }
 
@@ -53,6 +56,10 @@ export class ProjectsComponent implements OnInit {
             name: ["", [Validators.required]],
             users: [null, [Validators.required]],
         });
+    }
+
+    public getProjectImageSrc(project) {
+        return `${environment.apiUrl}projects/${project.id}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     public delete(project) {
