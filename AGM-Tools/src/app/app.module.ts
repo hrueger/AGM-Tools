@@ -28,6 +28,7 @@ import { ContextMenuModule } from "ngx-contextmenu";
 import { NgxExtendedPdfViewerModule } from "ngx-extended-pdf-viewer";
 import { LightboxModule } from "ngx-lightbox";
 import { ToastrModule } from "ngx-toastr";
+import { NgxOnlyOfficeModule } from "../../../../ngx-onlyoffice/dist/ngx-onlyoffice";
 import { environment } from "../environments/environment";
 import { AboutComponent } from "./_components/about/about.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
@@ -113,6 +114,7 @@ export function getJWT() {
         AngularFireDatabaseModule,
         AngularFireAuthModule,
         AngularFireMessagingModule,
+        NgxOnlyOfficeModule,
         AngularFireModule.initializeApp(environment.firebase),
         RouterModule.forRoot(routes, { useHash: true, enableTracing: false }),
         ContextMenuModule.forRoot({

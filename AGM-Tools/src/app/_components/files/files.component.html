@@ -145,6 +145,7 @@
             Bitte verwende einen neueren Browser.
         </audio>
         <ngx-extended-pdf-viewer *ngIf="getType() == 'pdf'" [src]="getCurrentFileSrc()" height="70vh" useBrowserLocale="true"></ngx-extended-pdf-viewer>
+        <onlyoffice *ngIf="getType() == 'document'" [config]="documentEditorConfig" class="documentEditor"></onlyoffice>
         <div *ngIf="getType() == 'other'" class="alert alert-warning">
             Diese Datei wird leider nicht unterstützt.
         </div>

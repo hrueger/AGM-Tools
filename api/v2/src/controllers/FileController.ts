@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import * as fs from "fs";
 import * as mergeFiles from "merge-files";
 import * as path from "path";
+import * as request from "request";
 import { getRepository, getTreeRepository } from "typeorm";
 import config from "../config/config";
 import { File } from "../entity/File";
@@ -182,6 +183,36 @@ class FileController {
     }
     await fileRepository.save(element);
     res.send({status: true});
+  }
+
+  public static trackDocument = async (req: Request, res: Response) => {
+    const pathForSave = "C:/Users/Hannes/Desktop/Angular/AGM-Tools/filestest/21/AG_ventskalender_2019_fehlermeldung_herz_03_anmerkungen_hannes.docx";
+    const updateFile = (response, body, p) => {
+      if (body.status == 2) {
+          const file = request.syncRequest("GET", body.url);
+          fs.writeFileSync(p, file.getBody());
+      }
+
+      response.write("{\"error\":0}");
+      response.end();
+    };
+
+    const readbody = (r, response, p) => {
+      let content = "";
+      r.on("data", (data) => {
+          content += data;
+      });
+      r.on("end", () => {
+          const body = JSON.parse(content);
+          updateFile(response, body, p);
+      });
+    };
+
+    if (req.body.hasOwnProperty("status")) {
+      updateFile(res, req.body, pathForSave);
+    } else {
+      readbody(req, res, pathForSave);
+    }
   }
 
   public static uploadFile = async (req: RequestWithFiles, res: Response) => {

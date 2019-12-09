@@ -29,7 +29,6 @@ export class FilesComponent implements OnInit {
     };
 
     public currentPath: any = [];
-    public lastFolder: any;
     public lastItem: any;
     public items: any[];
     public newFolderName: string;
@@ -37,6 +36,7 @@ export class FilesComponent implements OnInit {
     public shareLink: string = "";
     public tags: any[] = [];
     public currentFile: any;
+    public documentEditorConfig: any;
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
@@ -44,7 +44,6 @@ export class FilesComponent implements OnInit {
         private fb: FormBuilder,
         private alertService: AlertService,
         private navbarService: NavbarService,
-        private cdr: ChangeDetectorRef,
     ) { }
 
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
@@ -215,8 +214,14 @@ export class FilesComponent implements OnInit {
 
     public getType() {
         const filename: string = this.currentFile.name.toLowerCase();
+
+        const documentExtensions = ["doc", "docm", "docx", "dot", "dotm", "dotx", "epub", "fodt", "htm", "html", "mht", "odt", "ott", "pdf", "rtf", "txt", "djvu", "xps"];
+        const spreadsheetExtensions = ["csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx"];
+        const presentationExtensions = ["fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx"];
+
         const knownExtensions = {
             audio: ["mp3", "wav", "m4a"],
+            document: documentExtensions.concat(spreadsheetExtensions).concat(presentationExtensions),
             image: ["jpg", "jpeg", "gif", "png", "svg"],
             pdf: ["pdf"],
             video: ["mp4", "mov", "avi"],
@@ -225,12 +230,24 @@ export class FilesComponent implements OnInit {
         for (const [type, extensions] of Object.entries(knownExtensions)) {
             for (const ext of extensions) {
                 if (filename.endsWith(ext)) {
+                    if (type == "document") {
+                        let t;
+                        if (documentExtensions.includes(ext)) {
+                            t = "text";
+                        } else if (spreadsheetExtensions.includes(ext)) {
+                            t = "spreadsheet";
+                        } else if (presentationExtensions.includes(ext)) {
+                            t = "presentation";
+                        }
+                        this.setupDocumentEditorConfig(ext, t);
+                    }
                     return type;
                 }
             }
         }
         return "other";
     }
+
     public toggleTag(tagId, item) {
         this.remoteService
             .getNoCache("post", `files/${item.id}/tags`, {
@@ -311,5 +328,116 @@ export class FilesComponent implements OnInit {
         } else {
             this.goTo(this.lastItem, undefined, true);
         }
+    }
+
+    private setupDocumentEditorConfig(ext, type) {
+        this.documentEditorConfig = {
+            editorConfig: {
+              document: {
+                fileType: ext,
+                info: {
+                  author: this.currentFile.creator.username,
+                  folder: this.lastItem.name,
+                  owner: this.currentFile.creator.username,
+                  uploaded: this.currentFile.createdAt,
+                },
+                key: "3277238458",
+                permissions: {
+                    comment: true,
+                    download: true,
+                    edit: true,
+                    fillForms: true,
+                    print: true,
+                    review: true,
+                },
+                title: this.currentFile.name,
+                url: this.getCurrentFileSrc(),
+              },
+              documentType: type,
+              editorConfig: {
+                // callbackUrl: `${environment.apiUrl}files/documents/save`,
+                /*createUrl: "https://example.com/url-to-create-document/",*/
+                customization: {
+                    autosave: true,
+                    chat: true,
+                    commentAuthorOnly: false,
+                    comments: true,
+                    compactHeader: false,
+                    compactToolbar: false,
+                    customer: {
+                        address: "Hosted on GitHub",
+                        info: "An open-source platform for all kinds of workgroups. (https://hrueger.github.io/AGM-Tools)",
+                        /* logo: "https://example.com/logo-big.png", ToDo */
+                        name: "AGM-Tools",
+                        www: "https://github.com/hrueger/AGM-Tools",
+                    },
+                    feedback: {
+                        url: "https://github.com/hrueger/AGM-Tools/issues/new",
+                        visible: true,
+                    },
+                    forcesave: false,
+                    goback: {
+                        blank: true,
+                        text: "Dokumente",
+                        url: "https://example.com",
+                    },
+                    help: true,
+                    hideRightMenu: false,
+                    logo: {
+                        image: "https://example.com/logo.png",
+                        imageEmbedded: "https://example.com/logo_em.png",
+                        url: "https://example.com",
+                    },
+                    showReviewChanges: false,
+                    toolbarNoTabs: false,
+                    zoom: 100,
+                },
+                embedded: {
+                    embedUrl: "https://example.com/embedded?doc=exampledocument1.docx",
+                    fullscreenUrl: "https://example.com/embedded?doc=exampledocument1.docx#fullscreen",
+                    saveUrl: "https://example.com/download?doc=exampledocument1.docx",
+                    shareUrl: "https://example.com/view?doc=exampledocument1.docx",
+                    toolbarDocked: "top",
+                },
+                lang: "de",
+                mode: "edit",
+                recent: [
+                    {
+                        folder: "Example Files",
+                        title: "exampledocument1.docx",
+                        url: "https://example.com/exampledocument1.docx",
+                    },
+                    {
+                        folder: "Example Files",
+                        title: "exampledocument2.docx",
+                        url: "https://example.com/exampledocument2.docx",
+                    },
+                ],
+                region: "de-DE",
+                user: {
+                    id: this.authenticationService.currentUserValue.id,
+                    name: this.authenticationService.currentUserValue.id,
+                },
+            },
+              events: {
+                // tslint:disable-next-line: no-console
+                onBack: console.log,
+                // tslint:disable-next-line: no-console
+                onDocumentStateChange: console.log,
+                // tslint:disable-next-line: no-console
+                onError: console.log,
+                // tslint:disable-next-line: no-console
+                onReady: console.log,
+                // tslint:disable-next-line: no-console
+                onRequestEditRights: console.log,
+                // tslint:disable-next-line: no-console
+                onSave: console.log,
+              },
+              height: "100%",
+              type: "desktop",
+              width: "100%",
+            },
+            script: "https://agmtools.allgaeu-gymnasium.de:8080/web-apps/apps/api/documents/api.js",
+          };
     }
 }
