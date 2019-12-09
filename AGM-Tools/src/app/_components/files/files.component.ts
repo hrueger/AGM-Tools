@@ -114,12 +114,9 @@ export class FilesComponent implements OnInit {
         this.router.navigate(["/", "projects"]);
     }
 
-    public goTo(item: any, viewFile?, reload = false) {
+    public goTo(item: any, viewFile?) {
         if (item.isFolder) {
             this.navigate(item);
-            if (!reload) {
-                this.currentPath.push(item);
-            }
         } else {
             this.currentFile = item;
             this.modalService.open(viewFile, {size: "xl", scrollable: true});
@@ -323,7 +320,7 @@ export class FilesComponent implements OnInit {
         if (this.lastItem.id == -1) {
             this.navigate({ id: -1 });
         } else {
-            this.goTo(this.lastItem, undefined, true);
+            this.goTo(this.lastItem, undefined);
         }
     }
 
