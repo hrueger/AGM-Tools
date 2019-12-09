@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { EmitType, L10n } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
@@ -20,7 +21,6 @@ export class FilesComponent implements OnInit {
     public renameItemForm: FormGroup;
     public newFolderModalInvalidMessage: boolean = false;
     public renameItemFormInvalidMessage: boolean = false;
-    public selectProject: boolean = true;
     public projects: Project[];
     public imageSource: string;
     public pid: number;
@@ -44,6 +44,8 @@ export class FilesComponent implements OnInit {
         private fb: FormBuilder,
         private alertService: AlertService,
         private navbarService: NavbarService,
+        private route: ActivatedRoute,
+        private router: Router,
     ) { }
 
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
@@ -66,6 +68,10 @@ export class FilesComponent implements OnInit {
 
     public ngOnInit() {
         this.navbarService.setHeadline("Dateien");
+        if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
+            this.pid = this.route.snapshot.params.projectId;
+            this.navigate({ id: -1, name: this.route.snapshot.params.projectName});
+        }
         L10n.load({
             de: {
                 uploader: {
@@ -102,8 +108,12 @@ export class FilesComponent implements OnInit {
         this.renameItemForm = this.fb.group({
             renameItemName: [this.renameItemName, [Validators.required]],
         });
-        // this.cdr.detectChanges();
     }
+
+    public goBackToProjects() {
+        this.router.navigate(["/", "projects"]);
+    }
+
     public goTo(item: any, viewFile?, reload = false) {
         if (item.isFolder) {
             this.navigate(item);
@@ -130,19 +140,6 @@ export class FilesComponent implements OnInit {
                 ".png"
             );
         }
-    }
-    public goToProject(project: Project) {
-        this.selectProject = false;
-        this.pid = project.id;
-        this.currentPath = [];
-        // console.warn(this.currentPath);
-        // console.warn("Pushed project");
-
-        this.navigate({ id: -1, name: project.name });
-    }
-    public goToFiles() {
-        this.selectProject = true;
-        this.currentPath = [];
     }
     public upTo(id) {
         let item = null;

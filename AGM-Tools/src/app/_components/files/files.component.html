@@ -1,8 +1,8 @@
-<div class="navigation" *ngIf="!selectProject">
+<div class="navigation">
     <button class="btn btn-success" (click)="
             currentPath.length - 2 > -1
                 ? upTo(currentPath[currentPath.length - 2].id)
-                : goToFiles()
+                : goBackToProjects()
         ">
         Zurück
     </button> &nbsp;
@@ -31,24 +31,8 @@
         </li>
     </ol>
 </div>
-<div id="projects" class="table-responsive" *ngIf="selectProject">
-    <table id="projectChooser" class="table table-hover">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Beschreibung</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr (click)="goToProject(project)" *ngFor="let project of projects">
-                <td>{{ project.name }}</td>
-                <td>{{ project.description }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
-<div *ngIf="!selectProject">
+<div>
     <div id="dropArea">
         <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (chunkUploading)="onFileUpload($event)" (uploading)="onFileUpload($event)">
         </ejs-uploader>

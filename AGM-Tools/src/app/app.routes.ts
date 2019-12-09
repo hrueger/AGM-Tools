@@ -89,7 +89,7 @@ export const routes: Routes = [
     {
         canActivate: [AuthGuard],
         component: FilesComponent,
-        path: "files",
+        path: "files/:projectId/:projectName",
     },
     {
         canActivate: [AuthGuard],
