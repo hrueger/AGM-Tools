@@ -10,19 +10,16 @@ export class SidebarComponent {
     public showNav: boolean = true;
     public navLinks = [
         { name: "Dashboard", icon: "tachometer-alt", target: "dashboard" },
-        { name: "Benutzer", icon: "user", target: "users" },
-        { name: "Chat", icon: "comments", target: "chat" },
-        { name: "Tutorials", icon: "book", target: "tutorials" },
-        {
-            icon: "envelope",
-            name: "Benachrichtigungen",
-            target: "notifications",
-        },
-        { name: "Kalender", icon: "calendar", target: "calendar" },
         { name: "Projekte", icon: "folder", target: "projects" },
+        { name: "Kalender", icon: "calendar", target: "calendar" },
+        { seperator: true},
+        { name: "Chat", icon: "comments", target: "chat" },
+        { name: "Benachrichtigungen", icon: "envelope", target: "notifications" },
+        { seperator: true},
+        { name: "Tutorials", icon: "book", target: "tutorials" },
         { name: "Vorlagen", icon: "portrait", target: "templates" },
+        { seperator: true},
         { name: "Fertig", icon: "check", target: "done" },
-        { name: "Client-Software", icon: "mobile", target: "clientsoftware" },
     ];
 
     public hideNav() {
