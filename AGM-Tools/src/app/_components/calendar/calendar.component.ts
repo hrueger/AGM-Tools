@@ -11,6 +11,7 @@ import {
 } from "@syncfusion/ej2-angular-schedule";
 import { L10n, loadCldr } from "@syncfusion/ej2-base";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -174,10 +175,11 @@ export class CalendarComponent {
         private navbarService: NavbarService,
         private route: ActivatedRoute,
         private alertService: AlertService,
+        private fts: FastTranslateService,
     ) { }
 
-    public ngOnInit() {
-        this.navbarService.setHeadline("Kalender");
+    public async ngOnInit() {
+        this.navbarService.setHeadline(await this.fts.t("calendar.calendar"));
         this.remoteService.get("get", "events/").subscribe((dates) => {
             if (dates) {
                 this.eventSettings.dataSource = [];
@@ -214,24 +216,23 @@ export class CalendarComponent {
         });
     }
 
-    public onChange(ev) {
+    public async onChange(ev) {
         if (ev) {
             switch (ev.requestType) {
                 case "eventCreated":
                     this.remoteService
                         .getNoCache("post", "events/", {
-                            description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
+                            description: ev.data.Description ? ev.data.Description : await this.fts.t("errors.noDescriptionProvided"),
                             endDate: ev.data.EndTime.toISOString(),
-                            headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
+                            headline: ev.data.Subject ? ev.data.Subject : await this.fts.t("errors.noHeadlineProvided"),
                             important: true,
-                            location: ev.data.Location ? ev.data.Location : "Kein Ort angegeben",
+                            location:
+                                ev.data.Location ? ev.data.Location : await this.fts.t("errors.noLocationProvided"),
                             startDate: ev.data.StartTime.toISOString(),
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Termin erfolgreich gespeichert!",
-                                );
+                                this.alertService.success(await this.fts.t("calendar.eventSavedSucessfully"));
                                 this.idsToReplace.push(
                                     {
                                         // @ts-ignore
@@ -248,18 +249,16 @@ export class CalendarComponent {
                     if (id != null) {
                         this.remoteService
                             .getNoCache("post", `events/${id}`, {
-                                description: ev.data.Description ? ev.data.Description : "Keine Beschreibung angegeben",
+                                description: ev.data.Description ? ev.data.Description : await this.fts.t("errors.noDescriptionProvided"),
                                 endDate: ev.data.EndTime.toISOString(),
-                                headline: ev.data.Subject ? ev.data.Subject : "Kein Betreff angegeben",
+                                headline: ev.data.Subject ? ev.data.Subject : await this.fts.t("errors.noHeadlineProvided"),
                                 important: true,
-                                location: ev.data.Location ? ev.data.Location : "Kein Ort angegeben",
+                                location: ev.data.Location ? ev.data.Location : await this.fts.t("errors.noLocationProvided"),
                                 startDate: ev.data.StartTime.toISOString(),
                             })
-                            .subscribe((data) => {
+                            .subscribe(async (data) => {
                                 if (data && data.status == true) {
-                                    this.alertService.success(
-                                        "Termin erfolgreich aktualisiert!",
-                                    );
+                                    this.alertService.success(await this.fts.t("calendar.eventUpdatedSucessfully"));
                                 }
                             });
                     }
@@ -271,11 +270,9 @@ export class CalendarComponent {
                     if (evId != null) {
                         this.remoteService
                             .getNoCache("delete", `events/${evId}`)
-                            .subscribe((data) => {
+                            .subscribe(async (data) => {
                                 if (data && data.status == true) {
-                                    this.alertService.success(
-                                        "Termin erfolgreich gelöscht!",
-                                    );
+                                    this.alertService.success(await this.fts.t("calendar.eventDeletedSucessfully"));
                                 }
                             });
                     }

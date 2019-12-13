@@ -4,11 +4,11 @@
                 ? upTo(currentPath[currentPath.length - 2].id)
                 : goBackToProjects()
         ">
-        Zurück
+        {{'general.back' | translate}}
     </button> &nbsp;
 
     <button id="newFolderBtn" type="button" (click)="openNewFolderModal(newFolder)" class="btn btn-primary">
-        Neuer Ordner
+        {{'files.newFolder' | translate}}
     </button>
     <div class="btn-group float-right">
         <button type="button" id="btnList" class="btn btn-default">
@@ -21,7 +21,7 @@
     <br /><br />
     <ol class="breadcrumb">
         <li class="breadcrumb-item" [class.active]="currentPath.length == 0">
-            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goBackToProjects()">Dateien</a>
+            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goBackToProjects()">{{'files.files' | translate}}</a>
         </li>
         <li *ngFor="let path of currentPath; let last = last" [class.active]="last" class="breadcrumb-item">
             <a class="link" *ngIf="!last" (click)="upTo(path.id)">
@@ -40,10 +40,10 @@
 
     <context-menu #contextMenu>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item, viewFileModal)">
-            <i class="far fa-circle"></i> Öffnen
+            <i class="far fa-circle"></i> {{'files.open' | translate}}
         </ng-template>
         <ng-template contextMenuItem [subMenu]="tagsSubMenu">
-            <i class="fas fa-tags"></i> Tags
+            <i class="fas fa-tags"></i> {{'files.tags' | translate}}
         </ng-template>
         <context-menu #tagsSubMenu>
             <ng-template *ngFor="let tag of tags" contextMenuItem (execute)="toggleTag(tag.id, $event.item)">
@@ -52,23 +52,23 @@
         </context-menu>
         <ng-template contextMenuItem divider="true"></ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="download($event.item)">
-            <i class="fas fa-cloud-download-alt"></i> Herunterladen
+            <i class="fas fa-cloud-download-alt"></i> {{'files.download' | translate}}
         </ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="share($event.item, shareModal)">
-            <i class="far fa-share-square"></i> Freigeben
+            <i class="far fa-share-square"></i> {{'files.share' | translate}}
         </ng-template>
         <ng-template contextMenuItem divider="true"></ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="rename($event.item, renameModal)">
-            <i class="fas fa-pen"></i> Umbenennen
+            <i class="fas fa-pen"></i> {{'files.rename' | translate}}
         </ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="move($event.item)">
-            <i class="fa fa-arrows-alt"></i> Verschieben
+            <i class="fa fa-arrows-alt"></i> {{'files.move' | translate}}
         </ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="copy($event.item)">
-            <i class="fas fa-copy"></i> Kopieren
+            <i class="fas fa-copy"></i> {{'files.copy' | translate}}
         </ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="delete($event.item)">
-            <i class="fas fa-trash"></i> Löschen
+            <i class="fas fa-trash"></i> {{'files.delete' | translate}}
         </ng-template>
     </context-menu>
 
@@ -78,10 +78,10 @@
             <thead>
                 <tr>
                     <td></td>
-                    <td>Name</td>
-                    <td>Tags</td>
-                    <td>Erstelldatum</td>
-                    <td>Größe</td>
+                    <td>{{'general.name' | translate}}</td>
+                    <td>{{'files.tags' | translate}}</td>
+                    <td>{{'general.creationDate'}}</td>
+                    <td>{{'general.size' | translate}}</td>
                 </tr>
             </thead>
             <tbody>
@@ -123,10 +123,10 @@
     <div class="modal-body">
         <img *ngIf="getType() == 'image'" class="previewFile img-fluid" alt="Laden..." [src]="getCurrentFileSrc()" />
         <video class="previewFile" [attr.src]="getCurrentFileSrc()" controls *ngIf="getType() == 'video'">
-            Bitte verwende einen neueren Browser.
+            {{'errors.oldBrowser' | translate}}
         </video>
         <audio controls [src]="getCurrentFileSrc()" *ngIf="getType() == 'audio'">
-            Bitte verwende einen neueren Browser.
+            {{'errors.oldBrowser' | translate}}
         </audio>
         <ngx-extended-pdf-viewer *ngIf="getType() == 'pdf'" [src]="getCurrentFileSrc()" height="70vh" useBrowserLocale="true"></ngx-extended-pdf-viewer>
         <onlyoffice *ngIf="getType() == 'document'" [config]="documentEditorConfig" class="documentEditor"></onlyoffice>

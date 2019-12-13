@@ -4,7 +4,7 @@
     (click)="openNewModal(newUserModal)"
     class="btn btn-primary"
 >
-    Neuer Benutzer
+    {{'users.newUser' | translate}}
 </button>
 &nbsp;
 <button
@@ -13,16 +13,16 @@
     (click)="openEditModal(editUserModal)"
     class="btn btn-primary"
 >
-    Eigene Daten ändern
+    {{'users.changeOwnProfile' | translate}}
 </button>
 <br /><br />
 <div class="table-responsive">
     <table id="users" class="table  table-hover table-striped table-sm">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Benutzergruppe</th>
+                <th>{{'general.name' | translate}}</th>
+                <th>{{'general.email' | translate}}</th>
+                <th>{{'users.usergroup' | translate}}</th>
                 <th></th>
             </tr>
         </thead>
@@ -35,7 +35,7 @@
 
                 <td>
                     <button class="btn text-danger btn-link" (click)="deleteUser(user)">
-                        Löschen
+                        {{'general.delete' | translate}}
                     </button>
                 </td>
             </tr>
@@ -45,62 +45,61 @@
 
 <ng-template #newUserModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Neuer Benutzer</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{'users.newUser' | translate}}</h4>
         <button
             type="button"
             class="close"
-            aria-label="Close"
             (click)="modal.dismiss('Cross click')"
         >
-            <span aria-hidden="true">&times;</span>
+            <span>&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div *ngIf="invalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{'errors.requiredFieldsMissing' | translate}}
         </div>
         <form [formGroup]="newUserForm">
             <div class="form-group">
-                <label for="name">Benutzername: </label>
+                <label for="name">{{'general.username' | translate}}: </label>
                 <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
-                    placeholder="Benutzername"
+                    [placeholder]="'general.username' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="email">Email: </label>
+                <label for="email">{{'general.email' | translate}}: </label>
                 <input
                     type="email"
                     class="form-control"
                     id="email"
                     formControlName="email"
-                    placeholder="E-Mail Adresse"
+                    [placeholder]="'general.email' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="password1">Passwort: </label>
+                <label for="password1">{{'general.password' | translate}}: </label>
                 <input
                     type="password"
                     class="form-control"
                     id="password1"
                     formControlName="password1"
-                    placeholder="Passwort"
+                    [placeholder]="'general.password' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="password2">Passwort wiederholen: </label>
+                <label for="password2">{{'users.repeatPassword' | translate}}: </label>
                 <input
                     type="password"
                     class="form-control"
                     id="password2"
                     formControlName="password2"
-                    placeholder="Passwort erneut eingeben"
+                    [placeholder]="'users.repeatPassword' | translate"
                 />
             </div>
             <br />
@@ -117,88 +116,84 @@
                     : (invalidMessage = true)
             "
         >
-            Erstellen
+            {{'general.create' | translate}}
         </button>
     </div>
 </ng-template>
 
 <ng-template #editUserModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Eigene Daten ändern</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{'users.changeOwnProfile' | translate}}</h4>
         <button
             type="button"
             class="close"
-            aria-label="Close"
             (click)="modal.dismiss('Cross click')"
         >
-            <span aria-hidden="true">&times;</span>
+            <span>&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div *ngIf="invalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{'errors.requiredFieldsMissing' | translate}}
         </div>
         <form [formGroup]="editUserForm">
             <div class="form-group">
-                <label for="name">Benutzername: </label>
+                <label for="name">{{'general.username' | translate}}: </label>
                 <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="editUserName"
-                    placeholder="Benutzername"
+                    [placeholder]="'general.username' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="email">Email: </label>
+                <label for="email">{{'general.email' | translate}}: </label>
                 <input
                     type="email"
                     class="form-control"
                     id="email"
                     formControlName="editUserEmail"
-                    placeholder="E-Mail Adresse"
+                    [placeholder]="'general.username' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="password">Altes Passwort: </label>
+                <label for="password">{{'users.oldPassword' | translate}}: </label>
                 <input
                     type="password"
                     class="form-control"
                     id="password"
                     formControlName="editUserPasswordOld"
-                    placeholder="Altes Passwort"
+                    [placeholder]="'users.oldPassword' | translate"
                 />
             </div>
             <div class="alert alert-info">
-                Bei Änderungen muss immer das alte Passwort zusätzlich
-                angeben werden!
+                {{'users.changesPasswordInfo' | translate}}
             </div>
             <br />
             <div class="form-group">
-                <label for="password1">Neues Passwort: </label>
+                <label for="password1">{{'login.inputNewPassword' | translate}}: </label>
                 <input
                     type="password"
                     class="form-control"
                     id="password1"
                     formControlName="editUserPassword1"
-                    placeholder="Neues Passwort"
+                    [placeholder]="'login.inputNewPassword' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="password2">Neues Passwort wiederholen: </label>
+                <label for="password2">{{'login.repeatNewPassword' | translate}}: </label>
                 <input
                     type="password"
                     class="form-control"
                     id="password2"
                     formControlName="editUserPassword2"
-                    placeholder="Neues Passwort erneut eingeben"
+                    [placeholder]="'login.repeatNewPassword' | translate"
                 />
             </div>
-            <br />
-            <br />
         </form>
     </div>
     <div class="modal-footer">
@@ -211,7 +206,7 @@
                     : (invalidMessage = true)
             "
         >
-            Übernehmen
+            {{'general.update' | translate}}
         </button>
     </div>
 </ng-template>

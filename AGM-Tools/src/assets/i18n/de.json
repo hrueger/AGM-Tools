@@ -1,0 +1,189 @@
+{
+  "about": {
+    "description": "Eine Open-Source Plattform für alle Arbeitsgruppen.",
+    "hostedOnGithub": "Hosted bei GitHub"
+  },
+  "calendar": {
+    "calendar": "Kalender",
+    "eventDeletedSucessfully": "Termin erfolgreich gelöscht!",
+    "eventSavedSucessfully": "Termin erfolgreich gespeichert!",
+    "eventUpdatedSucessfully": "Termin erfolgreich aktualisiert!"
+  },
+  "chat": {
+    "chat": "Chat",
+    "contactNumberCopied": "Die Nummer wurde in die Zwischenablage kopiert!",
+    "didYouKnow": "<h4>Schon gewusst?</h4><p>Du kannst jetzt im Chat auch</p><ul><li>Bilder</li><li>Kontakte</li><li>Dateien</li><li>und Emojis</li></ul><p>verschicken!</p>",
+    "noMessages": "Noch keine Nachrichten. Beginne jetzt!"
+  },
+  "dashboard": {
+    "dashboard": "Dashboard",
+    "diskSpaceUsedByData": "Daten",
+    "diskSpaceUsedBySystem": "System",
+    "remainingDiskSpace": "Verfügbarer Speicherplatz",
+    "version": "Version",
+    "whatsnew": "Neue Features"
+  },
+  "done": {
+    "done": "Fertig",
+    "info": "<b>Information</b><br><br>Diese Seite ist noch nicht fertig gestellt, da ich nicht weiß, wie die fertigen Daten sortiert / dargestellt werden sollen. Bei Ideen gerne einen <a target='_blank' href='https://github.com/hrueger/AGM-Tools/issues/new'>Issue auf GitHub erstellen</a>!"
+  },
+  "errors": {
+    "errorWhileSaving": "Fehler beim Speichern...",
+    "fillOutPassword": "Das Passwordfeld muss ausgefüllt werden!",
+    "fillOutUsername": "Das Benutzernamefeld muss ausgefüllt werden!",
+    "noDescriptionProvided": "Keine Beschreibung angegeben",
+    "noHeadlineProvided": "Keine Überschrift angegeben",
+    "noLocationProvided": "Kein Ort angegeben",
+    "notSupportedFiletype": "Dieser Dateityp wird nicht unterstützt.",
+    "oldBrowser": "Bitte verwende einen neueren Browser.",
+    "requiredFieldMissing": "Dieses Feld muss ausgefüllt werden!",
+    "requiredFieldsMissing": "Bitte füllen Sie alle Pflichtfelder aus!"
+  },
+  "events": {
+    "countdown": "noch {{countdown}}",
+    "nextEvents": "Nächste Events",
+    "none": "Keine anstehenden Events!"
+  },
+  "files": {
+    "confirmFileDelete": "Soll diese Datei wirklich gelöscht werden?",
+    "confirmFolderDelete": "Soll dieser Ordner wirklich gelöscht werden?",
+    "copy": "Kopieren",
+    "delete": "Löschen",
+    "download": "Herunterladen",
+    "fileDeletedSucessfully": "Die Datei wurde erfolgreich gelöscht.",
+    "fileRenamedSucessfully": "Die Datei wurde erfolgreich umbenannt.",
+    "fileUploadedSucessfully": "Die Datei wurde erfolgreich hochgeladen.",
+    "files": "Dateien",
+    "folderCreatedSucessfully": "Der neue Ordner wurde erfolgreich erstellt.",
+    "folderDeletedSucessfully": "Der Ordner wurde erfolgreich gelöscht.",
+    "folderRenamedSucessfully": "Der Ordner wurde erfolgreich umbenannt.",
+    "linkCopied": "Link in die Zwischenablage kopiert!",
+    "move": "Verschieben",
+    "newFolder": "Neuer Ordner",
+    "open": "Öffnen",
+    "rename": "Umbenennen",
+    "share": "Freigeben",
+    "tags": "Tags"
+  },
+  "general": {
+    "audio": "Audio",
+    "avalibleInLaterVersion": "Diese Funktion wird in einer zukünftigen Version hinzugefügt.",
+    "back": "Zurück",
+    "camera": "Kamera",
+    "colors": {
+      "danger": "Gefahr",
+      "info": "Information",
+      "success": "Erfolg",
+      "warning": "Warnung"
+    },
+    "contact": "Kontakt",
+    "content": "Inhalt",
+    "create": "Erstellen",
+    "creationDate": "Erstelldatum",
+    "delete": "Löschen",
+    "description": "Beschreibung",
+    "document": "Dokument",
+    "edit": "Bearbeiten",
+    "email": "Email",
+    "gallery": "Gallerie",
+    "general": "Allgemeines",
+    "group": "Gruppe",
+    "image": "Bild",
+    "important": "Wichtig!",
+    "lastOnline": "Zuletzt online: {{time}}",
+    "lastUpdated": "Zuletzt aktualisiert: {{time}}",
+    "loading": "Laden...",
+    "location": "Standort",
+    "members": "Mitglieder",
+    "message": "Nachricht",
+    "name": "Name",
+    "password": "Passwort",
+    "read": "Gelesen",
+    "receivers": "Empfänger",
+    "reset": "Zurücksetzen",
+    "save": "Speichern",
+    "send": "Senden",
+    "size": "Größe",
+    "startingAtDate": "ab dem {{weekday}}, {{day}} um {{time}} Uhr",
+    "template": "Vorlage",
+    "title": "Titel",
+    "topic": "Thema",
+    "tutorial": "Tutorial",
+    "update": "Aktualisieren",
+    "uploadImage": "Bild hochladen",
+    "uploadStartedPleaseWait": "Hochladen gestarted, bitte warten...",
+    "uploading": "Hochladen...",
+    "username": "Benutzername"
+  },
+  "login": {
+    "inputEmail": "Bitte geben Sie Ihre Email-Adresse ein",
+    "inputNewPassword": "Neues Password",
+    "login": "Login",
+    "lostPassword": "Password vergessen?",
+    "passwordResetSuccessful": "Das Password wurde erfolgreich zurückgesetzt.",
+    "repeatNewPassword": "Neues Password wiederholen",
+    "toLogin": "Zum Login"
+  },
+  "notifications": {
+    "confirmDelete": "Möchten Sie diese Benachrichtigung wirklich löschen?",
+    "infoMessage": "Es werden nur diejenigen Benachrichtigungen angezeigt, die von Ihnen erstellt worden sind.",
+    "newNotification": "Neue Benachrichtigung",
+    "none": "Keine neuen Nachrichten!",
+    "notificationCreatedSucessfully": "Benachrichtigung erfolgreich gespeichert!",
+    "notificationDeletedSucessfully": "Benachrichtigung erfolgreich gelöscht!",
+    "notifications": "Benachrichtigungen"
+  },
+  "projects": {
+    "confirmDelete": "Soll dieses Projekt wirklich gelöscht werden?",
+    "newProject": "Neues Projekt",
+    "projectCreatesSucessfully": "Projekt erfolgreich erstellt!",
+    "projectDeletedSucessfully": "Projekt erfolgreich gelöscht!",
+    "projectUpdatedSucessfully": "Projekt erfolgreich aktualisiert!",
+    "projects": "Projects",
+    "update": "Projekt aktualisieren"
+  },
+  "share": {
+    "share": "Freigabe",
+    "sharedFile": "Diese Datei wurde freigegeben. Laden Sie sie jetzt herunter!",
+    "sharedFolder": "Dieser Ordner wurde freigegeben. Laden Sie ihn jetzt herunter!"
+  },
+  "tasks": {
+    "tasks": "Aufgaben"
+  },
+  "templates": {
+    "confirmDelete": "Soll diese Vorlage wirklich gelöscht werden?",
+    "groupPlaceholder": "Gruppe der Vorlage (Logo, Hintergrund etc.)",
+    "newTemplate": "Neue Vorlage",
+    "templateCreatedSucessfully": "Vorlage erfolgreich gespeichert!",
+    "templates": "Templates"
+  },
+  "tutorials": {
+    "addStep": "Schritt hinzufügen",
+    "changesSavedSucessfully": "Änderungen erfolgreich gespeichert!",
+    "confirmStepDelete": "Soll dieser Schritt wirklich gelöscht werden?",
+    "editTutorial": "Tutorial bearbeiten",
+    "imageXofY": "Bild %1 von %2",
+    "newTutorial": "Neues Tutorial",
+    "removeImage": "Bild entfernen",
+    "removeStep": "Schritt entfernen",
+    "stepAddedSucessfully": "Schritt erfolgreich hinzugefügt!",
+    "stepDeletedSucessfully": "Schritt erfolgreich gelöscht!",
+    "stepNr": "Schritt {{nr}}",
+    "stepsSavedSucessfully": "Schritte erfolgreich gespeichert!",
+    "tutorialCreatedSucessfully": "Tutorial erfolgreich erstellt!",
+    "tutorials": "Tutorials"
+  },
+  "users": {
+    "changeOwnProfile": "Eigene Daten ändern",
+    "changesPasswordInfo": "Bei Änderungen muss immer das alte Passwort zusätzlich angegeben werden!",
+    "confirmDelete": "Möchten Sie diesen Nutzer wirklich löschen?",
+    "currentUserUpdatedSucessfully": "Der Benutzer wurde erfolgreich aktualisiert.",
+    "newUser": "Neuer Benutzer",
+    "oldPassword": "Altes Password",
+    "repeatPassword": "Password wiederholen",
+    "userCreatedSucessfully": "Benutzer erfolgreich erstellt.",
+    "userDeletedSucessfully": "Der Benutzer wurde erfolgreich gelöscht.",
+    "usergroup": "Benutzergruppe",
+    "users": "Benutzer"
+  }
+}

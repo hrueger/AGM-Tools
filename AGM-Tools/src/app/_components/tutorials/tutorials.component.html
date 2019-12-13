@@ -1,4 +1,4 @@
-<button class="btn btn-primary" (click)="newTutorial(newTutorialModal)">Neues Tutorial</button>
+<button class="btn btn-primary" (click)="newTutorial(newTutorialModal)">{{'tutorials.newTutorial' | translate}}</button>
 
 <div class="row mt-4">
     <div class="col-md-4 col-sm-6 d-flex " routerLink="/tutorial/{{tutorial.id}}" *ngFor="let tutorial of tutorials">
@@ -8,7 +8,7 @@
                 {{tutorial.description}}
             </div>
             <div class="card-footer">
-                <small class="text-muted">Zuletzt aktualisiert: {{ tutorial.lastUpdated }}</small>
+                <small class="text-muted">{{'general.lastUpdated' | translate:{"time": tutorial.createdAt} }}</small>
                 <button class="float-right btn btn-primary p-1 px-2" *ngIf="tutorial.editable" routerLink="/editTutorial/{{tutorial.id}}"><i class="far fa-edit"></i></button>
             </div>
         </div>
@@ -17,24 +17,24 @@
 
 <ng-template #newTutorialModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Neues Tutorial</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+        <h4 class="modal-title" id="modal-basic-title">{{'tutorials.newTutorial' | translate}}</h4>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')">
+            <span>&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div *ngIf="invalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{'errors.requiredFieldsMissing' | translate}}
         </div>
         <form [formGroup]="newTutorialForm">
             <div class="form-group">
-                <label for="title">Titel: </label>
-                <input type="text" class="form-control" id="title" formControlName="title" placeholder="Titel des Tutorials" />
+                <label for="title">{{'general.title' | translate}}: </label>
+                <input type="text" class="form-control" id="title" formControlName="title" [placeholder]="'general.title' | translate" />
             </div>
             <br />
             <div class="form-group">
-                <label for="description">Beschreibung: </label>
-                <textarea class="form-control" id="description" formControlName="description" placeholder="Kurze Beschreibung des Inhalts"></textarea>
+                <label for="description">{{'general.description' | translate}}: </label>
+                <textarea class="form-control" id="description" formControlName="description" [placeholder]="'general.description' | translate"></textarea>
             </div>
             <br />
         </form>
@@ -45,7 +45,7 @@
                     ? modal.close('Save click')
                     : (invalidMessage = true)
             ">
-            Erstellen
+            {{'general.create' | translate}}
         </button>
     </div>
 </ng-template>

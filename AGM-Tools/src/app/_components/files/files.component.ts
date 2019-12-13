@@ -8,6 +8,7 @@ import { environment } from "../../../environments/environment";
 import { Project } from "../../_models/project.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -46,6 +47,7 @@ export class FilesComponent implements OnInit {
         private navbarService: NavbarService,
         private route: ActivatedRoute,
         private router: Router,
+        private fts: FastTranslateService,
     ) { }
 
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
@@ -59,15 +61,15 @@ export class FilesComponent implements OnInit {
         ];
         args.currentRequest.setRequestHeader("Authorization", this.authenticationService.currentUserValue.token);
     }
-    public onUploadSuccess(args: any): void {
+    public async onUploadSuccess(args: any): Promise<void> {
         if (args.operation === "upload") {
             this.reloadHere();
-            this.alertService.success("Die Datei wurde erfolgreich hochgeladen.");
+            this.alertService.success(await this.fts.t("files.fileUploadedSucessfully"));
         }
     }
 
-    public ngOnInit() {
-        this.navbarService.setHeadline("Dateien");
+    public async ngOnInit() {
+        this.navbarService.setHeadline(await this.fts.t("files.files"));
         if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
             this.pid = this.route.snapshot.params.projectId;
             this.navigate({ id: -1, name: this.route.snapshot.params.projectName});
@@ -174,9 +176,9 @@ export class FilesComponent implements OnInit {
                             name: this.newFolderForm.get("newFolderName").value,
                             pid: this.pid,
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
+                                this.alertService.success(await this.fts.t("files.folderCreatedSucessfully"));
                                 this.reloadHere();
                             }
                         });
@@ -278,39 +280,39 @@ export class FilesComponent implements OnInit {
                     .getNoCache("post", `files/${item.id}`, {
                         name: this.renameItemForm.get("renameItemName").value,
                     })
-                    .subscribe((data) => {
+                    .subscribe(async (data) => {
                         if (data.status == true) {
-                            this.alertService.success(`${(item.isFolder ? "Der Ordner" : "Die Datei")} wurde erfolgreich umbenannt.`);
+                            this.alertService.success(
+                                await this.fts.t(item.isFolder ? "files.folderRenamedSucessfully" : "files.fileRenamedSucessfully"));
                             this.reloadHere();
                         }
                     });
             });
 
     }
-    public delete(item) {
-        if (confirm("Soll dieses Element wirklich gelöscht werden?")) {
-            this.remoteService.getNoCache("delete", `files/${item.id}`).subscribe((data) => {
+    public async delete(item) {
+        if (confirm(await this.fts.t(item.isFolder ? "files.confirmFolderDelete" : "files.confirmFileDelete"))) {
+            this.remoteService.getNoCache("delete", `files/${item.id}`).subscribe(async (data) => {
                 if (data.status == true) {
-                    this.alertService.success(`${(item.isFolder ? "Der Ordner" : "Die Datei")} wurde erfolgreich gelöscht.`);
+                    this.alertService.success(
+                        await this.fts.t(item.isFolder ? "files.folderDeletedSucessfully" : "files.fileDeletedSucessfully"));
                     this.reloadHere();
                 }
             });
         }
     }
-    public move(item) {
-        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt.\
-        Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+    public async move(item) {
+        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
     }
-    public copy(item) {
-        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt.\
-        Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+    public async copy(item) {
+        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
     }
 
-    public copyShareLink(inputField) {
+    public async copyShareLink(inputField) {
         inputField.select();
         document.execCommand("copy");
         inputField.setSelectionRange(0, 0);
-        this.alertService.success("Link in die Zwischenablage kopiert!");
+        this.alertService.success(await this.fts.t("files.linkCopied"));
     }
     public openShareLinkInNewTab() {
         const win = window.open(this.shareLink, "_blank");
@@ -324,7 +326,7 @@ export class FilesComponent implements OnInit {
         }
     }
 
-    private setupDocumentEditorConfig(ext, type) {
+    private async setupDocumentEditorConfig(ext, type) {
         this.documentEditorConfig = {
             editorConfig: {
               document: {
@@ -359,8 +361,8 @@ export class FilesComponent implements OnInit {
                     compactHeader: false,
                     compactToolbar: false,
                     customer: {
-                        address: "Hosted on GitHub",
-                        info: "An open-source platform for all kinds of workgroups. (https://hrueger.github.io/AGM-Tools)",
+                        address: await this.fts.t("about.hostedOnGitHub"),
+                        info: await this.fts.t("about.description") + "(https://hrueger.github.io/AGM-Tools)",
                         /* logo: "https://example.com/logo-big.png", ToDo */
                         name: "AGM-Tools",
                         www: "https://github.com/hrueger/AGM-Tools",

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { AlertService } from "../../../_services/alert.service";
+import { FastTranslateService } from "../../../_services/fast-translate.service";
 
 @Component({
     moduleId: module.id,
@@ -14,7 +15,7 @@ export class MessageBoxComponent {
     @Output() public attachmentMessageSent = new EventEmitter<any>();
     public showEmojiPicker = false;
 
-    constructor(private alertService: AlertService) {}
+    constructor(private alertService: AlertService, private fts: FastTranslateService) {}
 
     public toggleEmojiPicker() {
         this.showEmojiPicker = !this.showEmojiPicker;
@@ -31,24 +32,24 @@ export class MessageBoxComponent {
         this.showEmojiPicker = false;
     }
 
-    public sendDocument() {
+    public async sendDocument() {
         this.showAttachmentContainer = false;
-        this.alertService.info("Das geht in der Webversion noch nicht!");
+        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
         // console.log("Send document!");
     }
-    public sendPicture() {
+    public async sendPicture() {
         this.showAttachmentContainer = false;
-        this.alertService.info("Das geht in der Webversion noch nicht!");
+        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
         // console.log("Send image!");
     }
-    public sendGallery() {
+    public async sendGallery() {
         this.showAttachmentContainer = false;
-        this.alertService.info("Das geht in der Webversion noch nicht!");
+        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
         // console.log("Send gallery!");
     }
-    public sendAudio() {
+    public async sendAudio() {
         this.showAttachmentContainer = false;
-        this.alertService.info("Das geht in der Webversion noch nicht!");
+        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
         // console.log("Send audio!");
     }
     public sendLocation() {
@@ -64,9 +65,9 @@ export class MessageBoxComponent {
             this.attachmentMessageSent.emit({type: "location", data: val});
         }).catch(() => undefined);
     }
-    public sendContact() {
+    public async sendContact() {
         this.showAttachmentContainer = false;
-        this.alertService.info("Das geht in der Webversion nicht!");
+        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
         // console.log("Send contact!");
     }
 }

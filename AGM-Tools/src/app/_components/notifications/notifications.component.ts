@@ -4,6 +4,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Notification } from "../../_models/notification.model";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -27,10 +28,11 @@ export class NotificationsComponent implements OnInit {
         private fb: FormBuilder,
         private alertService: AlertService,
         private navbarService: NavbarService,
+        private fts: FastTranslateService,
     ) { }
 
-    public ngOnInit() {
-        this.navbarService.setHeadline("Benachrichtigungen");
+    public async ngOnInit() {
+        this.navbarService.setHeadline(await this.fts.t("notifications.notifications"));
         this.remoteService
             .get("get", "notifications")
             .subscribe((data) => {
@@ -60,11 +62,9 @@ export class NotificationsComponent implements OnInit {
                             receivers: this.newNotificationForm.get("receivers").value,
                             theme: this.newNotificationForm.get("importance").value,
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Benachrichtigung erfolgreich erstellt!",
-                                );
+                                this.alertService.success(await this.fts.t("notifications.notificationCreatedSucessfully"));
                                 this.remoteService
                                     .get("get", "notifications")
                                     .subscribe((res) => {
@@ -75,15 +75,13 @@ export class NotificationsComponent implements OnInit {
                 },
             );
     }
-    public deleteNotification(notification: Notification) {
-        if (confirm("Möchten Sie diese Benachrichtigung wirklich löschen?") == true) {
+    public async deleteNotification(notification: Notification) {
+        if (confirm(await this.fts.t("notifications.confirmDelete")) == true) {
             this.remoteService
                 .getNoCache("delete", `notifications/${notification.id}`)
-                .subscribe((data) => {
+                .subscribe(async (data) => {
                     if (data && data.status == true) {
-                        this.alertService.success(
-                            "Benachrichtigung erfolgreich gelöscht",
-                        );
+                        this.alertService.success(await this.fts.t("notifications.notificationDeletedSucessfully"));
                         this.remoteService
                             .get("get", "notifications")
                             .subscribe((res) => {

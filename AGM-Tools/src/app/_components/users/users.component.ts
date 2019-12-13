@@ -4,6 +4,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -36,10 +37,11 @@ export class UsersComponent implements OnInit {
         private alertService: AlertService,
         private authService: AuthenticationService,
         private navbarService: NavbarService,
+        private fts: FastTranslateService,
     ) { }
 
-    public ngOnInit() {
-        this.navbarService.setHeadline("Benutzer");
+    public async ngOnInit() {
+        this.navbarService.setHeadline(await this.fts.t("users.users"));
         this.remoteService.get("get", "users/").subscribe((data) => {
             this.users = data;
         });
@@ -84,11 +86,9 @@ export class UsersComponent implements OnInit {
                             pw2: this.newUserForm.get("password2").value,
                             username: this.newUserForm.get("name").value,
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Benutzer erfolgreich erstellt",
-                                );
+                                this.alertService.success(await this.fts.t("users.userCreatedSucessfully"));
                                 this.remoteService
                                     .get("get", "users/")
                                     .subscribe((res) => {
@@ -125,11 +125,9 @@ export class UsersComponent implements OnInit {
                             username: this.editUserForm.get("editUserName")
                                 .value,
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Ihr Benutzer erfolgreich geändert",
-                                );
+                                this.alertService.success(await this.fts.t("users.currentUserUpdatedSucessfully"));
                                 this.remoteService
                                     .get("get", "users/")
                                     .subscribe((res) => {
@@ -141,15 +139,13 @@ export class UsersComponent implements OnInit {
             );
     }
 
-    public deleteUser(user: User) {
-        if (confirm("Möchten Sie diesen Nutzer wirklich löschen?") == true) {
+    public async deleteUser(user: User) {
+        if (confirm(await this.fts.t("users.confirmDelete")) == true) {
             this.remoteService
                 .getNoCache("delete", `users/${user.id}`)
-                .subscribe((data) => {
+                .subscribe(async (data) => {
                     if (data && data.status == true) {
-                        this.alertService.success(
-                            "Benutzer erfolgreich gelöscht",
-                        );
+                        this.alertService.success(await this.fts.t("users.userDeletedSucessfully"));
                         this.remoteService
                             .get("get", "users/")
                             .subscribe((res) => {

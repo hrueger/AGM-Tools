@@ -2,7 +2,7 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-body">
-                    <h5 class="card-title d-inline">Verfügbarer Speicherplatz</h5>
+                    <h5 class="card-title d-inline">{{ "dashboard.remainingDiskSpace" | translate }}</h5>
                     <button class="btn btn-primary float-right px-2 py-1 m-1" (click)="updateChart()">
                         <i class="fas fa-sync-alt"></i>
                     </button>
@@ -12,7 +12,7 @@
                     </div>
             </div>
             <div class="card-footer">
-                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.space }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.space} }}</small>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-body px-0 pb-0">
-                <h5 class="card-title px-3">Nachrichten</h5>
+                <h5 class="card-title px-3">{{ "notifications.notifications" | translate }}</h5>
                 <div class="list-group messages">
                     <div *ngFor="let notification of notifications"  class="border-right-0 border-left-0 list-group-item list-group-item-action list-group-item-{{notification.theme}}">
                         <div class="d-flex w-100 justify-content-between">
@@ -29,15 +29,15 @@
                         </div>
                         <p class="mb-1">{{notification.content}}</p>
                         <div class="d-flex justify-content-between">
-                            <small>{{notification.creator.username}} am {{notification.createdAt | date}}</small>
+                            <small>{{notification.creator.username}} {{ "general.atDate" | translate}} {{notification.createdAt | date}}</small>
                             <button type="button" (click)="seen(notification)" class="close"><span>&times;</span></button>
                         </div>
                     </div>
                 </div>
-                <span class="text-muted pl-3" *ngIf="notifications.length == 0">Keine neuen Nachrichten!</span>
+                <span class="text-muted pl-3" *ngIf="notifications.length == 0">{{ "notifications.none" | translate }}</span>
             </div>
             <div class="card-footer">
-                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.notifications }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.notifications} }}</small>
             </div>
         </div>
     </div>
@@ -45,20 +45,20 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-body">
-                <h5 class="card-title">Nächste Events</h5>
+                <h5 class="card-title">{{ "events.nextEvents" | translate }}</h5>
                 <div class="datelist">
                     <div *ngFor="let event of dates" class="event" routerLink="/calendar/{{event.id}}">
                         <span class="headline">{{event.headline}}</span><br>
-                        <i class="m-1 fas fa-calendar-day"></i><span class="text-muted">ab dem {{ event.start | date:"EEEE" }}, {{ event.start | date:"shortDate" }} um {{ event.start | date:"shortTime" }} Uhr</span><br>
+                        <i class="m-1 fas fa-calendar-day"></i><span class="text-muted">{{ "general.startingAtDate" | translate:{"weekday": (event.start | date:"EEEE"), "day": (event.start | date:"shortDate"), "time": (event.start | date:"shortTime")} }}</span><br>
                         <i class="m-1 fas fa-map-marker-alt"></i><span class="text-muted">{{ event.location }}</span><br>
-                        <i class="m-1 fas fa-stopwatch text-primary"></i><span class="text-primary">noch {{ event.countdownTime }}</span>
+                        <i class="m-1 fas fa-stopwatch text-primary"></i><span class="text-primary">{{ 'events.countdown' | translate:{'countdown':event.countdownTime} }}</span>
                         <br />
                     </div>
                 </div>
-                <span class="text-muted" *ngIf="!dates || dates.length == 0">Keine anstehenden Events!</span>
+                <span class="text-muted" *ngIf="!dates || dates.length == 0">{{ "events.none" | translate }}</span>
             </div>
             <div class="card-footer">
-                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.events }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.events} }}</small>
             </div>
         </div>
     </div>
@@ -66,7 +66,7 @@
     <div class="col-md-4 col-sm-6 d-flex">
             <div class="card flex-fill mb-3">
             <div class="card-body">
-                <h5 class="card-title">What's new</h5>
+                <h5 class="card-title">{{ "dashboard.whatsnew" | translate }}</h5>
                 <div class="p-0">
                     <ejs-accordion expandMode="Single" *ngFor="let version of whatsnew">
                         <div>
@@ -87,20 +87,20 @@
                 </div>
             </div>
             <div class="card-footer">
-                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.changelog }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.changelog} }}</small>
             </div>
             </div>
         </div>
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-body">
-                <h5 class="card-title">Version</h5>
+                <h5 class="card-title">{{ "dashboard.version" | translate }}</h5>
                 <div class="alert alert-primary">
                     <span>{{version}}</span>
                 </div>
             </div>
             <div class="card-footer">
-                <small class="text-muted">Zuletzt aktualisiert: {{ lastUpdated.version }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.version} }}</small>
             </div>
         </div>
     </div>

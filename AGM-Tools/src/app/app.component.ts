@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
 import { PushService } from "./_services/push.service";
@@ -19,7 +20,9 @@ export class AppComponent {
         private router: Router,
         private authenticationService: AuthenticationService,
         private pushService: PushService,
+        private translate: TranslateService,
     ) {
+        translate.setDefaultLang("en");
         this.authenticationService.currentUser.subscribe(
             (x) => (this.currentUser = x),
         );

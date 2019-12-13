@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Lightbox } from "ngx-lightbox";
 import { environment } from "../../../environments/environment";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -22,10 +23,11 @@ export class TutorialComponent implements OnInit {
               private http: HttpClient,
               private lightbox: Lightbox,
               private authenticationService: AuthenticationService,
+              private fts: FastTranslateService,
               private remoteService: RemoteService) { }
 
-  public ngOnInit() {
-    this.navbarService.setHeadline("Tutorial");
+  public async ngOnInit() {
+    this.navbarService.setHeadline(await this.fts.t("tutorials.tutorials"));
     this.route.params.subscribe((params) => {
       this.remoteService.get("get", `tutorials/${params.index}`).subscribe((tutorial) => {
         this.gotNewTutorialData(tutorial);
@@ -67,7 +69,7 @@ export class TutorialComponent implements OnInit {
       (n == 2 ? that.tutorial.steps[i].image2 : that.tutorial.steps[i].image3));
     const index = this.allImageSources.findIndex((img) => img.name == toCompare);
     this.lightbox.open(this.allImageSources, index, {
-      albumLabel: "Bild %1 von %2",
+      albumLabel: await this.fts.t("tutorials.imageXofY"),
       showImageNumberLabel: true,
     });
   }
@@ -78,7 +80,7 @@ export class TutorialComponent implements OnInit {
 
   private gotNewTutorialData(tutorial: any) {
     if (tutorial) {
-      this.navbarService.setHeadline(`Tutorial: ${tutorial.title}`);
+      this.navbarService.setHeadline(`${this.fts.t("general.tutorial")}: ${tutorial.title}`);
     }
     this.tutorial = tutorial;
   }

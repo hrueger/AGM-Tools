@@ -1,14 +1,14 @@
 <button id="newBtn" type="button" class="btn btn-primary" (click)="openNewModal(newTemplateModal)">
-    Neue Vorlage
+    {{'templates.newTemplate' | translate}}
 </button>
 <br /><br />
 <div class="table-responsive">
     <table id="notifications" class="table table-hover table-striped">
         <thead>
             <tr>
-                <th>Gruppe</th>
-                <th>Name</th>
-                <th>Beschreibung</th>
+                <th>{{'general.group' | translate}}</th>
+                <th>{{'general.name' | translate}}</th>
+                <th>{{'general.description' | translate}}</th>
                 <th></th>
             </tr>
         </thead>
@@ -19,7 +19,7 @@
                 <td>{{ template.description }}</td>
                 <td>
                     <button class="btn btn-link" (click)="delete(template, $event)">
-                        Löschen
+                        {{'general.delete' | translate}}
                     </button>
                 </td>
             </tr>
@@ -27,87 +27,68 @@
     </table>
 </div>
 
-<br />
-<br />
-<p>
-    <small><b>Wichtig:</b> bitte nur die Vorlagen löschen, die auch von Ihnen
-        erstellt und veraltet sind.</small
-    >
-</p>
-
 <ng-template #showModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Vorlage</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{'general.template' | translate}}</h4>
         <button
             type="button"
             class="close"
-            aria-label="Close"
             (click)="modal.dismiss('Cross click')"
         >
-            <span aria-hidden="true">&times;</span>
+            <span>&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <h3>{{ imgTitle }}</h3>
         <img class="img img-fluid" [src]="imgUrl" />
     </div>
-    <!--<div class="modal-footer">
-        <button
-            type="button"
-            class="btn btn-outline-dark"
-            (click)="modal.close('Save click')"
-        >
-            Save
-        </button>
-    </div>-->
 </ng-template>
 
 <ng-template #newTemplateModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Neue Vorlage</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{'templates.newTemplate' | translate}}</h4>
         <button
             type="button"
             class="close"
-            aria-label="Close"
             (click)="modal.dismiss('Cross click')"
         >
-            <span aria-hidden="true">&times;</span>
+            <span>&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div *ngIf="invalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{'errors.requiredFieldsMissing' | translate}}
         </div>
         <form [formGroup]="newTemplateForm">
             <div class="form-group">
-                <label for="name">Name: </label>
+                <label for="name">{{'general.name' | translate}}: </label>
                 <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
-                    placeholder="Name der Vorlage"
+                    [placeholder]="'general.name' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="description">Beschreibung: </label>
+                <label for="description">{{'general.description' | translate}}: </label>
                 <textarea
                     class="form-control"
                     formControlName="description"
                     id="description"
-                    placeholder="Beschreibung der Vorlage"
+                    [placeholder]="'general.description' | translate"
                 ></textarea>
             </div>
             <br />
             <div class="form-group">
-                <label for="group" class="">Gruppe:</label>
+                <label for="group" class="">{{'general.group' | translate}}:</label>
                 <input
                     type="text"
                     class="form-control"
                     id="group"
                     formControlName="group"
-                    placeholder="Gruppe der Vorlage (Logo, Hintergrund, etc.)"
+                    [placeholder]="'templates.groupPlaceholder' | translate"
                 />
             </div>
             <app-file-upload
@@ -127,7 +108,7 @@
                     : (invalidMessage = true)
             "
         >
-            Erstellen
+            {{'general.create' | translate}}
         </button>
     </div>
 </ng-template>

@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 
 @Component({
     selector: "app-sidebar",
@@ -8,19 +9,25 @@ import { Component, Input } from "@angular/core";
 export class SidebarComponent {
     @Input() public changed: any;
     public showNav: boolean = true;
-    public navLinks = [
-        { name: "Dashboard", icon: "tachometer-alt", target: "dashboard" },
-        { name: "Projekte", icon: "folder", target: "projects" },
-        { name: "Kalender", icon: "calendar", target: "calendar" },
-        { seperator: true},
-        { name: "Chat", icon: "comments", target: "chat" },
-        { name: "Benachrichtigungen", icon: "envelope", target: "notifications" },
-        { seperator: true},
-        { name: "Tutorials", icon: "book", target: "tutorials" },
-        { name: "Vorlagen", icon: "portrait", target: "templates" },
-        { seperator: true},
-        { name: "Fertig", icon: "check", target: "done" },
-    ];
+    public navLinks;
+
+    constructor(private fts: FastTranslateService) {}
+
+    public async ngOnInit() {
+        this.navLinks = [
+            { name: await this.fts.t("dashboard.dashboard"), icon: "tachometer-alt", target: "dashboard" },
+            { name: await this.fts.t("projects.projects"), icon: "folder", target: "projects" },
+            { name: await this.fts.t("calendar.calendar"), icon: "calendar", target: "calendar" },
+            { seperator: true},
+            { name: await this.fts.t("chat.chat"), icon: "comments", target: "chat" },
+            { name: await this.fts.t("notifications.notifications"), icon: "envelope", target: "notifications" },
+            { seperator: true},
+            { name: await this.fts.t("tutorials.tutorials"), icon: "book", target: "tutorials" },
+            { name: await this.fts.t("templates.templates"), icon: "portrait", target: "templates" },
+            { seperator: true},
+            { name: await this.fts.t("done.done"), icon: "check", target: "done" },
+        ];
+    }
 
     public hideNav() {
         this.showNav = false;

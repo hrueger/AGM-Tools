@@ -3,6 +3,7 @@ import { ChartOptions, ChartType } from "chart.js";
 import { Label, MultiDataSet } from "ng2-charts";
 // tslint:disable-next-line: max-line-length
 import * as pluginDataLabels from "../../../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js";
+import { FastTranslateService } from "../../_services/fast-translate.service.js";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -12,11 +13,7 @@ import { RemoteService } from "../../_services/remote.service";
     templateUrl: "./dashboard.component.html",
 })
 export class DashboardComponent implements OnInit {
-    public spaceChartLabels: Label[] = [
-        "Verfügbarer Speicherplatz",
-        "Vom System belegt",
-        "Von Daten belegt",
-    ];
+    public spaceChartLabels: Label[];
     public spaceChartData: MultiDataSet = [[0, 0, 0]]; // [[350, 450, 100]];
     public spaceChartColors = [
         {
@@ -52,10 +49,16 @@ export class DashboardComponent implements OnInit {
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
+        private fts: FastTranslateService,
     ) { }
 
-    public ngOnInit() {
+    public async ngOnInit() {
         this.navbarService.setHeadline("Dashboard");
+        this.spaceChartLabels = [
+            await this.fts.t("dashboard.remainingDiskSpace"),
+            await this.fts.t("dashboard.diskSpaceUsedBySystem"),
+            await this.fts.t("dashboard.diskSpaceUsedByData"),
+        ];
         this.initChart();
     }
 

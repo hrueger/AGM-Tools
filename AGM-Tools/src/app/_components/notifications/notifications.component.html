@@ -1,15 +1,15 @@
 <button id="newBtn" type="button" class="btn btn-primary" (click)="openNewModal(newNotificationModal)">
-    Neue Benachrichtigung
+    {{"notifications.newNotification" | translate }}
 </button>
 <br /><br />
 <div class="table-responsive">
     <table id="notifications" class="table table-hover table-striped">
         <thead>
             <tr>
-                <th>Empfänger</th>
-                <th>Thema</th>
-                <th>Nachricht</th>
-                <th>Gelesen</th>
+                <th>{{"general.receivers" | translate}}</th>
+                <th>{{"general.topic" | translate}}</th>
+                <th>{{"general.message" | translate}}</th>
+                <th>{{"general.read" | translate}}</th>
                 <th></th>
             </tr>
         </thead>
@@ -24,7 +24,7 @@
                 </td>
                 <td>
                     <button class="btn btn-link text-danger" (click)="deleteNotification(notification)">
-                        Löschen
+                        {{"general.delete" | translate}}
                     </button>
                 </td>
             </tr>
@@ -35,14 +35,13 @@
 <br />
 <br />
 <p>
-    <small><b>Wichtig:</b> es werden nur diejenigen Benachrichtigungen angezeigt,
-        die von Ihnen erstellt worden sind.</small>
+    <small><b>{{"general.important" | translate}}</b> {{"notifications.infoMessage" | translate}}</small>
 </p>
 
 <ng-template #newNotificationModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">
-            Neue Benachrichtigung
+            {{"notifications.newNotification" | translate}}
         </h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
@@ -50,43 +49,43 @@
     </div>
     <div class="modal-body">
         <div *ngIf="invalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{"errors.requiredFieldsMissing" | translate}}
         </div>
         <form [formGroup]="newNotificationForm">
             <div class="form-group">
-                <label for="headline">Thema: </label>
-                <input type="text" class="form-control" id="headline" formControlName="headline" placeholder="Thema" />
+                <label for="headline">{{"general.topic" | translate}}: </label>
+                <input type="text" class="form-control" id="headline" formControlName="headline" [placeholder]="'general.topic' | translate" />
             </div>
             <br />
             <div class="form-group">
-                <label for="content">Nachricht: </label>
-                <textarea class="form-control" formControlName="content" id="content" placeholder="Nachricht"></textarea>
+                <label for="content">{{"general.message" | translate}}: </label>
+                <textarea class="form-control" formControlName="content" id="content" [placeholder]="'general.message' | translate"></textarea>
             </div>
             <br />
             <div class="form-group">
-                <label for="receivers" class="">Empfänger:</label>
+                <label for="receivers" class="">{{"general.receivers" | translate}}:</label>
                 <select multiple class="custom-select" formControlName="receivers">
                     <option *ngFor="let user of allusers" value="{{ user.id }}">{{ user.username }}</option>
                 </select>
             </div>
             <br />
             <div class="form-group">
-                <label for="importance">Thema: </label>
+                <label for="importance">{{'general.topic' | translate}}: </label>
                 <div class="custom-control custom-radio bg-success py-2 px-5 my-1">
-                    <input type="radio" id="1" formControlName="importance" value="success" class="custom-control-input">
-                    <label class="custom-control-label" for="1">Erfolg</label>
+                    <input type="radio" id="1" formControlName="importance" value="info" class="custom-control-input">
+                    <label class="custom-control-label" for="1">{{'general.colors.info' | translate}}</label>
                 </div>
                 <div class="custom-control custom-radio bg-info py-2 px-5 my-1">
-                    <input type="radio" id="2" formControlName="importance" value="info" class="custom-control-input">
-                    <label class="custom-control-label" for="2">Information</label>
+                    <input type="radio" id="2" formControlName="importance" value="success" class="custom-control-input">
+                    <label class="custom-control-label" for="2">{{'general.colors.success' | translate}}</label>
                 </div>
                 <div class="custom-control custom-radio bg-warning py-2 px-5 my-1">
                     <input type="radio" id="3" formControlName="importance" value="warning" class="custom-control-input">
-                    <label class="custom-control-label" for="3">Warnung</label>
+                    <label class="custom-control-label" for="3">{{'general.colors.warning' | translate}}</label>
                 </div>
                 <div class="custom-control custom-radio bg-danger py-2 px-5 my-1">
                     <input type="radio" id="4" formControlName="importance" value="danger" class="custom-control-input">
-                    <label class="custom-control-label" for="4">Gefahr</label>
+                    <label class="custom-control-label" for="4">{{'general.colors.danger' | translate}}</label>
                 </div>
                 
             </div>
@@ -99,7 +98,7 @@
                     ? modal.close('Save click')
                     : (invalidMessage = true)
             ">
-            Senden
+            {{"general.send" | translate}}
         </button>
     </div>
 </ng-template>

@@ -1,0 +1,189 @@
+{
+  "about": {
+    "description": "An open-source platform for all kinds of workgroups.",
+    "hostedOnGithub": "Hosted on GitHub"
+  },
+  "calendar": {
+    "calendar": "Calendar",
+    "eventDeletedSucessfully": "Event deleted sucessfully!",
+    "eventSavedSucessfully": "Event saved sucessfully!",
+    "eventUpdatedSucessfully": "Event updated sucessfully!"
+  },
+  "chat": {
+    "chat": "Chat",
+    "contactNumberCopied": "The number has been copied to the clipboard!",
+    "didYouKnow": "<h4>Did you know?</h4><p>In the chat you can send</p><ul><li>Bilder</li><li>Contacts</li><li>Files</li><li>and Emojies</li></ul>",
+    "noMessages": "No messages. Start now!"
+  },
+  "dashboard": {
+    "dashboard": "Dashboard",
+    "diskSpaceUsedByData": "Data",
+    "diskSpaceUsedBySystem": "System",
+    "remainingDiskSpace": "Available Diskspace",
+    "version": "Version",
+    "whatsnew": "What's new"
+  },
+  "done": {
+    "done": "Done",
+    "info": "<b>Information</b><br><br>This page is not completed yet, because I don't know how to display and organize all files which are marked as done. If you have an idea, please <a target='_blank' href='https://github.com/hrueger/AGM-Tools/issues/new'>create a issue on GitHub</a>!"
+  },
+  "errors": {
+    "errorWhileSaving": "Error while saving...",
+    "fillOutPassword": "The password field can't be empty!",
+    "fillOutUsername": "The username field can't be empty!",
+    "noDescriptionProvided": "No description provided",
+    "noHeadlineProvided": "No headline provided",
+    "noLocationProvided": "No location provided",
+    "notSupportedFiletype": "This filetype is not supported. ",
+    "oldBrowser": "Please use a newer browser.",
+    "requiredFieldMissing": "This field can't be empty!",
+    "requiredFieldsMissing": "Please fill all required fields!"
+  },
+  "events": {
+    "countdown": "{{countdown}} left",
+    "nextEvents": "Next events",
+    "none": "No upcoming events!"
+  },
+  "files": {
+    "confirmFileDelete": "Are you sure that this file should be deleted?",
+    "confirmFolderDelete": "Are you sure that this folder should be deleted?",
+    "copy": "Copy",
+    "delete": "Delete",
+    "download": "Download",
+    "fileDeletedSucessfully": "The file has been deleted sucessfully.",
+    "fileRenamedSucessfully": "The file has been renamed sucessfully.",
+    "fileUploadedSucessfully": "The file has been uploaded sucessfully.",
+    "files": "Files",
+    "folderCreatedSucessfully": "The folder has been created sucessfully.",
+    "folderDeletedSucessfully": "The folder has been deleted sucessfully.",
+    "folderRenamedSucessfully": "The folder has been renamed sucessfully.",
+    "linkCopied": "The link has been copied to the clipboard!",
+    "move": "Move",
+    "newFolder": "New folder",
+    "open": "Open",
+    "rename": "Rename",
+    "share": "Share",
+    "tags": "Tags"
+  },
+  "general": {
+    "audio": "Audio",
+    "avalibleInLaterVersion": "This feature will be avalible in a future version!",
+    "back": "Back",
+    "camera": "Camera",
+    "colors": {
+      "danger": "Danger",
+      "info": "Info",
+      "success": "Success",
+      "warning": "Warning"
+    },
+    "contact": "Contact",
+    "content": "Content",
+    "create": "Create",
+    "creationDate": "Creation date",
+    "delete": "Delete",
+    "description": "Description",
+    "document": "Document",
+    "edit": "Edit",
+    "email": "Email",
+    "gallery": "Gallery",
+    "general": "General",
+    "group": "Group",
+    "image": "Image",
+    "important": "Important!",
+    "lastOnline": "Last seen:",
+    "lastUpdated": "Last updated: {{time}}",
+    "loading": "Loading...",
+    "location": "Location",
+    "members": "Members",
+    "message": "Message",
+    "name": "Name",
+    "password": "Password",
+    "read": "Read",
+    "receivers": "Receivers",
+    "reset": "Reset",
+    "save": "Save",
+    "send": "Send",
+    "size": "Size",
+    "startingAtDate": "starting {{weekday}}, {{day}} at {{time}} o'clock",
+    "template": "Template",
+    "title": "Title",
+    "topic": "Topic",
+    "tutorial": "Tutorial",
+    "update": "Update",
+    "uploadImage": "Upload image",
+    "uploadStartedPleaseWait": "Upload started, please wait...",
+    "uploading": "Uploading...",
+    "username": "Username"
+  },
+  "login": {
+    "inputEmail": "Please input your email address",
+    "inputNewPassword": "New password",
+    "login": "Login",
+    "lostPassword": "Lost password?",
+    "passwordResetSuccessful": "Your password was sucessfully reset.",
+    "repeatNewPassword": "Repeat new password",
+    "toLogin": "To Login"
+  },
+  "notifications": {
+    "confirmDelete": "Are you sure that this notification sould be deleted?",
+    "infoMessage": "Only the notifications you created are shown!",
+    "newNotification": "New Notification",
+    "none": "No new messages!",
+    "notificationCreatedSucessfully": "Notification saved sucessfully!",
+    "notificationDeletedSucessfully": "Notification deleted sucessfully!",
+    "notifications": "Notifications"
+  },
+  "projects": {
+    "confirmDelete": "Are you sure that this project sould be deleted?",
+    "newProject": "New Project",
+    "projectCreatesSucessfully": "Project created sucessfully!",
+    "projectDeletedSucessfully": "Project deleted sucessfully!",
+    "projectUpdatedSucessfully": "Project updated sucessfully!",
+    "projects": "Projects",
+    "update": "Update project"
+  },
+  "share": {
+    "share": "Share",
+    "sharedFile": "This file has been shared with you. Download it now!",
+    "sharedFolder": "This folder has been shared with you. Download it now!"
+  },
+  "tasks": {
+    "tasks": "Tasks"
+  },
+  "templates": {
+    "confirmDelete": "Are you sure that this template sould be deleted?",
+    "groupPlaceholder": "Template group (logo, background etc.)",
+    "newTemplate": "New template",
+    "templateCreatedSucessfully": "Template saved sucessfully!",
+    "templates": "Templates"
+  },
+  "tutorials": {
+    "addStep": "Add step",
+    "changesSavedSucessfully": "Changes saved sucessfully!",
+    "confirmStepDelete": "Are you sure that this step sould be deleted?",
+    "editTutorial": "Edit tutorial",
+    "imageXofY": "Image %1 of %2",
+    "newTutorial": "New tutorial",
+    "removeImage": "Remove image",
+    "removeStep": "Remove step",
+    "stepAddedSucessfully": "Step added sucessfully!",
+    "stepDeletedSucessfully": "Step deleted sucessfully!",
+    "stepNr": "Step {{nr}}",
+    "stepsSavedSucessfully": "Steps saved sucessfully!",
+    "tutorialCreatedSucessfully": "Tutorial created sucessfully!",
+    "tutorials": "Tutorials"
+  },
+  "users": {
+    "changeOwnProfile": "Change profile",
+    "changesPasswordInfo": "You always have to specify your old password when making changes!",
+    "confirmDelete": "Are you sure that this user should be deleted?",
+    "currentUserUpdatedSucessfully": "The current user has been updated sucessfully.",
+    "newUser": "New User",
+    "oldPassword": "Old password",
+    "repeatPassword": "Repeat password",
+    "userCreatedSucessfully": "The user has been created sucessfully.",
+    "userDeletedSucessfully": "The user has been deleted sucessfully.",
+    "usergroup": "Usergroup",
+    "users": "Users"
+  }
+}

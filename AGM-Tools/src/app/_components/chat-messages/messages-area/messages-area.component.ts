@@ -11,6 +11,7 @@ import { Lightbox } from "ngx-lightbox";
 import { environment } from "../../../../environments/environment";
 import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
+import { FastTranslateService } from "../../../_services/fast-translate.service";
 import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
@@ -33,13 +34,14 @@ export class MessagesAreaComponent implements OnInit {
         private authenticationService: AuthenticationService,
         private lightbox: Lightbox,
         private alertService: AlertService,
+        private fts: FastTranslateService,
     ) { }
 
     public ngOnInit() {
         this.messages = this.messages.slice(0, 50);
     }
 
-    public addContact(contact) {
+    public async addContact(contact) {
         const el = document.createElement("textarea");
         el.value = contact.number;
         // @ts-ignore
@@ -49,7 +51,7 @@ export class MessagesAreaComponent implements OnInit {
         el.select();
         document.execCommand("copy");
         document.body.removeChild(el);
-        this.alertService.success("Die Nummer wurde in die Zwischenablage kopiert!");
+        this.alertService.success(await this.fts.t("chat.contactNumberCopied"));
     }
 
     public displayImage(messageIndex) {

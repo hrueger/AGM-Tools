@@ -18,7 +18,7 @@ import { NavbarService } from "../../_services/navbar.service";
     templateUrl: "./navbar.component.html",
 })
 export class NavbarComponent {
-    public headline: string = "Nix";
+    public headline: string = "";
     @Output() public toggleNav = new EventEmitter<any>();
 
     constructor(

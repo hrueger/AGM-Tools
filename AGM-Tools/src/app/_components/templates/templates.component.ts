@@ -10,6 +10,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -31,11 +32,11 @@ export class TemplatesComponent implements OnInit {
         private modalService: NgbModal,
         private authenticationService: AuthenticationService,
         private navbarService: NavbarService,
-        private httpClient: HttpClient,
+        private fts: FastTranslateService,
         private alertService: AlertService,
     ) { }
-    public ngOnInit() {
-        this.navbarService.setHeadline("Vorlagen");
+    public async ngOnInit() {
+        this.navbarService.setHeadline(await this.fts.t("templates.templates"));
         this.loadTemplates();
         this.newTemplateForm = new FormGroup({
             description: new FormControl(null, Validators.required),
@@ -54,18 +55,16 @@ export class TemplatesComponent implements OnInit {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
             .result.then(
-                (result) => {
+                async (result) => {
                     this.invalidMessage = false;
-                    this.alertService.success(
-                        "Hochladen gestartet, bitte warten!",
-                    );
+                    this.alertService.success(await this.fts.t("general.uploadStartedPleaseWait"));
                     this.remoteService.uploadFile("templates", "file", this.newTemplateForm.get("file").value, {
                         description: this.newTemplateForm.get("description").value,
                         group: this.newTemplateForm.get("group").value,
                         name: this.newTemplateForm.get("name").value,
-                    }).subscribe((data) => {
+                    }).subscribe(async (data) => {
                         if (data && data.status == true) {
-                            this.alertService.success("Vorlage erfolgreich hochgeladen");
+                            this.alertService.success(await this.fts.t("templates.templateCreatedSucessfully"));
                             this.loadTemplates();
                         }
                     });
@@ -73,8 +72,8 @@ export class TemplatesComponent implements OnInit {
             );
     }
 
-    public delete(template, event) {
-        if (confirm("Soll diese Vorlage wirklich gelöscht werden?")) {
+    public async delete(template, event) {
+        if (confirm(await this.fts.t("templates.confirmDelete"))) {
             this.remoteService.get("delete", `templates/${template.id}`).subscribe((data) => {
                 if (data && data.status == true) {
                     this.loadTemplates();

@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Location } from "@angular/common";
 import { registerLocaleData } from "@angular/common";
-import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
 import localeDe from "@angular/common/locales/de";
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { AngularFireModule } from "@angular/fire";
@@ -17,6 +17,8 @@ import { JwtModule } from "@auth0/angular-jwt";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
 import { DashboardLayoutModule } from "@syncfusion/ej2-angular-layouts";
 import { AccordionModule, TabModule } from "@syncfusion/ej2-angular-navigations";
@@ -150,6 +152,13 @@ export function getJWT() {
         AccordionModule,
         NgxExtendedPdfViewerModule,
         ToastrModule.forRoot(),
+        TranslateModule.forRoot({
+            loader: {
+                deps: [HttpClient],
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+            },
+        }),
     ],
     providers: [
         Location,
@@ -164,3 +173,7 @@ export function getJWT() {
     ],
 })
 export class AppModule { }
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http);
+}

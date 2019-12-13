@@ -1,9 +1,9 @@
 <div *ngIf="tutorial">
     <div class="mycard" *ngFor="let step of tutorial.steps; let index = index">
-        <h3>Schritt {{index + 1}}: <i>{{step.title}}</i></h3>
+        <h3>{{'tutorials.stepNr' | translate:{"nr": index + 1} }}: <i>{{step.title}}</i></h3>
         <p [innerHTML]="getContent(step.content) | safe:'html'"></p>
-        <img class="img-fluid" (click)="showImage(index, 1)" *ngIf="step.image1" [src]="getFileSrc(step.image1)" alt="Bild 1">
-        <img class="img-fluid" (click)="showImage(index, 2)" *ngIf="step.image2" [src]="getFileSrc(step.image2)" alt="Bild 2">
-        <img class="img-fluid" (click)="showImage(index, 3)" *ngIf="step.image3" [src]="getFileSrc(step.image3)" alt="Bild 3">
+        <img class="img-fluid" (click)="showImage(index, 1)" *ngIf="step.image1" [src]="getFileSrc(step.image1)" [alt]="'general.image' | translate">
+        <img class="img-fluid" (click)="showImage(index, 2)" *ngIf="step.image2" [src]="getFileSrc(step.image2)" [alt]="'general.image' | translate">
+        <img class="img-fluid" (click)="showImage(index, 3)" *ngIf="step.image3" [src]="getFileSrc(step.image3)" [alt]="'general.image' | translate">
     </div>
 </div>

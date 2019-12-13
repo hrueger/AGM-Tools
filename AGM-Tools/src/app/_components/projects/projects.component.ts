@@ -11,6 +11,7 @@ import { AuthenticationService } from "../..//_services/authentication.service";
 import { Project } from "../../_models/project.model";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -34,12 +35,13 @@ export class ProjectsComponent implements OnInit {
         private modalService: NgbModal,
         private fb: FormBuilder,
         private alertService: AlertService,
+        private fts: FastTranslateService,
         private authenticationService: AuthenticationService,
         private navbarService: NavbarService,
     ) { }
 
-    public ngOnInit() {
-        this.navbarService.setHeadline("Projekte");
+    public async ngOnInit() {
+        this.navbarService.setHeadline(await this.fts.t("projects.projects"));
         this.remoteService.get("get", "projects").subscribe((data) => {
             this.projects = data;
         });
@@ -62,11 +64,11 @@ export class ProjectsComponent implements OnInit {
         return `${environment.apiUrl}projects/${project.id}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
-    public delete(project) {
-        if (confirm("Soll dieses Projekt wirklich gelöscht werden?")) {
-            this.remoteService.get("delete", `projects/${project.id}`).subscribe((data) => {
+    public async delete(project) {
+        if (confirm(await this.fts.t("projects.confirmDelete"))) {
+            this.remoteService.get("delete", `projects/${project.id}`).subscribe(async (data) => {
                 if (data && data.status == true) {
-                    this.alertService.success("Projekt erfolgreich gelöscht!");
+                    this.alertService.success(await this.fts.t("projects.projectDeletedSucessfully"));
                     this.remoteService.get("get", "projects").subscribe((d) => {
                         this.projects = d;
                     });
@@ -92,9 +94,9 @@ export class ProjectsComponent implements OnInit {
                             name: this.updateProjectForm.get("name").value,
                             users: this.updateProjectForm.get("users").value,
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success("Projekt erfolgreich aktualisiert");
+                                this.alertService.success(await this.fts.t("projects.projectUpdatedSucessfully"));
                                 this.remoteService.get("get", "projects").subscribe((d) => {
                                     this.projects = d;
                                 });
@@ -117,9 +119,9 @@ export class ProjectsComponent implements OnInit {
                             name: this.newProjectForm.get("name").value,
                             users: this.newProjectForm.get("users").value,
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success("Projekt erfolgreich erstellt");
+                                this.alertService.success(await this.fts.t("projects.projectsCreatedSucessfully"));
                                 this.remoteService.get("get", "projects").subscribe((d) => {
                                     this.projects = d;
                                 });

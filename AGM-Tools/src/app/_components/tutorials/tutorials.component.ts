@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -21,15 +22,16 @@ export class TutorialsComponent implements OnInit {
               private fb: FormBuilder,
               private remoteService: RemoteService,
               private modalService: NgbModal,
+              private fts: FastTranslateService,
               private alertService: AlertService) { }
 
-  public ngOnInit() {
+  public async ngOnInit() {
     this.remoteService
     .get("get", "tutorials/")
     .subscribe((res) => {
       this.tutorials = res;
     });
-    this.navbarService.setHeadline("Tutorials");
+    this.navbarService.setHeadline(await this.fts.t("tutorials.tutorials"));
     this.newTutorialForm = this.fb.group({
       description: [this.description, [Validators.required]],
       title: [this.title, [Validators.required]],
@@ -48,11 +50,9 @@ export class TutorialsComponent implements OnInit {
               description: this.newTutorialForm.get("description").value,
               title: this.newTutorialForm.get("title").value,
             })
-            .subscribe((data) => {
+            .subscribe(async (data) => {
               if (data && data.status == true) {
-                this.alertService.success(
-                  "Tutorial erfolgreich erstellt",
-                );
+                this.alertService.success(await this.fts.t("tutorials.tutorialCreatedSucessfully"));
                 this.remoteService
                   .get("get", "tutorials/")
                   .subscribe((res) => {

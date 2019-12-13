@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -26,14 +27,15 @@ export class EditTutorialComponent implements OnInit {
               private fb: FormBuilder,
               private alertService: AlertService,
               private authenticationService: AuthenticationService,
+              private fts: FastTranslateService,
               private route: ActivatedRoute) { }
 
-  public ngOnInit() {
+  public async ngOnInit() {
     this.tutorialForm = this.fb.group({
       description: [this.description, [Validators.required]],
       title: [this.title, [Validators.required]],
     });
-    this.navbarService.setHeadline("Tutorial");
+    this.navbarService.setHeadline(await this.fts.t("general.tutorial"));
     this.route.params.subscribe((params) => {
       this.remoteService.get("get", `tutorials/${params.index}`).subscribe((tutorial) => {
         this.gotNewTutorialData(tutorial);
@@ -48,11 +50,9 @@ export class EditTutorialComponent implements OnInit {
         description: this.tutorialForm.get("description").value,
         title: this.tutorialForm.get("title").value,
       })
-      .subscribe((data) => {
+      .subscribe(async (data) => {
         if (data && data.status == true) {
-          this.alertService.success(
-            "Änderungen erfolgreich gespeichert",
-          );
+          this.alertService.success(await this.fts.t("tutorials.changesSavedSucessfully"));
           this.remoteService
             .get("get", `tutorials/${this.tutorial.id}`)
             .subscribe((tutorial) => {
@@ -70,11 +70,9 @@ export class EditTutorialComponent implements OnInit {
   public addStep() {
     this.remoteService
       .getNoCache("post", `tutorials/${this.tutorial.id}/steps`)
-      .subscribe((data) => {
+      .subscribe(async (data) => {
         if (data && data.status == true) {
-          this.alertService.success(
-            "Schritt erfolgreich hinzugefügt",
-          );
+          this.alertService.success(await this.fts.t("tutorials.stepAddedSucessfully"));
           this.remoteService
             .get("get", `tutorials/${this.tutorial.id}`)
             .subscribe((tutorial) => {
@@ -86,7 +84,7 @@ export class EditTutorialComponent implements OnInit {
       });
   }
 
-  public updateSteps() {
+  public async updateSteps() {
     this.tutorial.steps.forEach((step) => {
       this.remoteService
         .getNoCache("post", `tutorials/${this.tutorial.id}/steps/${step.id}`, {
@@ -96,17 +94,13 @@ export class EditTutorialComponent implements OnInit {
           image3: step.image3,
           title: step.title,
         })
-        .subscribe((data) => {
+        .subscribe(async (data) => {
           if (!data || data.status != true) {
-            this.alertService.error(
-              "Fehler beim Speichern...",
-            );
+            this.alertService.error(await this.fts.t("errors.errorWhileSaving"));
           }
         });
     });
-    this.alertService.success(
-      "Schritte erfolgreich gespeichert",
-    );
+    this.alertService.success(await this.fts.t("tutorials.stepsSavedSucessfully"));
   }
 
   public uploadImage(files, stepIdx, n) {
@@ -134,16 +128,14 @@ export class EditTutorialComponent implements OnInit {
     });
   }
 
-  public deleteStep(index) {
-    if (confirm("Soll dieser Schritt wirklich gelöscht werden?")) {
+  public async deleteStep(index) {
+    if (confirm(await this.fts.t("tutorials.confirmStepDelete"))) {
       this.remoteService
         .getNoCache("delete", `tutorials/${this.tutorial.id}/steps/${this.tutorial.steps[index].id}`)
-        .subscribe((data) => {
+        .subscribe(async (data) => {
           if (data && data.status == true) {
             this.tutorial.steps.splice(index, 1);
-            this.alertService.success(
-              "Schritt erfolgreich gelöscht",
-            );
+            this.alertService.success(await this.fts.t("tutorials.stepDeletedSucessfully"));
           }
         });
     }
@@ -164,7 +156,7 @@ export class EditTutorialComponent implements OnInit {
       this.tutorial = tutorial;
       this.tutorialForm.get("description").setValue(tutorial.description);
       this.tutorialForm.get("title").setValue(tutorial.title);
-      this.navbarService.setHeadline(`Tutorial bearbeiten: ${tutorial.title}`);
+      this.navbarService.setHeadline(`${this.fts.t("tutorials.editTutorial")}: ${tutorial.title}`);
     }
   }
 

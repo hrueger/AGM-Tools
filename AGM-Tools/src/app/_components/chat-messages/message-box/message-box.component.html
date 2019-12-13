@@ -2,29 +2,29 @@
     <div class="row">
         <div class="col-4" (click)="sendDocument()">
             <img class="img-fluid" src="assets/attachment/document.png">
-            <span>Dokument</span>
+            <span>{{'general.document' | translate}}</span>
         </div>
         <div class="col-4" (click)="sendPicture()">
             <img class="img-fluid" src="assets/attachment/camera.png">
-            <span>Kamera</span>
+            <span>{{'general.camera' | translate}}</span>
         </div>
         <div class="col-4" (click)="sendGallery()">
             <img class="img-fluid" src="assets/attachment/gallery.png">
-            <span>Galerie</span>
+            <span>{{'general.gallery' | translate}}</span>
         </div>
     </div>
     <div class="row">
         <div class="col-4" (click)="sendAudio()">
             <img class="img-fluid" src="assets/attachment/audio.png">
-            <span>Audio</span>
+            <span>{{'general.audio' | translate}}</span>
         </div>
         <div class="col-4" (click)="sendLocation()">
             <img class="img-fluid" src="assets/attachment/location.png">
-            <span>Standort</span>
+            <span>{{'general.location' | translate}}</span>
         </div>
         <div class="col-4" (click)="sendContact()">
             <img class="img-fluid" src="assets/attachment/contact.png">
-            <span>Kontakt</span>
+            <span>{{'general.contact' | translate}}</span>
         </div>    
     </div>
 </div>
@@ -35,12 +35,12 @@
                 &#xf580;
             </button>
             <button class="btn btn-outline-secondary" (click)="showAttachmentContainer = !showAttachmentContainer">
-                +
+                <i class="fas fa-plus fa-xs"></i>
             </button>
 
             <emoji-mart showPreview="false" set="apple" class="emoji-picker" (emojiClick)="addEmoji($event)" *ngIf="showEmojiPicker" title="Pick your emoji…" [i18n]="emojiI18n"></emoji-mart>
         </div>
-        <input type="text" [(ngModel)]="messageContent" class="form-control" placeholder="Nachricht" />
+        <input type="text" [(ngModel)]="messageContent" class="form-control" [placeholder]="'general.message' | translate" />
         <div class="input-group-append" id="button-addon4">
             <button (click)="sendMessage()" class="fas btn btn-outline-secondary" type="button">
                 &#xf1d8;

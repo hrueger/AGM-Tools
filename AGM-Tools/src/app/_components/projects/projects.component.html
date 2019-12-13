@@ -4,7 +4,7 @@
     (click)="openNewModal(content)"
     class="btn btn-primary"
 >
-    Neues Projekt
+    {{ "projects.newProject" | translate }}
 </button>
 
 <div class="row mt-4">
@@ -14,8 +14,8 @@
             <div ngbDropdown class="d-inline-block float-right">
                 <button class="btn btn-outline-none text-primary p-1" ngbDropdownToggle><i class="fas fa-cog"></i></button>
                 <div ngbDropdownMenu>
-                    <button ngbDropdownItem class="btn btn-link text-primary btn-primary" (click)="update(project, updateModal)">Bearbeiten</button>
-                    <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(project)">Löschen</button>
+                    <button ngbDropdownItem class="btn btn-link text-primary btn-primary" (click)="update(project, updateModal)">{{"general.edit" | translate}}</button>
+                    <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(project)">{{"general.delete" | translate}}</button>
                 </div>
             </div>
             <h5 class="card-title">{{project.name}}</h5>
@@ -25,7 +25,7 @@
         <div class="list-group list-group-flush">
             <a [routerLink]="['/', 'chat', 'project', project.id]" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Chat</h5>
+                    <h5 class="mb-1">{{'chat.chat' | translate}}</h5>
                     <small>{{project.chat.lastUpdated}}</small>
                 </div>
                 <div>
@@ -36,7 +36,7 @@
             
             <a [routerLink]="['/', 'files', project.id, project.name]" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Dateien</h5>
+                    <h5 class="mb-1">{{"files.files" | translate}}</h5>
                     <small>{{project.files.lastUpdated}}</small>
                 </div>
                 <div>
@@ -47,7 +47,7 @@
                 
             <a [routerLink]="['/', 'tasks', project.id]" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Aufgaben</h5>
+                    <h5 class="mb-1">{{"tasks.tasks" | translate}}</h5>
                     <small>{{project.tasks.lastUpdated}}</small>
                 </div>
                 <div>
@@ -58,7 +58,7 @@
 
             <a [routerLink]="['/', 'tutorials', project.id]" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Tutorials</h5>
+                    <h5 class="mb-1">{{"tutorials.tutorials" | translate}}</h5>
                     <small>{{project.tutorials.lastUpdated}}</small>
                 </div>
                 <div>
@@ -72,11 +72,10 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Neues Projekt</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{"projects.newProject" | translate}}</h4>
         <button
             type="button"
             class="close"
-            aria-label="Close"
             (click)="modal.dismiss('Cross click')"
         >
             <span aria-hidden="true">&times;</span>
@@ -84,32 +83,32 @@
     </div>
     <div class="modal-body">
         <div *ngIf="invalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{"errors.requiredFieldsMissing" | translate}}
         </div>
         <form [formGroup]="newProjectForm">
             <div class="form-group">
-                <label for="name">Name: </label>
+                <label for="name">{{"general.name" | translate}}: </label>
                 <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
-                    placeholder="Name des Projekts"
+                    [placeholder]="'general.name' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="description">Beschreibung: </label>
+                <label for="description">{{'general.description' | translate}}: </label>
                 <textarea
                     class="form-control"
                     formControlName="description"
                     id="description"
-                    placeholder="Beschreibung des Projekts"
+                    [placeholder]="'general.description' | translate"
                 ></textarea>
             </div>
             <br />
             <div class="form-group">
-                <label for="users" class="">Mitglieder:</label>
+                <label for="users" class="">{{'general.members' | translate}}:</label>
                 <select
                     multiple
                     class="custom-select"
@@ -135,14 +134,14 @@
                     : (invalidMessage = true)
             "
         >
-            Erstellen
+        {{'general.create' | translate}}"
         </button>
     </div>
 </ng-template>
 
 <ng-template #updateModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Projekt aktualisieren</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{"projects.update" | translate}}</h4>
         <button
             type="button"
             class="close"
@@ -154,32 +153,32 @@
     </div>
     <div class="modal-body">
         <div *ngIf="updateProjectInvalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{"errors.requiredFieldsMissing" | translate}}
         </div>
         <form [formGroup]="updateProjectForm">
             <div class="form-group">
-                <label for="name">Name: </label>
+                <label for="name">{{"general.name" | translate}}: </label>
                 <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
-                    placeholder="Name des Projekts"
+                    [placeholder]="'general.name' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="description">Beschreibung: </label>
+                <label for="description">{{"general.description" | translate}}: </label>
                 <textarea
                     class="form-control"
                     formControlName="description"
                     id="description"
-                    placeholder="Beschreibung des Projekts"
+                    [placeholder]="'general.description' | translate"
                 ></textarea>
             </div>
             <br />
             <div class="form-group">
-                <label for="users" class="">Mitglieder:</label>
+                <label for="users" class="">{{"general.members" | translate}}:</label>
                 <select
                     multiple
                     class="custom-select"
@@ -205,7 +204,7 @@
                     : (updateProjectInvalidMessage = true)
             "
         >
-            Aktualisieren
+            {{"general.update" | translate}}
         </button>
     </div>
 </ng-template>
