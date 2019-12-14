@@ -1,8 +1,8 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
-import { FindOperator, getRepository } from "typeorm";
-
+import * as i18n from "i18n";
 import * as path from "path";
+import { FindOperator, getRepository } from "typeorm";
 import config from "../config/config";
 import { Tutorial } from "../entity/Tutorial";
 import { TutorialStep } from "../entity/TutorialStep";
@@ -37,7 +37,7 @@ class TutorialController {
     const tutorialRepository = getRepository(Tutorial);
     const { description, title } = req.body;
     if (!(description && title)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     const tutorial = new Tutorial();
@@ -55,7 +55,7 @@ class TutorialController {
     try {
       await tutorialRepository.save(tutorial);
     } catch (e) {
-      res.status(409).send({message: "Fehler beim Speichern des Tutorials!"});
+      res.status(409).send({message: i18n.__("errors.errorWhileSavingTutorial")});
       return;
     }
 
@@ -79,7 +79,7 @@ class TutorialController {
     try {
       await stepRepository.save(step);
     } catch (e) {
-      res.status(409).send({message: "Fehler beim Speichern des Schritts!"});
+      res.status(409).send({message: i18n.__("errors.errorWhileSavingTutorialStep")});
       return;
     }
 
@@ -90,18 +90,18 @@ class TutorialController {
     const tutorialRepository = getRepository(Tutorial);
     const { description, title } = req.body;
     if (!(description && title)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     let tutorial: Tutorial;
     try {
       tutorial = await tutorialRepository.findOneOrFail(req.params.id, {relations: ["creator"]});
     } catch {
-      res.status(404).send({message: "Tutorial nicht gefunden!"});
+      res.status(404).send({message: i18n.__("errors.tutorialNotFound")});
       return;
     }
     if (tutorial.creator.id != res.locals.jwtPayload.userId) {
-      res.status(401).send({message: "Diese Aktion ist nicht erlaubt!"});
+      res.status(401).send({message: i18n.__("errors.notAllowed")});
       return;
     }
     tutorial.description = description;
@@ -117,7 +117,7 @@ class TutorialController {
     try {
       await tutorialRepository.save(tutorial);
     } catch (e) {
-      res.status(409).send({message: "Fehler beim Aktualisieren des Tutorials!"});
+      res.status(409).send({message: i18n.__("errors.errorWhileUpdatingTutorial")});
       return;
     }
 
@@ -128,14 +128,14 @@ class TutorialController {
     const stepRepository = getRepository(TutorialStep);
     const { content, title, image1, image2, image3 } = req.body;
     if (!title) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     let step: TutorialStep;
     try {
       step = await stepRepository.findOneOrFail(req.params.id);
     } catch {
-      res.status(404).send({message: "Schritt nicht gefunden!"});
+      res.status(404).send({message: i18n.__("errors.tutorialStepNotFound")});
       return;
     }
     step.content = content;
@@ -154,7 +154,7 @@ class TutorialController {
     try {
       await stepRepository.save(step);
     } catch (e) {
-      res.status(409).send({message: "Fehler beim Aktualisieren des Schritts!"});
+      res.status(409).send({message: i18n.__("errors.errorWhileUpdatingTutorialStep")});
       return;
     }
 
@@ -168,7 +168,7 @@ class TutorialController {
     try {
       await stepRepository.delete(id);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Löschen!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileDeletingTutorialStep")});
       return;
     }
 
@@ -182,7 +182,7 @@ class TutorialController {
     // @ts-ignore
     req.files.file.mv(path.join(config.tutorialFilesStoragePath, newFilename), (err) => {
       if (err) {
-        res.status(500).send({message: `Fehler beim Speichern der Datei, Error: ${err.toString()}`});
+        res.status(500).send({message: `${i18n.__("errors.errorWhileSavingFile")} ${err.toString()}`});
       } else {
         res.send({status: true, image: newFilename});
       }

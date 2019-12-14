@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as getFolderSize from "get-folder-size";
+import * as i18n from "i18n";
 import { getRepository, MoreThan } from "typeorm";
 import config from "../config/config";
 import { Cache } from "../entity/Cache";
@@ -61,7 +62,7 @@ class DashboardController {
       }
       res.send({notifications, lastUpdated: "gerade eben"});
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Abrufen der Nachrichten: " + e.toString()});
+      res.status(500).send({message: `${i18n.__("errors.errorWhileLoadingMessages")}` + e.toString()});
       return;
     }
   }
@@ -76,7 +77,7 @@ class DashboardController {
       notification.seenBy.push(await getRepository(User).findOneOrFail(res.locals.jwtPayload.userId));
       await notificationRepository.save(notification);
     } catch (e) {
-      res.status(500).send({message: "Fehler: " + e.toString()});
+      res.status(500).send({message: `${i18n.__("errors.error")} ${e.toString()}`});
       return;
     }
     res.send({status: true});

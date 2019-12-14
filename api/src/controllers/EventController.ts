@@ -1,5 +1,6 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
+import * as i18n from "i18n";
 import { getRepository } from "typeorm";
 import { Event } from "../entity/Event";
 import { User } from "../entity/User";
@@ -15,7 +16,7 @@ class EventController {
     const eventRepository = getRepository(Event);
     const { startDate, endDate, headline, description, location, important} = req.body;
     if (!(description && headline && location && startDate && endDate)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     const event = new Event();
@@ -36,7 +37,7 @@ class EventController {
     try {
       id = (await eventRepository.save(event)).id;
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Speichern des Events!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileSavingEvent")});
       return;
     }
 
@@ -47,14 +48,14 @@ class EventController {
     const eventRepository = getRepository(Event);
     const { description, headline, location, startDate, endDate } = req.body;
     if (!(description && headline && location && startDate && endDate)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     let event: Event;
     try {
       event = await eventRepository.findOneOrFail(req.params.id, {relations: ["creator"]});
     } catch {
-      res.status(404).send({message: "Event nicht gefunden!"});
+      res.status(404).send({message: i18n.__("errors.eventNotFound")});
       return;
     }
     event.description = description;
@@ -73,7 +74,7 @@ class EventController {
     try {
       await eventRepository.save(event);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Aktualisieren des Events!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileUpdatingEvent")});
       return;
     }
 
@@ -86,7 +87,7 @@ class EventController {
     try {
       await eventRepository.delete(id);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Löschen!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileDeletingEvent")});
       return;
     }
 

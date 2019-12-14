@@ -3,9 +3,17 @@ import * as cors from "cors";
 import * as express from "express";
 import * as fileUpload from "express-fileupload";
 import * as helmet from "helmet";
+import * as i18n from "i18n";
+import * as path from "path";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import routes from "./routes";
+
+i18n.configure({
+  defaultLocale: "de",
+  directory: path.join(__dirname, "i18n"),
+  objectNotation: true,
+});
 
 // Connects to the Database -> then starts the express
 createConnection()
@@ -31,5 +39,3 @@ createConnection()
   })
   // tslint:disable-next-line: no-console
   .catch((error) => console.log(error));
-
-  // ToDo: jwt check in tutorial if tutorial created by that user; plural in all api requests

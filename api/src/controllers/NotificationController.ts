@@ -1,9 +1,9 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
+import * as i18n from "i18n";
 import { getRepository } from "typeorm";
 import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
-import { howLongAgo } from "../utils/utils";
 
 class NotificationController {
   public static listAll = async (req: Request, res: Response) => {
@@ -21,7 +21,7 @@ class NotificationController {
     const notificationRepository = getRepository(Notification);
     const { content, headline, receivers, theme } = req.body;
     if (!(headline && content && receivers)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     const userRepo = getRepository(User);
@@ -35,7 +35,7 @@ class NotificationController {
         notification.receivers.push(await userRepo.findOne(userId));
       }
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Senden der Nachricht: " + e.toString()});
+      res.status(500).send({message: `${i18n.__("errors.errorWhileSendingMessage")} ${e.toString()}`});
       return;
     }
     notification.creator = await userRepo.findOne(res.locals.jwtPayload.userId);
@@ -50,7 +50,7 @@ class NotificationController {
     try {
       id = (await notificationRepository.save(notification)).id;
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Speichern der Nachricht: " + e.toString()});
+      res.status(500).send({message: `${i18n.__("errors.errorWhileSendingMessage")} ${e.toString()}`});
       return;
     }
 
@@ -65,7 +65,7 @@ class NotificationController {
     try {
       notification = await notificationRepository.findOneOrFail(id);
     } catch (error) {
-      res.status(404).send({message: "Notification nicht gefunden!"});
+      res.status(404).send({message: i18n.__("errors.notificationNotFound")});
       return;
     }
     notificationRepository.delete(id);
@@ -81,7 +81,7 @@ class NotificationController {
     try {
       notification = await notificationRepository.findOneOrFail(id);
     } catch (error) {
-      res.status(404).send({message: "Notification nicht gefunden!"});
+      res.status(404).send({message: i18n.__("errors.notificationNotFound")});
       return;
     }
     notificationRepository.delete(id);

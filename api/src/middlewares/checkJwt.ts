@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import * as i18n from "i18n";
 import * as jwt from "jsonwebtoken";
 import config from "../config/config";
 
@@ -9,7 +10,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     token = req.query.authorization;
   }
   if (!token) {
-    res.status(401).send({message: "Unauthorisiert!"});
+    res.status(401).send({message: i18n.__("errors.unauthorized")});
     return;
   }
   token = token.replace("Bearer ", "");
@@ -22,7 +23,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     res.locals.jwtPayload.userId = parseInt(res.locals.jwtPayload.userId, undefined);
   } catch (error) {
     // If token is not valid, respond with 401 (unauthorized)
-    res.status(401).send({message: "Sitzung abgelaufen. Bitte erneut einloggen!", logout: true});
+    res.status(401).send({message: i18n.__("errors.sessionExpired"), logout: true});
     return;
   }
 

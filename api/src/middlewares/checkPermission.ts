@@ -12,7 +12,7 @@ export const checkPermission = (permissions: string[]) => {
     try {
       user = await userRepository.findOneOrFail(id, { relations: ["usergroup"]});
     } catch (id) {
-      res.status(401).send({message: "Dein Benutzer wurde nicht gefunden!", logout: true});
+      res.status(401).send({message: i18n.__("errors.userNotFound"), logout: true});
     }
 
     let allGranted = true;
@@ -25,7 +25,7 @@ export const checkPermission = (permissions: string[]) => {
     if (allGranted) {
       next();
     } else {
-      res.status(401).send({message: "Diese Aktion ist nicht erlaubt!"});
+      res.status(401).send({message: i18n.__("errors.notAllowed")});
     }
   };
 };

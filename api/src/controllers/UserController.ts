@@ -1,7 +1,7 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
+import * as i18n from "i18n";
 import { getRepository } from "typeorm";
-
 import { User } from "../entity/User";
 import { Usergroup } from "../entity/Usergroup";
 
@@ -23,11 +23,11 @@ class UserController {
     const { username, pw, pw2, email } = req.body;
 
     if (!(username && email && pw && pw2)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     if (pw != pw2) {
-      res.status(400).send({message: "Die beiden Passwörter stimmen nicht überein!"});
+      res.status(400).send({message: i18n.__("errors.passwordsDontMatch")});
       return;
     }
 
@@ -50,7 +50,7 @@ class UserController {
     try {
       await userRepository.save(user);
     } catch (e) {
-      res.status(409).send({message: "Der Benutzername ist bereits vorhanden!"});
+      res.status(409).send({message: i18n.__("errors.existingUsername")});
       return;
     }
 
@@ -67,21 +67,21 @@ class UserController {
     try {
       user = await userRepository.findOneOrFail(id);
     } catch (error) {
-      res.status(404).send({message: "Benutzer nicht gefunden!"});
+      res.status(404).send({message: i18n.__("errors.userNotFound")});
       return;
     }
 
     if (!(username && email && pwOld)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
     }
 
     if (pwNew != pwNew2) {
-      res.status(400).send({message: "Die beiden neuen Passwörter stimmen nicht überein!"});
+      res.status(400).send({message: i18n.__("errors.passwordsDontMatch")});
       return;
     }
 
     if (!user.checkIfUnencryptedPasswordIsValid(pwOld)) {
-      res.status(401).send({message: "Altes Passwort stimmt nicht!"});
+      res.status(401).send({message: i18n.__("errors.oldPasswordWrong")});
       return;
     }
 
@@ -102,7 +102,7 @@ class UserController {
     try {
       await userRepository.save(user);
     } catch (e) {
-      res.status(409).send({message: "Benutzername bereits vorhanden!"});
+      res.status(409).send({message: i18n.__("errors.existingUsername")});
       return;
     }
 
@@ -117,7 +117,7 @@ class UserController {
     try {
       await userRepository.delete(id);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Löschen!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileDeletingUser")});
       return;
     }
 

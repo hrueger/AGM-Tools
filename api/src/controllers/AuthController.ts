@@ -1,5 +1,6 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
+import * as i18n from "i18n";
 import * as jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
 import config from "../config/config";
@@ -12,7 +13,7 @@ class AuthController {
   public static login = async (req: Request, res: Response) => {
     const { username, password } = req.body;
     if (!(username && password)) {
-      res.status(400).end(JSON.stringify({error: "Benutzername oder Passwort leer!"}));
+      res.status(400).end(JSON.stringify({error: i18n.__("errors.usernameOrPasswordEmpty")}));
     }
 
     // Get user from database
@@ -21,15 +22,15 @@ class AuthController {
     try {
       user = await userRepository.findOneOrFail({ where: { username } });
     } catch (error) {
-      res.status(401).end(JSON.stringify({message: "Falscher Benutzername!"}));
+      res.status(401).end(JSON.stringify({message: i18n.__("errors.wrongUsername")}));
     }
 
     if (!user) {
-      res.status(401).end(JSON.stringify({message: "Falscher Benutzername!"}));
+      res.status(401).end(JSON.stringify({message: i18n.__("errors.wrongUsername")}));
       return;
     }
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
-      res.status(401).end(JSON.stringify({message: "Falsches Passwort!"}));
+      res.status(401).end(JSON.stringify({message: i18n.__("errors.wrongPassword")}));
       return;
     }
     const token = jwt.sign(
@@ -53,7 +54,7 @@ class AuthController {
     try {
       user = await userRepository.findOneOrFail({where: { email: req.params.email}});
     } catch {
-      res.status(404).send({message: "Email-Adresse nicht gefunden!"});
+      res.status(404).send({message: i18n.__("errors.emailNotFound")});
       return;
     }
 
@@ -62,7 +63,7 @@ class AuthController {
     try {
       await userRepository.save(user);
     } catch {
-      res.status(500).send({message: "Fehler beim Speichern des Tokens!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileSavingToken")});
       return;
     }
     const link = `${config.urlSettings.url}resetPassword/${token}`;
@@ -74,7 +75,7 @@ class AuthController {
     }).catch((err) => {
       // tslint:disable-next-line: no-console
       console.log(err);
-      res.status(500).send({message: "Fehler beim Senden der Email: " + err.toString()});
+      res.status(500).send({message: `${i18n.__("errors.errorWhileSendingEmail")}: ${err.toString()}`});
     });
   }
   public static resetPassword = async (req: Request, res: Response) => {
@@ -90,10 +91,10 @@ class AuthController {
     try {
       user = await userRepository.findOneOrFail({where: { passwordResetToken: req.params.resetToken}});
     } catch (id) {
-      res.status(404).send({message: "Benutzer nicht gefunden, fehlerhafter Link!"});
+      res.status(404).send({message: i18n.__("errors.userNotFoundWrongLink")});
     }
     if (password1 != password2) {
-      res.status(401).send({message: "Die beiden Passwörter stimmen nicht überein!"});
+      res.status(401).send({message: i18n.__("errors.passwordsDontMatch")});
       return;
     }
     user.password = password2;

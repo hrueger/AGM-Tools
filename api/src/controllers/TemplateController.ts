@@ -1,5 +1,6 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
+import * as i18n from "i18n";
 import * as path from "path";
 import { getRepository } from "typeorm";
 import config from "../config/config";
@@ -26,7 +27,7 @@ class TemplateController {
     const filename = `${genID(15)}.${filenameparts[filenameparts.length - 1]}`;
     req.files.file.mv(path.join(config.templateFilesStoragePath, filename));
     if (!(description && name && group)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     const template = new Template();
@@ -45,7 +46,7 @@ class TemplateController {
     try {
       await templateRepository.save(template);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Speichern des Templates!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileSavingTemplate")});
       return;
     }
     res.status(200).send({status: true});
@@ -57,7 +58,7 @@ class TemplateController {
     try {
       await templateRepository.delete(id);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Löschen!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileDeletingTemplate")});
       return;
     }
 

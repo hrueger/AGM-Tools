@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import * as i18n from "i18n";
 import * as request from "request";
 import { Brackets, getRepository } from "typeorm";
 import config from "../config/config";
@@ -17,7 +18,7 @@ class ChatController {
       project.users.map((user) => user.id).includes(res.locals.jwtPayload.userId));
     const chats = [];
     users.forEach((user) => {
-      chats.push({name: user.username, id: user.id, isUser: true, lastSeen: "Unbekannt"});
+      chats.push({name: user.username, id: user.id, isUser: true, lastSeen: i18n.__("general.unknown")});
     });
     projects.forEach((project) => {
       chats.push({
@@ -86,7 +87,7 @@ class ChatController {
   private static sendMessage = async (req: Request, res: Response, toUser: boolean, withAttachment: boolean) => {
     const { message } = req.body;
     if (!message && !withAttachment) {
-      res.status(400).send({message: "Nicht alle Daten angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     try {
@@ -111,7 +112,7 @@ class ChatController {
       messageRepository.save(msg);
       res.send({status: true});
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Senden der Nachricht! " + e.toString()});
+      res.status(500).send({message: `${i18n.__("errors.errorWhileSendingMessage")} ${e.toString()}`});
       return;
     }
   }

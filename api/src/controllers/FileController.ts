@@ -1,6 +1,7 @@
 import * as archiver from "archiver";
 import { Request, Response } from "express";
 import * as fs from "fs";
+import * as i18n from "i18n";
 import * as mergeFiles from "merge-files";
 import * as path from "path";
 import * as request from "request";
@@ -49,10 +50,10 @@ class FileController {
       if (element.length == 1) {
         res.send(element[0]);
       } else {
-        res.status(404).send({message: "Freigabe nicht gefunden!"});
+        res.status(404).send({message: i18n.__("errors.shareNotFound")});
       }
     } catch (e) {
-      res.status(500).send({message: "Freigabe nicht gefunden! " + e.toString()});
+      res.status(500).send({message: `${i18n.__("errors.shareNotFound")} ${e.toString()}`});
     }
   }
 
@@ -63,10 +64,10 @@ class FileController {
       if (element.length == 1) {
         await FileController.sendDownloadElement(element[0], res);
       } else {
-        res.status(404).send({message: "Freigabe nicht gefunden!"});
+        res.status(404).send({message: i18n.__("errors.shareNotFound")});
       }
     } catch (e) {
-      res.status(404).send({message: "Freigabe nicht gefunden!" + e.toString()});
+      res.status(404).send({message: `${i18n.__("errors.shareNotFound")} ${e.toString()}`});
     }
   }
 
@@ -86,7 +87,7 @@ class FileController {
     const fileRepository = getRepository(File);
     const { name, pid, fid} = req.body;
     if (!(name && pid)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     const userRepo = getRepository(User);
@@ -102,7 +103,7 @@ class FileController {
     try {
       await fileRepository.save(folder);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Erstellen des Ordners: " + e.toString()});
+      res.status(500).send({message: `${i18n.__("errorWhileCreatingFolder")} ${e.toString()}`});
       return;
     }
 
@@ -114,7 +115,7 @@ class FileController {
     const fileRepository = getRepository(File);
     const { name } = req.body;
     if (!name) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     const element = await fileRepository.findOne(req.params.id);
@@ -155,7 +156,7 @@ class FileController {
       await fileRepository.remove(children);
       await fileRepository.remove(element);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Löschen! " + e.toString()});
+      res.status(500).send({message: `${i18n.__("errors.errorWhileDeleting")} ${e.toString()}`});
       return;
     }
 
@@ -171,7 +172,7 @@ class FileController {
   public static toggleTag = async (req: Request, res: Response) => {
     const { tagId } = req.body;
     if (!tagId) {
-      res.status(400).send({message: "Nicht alle Daten angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     const fileRepository = getRepository(File);
@@ -189,11 +190,11 @@ class FileController {
     const pathForSave = "C:/Users/Hannes/Desktop/Angular/AGM-Tools/filestest/21/AG_ventskalender_2019_fehlermeldung_herz_03_anmerkungen_hannes.docx";
     const updateFile = (response, body, p) => {
       if (body.status == 2) {
-          const file = request.syncRequest("GET", body.url);
-          fs.writeFileSync(p, file.getBody());
+          const file = request.get("GET", body.url);
+          fs.writeFileSync(p, file.body);
       }
 
-      response.write("{\"error\":0}");
+      response.send({error: 0});
       response.end();
     };
 
@@ -224,7 +225,7 @@ class FileController {
         pid = parseInt(pid, undefined);
         fid = parseInt(fid, undefined);
         if (!(chunkIndex != undefined && totalChunk != undefined && pid != undefined && fid != undefined)) {
-          res.status(400).send({message: "Nicht alle Daten angegeben!"});
+          res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
           return;
         }
         const tempSaveDir = path.join(config.tempFilesStoragePath, req.files.chunkFile.name);
@@ -248,7 +249,7 @@ class FileController {
           if (ok) {
             const { dest, parentEl } = await FileController.getDestAndParent(fid, pid, req.files.chunkFile.name);
             if (!await mergeFiles(chunkFileList, dest)) {
-              res.status(500).send({message: "Unbekannter Fehler!"});
+              res.status(500).send({message: i18n.__("errors.unknown")});
             } else {
               await FileController.createFileInDB(req.files.chunkFile.name, res, pid, fid, parentEl);
             }
@@ -267,7 +268,7 @@ class FileController {
       res.send("");
       return;
     } catch (e) {
-      res.status(500).send({message: "Fehler: " + e.toString() + " " + e.stack});
+      res.status(500).send({message: `${i18n.__("errors.error")} ${e.toString()}`});
     }
   }
 

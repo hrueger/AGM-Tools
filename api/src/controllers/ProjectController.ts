@@ -1,6 +1,7 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
 import * as fs from "fs";
+import * as i18n from "i18n";
 import * as path from "path";
 import { getRepository } from "typeorm";
 import config from "../config/config";
@@ -38,14 +39,14 @@ class ProjectController {
       });
       if (!lastMessage) {
         lastMessage = new Message();
-        lastMessage.content = "Noch keine Nachricht gesendet!";
+        lastMessage.content = i18n.__("errors.noMessagesSent");
       } else {
         lastMessage.content = Buffer.from(lastMessage.content, "base64").toString("utf8");
       }
 
       project.tipps = [];
       if (!await ProjectController.getProjectImageStoragePath(project.id, true)) {
-        project.tipps.push("Füge ein Projektlogo hinzu. Die Datei muss logo.png oder logo.jpg heißen und sich im Hauptverzeichnis des Projekts befinden!");
+        project.tipps.push(i18n.__("tipps.addProjectLogo"));
       }
 
       project.chat = {
@@ -56,19 +57,19 @@ class ProjectController {
       project.tasks = {
         lastUpdated: howLongAgo(new Date()),
         number: Math.ceil(Math.random() * 10),
-        text: "Hallöchen, Aufgaben!!!",
+        text: i18n.__("errors.noTasksAssigned"),
       };
       project.tutorials = {
         lastUpdated: howLongAgo(new Date()),
         number: Math.ceil(Math.random() * 10),
-        text: "Hallöchen, Tutorials!!!",
+        text: i18n.__("errors.noTutorialsLinked"),
       };
 
       const lastFiles: any = await fileRepository.find({where: {project}, order: {createdAt: "DESC"}, take: 5});
       project.files = {
         lastUpdated: lastFiles.length > 0 ? howLongAgo(lastFiles[0].createdAt) : "",
         number: await fileRepository.count({where: {project}}),
-        text: lastFiles.length > 0 ? lastFiles.map((file) => file.name).join(", ") : "Noch keine Dateien hochgeladen!",
+        text: lastFiles.length > 0 ? lastFiles.map((file) => file.name).join(", ") : i18n.__("errors.noFilesUploaded"),
       };
     }
     res.send(projects);
@@ -78,7 +79,7 @@ class ProjectController {
     const projectRepository = getRepository(Project);
     const { users, name, description } = req.body;
     if (!(description && name && users)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     const project = new Project();
@@ -91,14 +92,14 @@ class ProjectController {
         project.users.push(u);
       }
     } catch {
-      res.status(500).send({message: "Fehler beim Hinzufügen der Benutzer!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileAddingUser")});
     }
 
     let id;
     try {
       id = (await projectRepository.save(project)).id;
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Speichern des Projects!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileSavingProject")});
       return;
     }
 
@@ -110,14 +111,14 @@ class ProjectController {
     const projectRepository = getRepository(Project);
     const { description, name, users } = req.body;
     if (!(description && name && users)) {
-      res.status(400).send({message: "Nicht alle Daten wurden angegeben!"});
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
     let project: Project;
     try {
       project = await projectRepository.findOneOrFail(req.params.id, {relations: ["users"]});
     } catch {
-      res.status(404).send({message: "Project nicht gefunden!"});
+      res.status(404).send({message: i18n.__("errors.projectNotFound")});
       return;
     }
     project.description = description;
@@ -137,7 +138,7 @@ class ProjectController {
     try {
       await projectRepository.save(project);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Aktualisieren des Projects!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileSavingProject")});
       return;
     }
 
@@ -150,7 +151,7 @@ class ProjectController {
     try {
       await projectRepository.delete(id);
     } catch (e) {
-      res.status(500).send({message: "Fehler beim Löschen!"});
+      res.status(500).send({message: i18n.__("errors.errorWhileDeletingProject")});
       return;
     }
 
