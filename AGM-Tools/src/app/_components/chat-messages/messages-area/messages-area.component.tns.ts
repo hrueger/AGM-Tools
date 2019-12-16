@@ -8,11 +8,11 @@ import {
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
-import * as clipboard from "nativescript-clipboard";
-import { PageChangeEventData } from "nativescript-image-swipe";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Page } from "tns-core-modules/ui/page/page";
+import * as clipboard from "nativescript-clipboard";
+import { PageChangeEventData } from "nativescript-image-swipe";
 import { environment } from "../../../../environments/environment";
 import { Message } from "../../../_models/message.model";
 import { AlertService } from "../../../_services/alert.service";
@@ -69,7 +69,8 @@ export class MessagesAreaComponent implements OnInit {
     public newMessageFromPushService(data: any) {
         if (data.action == "newMessage") {
             if (data.data.data.chatID == this.receiverId) {
-                this.remoteService.getNoCache("post", "chatMarkAsRead", { message: data.data.data.messageId }).subscribe();
+                this.remoteService.getNoCache("post", "chatMarkAsRead",
+                { message: data.data.data.messageId }).subscribe();
                 const message = {
                     chat: null,
                     created: Date.now(),

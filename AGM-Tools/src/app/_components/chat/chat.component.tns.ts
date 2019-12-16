@@ -46,6 +46,7 @@ export class ChatComponent {
                 this.chatsListView.nativeElement.refresh();
             }
         } else {
+            // tslint:disable-next-line: no-console
             console.log(data);
         }
     }

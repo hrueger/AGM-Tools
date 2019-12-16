@@ -140,6 +140,7 @@ export class SettingsComponent implements OnInit {
     this.settings[this.mainIndex].children[index].value = !this.settings[this.mainIndex].children[index].value;
   }
   public onDrawerButtonTap(): void {
+    // @ts-ignore
     const sideDrawer =  app.getRootView() as RadSideDrawer;
     sideDrawer.showDrawer();
   }

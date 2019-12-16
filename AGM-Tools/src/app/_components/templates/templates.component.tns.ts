@@ -119,6 +119,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
     }
 
     public onDrawerButtonTap(): void {
+        // @ts-ignore
         const sideDrawer = app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }
@@ -126,6 +127,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
+        // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.right = rightItem.getMeasuredWidth();
     }

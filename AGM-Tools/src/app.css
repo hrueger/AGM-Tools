@@ -1,5 +1,5 @@
-@import "~nativescript-theme-core/css/core.css";
-@import "~nativescript-theme-core/css/blue.css";
+@import "~@nativescript/theme/css/core.css";
+@import "~@nativescript/theme/css/blue.css";
 
 /*@import "./custom.css";*/
 

@@ -22,6 +22,7 @@ export class NavbarComponent {
     }
 
     public onDrawerButtonTap(): void {
+        // @ts-ignore
         const sideDrawer =  app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }

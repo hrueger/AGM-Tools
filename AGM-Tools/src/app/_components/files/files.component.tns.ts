@@ -1,4 +1,10 @@
 import { Component, NgZone, OnInit, ViewChild } from "@angular/core";
+import * as app from "tns-core-modules/application";
+import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
+import { EventData, View } from "tns-core-modules/ui/core/view";
+import * as dialog from "tns-core-modules/ui/dialogs";
+import { layout } from "tns-core-modules/utils/utils";
+import { openUrl } from "tns-core-modules/utils/utils";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -12,12 +18,6 @@ import { MultiSelect } from "nativescript-multi-select";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
-import * as app from "tns-core-modules/application";
-import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
-import { EventData, View } from "tns-core-modules/ui/core/view";
-import * as dialog from "tns-core-modules/ui/dialogs";
-import { layout } from "tns-core-modules/utils/utils";
-import { openUrl } from "tns-core-modules/utils/utils";
 import { environment } from "../../../environments/environment";
 import { Project } from "../../_models/project.model";
 import { AlertService } from "../../_services/alert.service";

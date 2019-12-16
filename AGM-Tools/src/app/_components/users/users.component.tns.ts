@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
-import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/directives/dialogs";
+import { ModalDialogOptions, ModalDialogService } from "nativescript-angular/directives/dialogs";
+import * as app from "tns-core-modules/application";
+import { View } from "tns-core-modules/ui/core/view/view";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
     CFAlertDialog,
     CFAlertStyle,
 } from "nativescript-cfalert-dialog";
-import { ListViewEventData } from "nativescript-ui-listview";
+import { ListViewEventData, SwipeActionsEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
-import * as app from "tns-core-modules/application";
-import { View } from "tns-core-modules/ui/core/view/view";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
@@ -83,7 +83,7 @@ export class UsersComponent implements OnInit {
     }
 
     public onDrawerButtonTap(): void {
-        const sideDrawer =  app.getRootView() as RadSideDrawer;
+        const sideDrawer =  app.getRootView() as any;
         sideDrawer.showDrawer();
     }
 
@@ -122,9 +122,10 @@ export class UsersComponent implements OnInit {
         });
     }
 
-    public onSwipeCellStarted(args: ListViewEventData) {
+    public onSwipeCellStarted(args: SwipeActionsEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
+        // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.right = rightItem.getMeasuredWidth();
     }

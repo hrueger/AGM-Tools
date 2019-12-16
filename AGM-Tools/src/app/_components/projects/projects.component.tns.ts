@@ -4,6 +4,7 @@ import { Project } from "../../_models/project.model";
 import { User } from "../../_models/user.model";
 import { RemoteService } from "../../_services/remote.service";
 
+import { View } from "tns-core-modules/ui/core/view/view";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -13,7 +14,6 @@ import {
 import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
-import { View } from "tns-core-modules/ui/core/view/view";
 import { AlertService } from "../../_services/alert.service";
 import { NewProjectModalComponent } from "../_modals/new-project.modal.tns";
 
@@ -78,7 +78,9 @@ export class ProjectsComponent implements OnInit {
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
+        // @ts-ignore
         const leftItem = swipeView.getViewById<View>("add-view");
+        // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.left = leftItem.getMeasuredWidth();
         swipeLimits.right = rightItem.getMeasuredWidth();
