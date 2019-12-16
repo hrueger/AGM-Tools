@@ -1,6 +1,6 @@
 import * as path from "path";
 
-const mainStoragePath = path.join(__dirname, "../../../../filestest");
+const mainStoragePath = path.join(__dirname, "../../../filestest");
 const domain = "localhost";
 const pth = "/#/";
 const port = 4200;
