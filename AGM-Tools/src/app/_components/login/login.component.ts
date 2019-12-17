@@ -38,15 +38,14 @@ export class LoginComponent implements OnInit {
         private alertService: AlertService,
         private remoteService: RemoteService,
         private route: ActivatedRoute,
-    ) {
-        // redirect to home if already logged in
-        if (this.authenticationService.currentUserValue) {
-            this.router.navigate(["/"]);
-        }
-    }
+    ) {}
 
     public ngOnInit() {
-        this.title.setTitle("AGM-Tools | Login");
+        if (this.authenticationService.currentUserValue) {
+            this.router.navigate(["/"]);
+            return;
+        }
+        this.title.setTitle("AGM-Tools");
         this.loginForm = this.formBuilder.group({
             password: ["", Validators.required],
             username: ["", Validators.required],
