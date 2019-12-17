@@ -13,7 +13,7 @@ import { RemoteService } from "../../_services/remote.service";
     templateUrl: "./dashboard.component.html",
 })
 export class DashboardComponent implements OnInit {
-    public spaceChartLabels: Label[];
+    public spaceChartLabels: Label[] = ["", "", ""];
     public spaceChartData: MultiDataSet = [[0, 0, 0]]; // [[350, 450, 100]];
     public spaceChartColors = [
         {
