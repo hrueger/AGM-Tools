@@ -52,5 +52,6 @@ bin
 google-services.json
 environment.ts
 environment.prod.ts
+environment.tns.ts
 firebase-messaging-sw.js
 filestest
