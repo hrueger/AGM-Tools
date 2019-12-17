@@ -19,7 +19,7 @@ export class AppComponent {
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
-        private pushService: PushService,
+        // private pushService: PushService,
         private translate: TranslateService,
     ) {
         translate.setDefaultLang("en");
@@ -34,9 +34,9 @@ export class AppComponent {
     }
     public ngOnInit() {
         const userId = Math.round(Math.random() * 10000);
-        this.pushService.requestPermission(userId);
-        this.pushService.receiveMessage();
-        this.pushMessage = this.pushService.currentMessage;
+        // this.pushService.requestPermission(userId);
+        // this.pushService.receiveMessage();
+        // this.pushMessage = this.pushService.currentMessage;
         this.router.events.subscribe((event: any) => {
             if (event.url) {
                 if (event.url.startsWith("/share/")) {
