@@ -50,8 +50,6 @@ class ProjectController {
         project.tipps.push(i18n.__("tipps.addProjectLogo"));
       }
 
-      console.log(project.tutorials);
-
       project.chat = {
         data: [(lastMessage.sender ? `${lastMessage.sender.username}: ` : "") + lastMessage.content],
         lastUpdated: lastMessage.date ? howLongAgo(lastMessage.date) : undefined,
@@ -64,8 +62,6 @@ class ProjectController {
         data: project.tutorials,
         lastUpdated: howLongAgo(new Date()),
       };
-
-      console.log(project.tutorials);
 
       const lastFiles: any = await fileRepository.find({where: {project}, order: {createdAt: "DESC"}, take: 5});
       project.files = {
