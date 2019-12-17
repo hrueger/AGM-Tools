@@ -28,7 +28,6 @@
         "noFilesUploaded": "No files uploaded yet!",
         "noMessagesSent": "No messages sent yet!",
         "noTasksAssigned": "No tasks assigned yet!",
-        "noTutorialsLinked": "No tutorials linked yet!",
         "notAllFieldsProvided": "Not all data provided!",
         "notAllowed": "This action is not allowed!",
         "notificationNotFound": "Notification not found!",
@@ -51,6 +50,6 @@
         "unknown": "Unknown"
     },
     "tipps": {
-        "addProjectLogo": "Add a project logo. The filename mzst be logo.png or logo.jpg and the file must be in the project's rot folder!"
+        "addProjectLogo": "Add a project logo. The filename must be 'logo.png' or 'logo.jpg' and the file must be in the project's rot folder!"
     }
 }

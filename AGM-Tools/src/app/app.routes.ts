@@ -58,6 +58,11 @@ export const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
+        component: TutorialsComponent,
+        path: "tutorials/new",
+    },
+    {
+        canActivate: [AuthGuard],
         component: TutorialComponent,
         path: "tutorial/:index",
     },
@@ -85,6 +90,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         component: ProjectsComponent,
         path: "projects",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: ProjectsComponent,
+        path: "projects/:id",
     },
     {
         canActivate: [AuthGuard],

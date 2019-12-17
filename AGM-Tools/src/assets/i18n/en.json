@@ -35,6 +35,7 @@
     "noHeadlineProvided": "No headline provided",
     "noLocationProvided": "No location provided",
     "notSupportedFiletype": "This filetype is not supported. ",
+    "noTutorialsLinked": "No tutorials linked yet!",
     "oldBrowser": "Please use a newer browser.",
     "requiredFieldMissing": "This field can't be empty!",
     "requiredFieldsMissing": "Please fill all required fields!"
@@ -70,6 +71,7 @@
     "avalibleInLaterVersion": "This feature will be avalible in a future version!",
     "back": "Back",
     "camera": "Camera",
+    "cancel": "Cancel",
     "colors": {
       "danger": "Danger",
       "info": "Info",
@@ -98,6 +100,7 @@
     "message": "Message",
     "name": "Name",
     "password": "Password",
+    "pick": "Pick",
     "read": "Read",
     "receivers": "Receivers",
     "reset": "Reset",
@@ -136,6 +139,7 @@
   "projects": {
     "confirmDelete": "Are you sure that this project sould be deleted?",
     "newProject": "New Project",
+    "pickTutorialToLink": "Choose tutorial to link",
     "projectCreatesSucessfully": "Project created sucessfully!",
     "projectDeletedSucessfully": "Project deleted sucessfully!",
     "projectUpdatedSucessfully": "Project updated sucessfully!",

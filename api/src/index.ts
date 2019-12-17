@@ -10,7 +10,7 @@ import { createConnection } from "typeorm";
 import routes from "./routes";
 
 i18n.configure({
-  defaultLocale: "de",
+  defaultLocale: "en",
   directory: path.join(__dirname, "i18n"),
   objectNotation: true,
 });

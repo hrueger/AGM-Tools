@@ -8,6 +8,7 @@ import config from "../config/config";
 import { File } from "../entity/File";
 import { Message } from "../entity/Message";
 import { Project } from "../entity/Project";
+import { Tutorial } from "../entity/Tutorial";
 import { User } from "../entity/User";
 import { getStoragePath, howLongAgo } from "../utils/utils";
 
@@ -16,7 +17,7 @@ class ProjectController {
     const projectRepository = getRepository(Project);
     const messageRepository = getRepository(Message);
     const fileRepository = getRepository(File);
-    const projects = await projectRepository.find({relations: ["users"]}) as any;
+    const projects = await projectRepository.find({relations: ["users", "tutorials"]}) as any;
     for (const project of projects) {
       const options: any = {
         order: {
@@ -49,27 +50,28 @@ class ProjectController {
         project.tipps.push(i18n.__("tipps.addProjectLogo"));
       }
 
+      console.log(project.tutorials);
+
       project.chat = {
+        data: [(lastMessage.sender ? `${lastMessage.sender.username}: ` : "") + lastMessage.content],
         lastUpdated: lastMessage.date ? howLongAgo(lastMessage.date) : undefined,
-        number: messageCount,
-        text: (lastMessage.sender ? `${lastMessage.sender.username}: ` : "") + lastMessage.content,
       };
       project.tasks = {
+        data: [],
         lastUpdated: howLongAgo(new Date()),
-        number: Math.ceil(Math.random() * 10),
-        text: i18n.__("errors.noTasksAssigned"),
       };
       project.tutorials = {
+        data: project.tutorials,
         lastUpdated: howLongAgo(new Date()),
-        number: Math.ceil(Math.random() * 10),
-        text: i18n.__("errors.noTutorialsLinked"),
       };
+
+      console.log(project.tutorials);
 
       const lastFiles: any = await fileRepository.find({where: {project}, order: {createdAt: "DESC"}, take: 5});
       project.files = {
+        data: lastFiles.length > 0 ? lastFiles.map((file) => file.name).join(", ") : i18n.__("errors.noFilesUploaded"),
         lastUpdated: lastFiles.length > 0 ? howLongAgo(lastFiles[0].createdAt) : "",
-        number: await fileRepository.count({where: {project}}),
-        text: lastFiles.length > 0 ? lastFiles.map((file) => file.name).join(", ") : i18n.__("errors.noFilesUploaded"),
+        totalFiles: await fileRepository.count({where: {project}}),
       };
     }
     res.send(projects);
@@ -135,6 +137,34 @@ class ProjectController {
       return;
     }
 
+    try {
+      await projectRepository.save(project);
+    } catch (e) {
+      res.status(500).send({message: i18n.__("errors.errorWhileSavingProject")});
+      return;
+    }
+
+    res.status(200).send({status: true});
+  }
+
+  public static linkTutorials = async (req: Request, res: Response) => {
+    const projectRepository = getRepository(Project);
+    const { tutorials } = req.body;
+    if (!tutorials) {
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
+      return;
+    }
+    let project: Project;
+    try {
+      project = await projectRepository.findOneOrFail(req.params.id, {relations: ["tutorials"]});
+    } catch {
+      res.status(404).send({message: i18n.__("errors.projectNotFound")});
+      return;
+    }
+    for (const tutorialId of tutorials) {
+      const t = await getRepository(Tutorial).findOneOrFail(parseInt(tutorialId, undefined));
+      project.tutorials.push(t);
+    }
     try {
       await projectRepository.save(project);
     } catch (e) {

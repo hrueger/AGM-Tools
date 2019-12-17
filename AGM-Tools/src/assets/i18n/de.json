@@ -35,6 +35,7 @@
     "noHeadlineProvided": "Keine Überschrift angegeben",
     "noLocationProvided": "Kein Ort angegeben",
     "notSupportedFiletype": "Dieser Dateityp wird nicht unterstützt.",
+    "noTutorialsLinked": "Noch keine Tutorials verlinkt!",
     "oldBrowser": "Bitte verwende einen neueren Browser.",
     "requiredFieldMissing": "Dieses Feld muss ausgefüllt werden!",
     "requiredFieldsMissing": "Bitte füllen Sie alle Pflichtfelder aus!"
@@ -70,6 +71,7 @@
     "avalibleInLaterVersion": "Diese Funktion wird in einer zukünftigen Version hinzugefügt.",
     "back": "Zurück",
     "camera": "Kamera",
+    "cancel": "Abbrechen",
     "colors": {
       "danger": "Gefahr",
       "info": "Information",
@@ -98,6 +100,7 @@
     "message": "Nachricht",
     "name": "Name",
     "password": "Passwort",
+    "pick": "Auswählen",
     "read": "Gelesen",
     "receivers": "Empfänger",
     "reset": "Zurücksetzen",
@@ -136,6 +139,7 @@
   "projects": {
     "confirmDelete": "Soll dieses Projekt wirklich gelöscht werden?",
     "newProject": "Neues Projekt",
+    "pickTutorialToLink": "Tutorial zum Verknüpfen auswählen",
     "projectCreatesSucessfully": "Projekt erfolgreich erstellt!",
     "projectDeletedSucessfully": "Projekt erfolgreich gelöscht!",
     "projectUpdatedSucessfully": "Projekt erfolgreich aktualisiert!",

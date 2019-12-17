@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
@@ -17,13 +18,15 @@ export class TutorialsComponent implements OnInit {
   public description: string;
   public invalidMessage: boolean;
   public tutorials = [];
+  @ViewChild("newTutorialModal", {static: false}) private newTutorialModal;
 
   constructor(private navbarService: NavbarService,
               private fb: FormBuilder,
               private remoteService: RemoteService,
               private modalService: NgbModal,
               private fts: FastTranslateService,
-              private alertService: AlertService) { }
+              private alertService: AlertService,
+              private router: Router) { }
 
   public async ngOnInit() {
     this.remoteService
@@ -36,6 +39,9 @@ export class TutorialsComponent implements OnInit {
       description: [this.description, [Validators.required]],
       title: [this.title, [Validators.required]],
     });
+    if (this.router.url.endsWith("new")) {
+      this.newTutorial(this.newTutorialModal);
+    }
   }
 
   public newTutorial(content) {

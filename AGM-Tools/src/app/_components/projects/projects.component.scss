@@ -3,6 +3,21 @@
     object-fit: cover;
 }
 
+.project-header {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.project-header-overlay {
+    position: relative;
+    width: 100%;
+    top: -200px;
+    margin-bottom: -200px;
+    height: 200px;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
 .card-img-overlay {
     background-color: rgba(255, 255, 255, 0.7);
 }

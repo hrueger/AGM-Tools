@@ -3,11 +3,10 @@
     type="button"
     (click)="openNewModal(content)"
     class="btn btn-primary"
->
-    {{ "projects.newProject" | translate }}
-</button>
+    *ngIf="!currentProject"
+>{{ "projects.newProject" | translate }}</button>
 
-<div class="row mt-4">
+<div class="row mt-4" *ngIf="!currentProject">
     <div class="col-md-3 col-sm-6 card ml-3 mb-3 px-0" *ngFor="let project of projects">
         <img [src]="getProjectImageSrc(project)" class="card-img project-image" alt="">
         <div class="card-img-overlay">
@@ -18,8 +17,10 @@
                     <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(project)">{{"general.delete" | translate}}</button>
                 </div>
             </div>
-            <h5 class="card-title">{{project.name}}</h5>
-            <p class="card-text">{{project.description}}</p>
+            <div class="pointer" (click)="goToProject(project)">
+                <h5 class="card-title">{{project.name}}</h5>
+                <p class="card-text">{{project.description}}</p>
+            </div>
         </div>
         <div class="alert alert-info  mb-0" *ngFor="let tipp of project.tipps">{{tipp}}</div>
         <div class="list-group list-group-flush">
@@ -29,8 +30,8 @@
                     <small>{{project.chat.lastUpdated}}</small>
                 </div>
                 <div>
-                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.chat.number > 0">{{project.chat.number}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.chat.text}}</small>
+                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.chat.data.length > 0">{{project.chat.data.length}}</span>
+                    <small class="mb-1 mr-4 truncate">{{project.chat.data}}</small>
                 </div>
             </a>
             
@@ -40,8 +41,8 @@
                     <small>{{project.files.lastUpdated}}</small>
                 </div>
                 <div>
-                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.files.number > 0">{{project.files.number}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.files.text}}</small>
+                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.files.totalFiles > 0">{{project.files.totalFiles}}</span>
+                    <small class="mb-1 mr-4 truncate">{{project.files.data}}</small>
                 </div>
             </a>
                 
@@ -51,8 +52,8 @@
                     <small>{{project.tasks.lastUpdated}}</small>
                 </div>
                 <div>
-                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.tasks.number > 0">{{project.tasks.number}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.tasks.text}}</small>
+                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.tasks.data.length > 0">{{project.tasks.data.length}}</span>
+                    <small class="mb-1 mr-4 truncate">{{project.tasks.data}}</small>
                 </div>
             </a>
 
@@ -62,10 +63,83 @@
                     <small>{{project.tutorials.lastUpdated}}</small>
                 </div>
                 <div>
-                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.tutorials.number > 0">{{project.tutorials.number}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.tutorials.text}}</small>
+                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.tutorials.data.length > 0">{{project.tutorials.data.length}}</span>
+                    <small class="mb-1 mr-4 truncate">{{project.tutorials.data.length > 0 ? joinWithComma(project.tutorials.data, 'title') : 'errors.noTutorialsLinked' | translate}}</small>
                 </div>
             </a>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="currentProject">
+    <img [src]="getProjectImageSrc(currentProject)" class="img-fluid project-header" alt="">
+    <div class="project-header-overlay p-3">
+        <button
+            id="backBtn"
+            type="button"
+            (click)="currentProject = undefined"
+            class="btn btn-primary mb-5"
+        >{{ "general.back" | translate }}</button>
+
+        <div ngbDropdown class="d-inline-block float-right">
+            <button class="btn btn-outline-none text-primary p-1" ngbDropdownToggle><i class="fas fa-cog"></i></button>
+            <div ngbDropdownMenu>
+                <button ngbDropdownItem class="btn btn-link text-primary btn-primary" (click)="update(currentProject, updateModal)">{{"general.edit" | translate}}</button>
+                <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(currentProject)">{{"general.delete" | translate}}</button>
+            </div>
+        </div>
+        <h5 class="card-title">{{currentProject.name}}</h5>
+        <p class="card-text">{{currentProject.description}}</p>
+    </div>
+
+    <div class="card-group mt-3 w-100">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3">Chat</h6>
+            </div>
+            <div class="card-body">
+                chat will be here!
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+        </div>
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3">Files</h6>
+            </div>
+            <div class="card-body">
+                {{currentProject.files.data}}
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3">Tasks</h6>
+            </div>
+            <div class="card-body">
+                {{currentProject.tasks.data}}
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3">Tutorials</h6>
+                <div>
+                    <button class="btn btn-outline-success py-1" (click)="linkTutorial()"><i class="fas fa-paperclip"></i></button>
+                    <a class="btn btn-outline-success py-1" [routerLink]="['/', 'tutorials', 'new']"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <span *ngIf="currentProject.tutorials.data.length == 0" ></span>
+                <div class="list-group-flush" *ngIf="currentProject.tutorials.data.length > 0">
+                    <a [routerLink]="['/', 'tutorial', tutorial.id]" class="list-group-item list-group-item-action" *ngFor="let tutorial of currentProject.tutorials.data">
+                        <h5 class="card-title">{{tutorial.title}}</h5>
+                        <small class="card-text">{{tutorial.description}}</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
         </div>
     </div>
 </div>

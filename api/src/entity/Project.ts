@@ -8,6 +8,7 @@ import {
   } from "typeorm";
 import { File } from "./File";
 import { Message } from "./Message";
+import { Tutorial } from "./Tutorial";
 import { User } from "./User";
 
 @Entity()
@@ -18,6 +19,10 @@ import { User } from "./User";
     @ManyToMany(() => User, (user) => user.projects)
     @JoinTable()
     public users: User[];
+
+    @ManyToMany(() => Tutorial, (tutorial) => tutorial.projects)
+    @JoinTable()
+    public tutorials: Tutorial[];
 
     @Column()
     public name: string;

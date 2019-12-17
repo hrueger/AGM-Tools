@@ -47,6 +47,7 @@ import { FilesComponent } from "./_components/files/files.component";
 import { LoginComponent } from "./_components/login/login.component";
 import { NavbarComponent } from "./_components/navbar/navbar.component";
 import { NotificationsComponent } from "./_components/notifications/notifications.component";
+import { PickerModalComponent } from "./_components/pickerModal/pickerModal";
 import { ProjectsComponent } from "./_components/projects/projects.component";
 import { SettingsComponent } from "./_components/settings/settings.component";
 import { ShareComponent } from "./_components/share/share.component";
@@ -97,6 +98,7 @@ export function getJWT() {
         NavbarComponent,
         SidebarComponent,
         ChatMessagesComponent,
+        PickerModalComponent,
         ShortWhenPipe,
         TruncatePipe,
         ToIconPipe,
@@ -111,6 +113,9 @@ export function getJWT() {
         EditTutorialComponent,
         DiffPipe,
         ShareComponent,
+    ],
+    entryComponents: [
+        PickerModalComponent,
     ],
     imports: [
         AngularFireDatabaseModule,

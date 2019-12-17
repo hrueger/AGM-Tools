@@ -5,6 +5,7 @@ import {
     FormGroup,
     Validators,
 } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { environment } from "../../../environments/environment";
 import { AuthenticationService } from "../..//_services/authentication.service";
@@ -14,6 +15,7 @@ import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { PickerModalComponent } from "../pickerModal/pickerModal";
 
 @Component({
     selector: "app-projects",
@@ -30,6 +32,7 @@ export class ProjectsComponent implements OnInit {
     public description: string;
     public invalidMessage: boolean = false;
     public updateProjectInvalidMessage: boolean = false;
+    public currentProject: any;
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
@@ -38,13 +41,13 @@ export class ProjectsComponent implements OnInit {
         private fts: FastTranslateService,
         private authenticationService: AuthenticationService,
         private navbarService: NavbarService,
+        private router: Router,
+        private route: ActivatedRoute,
     ) { }
 
     public async ngOnInit() {
         this.navbarService.setHeadline(await this.fts.t("projects.projects"));
-        this.remoteService.get("get", "projects").subscribe((data) => {
-            this.projects = data;
-        });
+        this.getProjects();
         this.remoteService.get("get", "users").subscribe((data) => {
             this.allusers = data;
         });
@@ -60,8 +63,33 @@ export class ProjectsComponent implements OnInit {
         });
     }
 
+    public goToProject(project) {
+        this.currentProject = project;
+        this.router.navigate(["/", "projects", project.id]);
+    }
+
+    public async linkTutorial() {
+        const tutorials = await this.remoteService.get("get", "tutorials").toPromise();
+        const modal = this.modalService.open(PickerModalComponent);
+        modal.componentInstance.title = await this.fts.t("projects.pickTutorialToLink");
+        modal.componentInstance.items = tutorials;
+        modal.componentInstance.multiple = true;
+        modal.result.then((res) => {
+            this.remoteService.get("post", `projects/${this.currentProject.id}/linkTutorials`,
+                {tutorials: res.map((tutorial) => tutorial.id)}).subscribe((r) => {
+                    if (r && r.status) {
+                        this.getProjects();
+                    }
+            });
+        }).catch(() => undefined);
+    }
+
     public getProjectImageSrc(project) {
         return `${environment.apiUrl}projects/${project.id}?authorization=${this.authenticationService.currentUserValue.token}`;
+    }
+
+    public joinWithComma(items, prop) {
+        return items.map((item) => item[prop]).join(", ");
     }
 
     public async delete(project) {
@@ -129,5 +157,14 @@ export class ProjectsComponent implements OnInit {
                         });
                 },
             );
+    }
+
+    private getProjects() {
+        this.remoteService.get("get", "projects").subscribe((data) => {
+            this.projects = data;
+            if (this.route.snapshot.params.id) {
+                this.currentProject = this.projects.filter((project) => project.id == this.route.snapshot.params.id)[0];
+            }
+        });
     }
 }
