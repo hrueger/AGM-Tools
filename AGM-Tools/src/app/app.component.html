@@ -1,11 +1,9 @@
 <navbar (toggleNav)="showNav = $event" *ngIf="currentUser && !isShare"></navbar>
-<div class="container-fluid" *ngIf="currentUser && !isShare">
-    <div class="row">
-        <app-sidebar [changed]="showNav" ></app-sidebar>
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10">
+<div [class.container-fluid]="currentUser && !isShare">
+    <div [class.row]="currentUser && !isShare">
+        <app-sidebar [changed]="showNav" *ngIf="currentUser && !isShare"></app-sidebar>
+        <main [attr.role]="currentUser && !isShare ? 'main' : ''" [class]="currentUser && !isShare ? 'col-md-9 ml-sm-auto col-lg-10' : ''">
             <router-outlet></router-outlet>
         </main>
     </div>
 </div>
-
-<router-outlet *ngIf="!currentUser || isShare"></router-outlet>
