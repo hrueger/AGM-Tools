@@ -24,6 +24,10 @@ import { User } from "./User";
     @JoinTable()
     public tutorials: Tutorial[];
 
+    @ManyToMany(() => File, (file) => file.linkedProjects)
+    @JoinTable()
+    public linkedFiles: File[];
+
     @Column()
     public name: string;
 

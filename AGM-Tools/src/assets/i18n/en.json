@@ -32,10 +32,12 @@
     "fillOutPassword": "The password field can't be empty!",
     "fillOutUsername": "The username field can't be empty!",
     "noDescriptionProvided": "No description provided",
+    "noFilesLinked": "No files linked yet!",
     "noHeadlineProvided": "No headline provided",
     "noLocationProvided": "No location provided",
-    "notSupportedFiletype": "This filetype is not supported. ",
+    "noTasksAssigned": "No tasks assigned yet!",
     "noTutorialsLinked": "No tutorials linked yet!",
+    "notSupportedFiletype": "This filetype is not supported. ",
     "oldBrowser": "Please use a newer browser.",
     "requiredFieldMissing": "This field can't be empty!",
     "requiredFieldsMissing": "Please fill all required fields!"

@@ -37,6 +37,9 @@ import { User } from "./User";
     @JoinTable()
     public tags: Tag[];
 
+    @ManyToMany((type) => Project, (project) => project.linkedFiles)
+    public linkedProjects: Project[];
+
     @Column()
     public name: string;
 

@@ -33,6 +33,7 @@ export class ProjectsComponent implements OnInit {
     public invalidMessage: boolean = false;
     public updateProjectInvalidMessage: boolean = false;
     public currentProject: any;
+    public currentProjectChat: any;
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
@@ -66,6 +67,10 @@ export class ProjectsComponent implements OnInit {
     public goToProject(project) {
         this.currentProject = project;
         this.router.navigate(["/", "projects", project.id]);
+        this.currentProjectChat = {
+            id: this.currentProject.id,
+            isUser: false,
+        };
     }
 
     public async linkTutorial() {
@@ -163,7 +168,7 @@ export class ProjectsComponent implements OnInit {
         this.remoteService.get("get", "projects").subscribe((data) => {
             this.projects = data;
             if (this.route.snapshot.params.id) {
-                this.currentProject = this.projects.filter((project) => project.id == this.route.snapshot.params.id)[0];
+                this.goToProject(this.projects.filter((project) => project.id == this.route.snapshot.params.id)[0]);
             }
         });
     }

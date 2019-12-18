@@ -34,8 +34,9 @@
     "noDescriptionProvided": "Keine Beschreibung angegeben",
     "noHeadlineProvided": "Keine Überschrift angegeben",
     "noLocationProvided": "Kein Ort angegeben",
-    "notSupportedFiletype": "Dieser Dateityp wird nicht unterstützt.",
+    "noTasksAssigned": "Noch keine Aufgaben vergeben!",
     "noTutorialsLinked": "Noch keine Tutorials verlinkt!",
+    "notSupportedFiletype": "Dieser Dateityp wird nicht unterstützt.",
     "oldBrowser": "Bitte verwende einen neueren Browser.",
     "requiredFieldMissing": "Dieses Feld muss ausgefüllt werden!",
     "requiredFieldsMissing": "Bitte füllen Sie alle Pflichtfelder aus!"

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { AlertService } from "../../../_services/alert.service";
 import { FastTranslateService } from "../../../_services/fast-translate.service";
 
@@ -10,6 +10,7 @@ import { FastTranslateService } from "../../../_services/fast-translate.service"
 })
 export class MessageBoxComponent {
     public messageContent: string;
+    @Input() public embedded: boolean = false;
     public showAttachmentContainer: boolean = false;
     @Output() public messageSent = new EventEmitter<string>();
     @Output() public attachmentMessageSent = new EventEmitter<any>();

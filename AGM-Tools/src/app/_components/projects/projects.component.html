@@ -42,7 +42,7 @@
                 </div>
                 <div>
                     <span class="float-right badge badge-normal badge-primary" *ngIf="project.files.totalFiles > 0">{{project.files.totalFiles}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.files.data}}</small>
+                    <small class="mb-1 mr-4 truncate">{{project.files.data.length > 0 ? joinWithComma(project.files.data, 'name') : 'errors.noFilesLinked' | translate}}</small>
                 </div>
             </a>
                 
@@ -53,7 +53,7 @@
                 </div>
                 <div>
                     <span class="float-right badge badge-normal badge-primary" *ngIf="project.tasks.data.length > 0">{{project.tasks.data.length}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.tasks.data}}</small>
+                    <small class="mb-1 mr-4 truncate">{{project.tasks.data.length > 0 ? joinWithComma(project.tasks.data, 'title') : 'errors.noTasksAssigned' | translate}}</small>
                 </div>
             </a>
 
@@ -95,43 +95,65 @@
     <div class="card-group mt-3 w-100">
         <div class="card">
             <div class="card-header d-flex justify-content-between p-1">
-                <h6 class="card-title mt-2 mb-0 ml-3">Chat</h6>
+                <h6 class="card-title mt-2 mb-0 ml-3">{{"chat.chat" | translate}}</h6>
+                <div>
+                    <a class="btn btn-outline-success py-1" [routerLink]="['/', 'chat', 'project', currentProject.id]"><i class="fas fa-expand-alt"></i></a>
+                </div>
             </div>
-            <div class="card-body">
-                chat will be here!
+            <div class="card-body p-0">
+                <chat-messages [inputChat]="currentProjectChat" [embedded]="true" class=""></chat-messages>
             </div>
             <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
         </div>
         <div class="card">
             <div class="card-header d-flex justify-content-between p-1">
-                <h6 class="card-title mt-2 mb-0 ml-3">Files</h6>
-            </div>
-            <div class="card-body">
-                {{currentProject.files.data}}
-            </div>
-            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
-        </div>
-        
-        <div class="card">
-            <div class="card-header d-flex justify-content-between p-1">
-                <h6 class="card-title mt-2 mb-0 ml-3">Tasks</h6>
-            </div>
-            <div class="card-body">
-                {{currentProject.tasks.data}}
-            </div>
-            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
-        </div>
-        
-        <div class="card">
-            <div class="card-header d-flex justify-content-between p-1">
-                <h6 class="card-title mt-2 mb-0 ml-3">Tutorials</h6>
+                <h6 class="card-title mt-2 mb-0 ml-3">{{"files.files" | translate}}</h6>
                 <div>
                     <button class="btn btn-outline-success py-1" (click)="linkTutorial()"><i class="fas fa-paperclip"></i></button>
                     <a class="btn btn-outline-success py-1" [routerLink]="['/', 'tutorials', 'new']"><i class="fas fa-plus"></i></a>
                 </div>
             </div>
             <div class="card-body p-0">
-                <span *ngIf="currentProject.tutorials.data.length == 0" ></span>
+                <p class="m-5 text-center" *ngIf="currentProject.files.data.length == 0">{{"errors.noFilesLinked" | translate}}</p>
+                <div class="list-group-flush" *ngIf="currentProject.files.data.length > 0">
+                    <a [routerLink]="['/', 'files', file.id]" class="list-group-item list-group-item-action" *ngFor="let file of currentProject.files.data">
+                        <h5 class="card-title">{{file.title}}</h5>
+                        <small class="card-text">{{file.description}}</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3">{{"tasks.tasks" | translate}}</h6>
+                <div>
+                    <a class="btn btn-outline-success py-1" [routerLink]="['/', 'tutorials', 'new']"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <p class="m-5 text-center" *ngIf="currentProject.tasks.data.length == 0">{{"errors.noTasksAssigned" | translate}}</p>
+                <div class="list-group-flush" *ngIf="currentProject.tasks.data.length > 0">
+                    <a [routerLink]="['/', 'tasks', task.id]" class="list-group-item list-group-item-action" *ngFor="let task of currentProject.tasks.data">
+                        <h5 class="card-title">{{task.title}}</h5>
+                        <small class="card-text">{{task.description}}</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3">{{"tutorials.tutorials" | translate}}</h6>
+                <div>
+                    <button class="btn btn-outline-success py-1" (click)="linkTutorial()"><i class="fas fa-paperclip"></i></button>
+                    <a class="btn btn-outline-success py-1" [routerLink]="['/', 'tutorials', 'new']"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <p class="m-5 text-center" *ngIf="currentProject.tutorials.data.length == 0">{{"errors.noTutorialsLinked" | translate}}</p>
                 <div class="list-group-flush" *ngIf="currentProject.tutorials.data.length > 0">
                     <a [routerLink]="['/', 'tutorial', tutorial.id]" class="list-group-item list-group-item-action" *ngFor="let tutorial of currentProject.tutorials.data">
                         <h5 class="card-title">{{tutorial.title}}</h5>

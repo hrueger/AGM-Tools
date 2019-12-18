@@ -17,7 +17,7 @@ class ProjectController {
     const projectRepository = getRepository(Project);
     const messageRepository = getRepository(Message);
     const fileRepository = getRepository(File);
-    const projects = await projectRepository.find({relations: ["users", "tutorials"]}) as any;
+    const projects = await projectRepository.find({relations: ["users", "tutorials", "linkedFiles"]}) as any;
     for (const project of projects) {
       const options: any = {
         order: {
@@ -63,12 +63,11 @@ class ProjectController {
         lastUpdated: howLongAgo(new Date()),
       };
 
-      const lastFiles: any = await fileRepository.find({where: {project}, order: {createdAt: "DESC"}, take: 5});
       project.files = {
-        data: lastFiles.length > 0 ? lastFiles.map((file) => file.name).join(", ") : i18n.__("errors.noFilesUploaded"),
-        lastUpdated: lastFiles.length > 0 ? howLongAgo(lastFiles[0].createdAt) : "",
-        totalFiles: await fileRepository.count({where: {project}}),
+        data: project.linkedFiles,
+        lastUpdated: howLongAgo(new Date()),
       };
+      project.linkedFiles = undefined;
     }
     res.send(projects);
   }

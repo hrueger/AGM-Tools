@@ -27,7 +27,6 @@
         "existingUsername": "Username already exists!",
         "noFilesUploaded": "No files uploaded yet!",
         "noMessagesSent": "No messages sent yet!",
-        "noTasksAssigned": "No tasks assigned yet!",
         "notAllFieldsProvided": "Not all data provided!",
         "notAllowed": "This action is not allowed!",
         "notificationNotFound": "Notification not found!",

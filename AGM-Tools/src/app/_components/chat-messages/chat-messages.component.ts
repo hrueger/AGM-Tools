@@ -19,6 +19,7 @@ import { RemoteService } from "../../_services/remote.service";
 export class ChatMessagesComponent
     implements OnChanges, AfterViewChecked {
     @Input() public inputChat: any;
+    @Input() public embedded: boolean = false;
     public unread: number;
     public messages: Message[];
     public showInfoMessage: boolean = true;
@@ -42,7 +43,9 @@ export class ChatMessagesComponent
     public scrollToBottom(): void {
         const elementList = document.querySelectorAll(".browser");
         const element = elementList[0] as HTMLElement;
-        element.scrollIntoView(false);
+        if (element) {
+            element.scrollIntoView(false);
+        }
     }
     public ngAfterViewChecked() {
         if (this.scrolledToBottom == false) {

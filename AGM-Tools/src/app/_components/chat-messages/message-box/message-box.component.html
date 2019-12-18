@@ -1,4 +1,4 @@
-<div class="attachmentContainer" *ngIf="showAttachmentContainer">
+<div class="attachmentContainer" [class.embedded]="embedded" *ngIf="showAttachmentContainer">
     <div class="row">
         <div class="col-4" (click)="sendDocument()">
             <img class="img-fluid" src="assets/attachment/document.png">

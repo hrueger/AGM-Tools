@@ -1,18 +1,18 @@
 <div *ngIf="!showInfoMessage">
-    <div class="bgimg messages" #messagesConatiner>
-        <div class="col-md-8 messages-header ">
+    <div class="bgimg messages" [class.p-0]="embedded"  #messagesConatiner>
+        <div class="col-md-8 messages-header" *ngIf="!embedded">
             <ngx-avatar class="messages-header thumb" [name]="inputChat.name"></ngx-avatar>
             <span class="messages-header title">{{ inputChat.name }}</span><br />
             <span class="messages-header subtitle">{{ inputChat.isUser ? ('general.lastOnline' | translate:{time:inputChat.lastSeen}) : inputChat.users }}</span>
         </div>
-        <div>
+        <div [class.px-1]="embedded">
             <ns-messages-area [messageSent]="messageGotToSend" [attachmentMessageSent]="attachmentMessageGotToSend" [messages]="messages" [chat]="inputChat" class="messages-area"></ns-messages-area>
         </div>
         <div>
-            <ns-message-box class="col-md-8 offset-md-4 message-box" (messageSent)="messageSentFromChild($event)" (attachmentMessageSent)="attachmentMessageSentFromChild($event)"></ns-message-box>
+            <ns-message-box [embedded]="embedded" [class]="embedded ? '' : 'col-md-8 offset-md-4 message-box'" (messageSent)="messageSentFromChild($event)" (attachmentMessageSent)="attachmentMessageSentFromChild($event)"></ns-message-box>
         </div>
     </div>
 </div>
-<div *ngIf="showInfoMessage" class="plcaeholderMessage">
+<div *ngIf="showInfoMessage && !embedded" class="plcaeholderMessage">
     <div class="new" [innerHTML]="'chat.didYouKnow' | translate | safe:'html'"></div>
 </div>
