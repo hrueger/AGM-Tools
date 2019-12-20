@@ -49,7 +49,7 @@
     "general": {
         "unknown": "Unbekannt"
     },
-    "tipps": {
+    "tips": {
         "addProjectLogo": "Füge ein Projektlogo hinzu. Die Datei muss logo.png oder logo.jpg heißen und sich im Hauptverzeichnis des Projekts befinden!"
     }
 }

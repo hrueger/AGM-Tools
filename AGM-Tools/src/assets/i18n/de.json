@@ -140,8 +140,8 @@
   "projects": {
     "confirmDelete": "Soll dieses Projekt wirklich gelöscht werden?",
     "newProject": "Neues Projekt",
-    "pickTutorialToLink": "Tutorial zum Verknüpfen auswählen",
     "pickFileToLink": "Datei oder Ordner zum Verknüpfen auswählen",
+    "pickTutorialToLink": "Tutorial zum Verknüpfen auswählen",
     "projectCreatesSucessfully": "Projekt erfolgreich erstellt!",
     "projectDeletedSucessfully": "Projekt erfolgreich gelöscht!",
     "projectUpdatedSucessfully": "Projekt erfolgreich aktualisiert!",
@@ -162,6 +162,10 @@
     "newTemplate": "Neue Vorlage",
     "templateCreatedSucessfully": "Vorlage erfolgreich gespeichert!",
     "templates": "Templates"
+  },
+  "tips": {
+    "tipsAvalible": "Neue Tipps erfügbar",
+    "viewTips": "Tipps anzeigen"
   },
   "tutorials": {
     "addStep": "Schritt hinzufügen",

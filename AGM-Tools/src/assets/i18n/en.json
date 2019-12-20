@@ -141,8 +141,8 @@
   "projects": {
     "confirmDelete": "Are you sure that this project sould be deleted?",
     "newProject": "New Project",
-    "pickTutorialToLink": "Choose tutorial to link",
     "pickFileToLink": "Choose file or folder to link",
+    "pickTutorialToLink": "Choose tutorial to link",
     "projectCreatesSucessfully": "Project created sucessfully!",
     "projectDeletedSucessfully": "Project deleted sucessfully!",
     "projectUpdatedSucessfully": "Project updated sucessfully!",
@@ -163,6 +163,10 @@
     "newTemplate": "New template",
     "templateCreatedSucessfully": "Template saved sucessfully!",
     "templates": "Templates"
+  },
+  "tips": {
+    "tipsAvalible": "New tips avalible",
+    "viewTips": "View tips"
   },
   "tutorials": {
     "addStep": "Add step",

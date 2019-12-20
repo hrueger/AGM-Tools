@@ -22,7 +22,7 @@
                 <p class="card-text">{{project.description}}</p>
             </div>
         </div>
-        <div class="alert alert-info  mb-0" *ngFor="let tipp of project.tipps">{{tipp}}</div>
+        <div class="alert alert-info mb-0" *ngIf="project.tips.length > 0">{{'tips.tipsAvalible' | translate}} <button class="btn btn-link" (click)="goToProject(project)">{{'tips.viewTips' | translate}} </button></div>
         <div class="list-group list-group-flush">
             <a [routerLink]="['/', 'chat', 'project', project.id]" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
@@ -91,6 +91,8 @@
         <h5 class="card-title">{{currentProject.name}}</h5>
         <p class="card-text">{{currentProject.description}}</p>
     </div>
+
+    <div class="alert alert-info mb-0" *ngFor="let tip of currentProject.tips">{{tip}}</div>
 
     <div class="card-group mt-3 w-100">
         <div class="card">

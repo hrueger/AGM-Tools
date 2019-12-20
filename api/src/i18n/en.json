@@ -48,7 +48,7 @@
     "general": {
         "unknown": "Unknown"
     },
-    "tipps": {
+    "tips": {
         "addProjectLogo": "Add a project logo. The filename must be 'logo.png' or 'logo.jpg' and the file must be in the project's rot folder!"
     }
 }

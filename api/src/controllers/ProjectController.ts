@@ -45,9 +45,9 @@ class ProjectController {
         lastMessage.content = Buffer.from(lastMessage.content, "base64").toString("utf8");
       }
 
-      project.tipps = [];
+      project.tips = [];
       if (!await ProjectController.getProjectImageStoragePath(project.id, true)) {
-        project.tipps.push(i18n.__("tipps.addProjectLogo"));
+        project.tips.push(i18n.__("tips.addProjectLogo"));
       }
 
       project.chat = {
