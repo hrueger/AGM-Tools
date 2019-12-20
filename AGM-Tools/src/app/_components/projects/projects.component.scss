@@ -32,3 +32,9 @@
     float: left;
     margin: 5px;
 }
+
+.chat-messages {
+    display: block;
+    height: 100%;
+    overflow: auto;
+}

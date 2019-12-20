@@ -1,7 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, NgZone, ElementRef } from "@angular/core";
 import {
     FormBuilder,
-    FormControl,
     FormGroup,
     Validators,
 } from "@angular/forms";
@@ -35,6 +34,7 @@ export class ProjectsComponent implements OnInit {
     public updateProjectInvalidMessage: boolean = false;
     public currentProject: any;
     public currentProjectChat: any;
+    @ViewChild("chatMessages", {static: false}) private chatMessagesComponent: ElementRef;
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
@@ -45,6 +45,7 @@ export class ProjectsComponent implements OnInit {
         private navbarService: NavbarService,
         private router: Router,
         private route: ActivatedRoute,
+        private zone: NgZone,
     ) { }
 
     public async ngOnInit() {
@@ -72,6 +73,10 @@ export class ProjectsComponent implements OnInit {
             id: this.currentProject.id,
             isUser: false,
         };
+        setTimeout(() => {
+            const el = document.getElementsByClassName("chat-messages")[0];
+            el.scrollTop = el.scrollHeight;
+        }, 500);
     }
 
     public getFileExtension(file) {

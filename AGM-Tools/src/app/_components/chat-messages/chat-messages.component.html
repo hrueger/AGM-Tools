@@ -8,7 +8,7 @@
         <div [class.px-1]="embedded">
             <ns-messages-area [messageSent]="messageGotToSend" [attachmentMessageSent]="attachmentMessageGotToSend" [messages]="messages" [chat]="inputChat" class="messages-area"></ns-messages-area>
         </div>
-        <div>
+        <div [class.message-box-holder-embedded]="embedded">
             <ns-message-box [embedded]="embedded" [class]="embedded ? '' : 'col-md-8 offset-md-4 message-box'" (messageSent)="messageSentFromChild($event)" (attachmentMessageSent)="attachmentMessageSentFromChild($event)"></ns-message-box>
         </div>
     </div>

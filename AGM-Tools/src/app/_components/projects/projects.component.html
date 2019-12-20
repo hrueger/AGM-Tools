@@ -102,8 +102,8 @@
                     <a class="btn btn-outline-success py-1" [routerLink]="['/', 'chat', 'project', currentProject.id]"><i class="fas fa-expand-alt"></i></a>
                 </div>
             </div>
-            <div class="card-body p-0">
-                <chat-messages [inputChat]="currentProjectChat" [embedded]="true" class=""></chat-messages>
+            <div class="card-body p-0 pb-5">
+                <chat-messages #chatMessages [inputChat]="currentProjectChat" [embedded]="true" class="chat-messages"></chat-messages>
             </div>
             <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
         </div>
