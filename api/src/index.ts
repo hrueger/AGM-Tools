@@ -7,6 +7,18 @@ import * as i18n from "i18n";
 import * as path from "path";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
+import { Cache } from "./entity/Cache";
+import { Event } from "./entity/Event";
+import { File } from "./entity/File";
+import { Message } from "./entity/Message";
+import { Notification } from "./entity/Notification";
+import { Project } from "./entity/Project";
+import { Tag } from "./entity/Tag";
+import { Template } from "./entity/Template";
+import { Tutorial } from "./entity/Tutorial";
+import { TutorialStep } from "./entity/TutorialStep";
+import { User } from "./entity/User";
+import { Usergroup } from "./entity/Usergroup";
 import routes from "./routes";
 
 i18n.configure({
@@ -16,7 +28,26 @@ i18n.configure({
 });
 
 // Connects to the Database -> then starts the express
-createConnection()
+createConnection({
+   charset : "utf8mb4",
+   cli: {
+      entitiesDir: "src/entity",
+      migrationsDir: "src/migration",
+      subscribersDir: "src/subscriber",
+   },
+   database: "testagmtools",
+   entities: [Cache, Event, File, Message, Notification,
+    Project, Tag, Template, Tutorial, TutorialStep, User, Usergroup],
+   host: "localhost",
+   logging: false,
+   migrations: ["src/migration/**/*.ts"],
+   password: "",
+   port: 3306,
+   subscribers: ["src/subscriber/**/*.ts"],
+   synchronize: true,
+   type: "mysql",
+   username: "root",
+})
   .then(async (connection) => {
     await connection.query("SET NAMES utf8mb4;");
     await connection.synchronize();
