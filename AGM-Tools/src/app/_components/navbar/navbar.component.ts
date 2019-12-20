@@ -36,7 +36,7 @@ export class NavbarComponent {
             this.navbarService.change.subscribe((headline) => {
                 try {
                     this.headline = headline;
-                    this.cdr.detectChanges();
+                    this.cdr.markForCheck();
                     // tslint:disable-next-line: no-empty
                 } finally {
                 }
