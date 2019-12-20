@@ -111,7 +111,7 @@
         "@angular-devkit/build-angular": "0.803.21",
         "@angular/cli": "^8.3.18",
         "@angular/compiler-cli": "8.2.13",
-        "@nativescript/schematics": "^0.7.3",
+        "@nativescript/schematics": "^1.0.0",
         "@types/jasmine": "~3.4.6",
         "@types/jasminewd2": "~2.0.7",
         "@types/node": "~12.12.7",
