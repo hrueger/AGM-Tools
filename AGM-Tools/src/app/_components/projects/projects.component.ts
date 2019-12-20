@@ -15,6 +15,7 @@ import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { FilePickerModalComponent } from "../filePickerModal/filePickerModal";
 import { PickerModalComponent } from "../pickerModal/pickerModal";
 
 @Component({
@@ -81,6 +82,20 @@ export class ProjectsComponent implements OnInit {
         modal.componentInstance.multiple = true;
         modal.result.then((res) => {
             this.remoteService.get("post", `projects/${this.currentProject.id}/linkTutorials`,
+                {tutorials: res.map((tutorial) => tutorial.id)}).subscribe((r) => {
+                    if (r && r.status) {
+                        this.getProjects();
+                    }
+            });
+        }).catch(() => undefined);
+    }
+
+    public async linkFile() {
+        const modal = this.modalService.open(FilePickerModalComponent);
+        modal.componentInstance.title = await this.fts.t("projects.pickFileToLink");
+        modal.componentInstance.projectId = this.currentProject.id;
+        modal.result.then((res) => {
+            this.remoteService.get("post", `projects/${this.currentProject.id}/linkFiles`,
                 {tutorials: res.map((tutorial) => tutorial.id)}).subscribe((r) => {
                     if (r && r.status) {
                         this.getProjects();

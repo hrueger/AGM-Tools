@@ -142,6 +142,7 @@
     "confirmDelete": "Are you sure that this project sould be deleted?",
     "newProject": "New Project",
     "pickTutorialToLink": "Choose tutorial to link",
+    "pickFileToLink": "Choose file or folder to link",
     "projectCreatesSucessfully": "Project created sucessfully!",
     "projectDeletedSucessfully": "Project deleted sucessfully!",
     "projectUpdatedSucessfully": "Project updated sucessfully!",

@@ -141,6 +141,7 @@
     "confirmDelete": "Soll dieses Projekt wirklich gelöscht werden?",
     "newProject": "Neues Projekt",
     "pickTutorialToLink": "Tutorial zum Verknüpfen auswählen",
+    "pickFileToLink": "Datei oder Ordner zum Verknüpfen auswählen",
     "projectCreatesSucessfully": "Projekt erfolgreich erstellt!",
     "projectDeletedSucessfully": "Projekt erfolgreich gelöscht!",
     "projectUpdatedSucessfully": "Projekt erfolgreich aktualisiert!",

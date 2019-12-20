@@ -21,7 +21,7 @@ import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
 import { DashboardLayoutModule } from "@syncfusion/ej2-angular-layouts";
-import { AccordionModule, TabModule } from "@syncfusion/ej2-angular-navigations";
+import { AccordionModule, TabModule, TreeViewModule } from "@syncfusion/ej2-angular-navigations";
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
 import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { ChartsModule } from "ng2-charts";
@@ -43,6 +43,7 @@ import { DashboardComponent } from "./_components/dashboard/dashboard.component"
 import { DoneComponent } from "./_components/done/done.component";
 import { EditTutorialComponent } from "./_components/edit-tutorial/edit-tutorial.component";
 import { FileUploadComponent } from "./_components/file-upload/file-upload.component";
+import { FilePickerModalComponent } from "./_components/filePickerModal/filePickerModal";
 import { FilesComponent } from "./_components/files/files.component";
 import { LoginComponent } from "./_components/login/login.component";
 import { NavbarComponent } from "./_components/navbar/navbar.component";
@@ -99,6 +100,7 @@ export function getJWT() {
         SidebarComponent,
         ChatMessagesComponent,
         PickerModalComponent,
+        FilePickerModalComponent,
         ShortWhenPipe,
         TruncatePipe,
         ToIconPipe,
@@ -116,12 +118,14 @@ export function getJWT() {
     ],
     entryComponents: [
         PickerModalComponent,
+        FilePickerModalComponent,
     ],
     imports: [
         AngularFireDatabaseModule,
         AngularFireAuthModule,
         AngularFireMessagingModule,
         NgxOnlyOfficeModule,
+        TreeViewModule,
         AngularFireModule.initializeApp(environment.firebase),
         RouterModule.forRoot(routes, { useHash: true, enableTracing: false }),
         ContextMenuModule.forRoot({

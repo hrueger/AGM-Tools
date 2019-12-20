@@ -23,13 +23,26 @@ class FileController {
     res.send(files);
   }
 
+  public static projectTree = async (req: Request, res: Response) => {
+    const project = await getRepository(Project).findOne(req.params.pid);
+    let roots = await getTreeRepository(File).findRoots();
+    const rootIds = roots.map((f) => f.id);
+    roots = await getRepository(File).findByIds(rootIds, {where: {project}});
+    const files = [];
+    for (const root of roots) {
+      files.push(await getTreeRepository(File).findDescendantsTree(root));
+    }
+    /// to work
+    res.send(files);
+  }
+
   public static showElement = async (req: Request, res: Response) => {
     const fileRepository = getRepository(File);
     const element = await fileRepository.findOne(req.params.id);
     if (element.isFolder) {
-      let files = await getTreeRepository(File).findDescendants(element);
-      files = files.filter((file) => file.id != element.id);
-      const fileIds = files.map((file) => file.id);
+      const file = await getTreeRepository(File).findDescendantsTree(element);
+      let files = file.files;
+      const fileIds = files.map((f) => f.id);
       files = await getRepository(File).findByIds(fileIds, {relations: ["tags", "creator"]});
       res.send(files);
     } else {
