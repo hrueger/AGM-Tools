@@ -5,7 +5,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <ejs-treeview *ngIf="itemTree" [fields]='config'></ejs-treeview>
+    <ejs-treeview #treeView *ngIf="itemTree" [fields]='config' [allowMultiSelection]='multiple'></ejs-treeview>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">{{'general.cancel' | translate}}</button>

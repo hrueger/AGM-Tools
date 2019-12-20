@@ -170,6 +170,34 @@ class ProjectController {
     res.status(200).send({status: true});
   }
 
+  public static linkFiles = async (req: Request, res: Response) => {
+    const projectRepository = getRepository(Project);
+    const { files } = req.body;
+    if (!files) {
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
+      return;
+    }
+    let project: Project;
+    try {
+      project = await projectRepository.findOneOrFail(req.params.id, {relations: ["linkedFiles"]});
+    } catch {
+      res.status(404).send({message: i18n.__("errors.projectNotFound")});
+      return;
+    }
+    for (const fileId of files) {
+      const f = await getRepository(File).findOneOrFail(parseInt(fileId, undefined));
+      project.linkedFiles.push(f);
+    }
+    try {
+      await projectRepository.save(project);
+    } catch (e) {
+      res.status(500).send({message: i18n.__("errors.errorWhileSavingProject")});
+      return;
+    }
+
+    res.status(200).send({status: true});
+  }
+
   public static deleteProject = async (req: Request, res: Response) => {
     const id = req.params.id;
     const projectRepository = getRepository(Project);

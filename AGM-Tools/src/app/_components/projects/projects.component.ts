@@ -74,6 +74,14 @@ export class ProjectsComponent implements OnInit {
         };
     }
 
+    public getFileExtension(file) {
+        if (file.isFolder) {
+            return "folder";
+        }
+        const name = file.name.split(".");
+        return name[name.length - 1];
+    }
+
     public async linkTutorial() {
         const tutorials = await this.remoteService.get("get", "tutorials").toPromise();
         const modal = this.modalService.open(PickerModalComponent);
@@ -94,9 +102,10 @@ export class ProjectsComponent implements OnInit {
         const modal = this.modalService.open(FilePickerModalComponent);
         modal.componentInstance.title = await this.fts.t("projects.pickFileToLink");
         modal.componentInstance.projectId = this.currentProject.id;
-        modal.result.then((res) => {
+        modal.componentInstance.multiple = true;
+        modal.result.then((ids) => {
             this.remoteService.get("post", `projects/${this.currentProject.id}/linkFiles`,
-                {tutorials: res.map((tutorial) => tutorial.id)}).subscribe((r) => {
+                {files: ids}).subscribe((r) => {
                     if (r && r.status) {
                         this.getProjects();
                     }

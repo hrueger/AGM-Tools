@@ -117,8 +117,9 @@
                 <p class="m-5 text-center" *ngIf="currentProject.files.data.length == 0">{{"errors.noFilesLinked" | translate}}</p>
                 <div class="list-group-flush" *ngIf="currentProject.files.data.length > 0">
                     <a [routerLink]="['/', 'files', file.id]" class="list-group-item list-group-item-action" *ngFor="let file of currentProject.files.data">
-                        <h5 class="card-title">{{file.title}}</h5>
-                        <small class="card-text">{{file.description}}</small>
+                        <img class="img-fluid file-icon" [src]="'assets/icons/extralarge/' + getFileExtension(file) + '.png'">
+                        <h6 class="card-title">{{file.name}}</h6>
+                        <small class="card-text">{{file.createdAt | date:'shortDate'}}</small>
                     </a>
                 </div>
             </div>

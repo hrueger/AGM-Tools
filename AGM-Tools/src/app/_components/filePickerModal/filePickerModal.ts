@@ -1,5 +1,6 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ViewChild } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { TreeViewComponent } from "@syncfusion/ej2-angular-navigations";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
@@ -12,6 +13,8 @@ import { RemoteService } from "../../_services/remote.service";
     @Input() public projectId;
     public itemTree: any[];
     public config: any;
+
+    @ViewChild("treeView", { static: false }) private treeView: TreeViewComponent;
 
     constructor(public activeModal: NgbActiveModal, public remoteService: RemoteService) {}
 
@@ -31,7 +34,7 @@ import { RemoteService } from "../../_services/remote.service";
     }
 
     public pick() {
-        this.activeModal.close(this.itemTree.filter((item: any) => item.selected));
+        this.activeModal.close(this.treeView.selectedNodes);
     }
 
     private addIconUrls(itemTree) {
