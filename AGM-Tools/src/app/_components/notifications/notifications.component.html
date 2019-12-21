@@ -1,4 +1,4 @@
-<button id="newBtn" type="button" class="btn btn-primary" (click)="openNewModal(newNotificationModal)">
+<button id="newBtn" type="button" class="btn btn-outline-primary" (click)="openNewModal(newNotificationModal)">
     {{"notifications.newNotification" | translate }}
 </button>
 <br /><br />
@@ -93,7 +93,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="
+        <button type="button" class="btn btn-outline-success" (click)="
                 !newNotificationForm.invalid
                     ? modal.close('Save click')
                     : (invalidMessage = true)

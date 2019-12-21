@@ -6,7 +6,7 @@
                 <h1>{{'share.share' | translate}}: <i>{{file.name}}</i></h1>
                 <small></small>
                 <p class="lead">{{ file.isFolder ? 'share.sharedFolder' : 'share.sharedFile' | translate}}</p>
-                <a class="btn btn-lg m-auto btn-primary text-white" target="_blank" [href]="getSrc()">{{'files.download' | translate}}</a>
+                <a class="btn btn-lg m-auto btn-outline-primary text-white" target="_blank" [href]="getSrc()">{{'files.download' | translate}}</a>
             </div>
             <div *ngIf="!file">
                 <h2>{{'general.loading' | translate}}</h2>

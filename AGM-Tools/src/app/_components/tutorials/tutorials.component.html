@@ -1,4 +1,4 @@
-<button class="btn btn-primary" (click)="newTutorial(newTutorialModal)">{{'tutorials.newTutorial' | translate}}</button>
+<button class="btn btn-outline-primary" (click)="newTutorial(newTutorialModal)">{{'tutorials.newTutorial' | translate}}</button>
 
 <div class="row mt-4">
     <div class="col-md-4 col-sm-6 d-flex " routerLink="/tutorial/{{tutorial.id}}" *ngFor="let tutorial of tutorials">
@@ -9,7 +9,7 @@
             </div>
             <div class="card-footer">
                 <small class="text-muted">{{'general.lastUpdated' | translate:{"time": tutorial.createdAt} }}</small>
-                <button class="float-right btn btn-primary p-1 px-2" *ngIf="tutorial.editable" routerLink="/editTutorial/{{tutorial.id}}"><i class="far fa-edit"></i></button>
+                <button class="float-right btn btn-outline-primary p-1 px-2" *ngIf="tutorial.editable" routerLink="/editTutorial/{{tutorial.id}}"><i class="far fa-edit"></i></button>
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="
+        <button type="button" class="btn btn-outline-success" (click)="
                 !newTutorialForm.invalid
                     ? modal.close('Save click')
                     : (invalidMessage = true)

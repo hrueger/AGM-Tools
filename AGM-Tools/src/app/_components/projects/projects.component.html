@@ -2,7 +2,7 @@
     id="newBtn"
     type="button"
     (click)="openNewModal(content)"
-    class="btn btn-primary"
+    class="btn btn-outline-primary"
     *ngIf="!currentProject"
 >{{ "projects.newProject" | translate }}</button>
 
@@ -13,7 +13,7 @@
             <div ngbDropdown class="d-inline-block float-right">
                 <button class="btn btn-outline-none text-primary p-1" ngbDropdownToggle><i class="fas fa-cog"></i></button>
                 <div ngbDropdownMenu>
-                    <button ngbDropdownItem class="btn btn-link text-primary btn-primary" (click)="update(project, updateModal)">{{"general.edit" | translate}}</button>
+                    <button ngbDropdownItem class="btn btn-link text-primary btn-outline-primary" (click)="update(project, updateModal)">{{"general.edit" | translate}}</button>
                     <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(project)">{{"general.delete" | translate}}</button>
                 </div>
             </div>
@@ -78,13 +78,13 @@
             id="backBtn"
             type="button"
             (click)="currentProject = undefined"
-            class="btn btn-primary mb-5"
+            class="btn btn-outline-primary mb-5"
         >{{ "general.back" | translate }}</button>
 
         <div ngbDropdown class="d-inline-block float-right">
             <button class="btn btn-outline-none text-primary p-1" ngbDropdownToggle><i class="fas fa-cog"></i></button>
             <div ngbDropdownMenu>
-                <button ngbDropdownItem class="btn btn-link text-primary btn-primary" (click)="update(currentProject, updateModal)">{{"general.edit" | translate}}</button>
+                <button ngbDropdownItem class="btn btn-link text-primary btn-outline-primary" (click)="update(currentProject, updateModal)">{{"general.edit" | translate}}</button>
                 <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(currentProject)">{{"general.delete" | translate}}</button>
             </div>
         </div>
@@ -226,7 +226,7 @@
     <div class="modal-footer">
         <button
             type="button"
-            class="btn btn-success"
+            class="btn btn-outline-success"
             (click)="
                 !newProjectForm.invalid
                     ? modal.close('Save click')
@@ -296,7 +296,7 @@
     <div class="modal-footer">
         <button
             type="button"
-            class="btn btn-success"
+            class="btn btn-outline-success"
             (click)="
                 !updateProjectForm.invalid
                     ? modal.close('Save click')

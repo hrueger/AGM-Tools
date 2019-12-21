@@ -2,7 +2,7 @@
     id="newBtn"
     type="button"
     (click)="openNewModal(newUserModal)"
-    class="btn btn-primary"
+    class="btn btn-outline-primary"
 >
     {{'users.newUser' | translate}}
 </button>
@@ -11,7 +11,7 @@
     id="editBtn"
     type="button"
     (click)="openEditModal(editUserModal)"
-    class="btn btn-primary"
+    class="btn btn-outline-primary"
 >
     {{'users.changeOwnProfile' | translate}}
 </button>
@@ -109,7 +109,7 @@
     <div class="modal-footer">
         <button
             type="button"
-            class="btn btn-success"
+            class="btn btn-outline-success"
             (click)="
                 !newUserForm.invalid
                     ? modal.close('Save click')
@@ -199,7 +199,7 @@
     <div class="modal-footer">
         <button
             type="button"
-            class="btn btn-success"
+            class="btn btn-outline-success"
             (click)="
                 !editUserForm.invalid
                     ? modal.close('Save click')

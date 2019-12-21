@@ -1,5 +1,5 @@
 <div class="navigation">
-    <button class="btn btn-success" (click)="
+    <button class="btn btn-outline-success" (click)="
             currentPath.length - 2 > -1
                 ? upTo(currentPath[currentPath.length - 2].id)
                 : goBackToProjects()
@@ -7,7 +7,7 @@
         {{'general.back' | translate}}
     </button> &nbsp;
 
-    <button id="newFolderBtn" type="button" (click)="openNewFolderModal(newFolder)" class="btn btn-primary">
+    <button id="newFolderBtn" type="button" (click)="openNewFolderModal(newFolder)" class="btn btn-outline-primary">
         {{'files.newFolder' | translate}}
     </button>
     <div class="btn-group float-right">
@@ -136,11 +136,11 @@
     </div>
     <div class="modal-footer d-flex justify-content-between">
         <div>
-            <button class="btn btn-primary" (click)="download(currentFile)"><i class="fas fa-download"></i></button>
-            <button class="btn btn-success mr-2" (click)="share(currentFile, shareModal)"><i class="fas fa-share-square"></i></button>
+            <button class="btn btn-outline-primary" (click)="download(currentFile)"><i class="fas fa-download"></i></button>
+            <button class="btn btn-outline-success mr-2" (click)="share(currentFile, shareModal)"><i class="fas fa-share-square"></i></button>
 
-            <button class="btn btn-primary" (click)="rename(currentFile)"><i class="fas fa-pen"></i></button>
-            <button class="btn btn-success" (click)="move(currentFile)"><i class="fas fa-arrows-alt"></i></button>
+            <button class="btn btn-outline-primary" (click)="rename(currentFile)"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-outline-success" (click)="move(currentFile)"><i class="fas fa-arrows-alt"></i></button>
             <button class="btn btn-warning" (click)="copy(currentFile)"><i class="fas fa-arrows-alt"></i></button>
             <button class="btn btn-danger" (click)="delete(currentFile)"><i class="fas fa-trash-alt"></i></button>
         </div>
@@ -169,7 +169,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="
+        <button type="button" class="btn btn-outline-primary" (click)="
                 !newFolderForm.invalid
                     ? modal.close('Save click')
                     : (newFolderModalInvalidMessage = true)
@@ -200,7 +200,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="
+        <button type="button" class="btn btn-outline-primary" (click)="
                 !renameItemForm.invalid
                     ? modal.close('Save click')
                     : (renameItemFormInvalidMessage = true)
@@ -221,8 +221,8 @@
         <input class="form-control" type="text" #shareLinkField value="{{shareLink}}" placeholder="Link wird generiert..." readonly>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success" (click)="copyShareLink(shareLinkField)">Link in die Zwischenablage
+        <button class="btn btn-outline-success" (click)="copyShareLink(shareLinkField)">Link in die Zwischenablage
             kopieren</button>
-        <button class="btn btn-primary" (click)="openShareLinkInNewTab()">In neuem Tab öffnen</button>
+        <button class="btn btn-outline-primary" (click)="openShareLinkInNewTab()">In neuem Tab öffnen</button>
     </div>
 </ng-template>

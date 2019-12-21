@@ -1,4 +1,4 @@
-<button id="newBtn" type="button" class="btn btn-primary" (click)="openNewModal(newTemplateModal)">
+<button id="newBtn" type="button" class="btn btn-outline-primary" (click)="openNewModal(newTemplateModal)">
     {{'templates.newTemplate' | translate}}
 </button>
 <br /><br />
@@ -101,7 +101,7 @@
     <div class="modal-footer">
         <button
             type="button"
-            class="btn btn-success"
+            class="btn btn-outline-success"
             (click)="
                 !newTemplateForm.invalid
                     ? modal.close('Save click')

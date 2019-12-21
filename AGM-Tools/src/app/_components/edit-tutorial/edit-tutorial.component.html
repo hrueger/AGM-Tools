@@ -14,10 +14,10 @@
             <textarea class="form-control" id="description" formControlName="description" [placeholder]="'general.description' | translate"></textarea>
         </div>
     </form>
-    <button type="button" class="btn btn-primary" (click)="addStep()">
+    <button type="button" class="btn btn-outline-primary" (click)="addStep()">
         {{"tutorials.addStep" | translate}}
     </button> &nbsp;
-    <button type="button" class="btn btn-success" (click)="
+    <button type="button" class="btn btn-outline-success" (click)="
         !tutorialForm.invalid
             ? updateGeneral()
             : (invalidMessage = true)
@@ -75,10 +75,10 @@
 </div>
 
 <div class="mycard">
-    <button type="button" class="btn btn-primary" (click)="addStep()">
+    <button type="button" class="btn btn-outline-primary" (click)="addStep()">
         {{'tutorials.addStep' | translate}}
     </button> &nbsp;
-    <button type="button" class="btn btn-success" (click)="updateSteps()">
+    <button type="button" class="btn btn-outline-success" (click)="updateSteps()">
         {{'general.save' | translate}}
     </button>
 </div>
