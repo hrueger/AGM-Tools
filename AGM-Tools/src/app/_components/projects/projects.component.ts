@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, NgZone, ElementRef } from "@angular/core";
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from "@angular/core";
 import {
     FormBuilder,
     FormGroup,
