@@ -2,7 +2,6 @@
   "groups": {
     "default": {
       "packages": [
-        "AGM-Tools/.migration_backup/package.json",
         "AGM-Tools/package.json",
         "AGM-Tools/src/package.json"
       ]
