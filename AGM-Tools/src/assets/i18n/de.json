@@ -100,6 +100,7 @@
     "members": "Mitglieder",
     "message": "Nachricht",
     "name": "Name",
+    "next": "Weiter",
     "password": "Passwort",
     "pick": "Auswählen",
     "read": "Gelesen",
@@ -167,6 +168,24 @@
   "tips": {
     "tipsAvalible": "Neue Tipps erfügbar",
     "viewTips": "Tipps anzeigen"
+  },
+  "tour": {
+    "description": {
+      "calendar": "Behalte mit dem integrierten Kalender deine Termine im Blick oder exportiere sie direkt in Deinen Kalender!",
+      "chat": "Kommuniziere mit Deinen Mitstreitern direkt in der App und verlinke Dateien, verwende Emojis und verschicke Bilder!",
+      "everythingTogether": "Profitiere vom einzigartigen Workflow, den dir diese Plattform bietet. Alles ist vernetzt und perfekt aufeinander abgestimmt!",
+      "files": "Habe alle deine Dateien immer mit dabei - dank integrierter Dateiverwaltung, Dateibrowser und Dateivorschau!",
+      "sharing": "Teile alles auch mit den Personen, die AGM-Tools (leider) noch nicht haben - mit den Tools, die Du bereits kennst!",
+      "updates": "Die schnellsten Push-Nachrichten über alle Aktivitäten halten Dich immer auf dem Laufenden!"
+    },
+    "headlines": {
+      "calendar": "Integrierter Kalender",
+      "chat": "Eingebauter Chat",
+      "everythingTogether": "Alles vereint",
+      "files": "Dateien immer mit dabei",
+      "sharing": "Teilen - was immer Du willst",
+      "updates": "Immer Up-to-Date"
+    }
   },
   "tutorials": {
     "addStep": "Schritt hinzufügen",

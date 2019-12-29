@@ -12,9 +12,7 @@
     </Carousel>
     <GridLayout [backgroundColor]="currentBackgroundColor" class="navigation" row="1" col="0" rows="auto, auto" columns="auto, *, auto">
         <StackLayout row="0" col="0" colspan="3" class="hr-light"></StackLayout>
-        <Button (tap)="prev()" #btnPrev row="1" col="0" class="no-border round prev-next-button" text="Zurück"></Button>
-        <Button (tap)="next()" #btnNext row="1" col="2" class="no-border round prev-next-button" text="Weiter"></Button>
+        <Button (tap)="prev()" #btnPrev row="1" col="0" class="no-border round prev-next-button" [text]="'general.back' | translate"></Button>
+        <Button (tap)="next()" #btnNext row="1" col="2" class="no-border round prev-next-button" [text]="'general.next' | translate"></Button>
     </GridLayout>
 </GridLayout>
-
-

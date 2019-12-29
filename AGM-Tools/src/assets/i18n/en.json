@@ -101,6 +101,7 @@
     "members": "Members",
     "message": "Message",
     "name": "Name",
+    "next": "Next",
     "password": "Password",
     "pick": "Pick",
     "read": "Read",
@@ -168,6 +169,24 @@
   "tips": {
     "tipsAvalible": "New tips avalible",
     "viewTips": "View tips"
+  },
+  "tour": {
+    "description": {
+      "calendar": "Keep track of your appointments with the integrated calendar or export them directly to your calendar!",
+      "chat": "Communicate with your fellow users directly in the app and link files, use emojis and send pictures!",
+      "everythingTogether": "Benefit from the unique workflow this platform offers you. Everything is networked and perfectly coordinated!",
+      "files": "Always have all your files with you - thanks to integrated file management, file browser and file preview!",
+      "sharing": "Share everything with people who (unfortunately) don't have AGM tools yet - with the tools you already know!",
+      "updates": "The fastest push messages about all activities keep you up to date!"
+    },
+    "headlines": {
+      "calendar": "Integrated calendar",
+      "chat": "Built-in chat",
+      "everythingTogether": "Everything together",
+      "files": "Have your files always with you",
+      "sharing": "Share - whatever you want",
+      "updates": "Always up-to-date"
+    }
   },
   "tutorials": {
     "addStep": "Add step",
