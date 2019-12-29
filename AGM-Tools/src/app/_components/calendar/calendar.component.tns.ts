@@ -104,7 +104,7 @@ export class CalendarComponent {
     }
 
     public ngOnInit() {
-        this.remoteService.get("post", "calendarGetDates").subscribe(
+        this.remoteService.get("get", "events").subscribe(
             (data) => {
                 this.gotNewCalendarData(data, true);
             },
@@ -132,7 +132,6 @@ export class CalendarComponent {
         if (!skipReload) {
             this.calendar.nativeElement.reload();
         }
-
     }
 
     public onNavigatedToDate(args) {
@@ -149,7 +148,7 @@ export class CalendarComponent {
             if (newCalendarEvent) {
 
                 this.remoteService
-                    .getNoCache("post", "calendarNewEvent", {
+                    .getNoCache("post", "events", {
                         description: newCalendarEvent.description,
                         endDate: newCalendarEvent.endDate.toString(),
                         headline: newCalendarEvent.title,
@@ -163,7 +162,7 @@ export class CalendarComponent {
                                 "Termin erfolgreich gespeichert!",
                             );
                             this.remoteService
-                                .get("post", "calendarGetDates")
+                                .get("get", "events")
                                 .subscribe((res) => {
                                     this.gotNewCalendarData(res);
                                 });
