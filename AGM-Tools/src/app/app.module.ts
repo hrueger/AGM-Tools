@@ -175,5 +175,5 @@ registerLocaleData(localeDe);
 export class AppModule { }
 
 export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http);
+    return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
 }

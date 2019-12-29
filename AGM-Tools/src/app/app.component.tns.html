@@ -1,100 +1,61 @@
 <RadSideDrawer #rsd [drawerTransition]="sideDrawerTransition">
     <GridLayout tkDrawerContent rows="auto, *" class="sidedrawer sidedrawer-left">
-        <GridLayout rows="*, auto, auto, auto" columns="*, auto, auto" row="0" class="sidedrawer-header">
-            <Button row="0" col="1" class="no-border round fas" pageTransition="fade" (tap)="hideDrawer()" [nsRouterLink]="['/settings']" text="&#xf013;"></Button>
-            <Button row="0" col="2" class="no-border round fas" (tap)="logout()" text="&#xf2f5;"></Button>
+        <GridLayout rows="*, auto, auto, auto" columns="*, auto, auto, auto" row="0" class="sidedrawer-header">
+            <Button row="0" col="1" class="header-button no-border round fas" pageTransition="fade" (tap)="hideDrawer()" [nsRouterLink]="['/settings']" text="&#xf013;"></Button>
+            <Button row="0" col="2" class="header-button no-border round fas" pageTransition="fade" (tap)="hideDrawer()" [nsRouterLink]="['/users']" text="&#xf0c0;"></Button>
+            <Button row="0" col="3" class="header-button no-border round fas" (tap)="logout()" text="&#xf2f5;"></Button>
             <Label row="0" col="0" class="sidedrawer-header-image fas" text="&#xf007;"></Label>
             <Label row="1" col="0" colspan="3" class="sidedrawer-header-brand" text="{{username}}"></Label>
             <Label row="2" col="0" colspan="3" class="sidedrawer-header-footnote" text="{{useremail}}"></Label>
         </GridLayout>
 
-        <ScrollView row="1">
-            <StackLayout class="sidedrawer-content">
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" pageTransition="fade" [nsRouterLink]="['/dashboard']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf3fd;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Dashboard"></Span>
-                        </FormattedString>
-
-                    </Button>
+        <ScrollView row="1" class="nt-drawer__body">
+            <StackLayout>
+                <GridLayout columns="auto, *" class="nt-drawer__list-item" nsRouterLinkActive="active" [nsRouterLink]="['/dashboard']" (tap)="hideDrawer()">
+                    <Label col="0" text="&#xf3fd;" class="nt-icon fas"></Label>
+                    <Label col="1" [text]="'dashboard.dashboard' | translate" class="p-r-10"></Label>
                 </GridLayout>
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" pageTransition="fade" [nsRouterLink]="['/users']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf007;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Benutzer"></Span>
-                        </FormattedString>
-                    </Button>
+                <GridLayout columns="auto, *" class="nt-drawer__list-item" nsRouterLinkActive="active" [nsRouterLink]="['/projects']" (tap)="hideDrawer()">
+                    <Label col="0" text="&#xf07b;" class="nt-icon fas"></Label>
+                    <Label col="1" [text]="'projects.projects' | translate" class="p-r-10"></Label>
+                </GridLayout>
+                <GridLayout columns="auto, *" class="nt-drawer__list-item" nsRouterLinkActive="active" [nsRouterLink]="['/calendar']" (tap)="hideDrawer()">
+                    <Label col="0" text="&#xf073;" class="nt-icon fas"></Label>
+                    <Label col="1" [text]="'calendar.calendar' | translate" class="p-r-10"></Label>
                 </GridLayout>
 
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/chat']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf086;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Chat"></Span>
-                        </FormattedString>
-                    </Button>
+                <StackLayout class="hr"></StackLayout>
+                
+                <GridLayout columns="auto, *" class="nt-drawer__list-item" nsRouterLinkActive="active" [nsRouterLink]="['/chat']" (tap)="hideDrawer()">
+                    <Label col="0" text="&#xf086;" class="nt-icon fas"></Label>
+                    <Label col="1" [text]="'chat.chat' | translate" class="p-r-10"></Label>
+                </GridLayout>
+                <GridLayout columns="auto, *" class="nt-drawer__list-item" nsRouterLinkActive="active" [nsRouterLink]="['/notifications']" (tap)="hideDrawer()">
+                    <Label col="0" text="&#xf0e0;" class="nt-icon fas"></Label>
+                    <Label col="1" [text]="'notifications.notifications' | translate" class="p-r-10"></Label>
                 </GridLayout>
 
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/notifications']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf0e0;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Benachrichtigungen"></Span>
-                        </FormattedString>
-                    </Button>
+                <StackLayout class="hr"></StackLayout>
+                
+                <GridLayout columns="auto, *" class="nt-drawer__list-item" nsRouterLinkActive="active" [nsRouterLink]="['/tutorials']" (tap)="hideDrawer()">
+                    <Label col="0" text="&#xf02d;" class="nt-icon fas"></Label>
+                    <Label col="1" [text]="'tutorials.tutorials' | translate" class="p-r-10"></Label>
+                </GridLayout>
+                <GridLayout columns="auto, *" class="nt-drawer__list-item" nsRouterLinkActive="active" [nsRouterLink]="['/templates']" (tap)="hideDrawer()">
+                    <Label col="0" text="&#xf1c5;" class="nt-icon fas" fontSize="10"></Label>
+                    <Label col="1" [text]="'templates.templates' | translate" class="p-r-10"></Label>
                 </GridLayout>
 
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/calendar']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf073;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Kalender"></Span>
-                        </FormattedString>
-                    </Button>
+                <StackLayout class="hr"></StackLayout>
+                
+                <GridLayout columns="auto, *" class="nt-drawer__list-item" nsRouterLinkActive="active" [nsRouterLink]="['/done']" (tap)="hideDrawer()">
+                    <Label col="0" text="&#xf00c;" class="nt-icon fas"></Label>
+                    <Label col="1" [text]="'done.done' | translate" class="p-r-10"></Label>
                 </GridLayout>
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/projects']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf07b;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Projekte"></Span>
-                        </FormattedString>
-                    </Button>
-                </GridLayout>
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/files']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf15c;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Dateien"></Span>
-                        </FormattedString>
-                    </Button>
-                </GridLayout>
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/templates']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf1c5;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Vorlagen"></Span>
-                        </FormattedString>
-                    </Button>
-                </GridLayout>
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" nsRouterLinkActive="active">
-                    <Button col="1" text="" pageTransition="fade" [nsRouterLink]="['/done']" (tap)="hideDrawer()" class="p-r-10 sidedrawer-button">
-                        <FormattedString style="background-color: transparent;">
-                            <Span text="&#xf00c;" class="fas"></Span>
-                            <Span text="    " class=""></Span>
-                            <Span text="Fertig"></Span>
-                        </FormattedString>
-                    </Button>
-                </GridLayout>
+
+
+                <!-- &#xf007; Users-->
+
             </StackLayout>
         </ScrollView>
     </GridLayout>
