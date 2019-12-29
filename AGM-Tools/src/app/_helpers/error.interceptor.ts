@@ -21,14 +21,15 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         // tslint:disable-next-line: no-console
-        console.log("Error in error.interceptor.ts: ", err, err.stack);
+        console.error("Error in error.interceptor.ts: ", err, err.stack);
 
         if (err && err.error && err.error.logout) {
           this.authenticationService.logout();
           this.router.navigate(["login"]);
         }
-
-        const error = err.error.error || err.error.message || err.statusText;
+        const error = err.error && err.error.error ?
+          err.error.error : err.error && err.error.message ?
+            err.error.message : err.statusText ? err.statusText : err ? err : "Unknown error!";
         return throwError(error);
       }),
     );
