@@ -44,9 +44,9 @@
             <ActivityIndicator [busy]="isAuthenticating" rowSpan="2"></ActivityIndicator>
         </GridLayout>
 
-        <Button [text]="'login.login' | translate" [isEnabled]="!isAuthenticating" class="submit-button" (tap)="submit()"></Button>
+        <Button #loginButton [text]="'login.login' | translate" [isEnabled]="!isAuthenticating" class="submit-button" (tap)="submit()"></Button>
 
-        <Label class="forgot-password-label" [text]="'login.lostPassword' | translate" (tap)="forgotPassword()"></Label>
+        <Label #forgotPasswordLabel class="forgot-password-label" [text]="'login.lostPassword' | translate" (tap)="forgotPassword()"></Label>
     </StackLayout>
 
     <!-- The fruit logo that appears within the container -->
