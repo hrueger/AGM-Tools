@@ -10,6 +10,7 @@ import {
 } from "nativescript-ui-sidedrawer";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     selector: "app-root",
@@ -30,7 +31,16 @@ export class AppComponent {
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
+        private translate: TranslateService,
     ) {
+    }
+
+    public logout() {
+        this.hideDrawer();
+        this.authenticationService.logout();
+        this.router.navigate(["/login"]);
+    }
+    public ngOnInit() {
         this.authenticationService.currentUser.subscribe((x) => {
             if (x) {
                 this.currentUser = x;
@@ -46,14 +56,7 @@ export class AppComponent {
             }
 
         });
-    }
-
-    public logout() {
-        this.hideDrawer();
-        this.authenticationService.logout();
-        this.router.navigate(["/login"]);
-    }
-    public ngOnInit() {
+        this.translate.setDefaultLang("en");
         this.psideDrawerTransition = new SlideInOnTopTransition();
         Downloader.init();
     }

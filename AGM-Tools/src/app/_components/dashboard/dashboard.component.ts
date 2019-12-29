@@ -3,7 +3,7 @@ import { ChartOptions, ChartType } from "chart.js";
 import { Label, MultiDataSet } from "ng2-charts";
 // tslint:disable-next-line: max-line-length
 import * as pluginDataLabels from "../../../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js";
-import { FastTranslateService } from "../../_services/fast-translate.service.js";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 

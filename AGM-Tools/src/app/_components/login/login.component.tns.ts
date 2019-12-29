@@ -60,6 +60,7 @@ export class LoginComponent {
   public login() {
     if (getConnectionType() === connectionType.none) {
       alert("AGM-Tools benötigt eine Internetverbindung.");
+      this.isAuthenticating = false;
       return;
     }
 

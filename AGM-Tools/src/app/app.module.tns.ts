@@ -1,5 +1,5 @@
 import { registerLocaleData } from "@angular/common";
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClient } from "@angular/common/http";
 import localeDe from "@angular/common/locales/de";
 import {
     LOCALE_ID,
@@ -7,6 +7,7 @@ import {
     NO_ERRORS_SCHEMA,
     PlatformRef,
 } from "@angular/core";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
@@ -72,13 +73,10 @@ import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
 registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
-import { JwtModule } from "@auth0/angular-jwt";
-import { getString, setString } from "tns-core-modules/application-settings";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { ShareComponent } from "./_components/share/share.component";
+import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 
-export function getJWT() {
-    return getString("jwt_token", "");
-}
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -128,11 +126,6 @@ export function getJWT() {
     imports: [
         NativeScriptModule,
         NativeScriptRouterModule.forRoot(routes),
-        JwtModule.forRoot({
-            config: {
-                tokenGetter: getJWT,
-            },
-        }),
         NativeScriptHttpClientModule,
         NativeScriptFormsModule,
         NativeScriptUISideDrawerModule,
@@ -144,6 +137,13 @@ export function getJWT() {
         LetterAvatarModule,
         AvatarModule,
         EmojiPickerModule,
+        TranslateModule.forRoot({
+            loader: {
+                deps: [HttpClient],
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+            },
+        }),
     ],
     providers: [
         FormBuilder,
@@ -159,7 +159,13 @@ export function getJWT() {
             useValue: "de-DE",
         },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
     schemas: [NO_ERRORS_SCHEMA],
 })
 export class AppModule { }
+
+export function HttpLoaderFactory(http: HttpClient) {
+    console.log("Translate http loader factory called!");
+    return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
+}

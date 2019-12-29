@@ -90,7 +90,7 @@ export class PushService {
             (token) => {
                 // tslint:disable-next-line: no-console
                 console.log("Firebase plugin received a push token: " + token);
-                this.remoteService.getNoCache("post", "updatePushToken", { pushToken: token }).subscribe();
+                this.remoteService.getNoCache("post", "push/token/update", { pushToken: token }).subscribe();
             },
         );
         this.registerOnReceivedCallback();
@@ -275,7 +275,7 @@ export class PushService {
             onPushTokenReceivedCallback: (token: string): void => {
                 // tslint:disable-next-line: no-console
                 console.log(">>>> Firebase plugin received a push token: " + token);
-                this.remoteService.getNoCache("post", "updatePushToken", { pushToken: token }).subscribe();
+                this.remoteService.getNoCache("post", "push/token/update", { pushToken: token }).subscribe();
             },
             showNotifications: true,
             showNotificationsWhenInForeground: false,
