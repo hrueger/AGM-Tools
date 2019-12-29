@@ -1,8 +1,8 @@
 <RadSideDrawer #rsd [drawerTransition]="sideDrawerTransition">
     <GridLayout tkDrawerContent rows="auto, *" class="sidedrawer sidedrawer-left">
         <GridLayout rows="*, auto, auto, auto" columns="*, auto, auto, auto" row="0" class="sidedrawer-header">
-            <Button row="0" col="1" class="header-button no-border round fas" pageTransition="fade" (tap)="hideDrawer()" [nsRouterLink]="['/settings']" text="&#xf013;"></Button>
-            <Button row="0" col="2" class="header-button no-border round fas" pageTransition="fade" (tap)="hideDrawer()" [nsRouterLink]="['/users']" text="&#xf0c0;"></Button>
+            <Button row="0" col="1" class="header-button no-border round fas" pageTransition="fade" (tap)="hideDrawer()" nsRouterLinkActive="active" [nsRouterLink]="['/settings']" text="&#xf013;"></Button>
+            <Button row="0" col="2" class="header-button no-border round fas" pageTransition="fade" (tap)="hideDrawer()" nsRouterLinkActive="active" [nsRouterLink]="['/users']" text="&#xf0c0;"></Button>
             <Button row="0" col="3" class="header-button no-border round fas" (tap)="logout()" text="&#xf2f5;"></Button>
             <Label row="0" col="0" class="sidedrawer-header-image fas" text="&#xf007;"></Label>
             <Label row="1" col="0" colspan="3" class="sidedrawer-header-brand" text="{{username}}"></Label>
