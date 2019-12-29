@@ -13,7 +13,6 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
-import { JwtModule } from "@auth0/angular-jwt";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
@@ -60,6 +59,7 @@ import { TutorialsComponent } from "./_components/tutorials/tutorials.component"
 import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
+import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { RenewJwtTokenInterceptor } from "./_helpers/renewJwtToken.interceptor";
 import { DiffPipe } from "./_pipes/diff.pipe";
 import { DisplayUsernamesPipe } from "./_pipes/displayUsernames.pipe";
@@ -73,10 +73,6 @@ import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
 
 registerLocaleData(localeDe);
-
-export function getJWT() {
-    return sessionStorage.getItem("jwt_token");
-}
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -131,12 +127,6 @@ export function getJWT() {
         ContextMenuModule.forRoot({
             useBootstrap4: true,
         }),
-        JwtModule.forRoot({
-            config: {
-                tokenGetter: getJWT,
-                whitelistedDomains: ["localhost:3000"],
-            },
-        }),
         BrowserAnimationsModule,
         DashboardLayoutModule,
         BrowserModule,
@@ -179,6 +169,7 @@ export function getJWT() {
         },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: RenewJwtTokenInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
 })
 export class AppModule { }

@@ -77,7 +77,6 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { ShareComponent } from "./_components/share/share.component";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 
-
 @NgModule({
     bootstrap: [AppComponent],
     declarations: [
@@ -166,6 +165,5 @@ import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 export class AppModule { }
 
 export function HttpLoaderFactory(http: HttpClient) {
-    console.log("Translate http loader factory called!");
     return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
 }
