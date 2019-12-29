@@ -16,14 +16,15 @@
             </StackLayout>
             <StackLayout class="card">
                 <Label class="headline" [text]="'events.nextEvents' | translate"></Label>
-                <Label textWrap="true" *ngFor="let date of dates">
+                <Label textWrap="true" *ngFor="let event of dates">
                     <FormattedString textWarp="true">
-                        <Span textWarp="true" text="{{ date.name }}&#xA;"
-                            style="font-weight: bold;font-size: 15; padding-top:5;"></Span>
-                        <Span textWarp="true" text="am {{ date.date }}, {{ date.date }} ab {{
-                                date.starttime
-                            }} Uhr&#xA;"></Span>
-                        <Span textWarp="true" text="{{ date.countdown }}&#xA;" color="#337ab7"></Span>
+                        <Span textWarp="true" [text]="event.headline" style="font-weight: bold;font-size: 15; padding-top:5;"></Span>
+                        <Span text="&#xA;&#xf783;   " class="fas"></Span>
+                        <Span textWarp="true" [text]="'general.startingAtDate' | translate:{'weekday': (event.start | date:'EEEE'), 'day': (event.start | date:'shortDate'), 'time': (event.start | date:'shortTime')}"></Span>
+                        <Span text="&#xA;"></Span>
+                        <Span textWarp="true" class="fas" [text]="'&#xf3c5;   ' + event.location + '&#xA;'"></Span>
+                        <Span textWarp="true" class="fas" text="&#xf2f2;   " color="#337ab7"></Span>
+                        <Span textWarp="true" class="fas" [text]="'events.countdown' | translate:{'countdown':event.countdownTime}" color="#337ab7"></Span>
                     </FormattedString>
                 </Label>
                 <Label [text]="'events.none' | translate" *ngIf="!dates || dates.length == 0"></Label>

@@ -11,6 +11,7 @@ import {
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { PushService } from "../../_services/push.service";
 import { RemoteService } from "../../_services/remote.service";
+import { dateDiff } from "./helpers";
 
 @Component({
     selector: "app-dashboard",
@@ -39,6 +40,7 @@ export class DashboardComponent implements OnInit {
         space: "",
         version: "",
     };
+    public countdownInterval: any;
 
     constructor(
         private remoteService: RemoteService,
@@ -55,11 +57,15 @@ export class DashboardComponent implements OnInit {
     }
 
     public ngOnInit() {
-
         this.currentVersion = appversion.getVersionNameSync();
         this.getData();
         this.pushService.init();
     }
+
+    public ngOnDestroy() {
+        clearInterval(this.countdownInterval);
+    }
+
     public getData(obj = false) {
         this.gotSpaceChartData = false;
         this.gotWhatsNew = false;
@@ -87,6 +93,22 @@ export class DashboardComponent implements OnInit {
         });
         this.remoteService.get("get", "dashboard/events").subscribe((data) => {
             this.dates = data.events;
+            const that = this;
+            this.countdownInterval = setInterval(() => {
+                console.log("Interval ran");
+                for (const event of that.dates) {
+                    const d = dateDiff(new Date().getTime(), new Date(event.start).getTime());
+                    const a = [];
+                    if (d.months) { a.push(`${d.months} Monat${(d.months > 1 ? "e" : "")}`); }
+                    if (d.days) { a.push(`${d.days} Tag${(d.days > 1 ? "e" : "")}`); }
+                    if (d.hours) { a.push(`${d.hours} Stunde${(d.hours > 1 ? "n" : "")}`); }
+                    if (d.minutes) { a.push(`${d.minutes} Minute${(d.minutes > 1 ? "n" : "")}`); }
+                    if (d.seconds) { a.push(`${d.seconds} Sekunde${(d.seconds > 1 ? "n" : "")}`); }
+                    event.countdownTime = a.join(", ");
+                }
+                console.log("Interval ran");
+                console.log("Interval ran");
+            }, 900);
             this.lastUpdated.events = data.lastUpdated;
             this.gotDates = true;
             this.checkForRefreshDone(obj);
