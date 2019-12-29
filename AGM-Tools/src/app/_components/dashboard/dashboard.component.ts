@@ -6,6 +6,7 @@ import * as pluginDataLabels from "../../../../node_modules/chartjs-plugin-datal
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { dateDiff } from "./helpers";
 
 @Component({
     selector: "app-dashboard",
@@ -46,6 +47,7 @@ export class DashboardComponent implements OnInit {
         space: "",
         version: "",
     };
+    public countdownInterval: any;
     constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
@@ -66,6 +68,10 @@ export class DashboardComponent implements OnInit {
         return new Date().getTime();
     }
 
+    public ngOnDestroy() {
+        clearInterval(this.countdownInterval);
+    }
+
     public initChart() {
         this.remoteService.get("get", "dashboard/spaceChartData").subscribe((data) => {
             this.setSpaceChartData(data);
@@ -79,9 +85,9 @@ export class DashboardComponent implements OnInit {
             this.dates = data.events;
             this.lastUpdated.events = data.lastUpdated;
             const that = this;
-            setInterval(() => {
+            this.countdownInterval = setInterval(() => {
                 for (const event of that.dates) {
-                    const d = this.dateDiff(new Date().getTime(), new Date(event.start).getTime());
+                    const d = dateDiff(new Date().getTime(), new Date(event.start).getTime());
                     const a = [];
                     if (d.months) { a.push(`${d.months} Monat${(d.months > 1 ? "e" : "")}`); }
                     if (d.days) { a.push(`${d.days} Tag${(d.days > 1 ? "e" : "")}`); }
@@ -90,7 +96,7 @@ export class DashboardComponent implements OnInit {
                     if (d.seconds) { a.push(`${d.seconds} Sekunde${(d.seconds > 1 ? "n" : "")}`); }
                     event.countdownTime = a.join(", ");
                 }
-            });
+            }, 900);
         });
         this.remoteService.get("get", "dashboard/version").subscribe((data) => {
             this.version = data.version;
@@ -127,25 +133,5 @@ export class DashboardComponent implements OnInit {
 
     private setSpaceChartData(data: any) {
         this.spaceChartData = [data.free, data.system, data.used];
-    }
-
-    private dateDiff(a, b) {
-        let delta = Math.abs(b - a) / 1000;
-        const months = Math.floor(delta / 2592000);
-        delta -= months * 2592000;
-        const days = Math.floor(delta / 86400);
-        delta -= days * 86400;
-        const hours = Math.floor(delta / 3600) % 24;
-        delta -= hours * 3600;
-        const minutes = Math.floor(delta / 60) % 60;
-        delta -= minutes * 60;
-        const seconds = Math.floor(delta % 60);
-        return {
-            days,
-            hours,
-            minutes,
-            months,
-            seconds,
-        };
     }
 }
