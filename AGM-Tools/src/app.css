@@ -60,15 +60,13 @@ StackLayout.content {
 
 .fab-button {
     color: #ffffff;
-    font-size: 36;
-    padding-top: 5;
-    padding-left: 12;
-    background-color: transparent;
+    font-size: 40;
     background-color: #30bcff;
-    border-radius: 28;
+    border-radius: 100;
     width: 60;
     height: 60;
     margin: 20;
+    padding-top: -3;
 }
 
 .no-border {
@@ -152,8 +150,9 @@ StackLayout.content {
 }
 
 .swipeLabel {
-    size: 60;
-    line-height: 40;
+    font-size: 20;
+    padding-left: 10;
+    padding-top: 10;
     color: #ffffff;
 }
 
