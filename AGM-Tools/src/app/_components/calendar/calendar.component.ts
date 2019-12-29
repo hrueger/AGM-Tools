@@ -222,13 +222,12 @@ export class CalendarComponent {
                 case "eventCreated":
                     this.remoteService
                         .getNoCache("post", "events/", {
-                            description: ev.data.Description ? ev.data.Description : await this.fts.t("errors.noDescriptionProvided"),
-                            endDate: ev.data.EndTime.toISOString(),
-                            headline: ev.data.Subject ? ev.data.Subject : await this.fts.t("errors.noHeadlineProvided"),
+                            description: ev.data[0].Description ? ev.data[0].Description : await this.fts.t("errors.noDescriptionProvided"),
+                            endDate: ev.data[0].EndTime.toISOString(),
+                            headline: ev.data[0].Subject ? ev.data[0].Subject : await this.fts.t("errors.noHeadlineProvided"),
                             important: true,
-                            location:
-                                ev.data.Location ? ev.data.Location : await this.fts.t("errors.noLocationProvided"),
-                            startDate: ev.data.StartTime.toISOString(),
+                            location: ev.data[0].Location ? ev.data[0].Location : await this.fts.t("errors.noLocationProvided"),
+                            startDate: ev.data[0].StartTime.toISOString(),
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
@@ -236,7 +235,7 @@ export class CalendarComponent {
                                 this.idsToReplace.push(
                                     {
                                         // @ts-ignore
-                                        bad: this.eventSettings.dataSource.find((e) => e.Id == ev.data.Id).Id,
+                                        bad: this.eventSettings.dataSource.find((e) => e.Id == ev.data[0].Id).Id,
                                         good: data.id,
                                     },
                                 );
@@ -245,16 +244,16 @@ export class CalendarComponent {
                             }
                         });
                 case "eventChanged":
-                    const id = this.getRealId(ev.data.Id);
+                    const id = this.getRealId(ev.data[0].Id);
                     if (id != null) {
                         this.remoteService
                             .getNoCache("post", `events/${id}`, {
-                                description: ev.data.Description ? ev.data.Description : await this.fts.t("errors.noDescriptionProvided"),
-                                endDate: ev.data.EndTime.toISOString(),
-                                headline: ev.data.Subject ? ev.data.Subject : await this.fts.t("errors.noHeadlineProvided"),
+                                description: ev.data[0].Description ? ev.data[0].Description : await this.fts.t("errors.noDescriptionProvided"),
+                                endDate: ev.data[0].EndTime.toISOString(),
+                                headline: ev.data[0].Subject ? ev.data[0].Subject : await this.fts.t("errors.noHeadlineProvided"),
                                 important: true,
-                                location: ev.data.Location ? ev.data.Location : await this.fts.t("errors.noLocationProvided"),
-                                startDate: ev.data.StartTime.toISOString(),
+                                location: ev.data[0].Location ? ev.data[0].Location : await this.fts.t("errors.noLocationProvided"),
+                                startDate: ev.data[0].StartTime.toISOString(),
                             })
                             .subscribe(async (data) => {
                                 if (data && data.status == true) {
