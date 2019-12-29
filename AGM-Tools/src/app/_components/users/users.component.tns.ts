@@ -39,7 +39,7 @@ export class UsersComponent implements OnInit {
     ) { }
 
     public ngOnInit() {
-        this.remoteService.get("post", "usersGetUsers").subscribe((data) => {
+        this.remoteService.get("get", "users").subscribe((data) => {
             this.users = data;
         });
     }
@@ -59,7 +59,7 @@ export class UsersComponent implements OnInit {
         this.modal.showModal(NewUserModalComponent, options).then((newUser) => {
             if (newUser) {
                 this.remoteService
-                    .getNoCache("post", "usersNewUser", {
+                    .getNoCache("post", "users", {
                         email: newUser.email,
                         pw: newUser.password,
                         pw2: newUser.password2,
@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit {
                                 "Benutzer erfolgreich erstellt",
                             );
                             this.remoteService
-                                .get("post", "usersGetUsers")
+                                .get("get", "users")
                                 .subscribe((res) => {
                                     this.users = res;
                                 });
@@ -97,7 +97,7 @@ export class UsersComponent implements OnInit {
         this.modal.showModal(EditUserModalComponent, options).then((newUser) => {
             if (newUser) {
                 this.remoteService
-                    .getNoCache("post", "usersEditCurrentUser", {
+                    .getNoCache("post", "users/editCurrent", {
                         "email": newUser.email,
                         "id": this.authService.currentUserValue.id,
                         "pw-new": newUser.password1,
@@ -111,7 +111,7 @@ export class UsersComponent implements OnInit {
                                 "Eigene Daten erfolgreich geändert!",
                             );
                             this.remoteService
-                                .get("post", "usersGetUsers")
+                                .get("get", "users")
                                 .subscribe((res) => {
                                     this.users = res;
                                 });
