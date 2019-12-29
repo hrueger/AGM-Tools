@@ -127,6 +127,7 @@
     "lostPassword": "Lost password?",
     "passwordResetSuccessful": "Your password was sucessfully reset.",
     "repeatNewPassword": "Repeat new password",
+    "takeatour": "Take a tour",
     "toLogin": "To Login"
   },
   "notifications": {
