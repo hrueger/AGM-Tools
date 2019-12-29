@@ -95,7 +95,6 @@ export class DashboardComponent implements OnInit {
             this.dates = data.events;
             const that = this;
             this.countdownInterval = setInterval(() => {
-                console.log("Interval ran");
                 for (const event of that.dates) {
                     const d = dateDiff(new Date().getTime(), new Date(event.start).getTime());
                     const a = [];
@@ -106,8 +105,6 @@ export class DashboardComponent implements OnInit {
                     if (d.seconds) { a.push(`${d.seconds} Sekunde${(d.seconds > 1 ? "n" : "")}`); }
                     event.countdownTime = a.join(", ");
                 }
-                console.log("Interval ran");
-                console.log("Interval ran");
             }, 900);
             this.lastUpdated.events = data.lastUpdated;
             this.gotDates = true;
