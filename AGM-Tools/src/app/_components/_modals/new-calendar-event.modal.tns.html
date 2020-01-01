@@ -1,9 +1,9 @@
 <StackLayout>
     <GridLayout rows="36" columns="auto,*,auto" class="action-bar p-10">
-        <Button text="&#xf060;" class="fas no-border round" row="0" col="0" (tap)="goBack()">
+        <Button text="&#xf060;" class="fas no-border round action-bar-button" row="0" col="0" (tap)="goBack()">
         </Button>
         <Label text="Neuer Termin" class="text-center action-bar-title" row="0" col="1"></Label>
-        <Button row="0" col="2" text="&#xf0c7;" class="fas no-border round" (tap)="close()"></Button>
+        <Button row="0" col="2" text="&#xf0c7;" class="fas no-border round action-bar-button" (tap)="close()"></Button>
     </GridLayout>
     <RadDataForm class="dataform" #dataform [metadata]="dataFormConfig" [source]="event"></RadDataForm>
     <Label class="form-info-message" [textWrap]="true" text="Alle Benutzer werden durch eine Benachrichtigung über diesen neuen Termin informiert."></Label>
