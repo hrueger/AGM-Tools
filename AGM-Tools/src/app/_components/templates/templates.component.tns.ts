@@ -14,10 +14,10 @@ import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { View } from "tns-core-modules/ui/core/view/view";
 import { Page } from "tns-core-modules/ui/page/page";
+import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
-import { environment } from "../../../environments/environment";
 
 @Component({
     selector: "app-templates",

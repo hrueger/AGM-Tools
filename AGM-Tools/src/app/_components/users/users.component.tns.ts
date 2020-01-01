@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
 import { ModalDialogOptions, ModalDialogService } from "nativescript-angular/directives/dialogs";
-import * as app from "tns-core-modules/application";
-import { View } from "tns-core-modules/ui/core/view/view";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -12,6 +10,8 @@ import {
 import { ListViewEventData, SwipeActionsEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
+import * as app from "tns-core-modules/application";
+import { View } from "tns-core-modules/ui/core/view/view";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";

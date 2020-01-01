@@ -4,7 +4,6 @@ import { Project } from "../../_models/project.model";
 import { User } from "../../_models/user.model";
 import { RemoteService } from "../../_services/remote.service";
 
-import { View } from "tns-core-modules/ui/core/view/view";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -14,6 +13,7 @@ import {
 import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
+import { View } from "tns-core-modules/ui/core/view/view";
 import { AlertService } from "../../_services/alert.service";
 import { NewProjectModalComponent } from "../_modals/new-project.modal.tns";
 
