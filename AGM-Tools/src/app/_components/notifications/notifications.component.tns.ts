@@ -37,6 +37,7 @@ export class NotificationsComponent implements OnInit {
 
     public openNewModal() {
         const options = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef,
