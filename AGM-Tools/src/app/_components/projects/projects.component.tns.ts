@@ -49,6 +49,7 @@ export class ProjectsComponent implements OnInit {
     }
     public openNewModal(content) {
         const options = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef,
