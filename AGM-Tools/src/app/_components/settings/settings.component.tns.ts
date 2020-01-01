@@ -17,9 +17,6 @@ export class SettingsComponent implements OnInit {
   public displayingFull: boolean = false;
   public settings: any[] = [
     {
-      description: "Tägliche Updates, Geräte verwalten, ...",
-      icon: 0xf0f3,
-      name: "Push-Nachrichten",
       children: [
         {
           description: "Täglich eine Tageszusammenfassung per Mail erhalten.",
@@ -43,11 +40,11 @@ export class SettingsComponent implements OnInit {
           value: false,
         },
       ],
+      description: "Tägliche Updates, Geräte verwalten, ...",
+      icon: 0xf0f3,
+      name: "Push-Nachrichten",
     },
     {
-      description: "Zuletzt online, ...",
-      icon: 0xf2f5,
-      name: "Datenschutz",
       children: [
         {
           description: "Den anderen Benutzern Informatioen über den online Status zur Verfügung stellen.",
@@ -71,11 +68,11 @@ export class SettingsComponent implements OnInit {
           value: false,
         },
       ],
+      description: "Zuletzt online, ...",
+      icon: 0xf2f5,
+      name: "Datenschutz",
     },
     {
-      description: "Impressum, Lizenzen, ...",
-      icon: 0xf249,
-      name: "Über",
       children: [
         {
           description: "",
@@ -99,6 +96,9 @@ export class SettingsComponent implements OnInit {
           value: `© ${new Date().getFullYear()}, Hannes Rüger`,
         },
       ],
+      description: "Impressum, Lizenzen, ...",
+      icon: 0xf249,
+      name: "Über",
     },
   ];
 

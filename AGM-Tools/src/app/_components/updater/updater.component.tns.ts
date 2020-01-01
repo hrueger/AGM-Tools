@@ -63,6 +63,7 @@ export class UpdaterComponent implements OnInit {
             })
             .catch((error) => {
               this.alertService.error(error.message);
+              // tslint:disable-next-line: no-console
               console.error(error.message);
             });
          });

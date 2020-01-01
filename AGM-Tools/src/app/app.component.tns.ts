@@ -1,6 +1,7 @@
 import { Component, ElementRef } from "@angular/core";
 import { OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { Downloader } from "nativescript-downloader";
 import {
@@ -10,7 +11,6 @@ import {
 } from "nativescript-ui-sidedrawer";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
-import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     selector: "app-root",
