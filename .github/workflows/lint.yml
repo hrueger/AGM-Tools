@@ -3,21 +3,36 @@ name: Lint
 on: [push]
 
 jobs:
-  lint_frontend:
-    name: Lint Frontend
+  lint_web_frontend:
+    name: Lint Web Frontend
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: 10
+        node-version: 12
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
     - name: Lint
       working-directory: AGM-Tools
-      run: npm run lint
+      run: npm run lint:web
+  lint_mobile_frontend:
+    name: Lint Mobile Frontend
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - name: Install dependencies
+      working-directory: AGM-Tools
+      run: npm i
+    - name: Lint
+      working-directory: AGM-Tools
+      run: npm run lint:mobile
   lint_api:
     name: Lint API
     runs-on: ubuntu-latest
@@ -26,7 +41,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: 10
+        node-version: 12
     - name: Install dependencies
       working-directory: api
       run: npm i

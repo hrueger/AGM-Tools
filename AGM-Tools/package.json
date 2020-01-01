@@ -17,7 +17,8 @@
         "serve:web": "ng serve",
         "serve:android": "tns run android",
         "serve:ios": "tns run ios",
-        "lint": "ng lint",
+        "lint:web": "ng lint",
+        "lint:mobile": "ng lint --tsConfig tsconfig.tns.json",
         "createFilesWithApiKeys": "node createFilesWithApiKeys.js"
     },
     "private": true,
