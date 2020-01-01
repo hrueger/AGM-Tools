@@ -88,6 +88,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
     public openNewModal() {
         this.alertService.info("Gibt's am Handy noch nicht!");
         /*let options = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef
