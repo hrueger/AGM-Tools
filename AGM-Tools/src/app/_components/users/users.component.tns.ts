@@ -90,6 +90,7 @@ export class UsersComponent implements OnInit {
     public openEditModal() {
         const currentUser = this.authService.currentUserValue;
         const options = {
+            animated: true,
             context: { currentUser },
             fullscreen: true,
             viewContainerRef: this.vcRef,
