@@ -140,6 +140,7 @@ export class CalendarComponent {
 
     public openNewModal() {
         const options = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef,
