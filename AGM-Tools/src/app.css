@@ -175,3 +175,17 @@ StackLayout.content {
     margin: 2;
     text-align: center;
 }
+
+.action-bar-button {
+    width: 40;
+    color: white;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.action-bar-title {
+    line-height: 36;
+    vertical-align: center;
+    font-weight: normal;
+    font-size: 20;
+}
