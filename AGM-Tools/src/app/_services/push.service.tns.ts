@@ -165,6 +165,7 @@ export class PushService {
     }
 
     private handleNewChatMessage(message: Message): number {
+        // tslint:disable-next-line: no-console
         console.log(message.data.messageId);
         this.remoteService.getNoCache("post", "chatMarkAsReceived", { message: message.data.messageId }).subscribe();
         this.chatActionSubject.next({
