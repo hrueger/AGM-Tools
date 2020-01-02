@@ -94,7 +94,7 @@
     "group": "Group",
     "image": "Image",
     "important": "Important!",
-    "lastOnline": "Last seen:",
+    "lastOnline": "Last seen: {{time}}",
     "lastUpdated": "Last updated: {{time}}",
     "loading": "Loading...",
     "location": "Location",
