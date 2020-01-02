@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 import * as clipboard from "nativescript-clipboard";
 import { PageChangeEventData } from "nativescript-image-swipe";
+import { Utils } from "tns-core-modules";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Page } from "tns-core-modules/ui/page/page";
@@ -42,9 +43,15 @@ export class MessagesAreaComponent implements OnInit {
     constructor(private pushService: PushService,
                 private authService: AuthenticationService,
                 private remoteService: RemoteService,
+                private authenticationService: AuthenticationService,
                 private page: Page) {
 
     }
+
+    public openLocation(message) {
+        Utils.openUrl(`https://www.google.de/maps/place/${message.locationLat},${message.locationLong}/@${message.locationLat},${message.locationLong},17z/`);
+    }
+
     public getImageSrc(imageName, thumbnail = true) {
         return environment.apiUrl +
             "?getAttachment=" +
@@ -64,6 +71,10 @@ export class MessagesAreaComponent implements OnInit {
     }
     public downloadCurrentImage() {
         alert("Herunterladen von Bildern in die Gallerie wird noch nicht unterstützt!");
+    }
+
+    public getLocationImageSrc(message) {
+        return `${environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     public newMessageFromPushService(data: any) {

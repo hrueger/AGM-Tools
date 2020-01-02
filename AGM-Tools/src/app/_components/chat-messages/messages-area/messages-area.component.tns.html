@@ -5,8 +5,8 @@
                 <FlexboxLayout class="message-bubble-content">
                     <StackLayout>
                         <Label class="sendername" *ngIf="!isContinuation(index) && !message.system && !message.fromMe" [text]="' ' + message.sendername"></Label>
-                        <Image class="message-text" (loaded)="imageLoaded()" (tap)="displayImage(index)" *ngIf="message.imageSrc" [src]="getImageSrc(message.imageSrc)">
-                        </Image>
+                        <Image class="message-text" (loaded)="imageLoaded()" (tap)="displayImage(index)" *ngIf="message.imageSrc" [src]="getImageSrc(message.imageSrc)"></Image>
+                        <Image class="message-text" (loaded)="imageLoaded()" (tap)="openLocation(message)" *ngIf="message.locationLat && message.locationLong" [src]="getLocationImageSrc(message)"></Image>
                         <GridLayout *ngIf="message.contactSrc" rows="auto, auto" columns="auto, auto, auto" class="contact">
                             <Image row="0" col="0" class="image" rowspan="2" src="~/assets/attachment/contact.png"></Image>
                             <Label row="0" col="1" class="name" [text]="message.contactSrc.name"></Label>
