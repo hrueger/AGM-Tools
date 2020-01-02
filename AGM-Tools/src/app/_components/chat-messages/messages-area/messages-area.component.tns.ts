@@ -10,13 +10,12 @@ import {
 } from "@angular/core";
 import * as clipboard from "nativescript-clipboard";
 import { PageChangeEventData } from "nativescript-image-swipe";
-import { Utils } from "tns-core-modules";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Page } from "tns-core-modules/ui/page/page";
+import * as utils from "tns-core-modules/utils/utils";
 import { environment } from "../../../../environments/environment";
 import { Message } from "../../../_models/message.model";
-import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { PushService } from "../../../_services/push.service.tns";
 import { RemoteService } from "../../../_services/remote.service";
@@ -49,7 +48,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public openLocation(message) {
-        Utils.openUrl(`https://www.google.de/maps/place/${message.locationLat},${message.locationLong}/@${message.locationLat},${message.locationLong},17z/`);
+        utils.openUrl(`https://www.google.de/maps/place/${message.locationLat},${message.locationLong}/@${message.locationLat},${message.locationLong},17z/`);
     }
 
     public getImageSrc(imageName, thumbnail = true) {
