@@ -12,11 +12,6 @@ import { ActivatedRoute } from "@angular/router";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as camera from "nativescript-camera";
-import {
-    AudioPickerOptions, FilePickerOptions, ImagePickerOptions,
-    Mediafilepicker, VideoPickerOptions,
-} from "nativescript-mediafilepicker";
-import * as permissions from "nativescript-permissions";
 import { PhotoEditor } from "nativescript-photo-editor";
 import { from } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -24,6 +19,7 @@ import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { knownFolders, path } from "tns-core-modules/file-system/file-system";
 import { ImageSource } from "tns-core-modules/image-source/image-source";
 import * as dialogs from "tns-core-modules/ui/dialogs";
+import { Page } from "tns-core-modules/ui/page/page";
 import { environment } from "../../../environments/environment";
 import { Chat } from "../../_models/chat.model";
 import { Contact } from "../../_models/contact.model";
@@ -32,8 +28,6 @@ import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
 import { ContactPickerComponent } from "../_modals/contact-picker.modal.tns";
-
-declare var android: any;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,7 +38,8 @@ declare var android: any;
 export class ChatMessagesComponent
     implements OnInit {
     @Input() public inputReceiverId: number;
-    public receiverId: number;
+    public chatId: number;
+    public chatType: string;
     public showEmojiPicker = false;
     public chat: Chat = {
         contact: new Contact(),
@@ -69,6 +64,7 @@ export class ChatMessagesComponent
         private alertService: AlertService,
         private modal: ModalDialogService,
         private vcRef: ViewContainerRef,
+        private page: Page,
     ) { }
 
     public toggleAttachmentDialog() {
@@ -142,7 +138,7 @@ export class ChatMessagesComponent
                                             { name: "attachment", filename: pathDest, mimeType: "image/png" },
                                             { name: "type", value: "image" },
                                             {
-                                                name: "sendChatAttachment", value: that.receiverId.toString(),
+                                                name: "sendChatAttachment", value: that.chatId.toString(),
                                             },
                                         ];
                                         const task = session.multipartUpload(params, request);
@@ -182,6 +178,7 @@ export class ChatMessagesComponent
     public sendContact() {
         this.toggleAttachmentDialog();
         const options = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef,
@@ -215,7 +212,7 @@ export class ChatMessagesComponent
                             .getNoCache("post", "chatSendMessage", {
                                 contactSrc: contactToSend,
                                 message: "Kontakt",
-                                rid: this.receiverId,
+                                rid: this.chatId,
                             })
                             .subscribe((data) => {
                                 message = this.messages.pop();
@@ -243,7 +240,7 @@ export class ChatMessagesComponent
             this.remoteService
                 .getNoCache("post", "chatSendMessage", {
                     message: this.inputMessageField.nativeElement.text,
-                    rid: this.receiverId,
+                    rid: this.chatId,
                 })
                 .subscribe((data) => {
                     message = this.messages.pop();
@@ -257,40 +254,49 @@ export class ChatMessagesComponent
     }
 
     public ngOnInit() {
-        this.route.params.subscribe((params) => {
-            this.receiverId = +params.index;
-            this.remoteService.get("post", "chatGetContacts").subscribe((chats) => {
-                // this.chats = chats;
-                from(chats)
-                    .pipe(
-                        filter(
-                            // @ts-ignore
-                            (chat) => chat.rid == this.receiverId,
-                        ),
-                    )
-                    .subscribe((chat) => {
-                        // @ts-ignore
-                        this.chat = chat;
-                        this.getMessages(this.receiverId);
-                    });
+        this.page.actionBarHidden = true;
+        this.chatId = this.route.snapshot.params.id;
+        this.chatType = this.route.snapshot.params.type;
+        setTimeout(() => {
+            this.remoteService.get("get", "chats").subscribe((chats) => {
+                this.chat = chats.filter((chat: any) => chat.id == this.chatId)[0];
+                this.cdr.markForCheck();
+                this.getMessages();
             });
         });
     }
 
-    public getMessages(receiverId) {
-        this.remoteService
-            .get("post", "chatGetMessages", { rid: receiverId })
+    public videoCall() {
+        //
+    }
+
+    public audioCall() {
+        //
+    }
+
+    public options() {
+        //
+    }
+
+    public getMessages() {
+        setTimeout(() => {
+            this.remoteService.get("get", `chats/${this.chatType}/${this.chatId}`)
             .subscribe((data) => {
                 if (data != null) {
                     this.messages.length = 0;
                     this.messages.push(...data);
-                    this.cdr.detectChanges();
+                    this.cdr.markForCheck();
                 }
             });
+        }, 0);
+    }
+
+    public getInitials(name: string) {
+        const initials = name.match(/\b\w/g) || [];
+        return ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
     }
 
     public goBack() {
-        // @ts-ignore
         this.router.navigate(["chat"], {
             animated: true,
             transition: {

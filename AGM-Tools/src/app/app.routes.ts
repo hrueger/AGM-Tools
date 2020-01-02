@@ -49,7 +49,7 @@ export const routes: Routes = [
     {
         canActivate: [AuthGuard],
         component: ChatMessagesComponent,
-        path: "chat-messages/:index",
+        path: "chat-messages/:type/:id",
     },
     {
         canActivate: [AuthGuard],

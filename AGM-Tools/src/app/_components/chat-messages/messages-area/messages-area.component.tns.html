@@ -13,7 +13,7 @@
                             <Label row="1" col="1" class="number" [text]="message.contactSrc.number"></Label>
                             <Button row="0" col="2" rowspan="2" text="&#xf0c5;" width="40" height="40" color="#19a9e7" borderColor="transparent" class="fas no-border round" (tap)="addContact(message.contactSrc)"></Button>
                         </GridLayout>
-                        <EmojiLabel class="message-text" *ngIf="!message.imageSrc && !message.contactSrc" [text]="message.text" textWrap="true"></EmojiLabel>
+                        <EmojiLabel class="message-text" *ngIf="!message.imageSrc && !message.contactSrc" [text]="message.content" textWrap="true"></EmojiLabel>
                         <!--<Label class="message-text" *ngIf="!message.imageSrc && !message.contactSrc" [text]="message.text" textWrap="true"></Label>-->
 
                     </StackLayout>
