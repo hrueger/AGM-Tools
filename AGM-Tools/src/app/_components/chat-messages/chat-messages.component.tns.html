@@ -11,8 +11,8 @@
             </FormattedString>
         </Label>
         <StackLayout row="0" col="3" orientation="horizontal">
-            <Button text="&#xf03d;" class="fas no-border round action-bar-button" (tap)="videoCall()"></Button>
-            <Button text="&#xf095;" class="fas no-border round action-bar-button" (tap)="audioCall()"></Button>
+            <Button text="&#xf03d;" class="fas no-border round action-bar-button" (tap)="videoCall()" *ngIf="chat.isUser"></Button>
+            <Button text="&#xf095;" class="fas no-border round action-bar-button" (tap)="audioCall()" *ngIf="chat.isUser"></Button>
             <Button text="&#xf142;" class="fas no-border round action-bar-button" (tap)="options()"></Button>
         </StackLayout>
     </GridLayout>

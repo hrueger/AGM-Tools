@@ -12,18 +12,15 @@ import { ActivatedRoute } from "@angular/router";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as camera from "nativescript-camera";
+import * as geolocation from "nativescript-geolocation";
 import { PhotoEditor } from "nativescript-photo-editor";
-import { from } from "rxjs";
-import { filter } from "rxjs/operators";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { knownFolders, path } from "tns-core-modules/file-system/file-system";
 import { ImageSource } from "tns-core-modules/image-source/image-source";
 import * as dialogs from "tns-core-modules/ui/dialogs";
+import { Accuracy } from "tns-core-modules/ui/enums";
 import { Page } from "tns-core-modules/ui/page/page";
 import { environment } from "../../../environments/environment";
-import { Chat } from "../../_models/chat.model";
-import { Contact } from "../../_models/contact.model";
-import { Message } from "../../_models/message.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
@@ -41,8 +38,9 @@ export class ChatMessagesComponent
     public chatId: number;
     public chatType: string;
     public showEmojiPicker = false;
-    public chat: Chat = {
-        contact: new Contact(),
+    public chat = {
+        id: null,
+        isUser: null,
         muted: null,
         rid: null,
         text: null,
@@ -52,7 +50,7 @@ export class ChatMessagesComponent
     };
     public dialogOpen: boolean = false;
     public unread: number;
-    public messages: ObservableArray<Message> = new ObservableArray<Message>(0);
+    public messages: ObservableArray<any> = new ObservableArray<any>(0);
 
     @ViewChild("inputMessageField", { static: false }) public inputMessageField: ElementRef;
     constructor(
@@ -173,7 +171,11 @@ export class ChatMessagesComponent
     }
     public sendLocation() {
         this.toggleAttachmentDialog();
-        alert("Leider wird das nicht unterstützt. Den Button gibts nur für die Ästhetik ;-)");
+        geolocation.enableLocationRequest().then(() => {
+            geolocation.getCurrentLocation({desiredAccuracy:  Accuracy.high }).then((l) => {
+                console.log(l);
+            });
+        });
     }
     public sendContact() {
         this.toggleAttachmentDialog();
@@ -198,28 +200,7 @@ export class ChatMessagesComponent
                         number: contact.phone[0].number,
                     };
                     if (result) {
-                        let message: Message = {
-                            chat: null,
-                            contactSrc: contactToSend,
-                            created: Date.now(),
-                            fromMe: true,
-                            sendername: "",
-                            sent: "notsent",
-                            text: "",
-                        };
-                        this.messages.push(message);
-                        this.remoteService
-                            .getNoCache("post", "chatSendMessage", {
-                                contactSrc: contactToSend,
-                                message: "Kontakt",
-                                rid: this.chatId,
-                            })
-                            .subscribe((data) => {
-                                message = this.messages.pop();
-                                message.sent = "sent";
-                                this.messages.push(message);
-                                this.cdr.detectChanges();
-                            });
+                        this.displayAndSendMessage({contact: contactToSend});
                     }
                 });
             }
@@ -228,28 +209,7 @@ export class ChatMessagesComponent
 
     public sendMessage() {
         if (this.inputMessageField.nativeElement.text && this.inputMessageField.nativeElement.text != "") {
-            let message: Message = {
-                chat: null,
-                created: Date.now(),
-                fromMe: true,
-                sendername: "",
-                sent: "notsent",
-                text: this.inputMessageField.nativeElement.text,
-            };
-            this.messages.push(message);
-            this.remoteService
-                .getNoCache("post", "chatSendMessage", {
-                    message: this.inputMessageField.nativeElement.text,
-                    rid: this.chatId,
-                })
-                .subscribe((data) => {
-                    message = this.messages.pop();
-                    message.sent = "sent";
-                    this.messages.push(message);
-                    // console.log(this.messages);
-                    this.cdr.detectChanges();
-                });
-            this.inputMessageField.nativeElement.text = "";
+            this.displayAndSendMessage({content: this.inputMessageField.nativeElement.text});
         }
     }
 
@@ -309,20 +269,57 @@ export class ChatMessagesComponent
         this.inputMessageField.nativeElement.togglePopup();
     }
 
+    private displayAndSendMessage(options: {
+            contact?: { name: any; number: any; },
+            location?: {lat: number, long: number},
+            content?: string,
+        }) {
+        let message = {
+            chat: null,
+            contactSrc: options.contact,
+            content: options.content,
+            created: Date.now(),
+            fromMe: true,
+            sendername: "",
+            sent: "notsent",
+        };
+        this.messages.push(message);
+        const url = `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}${options.content ? "" : "/attachment"}`;
+        let o: any = {message: options.content};
+        if (options.contact) {
+            o.contactName = options.contact.name;
+            o.contactNumber = options.contact.number;
+        } else if (options.location) {
+            o = {
+                locationLat: options.location.lat,
+                locationLong: options.location.long,
+            };
+        }
+        this.remoteService
+            .getNoCache("post", url, o)
+            .subscribe(() => {
+                message = this.messages.pop();
+                message.sent = "sent";
+                this.messages.push(message);
+                this.cdr.markForCheck();
+                if (options.content) { this.inputMessageField.nativeElement.text = ""; }
+            });
+    }
+
 }
 
-function progressHandler(e) {
+function progressHandler(e: any) {
     //
 }
-function errorHandler(e) {
+function errorHandler(e: { responseCode: string; }) {
     alert("Die Datei konnte nicht erfolgreich hochgeladen werden, Fehlercode " + e.responseCode);
 }
-function respondedHandler(e) {
+function respondedHandler(e: any) {
     // console.log("received " + e.responseCode + " code. Server sent: " + e.data);
 }
-function completeHandler(e) {
+function completeHandler(e: any) {
     //
 }
-function cancelledHandler(e) {
+function cancelledHandler(e: any) {
     //
 }
