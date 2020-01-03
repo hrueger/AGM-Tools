@@ -74,8 +74,13 @@ import { routes } from "./app.routes";
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
 registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { WebRTC } from "nativescript-webrtc-plugin";
+import { WebRTCModule } from "nativescript-webrtc-plugin/angular";
+import { CallComponent } from "./_components/call/call.component";
 import { ShareComponent } from "./_components/share/share.component";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
+
+WebRTC.init();
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -87,6 +92,7 @@ import { JwtInterceptor } from "./_helpers/jwt.interceptor";
         ChatComponent,
         NotificationsComponent,
         CalendarComponent,
+        CallComponent,
         ProjectsComponent,
         FilesComponent,
         TemplatesComponent,
@@ -135,6 +141,7 @@ import { JwtInterceptor } from "./_helpers/jwt.interceptor";
         NativeScriptUIGaugeModule,
         LetterAvatarModule,
         AvatarModule,
+        WebRTCModule,
         EmojiPickerModule,
         TranslateModule.forRoot({
             loader: {

@@ -18,6 +18,7 @@ import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { knownFolders, path } from "tns-core-modules/file-system/file-system";
 import { ImageSource } from "tns-core-modules/image-source/image-source";
 import * as dialogs from "tns-core-modules/ui/dialogs";
+import { confirm } from "tns-core-modules/ui/dialogs";
 import { Accuracy } from "tns-core-modules/ui/enums";
 import { Page } from "tns-core-modules/ui/page/page";
 import { environment } from "../../../environments/environment";
@@ -42,6 +43,7 @@ export class ChatMessagesComponent
         id: null,
         isUser: null,
         muted: null,
+        name: null,
         rid: null,
         text: null,
         type: null,
@@ -226,12 +228,16 @@ export class ChatMessagesComponent
         });
     }
 
-    public videoCall() {
-        //
+    public async videoCall() {
+        if (await confirm(`Möchtest du einen Videoanruf mit ${this.chat.name} starten?`)) {
+            this.router.navigate(["call", "user", this.chat.id, "video"]);
+        }
     }
 
-    public audioCall() {
-        //
+    public async audioCall()  {
+        if (await confirm(`Möchtest du einen Sprachanruf mit ${this.chat.name} starten?`)) {
+            this.router.navigate(["call", "user", this.chat.id, "audio"]);
+        }
     }
 
     public options() {

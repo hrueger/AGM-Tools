@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { AboutComponent } from "./_components/about/about.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
+import { CallComponent } from "./_components/call/call.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
 import { ChatComponent } from "./_components/chat/chat.component";
 import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
@@ -50,6 +51,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         component: ChatMessagesComponent,
         path: "chat-messages/:type/:id",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: CallComponent,
+        path: "call/:chatType/:id/:callType",
     },
     {
         canActivate: [AuthGuard],
