@@ -3,10 +3,10 @@
     "nativescript": {
         "id": "de.multimediaag.agmtools",
         "tns-ios": {
-            "version": "6.1.1"
+            "version": "6.3.0"
         },
         "tns-android": {
-            "version": "6.1.1"
+            "version": "6.3.0"
         }
     },
     "version": "3.09.22",
@@ -48,18 +48,18 @@
         "@nstudio/nativescript-pulltorefresh": "1.1.1",
         "@nstudio/nativescript-snackbar": "^1.1.1",
         "@syncfusion/ej2-angular-inputs": "^17.4.39",
-        "@syncfusion/ej2-angular-layouts": "^17.4.39",
+        "@syncfusion/ej2-angular-layouts": "^17.4.40",
         "@syncfusion/ej2-angular-navigations": "^17.4.39",
         "@syncfusion/ej2-angular-popups": "^17.4.39",
         "@syncfusion/ej2-angular-schedule": "^17.4.39",
-        "@syncfusion/ej2-layouts": "^17.4.39",
+        "@syncfusion/ej2-layouts": "^17.4.40",
         "ajv": "^6.10.2",
-        "angularx-flatpickr": "^6.1.1",
+        "angularx-flatpickr": "^6.2.0",
         "bootstrap": "^4.4.1",
         "chart.js": "^2.9.3",
         "chartjs-plugin-datalabels": "^0.7.0",
         "cldr-data": "^36.0.0",
-        "core-js": "^3.6.0",
+        "core-js": "^3.6.1",
         "date-fns": "^2.8.1",
         "firebase": "^7.6.1",
         "fontawesome": "^5.6.3",
@@ -89,7 +89,7 @@
         "nativescript-ngx-fonticon": "^5.0.2",
         "nativescript-pdf-view": "^2.1.0",
         "nativescript-photo-editor": "^1.1.0",
-        "nativescript-plugin-firebase": "^10.3.2",
+        "nativescript-plugin-firebase": "^10.3.3",
         "nativescript-progress-notifications": "^1.0.1",
         "nativescript-ui-autocomplete": "6.0.0",
         "nativescript-ui-calendar": "6.0.0",
@@ -99,6 +99,7 @@
         "nativescript-ui-listview": "8.0.1",
         "nativescript-ui-sidedrawer": "8.0.0",
         "nativescript-videoplayer": "^4.2.1",
+        "nativescript-webrtc-plugin": "^2.0.0-alpha.19",
         "ng2-charts": "^2.3.0",
         "ngx-avatar": "^3.7.0",
         "ngx-contextmenu": "^5.3.0",
@@ -107,8 +108,8 @@
         "ngx-onlyoffice": "^0.0.4",
         "ngx-toastr": "^11.2.1",
         "reflect-metadata": "~0.1.13",
-        "rxjs": "^6.5.3",
-        "rxjs-compat": "^6.5.3",
+        "rxjs": "^6.5.4",
+        "rxjs-compat": "^6.5.4",
         "tns-core-modules": "6.3.2",
         "zone.js": "0.10.2"
     },
@@ -127,7 +128,7 @@
         "karma-chrome-launcher": "~3.1.0",
         "karma-coverage-istanbul-reporter": "^2.1.1",
         "karma-jasmine": "~2.0.1",
-        "karma-jasmine-html-reporter": "^1.4.2",
+        "karma-jasmine-html-reporter": "^1.5.1",
         "nativescript-dev-webpack": "1.4.0",
         "node-sass": "4.13.0",
         "protractor": "~5.4.2",
