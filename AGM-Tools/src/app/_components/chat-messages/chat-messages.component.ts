@@ -7,9 +7,9 @@ import {
     Input,
     OnChanges,
 } from "@angular/core";
+import { Router } from "@angular/router";
 import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
-import { Router } from "@angular/router";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
