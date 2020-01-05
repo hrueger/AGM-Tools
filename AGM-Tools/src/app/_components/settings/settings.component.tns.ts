@@ -34,7 +34,7 @@ export class SettingsComponent implements OnInit {
         },
         {
           description: "Benachrichtigungen im Webinterface",
-          icon: 0xf109,
+          icon: 0xf108,
           name: "Im Webinterface",
           type: "switch",
           value: false,
@@ -78,7 +78,7 @@ export class SettingsComponent implements OnInit {
           description: "",
           icon: 0xf070,
           name: "Impressum",
-          type: "displayText",
+          type: "html",
           value: "Haufenweise Text...",
         },
         {
@@ -92,7 +92,7 @@ export class SettingsComponent implements OnInit {
           description: "",
           icon: 0xf070,
           name: "Über",
-          type: "displayText",
+          type: "html",
           value: `© ${new Date().getFullYear()}, Hannes Rüger`,
         },
       ],
@@ -124,12 +124,14 @@ export class SettingsComponent implements OnInit {
         this.updateSwitch(index);
       } else {
         this.displayingFull = this.settings[this.mainIndex].children[index];
+        this.currentHeadline = this.settings[this.mainIndex].children[index].name;
       }
     }
   }
   public back() {
     if (this.displayingFull) {
       this.displayingFull = false;
+      this.currentHeadline = this.settings[this.mainIndex].name;
     } else {
       this.displayItems = this.settings;
       this.sub = false;
