@@ -51,7 +51,9 @@ export class CallComponent {
                 });
             } else {
                 // send data to signaling server
+                // tslint:disable-next-line: no-console
                 console.log("type:", type);
+                // tslint:disable-next-line: no-console
                 console.log("sdp:", sdp);
             }
         });
@@ -59,6 +61,7 @@ export class CallComponent {
         webrtc.on("webRTCClientDidGenerateIceCandidate", (args) => {
             const iceCandidate = args.object.get("iceCandidate");
             // send data to signaling server
+            // tslint:disable-next-line: no-console
             console.log("iceCandidate:", iceCandidate);
         });
 

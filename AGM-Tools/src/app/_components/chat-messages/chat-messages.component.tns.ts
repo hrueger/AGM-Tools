@@ -175,6 +175,7 @@ export class ChatMessagesComponent
         this.toggleAttachmentDialog();
         geolocation.enableLocationRequest().then(() => {
             geolocation.getCurrentLocation({desiredAccuracy:  Accuracy.high }).then((l) => {
+                // tslint:disable-next-line: no-console
                 console.log(l);
             });
         });
