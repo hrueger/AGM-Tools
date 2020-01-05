@@ -38,3 +38,30 @@
     height: 100%;
     overflow: auto;
 }
+
+.bar-button {
+    border-width: 1;
+    margin: 0;
+    font-size: 20;
+}
+
+GridLayout.holder {
+    margin-top: 20;
+}
+
+.bg-white {
+    background-color: white; 
+}
+.info {
+    padding: 10;
+    padding-bottom: 40;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+.p-0 {
+    padding: 0;
+}
+.bg-image-holder {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
