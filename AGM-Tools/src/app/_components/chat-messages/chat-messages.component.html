@@ -1,6 +1,11 @@
 <div *ngIf="!showInfoMessage">
     <div class="bgimg messages" [class.p-0]="embedded"  #messagesConatiner>
         <div class="col-md-8 messages-header" *ngIf="!embedded">
+        <div class="float-right mt-2">
+            <button class="btn text-primary" (click)="videoCall()" *ngIf="inputChat.isUser"><i class="fas fa-video"></i></button>
+            <button class="btn text-primary" (click)="audioCall()" *ngIf="inputChat.isUser"><i class="fas fa-microphone"></i></button>
+            <button class="btn text-primary" (click)="options()"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
             <ngx-avatar class="messages-header thumb" [name]="inputChat.name"></ngx-avatar>
             <span class="messages-header title">{{ inputChat.name }}</span><br />
             <span class="messages-header subtitle">{{ inputChat.isUser ? ('general.lastOnline' | translate:{time:inputChat.lastSeen}) : inputChat.users }}</span>

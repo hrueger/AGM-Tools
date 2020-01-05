@@ -52,6 +52,7 @@
       "mysql": "^2.14.1",
       "nodemailer": "^6.3.1",
       "reflect-metadata": "^0.1.10",
+      "socket.io": "^2.1.1",
       "timeago.js": "^4.0.1",
       "ts-node-dev": "^1.0.0-pre.44",
       "typeorm": "0.2.20"
@@ -59,6 +60,7 @@
    "scripts": {
       "tsc": "tsc",
       "start": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/index.ts",
+      "start:rtc": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/rtcServer.ts",
       "prod": "tsc && node ./build/app.js",
       "build": "tsc",
       "lint": "npx tslint --project .",

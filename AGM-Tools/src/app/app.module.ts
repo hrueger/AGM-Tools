@@ -33,6 +33,7 @@ import { ToastrModule } from "ngx-toastr";
 import { environment } from "../environments/environment";
 import { AboutComponent } from "./_components/about/about.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
+import { CallComponent } from "./_components/call/call.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
 import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
 import { MessagesAreaComponent } from "./_components/chat-messages/messages-area/messages-area.component";
@@ -99,6 +100,7 @@ registerLocaleData(localeDe);
         FilePickerModalComponent,
         ShortWhenPipe,
         TruncatePipe,
+        CallComponent,
         ToIconPipe,
         MessagesAreaComponent,
         MessageBoxComponent,

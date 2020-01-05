@@ -9,6 +9,7 @@ import {
 } from "@angular/core";
 import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
+import { Router } from "@angular/router";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +32,7 @@ export class ChatMessagesComponent
         private remoteService: RemoteService,
         private location: Location,
         private cdr: ChangeDetectorRef,
+        private router: Router,
     ) { }
 
     public messageSentFromChild(event: Event) {
@@ -38,6 +40,22 @@ export class ChatMessagesComponent
     }
     public attachmentMessageSentFromChild(event: Event) {
         this.attachmentMessageGotToSend = event;
+    }
+
+    public async videoCall() {
+        if (confirm(`Möchtest du einen Videoanruf mit ${this.inputChat.name} starten?`)) {
+            this.router.navigate(["call", "user", this.inputChat.id, "video"]);
+        }
+    }
+
+    public async audioCall()  {
+        if (confirm(`Möchtest du einen Sprachanruf mit ${this.inputChat.name} starten?`)) {
+            this.router.navigate(["call", "user", this.inputChat.id, "audio"]);
+        }
+    }
+
+    public options() {
+        //
     }
 
     public scrollToBottom(): void {
