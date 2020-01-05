@@ -1,6 +1,5 @@
 @import "~@nativescript/theme/css/core.css";
 @import "~@nativescript/theme/css/blue.css";
-
 /*@import "./custom.css";*/
 
 
@@ -61,12 +60,16 @@ StackLayout.content {
 .fab-button {
     color: #ffffff;
     font-size: 40;
-    background-color: #30bcff;
+    background-color: #428bca;
     border-radius: 100;
     width: 60;
     height: 60;
     margin: 20;
     padding-top: -3;
+}
+
+.btn-primary {
+    color: #428bca;
 }
 
 .no-border {
