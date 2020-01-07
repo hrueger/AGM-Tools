@@ -22,7 +22,6 @@ export class FilesComponent implements OnInit {
     public renameItemForm: FormGroup;
     public newFolderModalInvalidMessage: boolean = false;
     public renameItemFormInvalidMessage: boolean = false;
-    public projects: Project[];
     public imageSource: string;
     public pid: number;
     public settings = {
@@ -95,11 +94,6 @@ export class FilesComponent implements OnInit {
                     uploadSuccessMessage: "Die Datei(en) wurde(n) erfolgreich hochgeladen.",
                 },
             },
-        });
-
-        // console.log("Headline change requested");
-        this.remoteService.get("get", "projects").subscribe((data) => {
-            this.projects = data;
         });
         this.remoteService.get("get", "files/tags").subscribe((data) => {
             this.tags = data;

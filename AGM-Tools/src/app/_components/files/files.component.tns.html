@@ -1,43 +1,26 @@
-<ActionBar class="action-bar">
-    <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
-    <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
-    </ActionItem>
-
-    <Label class="action-bar-title" text="Dateien"></Label>
-    <ActionItem *ngIf="!selectProject" ios:visibility="collapsed" icon="res://ic_back" (tap)="currentPath.length - 2 > -1
-                ? upTo(currentPath[currentPath.length - 2].id)
-                : goToFiles()"></ActionItem>
-</ActionBar>
-
-<!--<Label class="breadcrumbs">
-    <FormattedString textWarp="true">
-        <Span textWarp="true" text="{{ currentProject }}"></Span>
-        <Span
-            *ngFor="let folder of currentPath"
-            textWarp="true"
-            text=" -> {{ folder.name }}"
-        ></Span>
-    </FormattedString>
-</Label>-->
+<StackLayout>
+    <GridLayout rows="36" columns="auto,*,auto" class="action-bar p-10">
+        <Button text="&#xf060;" class="fas no-border round action-bar-button" row="0" col="0" (tap)="currentPath.length - 2 > -1 ? upTo(currentPath[currentPath.length - 2].id) : goBackToProjects()">
+        </Button>
+        <ScrollView #breadcrumbsScrollView row="0" col="1" orientation="horizontal">
+            <StackLayout class="breadcrumbs" orientation="horizontal">
+                <ng-container *ngFor="let segment of currentPath; let i = index;">
+                    <Label [class.clickable]="i + 1 != currentPath.length" (tap)="upTo(segment.id)" [text]="segment.name"></Label>
+                    <Label class="delimiter" *ngIf="i + 1 != currentPath.length" text=" /"></Label>
+                    <Label class="delimiter" [text]="' '"></Label>
+                </ng-container>
+            </StackLayout>
+        </ScrollView>
+    </GridLayout>
 <GridLayout rows="*,auto">
-    <GridLayout rowSpan="2">
-        <ListView [items]="projects" id="projects" *ngIf="selectProject && !viewFile" class="list-group">
-            <ng-template let-project="item" let-index="index">
-                <GridLayout (tap)="goToProject(project)" rows="auto, auto" columns="auto, *, auto" class="list-group-item">
-                    <Label row="0" col="1" [text]="project.name"></Label>
-                    <Label row="1" col="1" [text]="project.description" class="body"></Label>
-                </GridLayout>
-            </ng-template>
-        </ListView>
-
-        <GridLayout [columns]="progressColumns" class="progressbar" *ngIf="showProgressbar">
+    <GridLayout rowSpan="2" rows="auto, *">
+        <GridLayout row="0" [columns]="progressColumns" class="progressbar" *ngIf="showProgressbar">
             <StackLayout col="0" class="progressbar-value"></StackLayout>
         </GridLayout>
-
-        <RadListView #itemsListView [items]="items" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true" *ngIf="!selectProject && !viewFile" id="items" class="list-group">
+        <RadListView row="1" #itemsListView [items]="items" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true" *ngIf="!viewFile" id="items" class="list-group" pullToRefresh="true" (pullToRefreshInitiated)="onPullToRefresh()">
             <ng-template let-item="item" let-index="index">
                 <StackLayout>
-                    <GridLayout (tap)="goTo(item)" rows="auto, auto" columns="auto, *, auto" class="list-group-item">
+                    <GridLayout (tap)="goTo(item)" rows="auto, auto" columns="auto, *, auto" class="list-group-item -seperator">
                         <Image row="0" col="0" rowSpan="2" [src]="getIcon(item)" class="thumb"></Image>
                         <Label row="0" col="1" [text]="item.name"></Label>
                         <Label row="1" col="1" [text]="item.size" class="body"></Label>
@@ -45,14 +28,11 @@
                         <StackLayout *ngIf="item.tags" row="1" col="2" orientation="vertical">
                             <Label [style.color]="tag.color" [style.background-color]="tag.backgroundColor" class="badge" *ngFor="let tag of item.tags" [text]="tag.name"></Label>
                         </StackLayout>
-
                     </GridLayout>
-                    <StackLayout height="1" class="list-group-seperator">
-                    </StackLayout>
                 </StackLayout>
             </ng-template>
             <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto">
-                <GridLayout columns="*, *, *" col="0" id="left-stack">
+                <GridLayout columns="auto, auto, auto" col="0" id="left-stack">
                     <GridLayout col="0" class="tagsSwipeContainer" (tap)="editTags($event.object.bindingContext)" id="swipeTags">
                         <Label text="&#xf02c;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
                     </GridLayout>
@@ -63,7 +43,7 @@
                         <Label text="&#xf14d;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
                     </GridLayout>
                 </GridLayout>
-                <GridLayout columns="*, *, *, *" col="2" id="right-stack">
+                <GridLayout columns="auto, auto, auto, auto" col="2" id="right-stack">
                     <GridLayout col="0" class="renameSwipeContainer" (tap)="rename($event.object.bindingContext)" id="swipeRename">
                         <Label text="&#xf044;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
                     </GridLayout>
@@ -80,18 +60,11 @@
             </GridLayout>
         </RadListView>
 
-        <StackLayout *ngIf="viewFile">
-
-            <Image *ngIf="getType() == 'image'" [src]="getSrc()"></Image>
-            <VideoPlayer *ngIf="getType() == 'video'" [src]="getSrc()" autoplay="true"></VideoPlayer>
-            <PDFView *ngIf="getType() == 'pdf'" [src]="getSrc()"></PDFView>
-            <Label *ngIf="getType() == 'other'" text="Dieser Dateityp wird nicht unterstüzt."></Label>
-        </StackLayout>
-
     </GridLayout>
-    <GridLayout row="1" *ngIf="!selectProject && !viewFile">
+    <GridLayout row="1">
         <GridLayout columns="*, auto" row="1">
             <Button col="1" (tap)="openNewFolderModal()" text="+" class="fab-button"></Button>
         </GridLayout>
     </GridLayout>
 </GridLayout>
+</StackLayout>

@@ -1,4 +1,5 @@
-import { Component, NgZone, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -16,13 +17,15 @@ import * as app from "tns-core-modules/application";
 import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
 import { EventData, View } from "tns-core-modules/ui/core/view";
 import * as dialog from "tns-core-modules/ui/dialogs";
+import { Page } from "tns-core-modules/ui/page/page";
+import { ScrollView } from "tns-core-modules/ui/scroll-view/scroll-view";
 import { layout } from "tns-core-modules/utils/utils";
 import { openUrl } from "tns-core-modules/utils/utils";
 import { environment } from "../../../environments/environment";
 import { Project } from "../../_models/project.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
-import { NavbarService } from "../../_services/navbar.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
@@ -34,64 +37,67 @@ export class FilesComponent implements OnInit {
     public showProgressbar: boolean;
     @ViewChild("itemsListView", { read: RadListViewComponent, static: false })
     public itemsListView: RadListViewComponent;
+    @ViewChild("breadcrumbsScrollView", { static: false })
+    public breadcrumbsScrollView: ElementRef<ScrollView>;
     public selectProject: boolean = true;
     public viewFile: boolean = false;
     public projects: Project[];
     public imageSource: string;
     public pid: number;
+    public documentEditorConfig: any;
 
-    public tags = [
-        { id: 1, name: "Fertig" },
-        { id: 4, name: "Zu verbessern" },
-        { id: 2, name: "In Arbeit" },
-        { id: 3, name: "Wichtig" },
-    ];
+    public tags = [];
 
     public currentPath: any = [];
     public lastFolder: any;
     public lastItem: any;
-    public items: ObservableArray<any>;
+    public items: ObservableArray<any> = new ObservableArray<any>();
     public shareLink: string = "";
-    private multiSelect: MultiSelect;
+    public currentFile: any;
 
+    private multiSelect: MultiSelect;
     private leftItem: View;
     private rightItem: View;
     private mainView: View;
+
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
         private alertService: AlertService,
-        private navbarService: NavbarService,
-        private zone: NgZone,
+        private route: ActivatedRoute,
+        private router: Router,
+        private fts: FastTranslateService,
+        private page: Page,
     ) {
         this.multiSelect = new MultiSelect();
     }
 
     public ngOnInit() {
-        this.navbarService.setHeadline("Dateien");
-
-        this.remoteService.get("post", "projectsGetProjects").subscribe((data) => {
-            this.projects = data;
+        this.page.actionBarHidden = true;
+        if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
+            this.pid = this.route.snapshot.params.projectId;
+            this.navigate({ id: -1, name: this.route.snapshot.params.projectName});
+        }
+        this.remoteService.get("get", "files/tags").subscribe((data) => {
+            this.tags = data;
         });
     }
-    public goTo(item: any, reload = false) {
-        if (!reload) {
-            this.currentPath.push(item);
-        }
-        if (item.type == "folder") {
-            this.navigate(item);
+    public goTo(item: any, triggeredByPullToRefresh = false) {
+        if (item.isFolder) {
+            this.navigate(item, triggeredByPullToRefresh);
         } else {
-            this.viewFile = true;
-            this.imageSource = `${environment.apiUrl}getFile.php?fid=${item.id}`;
-
+            this.currentFile = item;
+            // ToDo
+            // this.modalService.open(viewFile, {size: "xl", scrollable: true});
         }
     }
+
     public getIcon(item: any) {
 
         const basepath = "~/assets/icons/";
 
         const iconPath = basepath + "extralarge/";
-        if (item.type == "folder") {
+        if (item.isFolder == true) {
             return basepath + "folder.png";
         } else {
             return (
@@ -104,15 +110,11 @@ export class FilesComponent implements OnInit {
             );
         }
     }
-    public goToProject(project: Project) {
-        this.selectProject = false;
-        this.pid = project.id;
-        this.currentPath = [];
-        // console.warn(this.currentPath);
-        // console.warn("Pushed project");
 
-        this.navigate({ id: -1, name: project.name });
+    public goBackToProjects() {
+        this.router.navigate(["/", "projects"]);
     }
+
     public goToFiles() {
         if (this.viewFile) {
             this.viewFile = false;
@@ -130,34 +132,114 @@ export class FilesComponent implements OnInit {
         } while (item.id != id);
         this.navigate(item);
     }
-    public navigate(item) {
-        // console.log(this.currentPath);
+
+    public navigate(item, triggeredByPullToRefresh = false) {
+        let r;
+        if (item.id == -1) {
+            r = this.remoteService.get("get", `files/projects/${this.pid}`);
+        } else {
+            r = this.remoteService.get("get", `files/${item.id}`);
+        }
+        r.subscribe((data) => {
+            if (
+                this.currentPath.length == 0 ||
+                this.currentPath[this.currentPath.length - 1].id != item.id
+            ) {
+                this.currentPath.push(item);
+                setTimeout(() => {
+                    this.breadcrumbsScrollView.nativeElement.scrollToHorizontalOffset(
+                        this.breadcrumbsScrollView.nativeElement.scrollableWidth, false);
+                }, 0);
+            }
+            this.items = new ObservableArray<any>();
+            this.items.push(...data);
+            this.lastItem = item;
+            if (triggeredByPullToRefresh) {
+                this.itemsListView.listView.notifyPullToRefreshFinished();
+            }
+        });
+    }
+
+    public getFileSrc(file, download = false) {
+        return `${environment.apiUrl}files/${file.id}${(download ? "/download" : "")}?authorization=${this.authenticationService.currentUserValue.token}`;
+    }
+
+    public getCurrentFileSrc() {
+        return this.getFileSrc(this.currentFile);
+    }
+
+    public changeCurrentFile(add: number) {
+        let idx = this.items.indexOf(this.currentFile);
+        do {
+            idx += add;
+            if (idx >= this.items.length) {
+                idx = 0;
+            }
+            if (idx < 0) {
+                idx = this.items.length - 1;
+            }
+        } while (this.items[idx].isFolder == true);
+        this.currentFile = this.items[idx];
+    }
+
+    public getType() {
+        const filename: string = this.currentFile.name.toLowerCase();
+
+        const documentExtensions = ["doc", "docm", "docx", "dot", "dotm", "dotx", "epub", "fodt", "htm", "html", "mht", "odt", "ott", "pdf", "rtf", "txt", "djvu", "xps"];
+        const spreadsheetExtensions = ["csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx"];
+        const presentationExtensions = ["fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx"];
+
+        const knownExtensions = {
+            audio: ["mp3", "wav", "m4a"],
+            document: documentExtensions.concat(spreadsheetExtensions).concat(presentationExtensions),
+            image: ["jpg", "jpeg", "gif", "png", "svg"],
+            pdf: ["pdf"],
+            video: ["mp4", "mov", "avi"],
+
+        };
+        // @ts-ignore
+        for (const [type, extensions] of Object.entries(knownExtensions)) {
+            for (const ext of extensions) {
+                if (filename.endsWith(ext)) {
+                    if (type == "document") {
+                        let t;
+                        if (documentExtensions.includes(ext)) {
+                            t = "text";
+                        } else if (spreadsheetExtensions.includes(ext)) {
+                            t = "spreadsheet";
+                        } else if (presentationExtensions.includes(ext)) {
+                            t = "presentation";
+                        }
+                        this.setupDocumentEditorConfig(ext, t);
+                    }
+                    return type;
+                }
+            }
+        }
+        return "other";
+    }
+
+    public reloadHere(triggeredByPullToRefresh = false) {
+        if (this.lastItem.id == -1) {
+            this.navigate({ id: -1 }, triggeredByPullToRefresh);
+        } else {
+            this.goTo(this.lastItem, triggeredByPullToRefresh);
+        }
+    }
+
+    public toggleTag(tagId, item) {
         this.remoteService
-            .get("post", "filesGetFolder", {
-                fid: item.id,
-                pid: this.pid,
+            .getNoCache("post", `files/${item.id}/tags`, {
+                tagId,
             })
             .subscribe((data) => {
-                if (
-                    this.currentPath.length == 0 ||
-                    this.currentPath[this.currentPath.length - 1].id != item.id
-                ) {
-                    this.currentPath.push(item);
+                if (data.status == true) {
+                    // this.goTo(this.lastItem);
+                    this.reloadHere();
                 }
-
-                /*data.forEach(item, index => {
-                    this.items.splice(index, 0, item);
-                });
-                if (data.length < this.items.length) {
-                    for (var i = data.length; i < this.items.length; i++) {
-                        this.items.splice(i, 1);
-                    }
-                }*/
-                this.items = data;
-
-                this.lastItem = item;
             });
     }
+
     public getSrc() {
         const file = this.currentPath[this.currentPath.length - 1];
         const path = environment.apiUrl +
@@ -167,6 +249,9 @@ export class FilesComponent implements OnInit {
             "&token=" +
             this.authenticationService.currentUserValue.token;
         return path;
+    }
+    public onPullToRefresh() {
+        this.reloadHere(true);
     }
     public openNewFolderModal(content) {
         const that = this;
@@ -181,7 +266,7 @@ export class FilesComponent implements OnInit {
         }).then((r) => {
             if (r.result) {
                 that.remoteService
-                    .getNoCache("post", "filesNewFolder", {
+                    .getNoCache("post", "files", {
                         fid: that.currentPath[that.currentPath.length - 1].id,
                         name: r.text,
                         pid: that.pid,
@@ -189,37 +274,13 @@ export class FilesComponent implements OnInit {
                     .subscribe((data) => {
                         if (data && data.status == true) {
                             that.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
-                            // this.reloadHere();
+                            this.reloadHere();
                         }
                     });
             }
 
         });
 
-    }
-    public getType() {
-        const filename = this.currentPath[
-            this.currentPath.length - 1
-        ].name.toLowerCase();
-        const videoFileExtensions = ["mp4", "mov", "avi"];
-        const imageFileExtensions = ["jpg", "jpeg", "gif", "png"];
-        const pdfFileExtensions = ["pdf"];
-        for (const ext of videoFileExtensions) {
-            if (filename.endsWith(ext)) {
-                return "video";
-            }
-        }
-        for (const ext of pdfFileExtensions) {
-            if (filename.endsWith(ext)) {
-                return "pdf";
-            }
-        }
-        for (const ext of imageFileExtensions) {
-            if (filename.endsWith(ext)) {
-                return "image";
-            }
-        }
-        return "other";
     }
 
     public editTags(item) {
@@ -438,5 +499,116 @@ export class FilesComponent implements OnInit {
             default:
                 break;
         }
+    }
+
+    private async setupDocumentEditorConfig(ext, type) {
+        this.documentEditorConfig = {
+            editorConfig: {
+              document: {
+                fileType: ext,
+                info: {
+                  author: this.currentFile.creator.username,
+                  folder: this.lastItem.name,
+                  owner: this.currentFile.creator.username,
+                  uploaded: this.currentFile.createdAt,
+                },
+                key: "3277238458",
+                permissions: {
+                    comment: true,
+                    download: true,
+                    edit: true,
+                    fillForms: true,
+                    print: true,
+                    review: true,
+                },
+                title: this.currentFile.name,
+                url: this.getCurrentFileSrc(),
+              },
+              documentType: type,
+              editorConfig: {
+                // callbackUrl: `${environment.apiUrl}files/documents/save`,
+                /*createUrl: "https://example.com/url-to-create-document/",*/
+                customization: {
+                    autosave: true,
+                    chat: true,
+                    commentAuthorOnly: false,
+                    comments: true,
+                    compactHeader: false,
+                    compactToolbar: false,
+                    customer: {
+                        address: await this.fts.t("about.hostedOnGitHub"),
+                        info: await this.fts.t("about.description") + "(https://hrueger.github.io/AGM-Tools)",
+                        /* logo: "https://example.com/logo-big.png", ToDo */
+                        name: "AGM-Tools",
+                        www: "https://github.com/hrueger/AGM-Tools",
+                    },
+                    feedback: {
+                        url: "https://github.com/hrueger/AGM-Tools/issues/new",
+                        visible: true,
+                    },
+                    forcesave: false,
+                    goback: {
+                        blank: true,
+                        text: "Dokumente",
+                        url: "https://example.com",
+                    },
+                    help: true,
+                    hideRightMenu: false,
+                    logo: {
+                        image: "https://example.com/logo.png",
+                        imageEmbedded: "https://example.com/logo_em.png",
+                        url: "https://example.com",
+                    },
+                    showReviewChanges: false,
+                    toolbarNoTabs: false,
+                    zoom: 100,
+                },
+                embedded: {
+                    embedUrl: "https://example.com/embedded?doc=exampledocument1.docx",
+                    fullscreenUrl: "https://example.com/embedded?doc=exampledocument1.docx#fullscreen",
+                    saveUrl: "https://example.com/download?doc=exampledocument1.docx",
+                    shareUrl: "https://example.com/view?doc=exampledocument1.docx",
+                    toolbarDocked: "top",
+                },
+                lang: "de",
+                mode: "edit",
+                recent: [
+                    {
+                        folder: "Example Files",
+                        title: "exampledocument1.docx",
+                        url: "https://example.com/exampledocument1.docx",
+                    },
+                    {
+                        folder: "Example Files",
+                        title: "exampledocument2.docx",
+                        url: "https://example.com/exampledocument2.docx",
+                    },
+                ],
+                region: "de-DE",
+                user: {
+                    id: this.authenticationService.currentUserValue.id,
+                    name: this.authenticationService.currentUserValue.id,
+                },
+            },
+              events: {
+                // tslint:disable-next-line: no-console
+                onBack: console.log,
+                // tslint:disable-next-line: no-console
+                onDocumentStateChange: console.log,
+                // tslint:disable-next-line: no-console
+                onError: console.log,
+                // tslint:disable-next-line: no-console
+                onReady: console.log,
+                // tslint:disable-next-line: no-console
+                onRequestEditRights: console.log,
+                // tslint:disable-next-line: no-console
+                onSave: console.log,
+              },
+              height: "100%",
+              type: "desktop",
+              width: "100%",
+            },
+            script: "https://agmtools.allgaeu-gymnasium.de:8080/web-apps/apps/api/documents/api.js",
+          };
     }
 }

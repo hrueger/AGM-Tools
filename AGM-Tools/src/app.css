@@ -114,42 +114,42 @@ StackLayout.content {
 
 .deleteSwipeContainer {
     background-color: #e74c3c;
-    padding: 16;
+    padding: 10;
 }
 
 .addSwipeContainer {
     background-color: #e7cd3c;
-    padding: 16;
+    padding: 10;
 }
 
 .tagsSwipeContainer {
     background-color: #f1c40f;
-    padding: 16;
+    padding: 10;
 }
 
 .downloadSwipeContainer {
     background-color: #3498db;
-    padding: 16;
+    padding: 10;
 }
 
 .shareSwipeContainer {
     background-color: #2ecc71;
-    padding: 16;
+    padding: 10;
 }
 
 .renameSwipeContainer {
     background-color: #e7cd3c;
-    padding: 16;
+    padding: 10;
 }
 
 .moveSwipeContainer {
     background-color: #3498db;
-    padding: 16;
+    padding: 10;
 }
 
 .copySwipeContainer {
     background-color: #2ecc71;
-    padding: 16;
+    padding: 10;
 }
 
 .swipeLabel {
