@@ -3,6 +3,7 @@ import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { Page } from "tns-core-modules/ui/page";
 import { environment } from "../../../environments/environment";
+import { RemoteService } from "../../_services/remote.service";
 
 @Component({
   selector: "app-settings",
@@ -15,98 +16,16 @@ export class SettingsComponent implements OnInit {
   public mainIndex: number;
   public currentHeadline: string = "Einstellungen";
   public displayingFull: boolean = false;
-  public settings: any[] = [
-    {
-      children: [
-        {
-          description: "Täglich eine Tageszusammenfassung per Mail erhalten.",
-          icon: 0xf0e0,
-          name: "Per E-Mail",
-          type: "switch",
-          value: false,
-        },
-        {
-          description: "Benachrichtigungen in der App",
-          icon: 0xf10b,
-          name: "In der App",
-          type: "switch",
-          value: false,
-        },
-        {
-          description: "Benachrichtigungen im Webinterface",
-          icon: 0xf108,
-          name: "Im Webinterface",
-          type: "switch",
-          value: false,
-        },
-      ],
-      description: "Tägliche Updates, Geräte verwalten, ...",
-      icon: 0xf0f3,
-      name: "Push-Nachrichten",
-    },
-    {
-      children: [
-        {
-          description: "Den anderen Benutzern Informatioen über den online Status zur Verfügung stellen.",
-          icon: 0xf012,
-          name: "Gerade online",
-          type: "switch",
-          value: false,
-        },
-        {
-          description: "Den anderen Benutzern Informatioen über den zuletzt online Zeitpunkt zur Verfügung stellen.",
-          icon: 0xf017,
-          name: "Zuletzt online",
-          type: "switch",
-          value: false,
-        },
-        {
-          description: "Email-Adresse nur für Administratoren sichtbar.",
-          icon: 0xf070,
-          name: "Email-Adresse verbergen",
-          type: "switch",
-          value: false,
-        },
-      ],
-      description: "Zuletzt online, ...",
-      icon: 0xf2f5,
-      name: "Datenschutz",
-    },
-    {
-      children: [
-        {
-          description: "",
-          icon: 0xf070,
-          name: "Impressum",
-          type: "html",
-          value: "Haufenweise Text...",
-        },
-        {
-          description: "",
-          icon: 0xf070,
-          name: "OpenSource Lizenzen",
-          type: "webview",
-          value: `${environment.apiUrl}3rdpartylicenses.txt`,
-        },
-        {
-          description: "",
-          icon: 0xf070,
-          name: "Über",
-          type: "html",
-          value: `© ${new Date().getFullYear()}, Hannes Rüger`,
-        },
-      ],
-      description: "Impressum, Lizenzen, ...",
-      icon: 0xf249,
-      name: "Über",
-    },
-  ];
+  public settings: any[] = [];
 
-  constructor( private page: Page) {}
+  constructor( private page: Page, private remoteService: RemoteService) {}
 
   public ngOnInit() {
     this.page.actionBarHidden = true;
-    this.displayItems = this.settings;
+    this.remoteService.get("get", "settings").subscribe((settings: []) => {
+      this.settings = settings;
+      this.displayItems = this.settings;
+    });
   }
 
   public getIcon(icon): string {
@@ -115,7 +34,12 @@ export class SettingsComponent implements OnInit {
 
   public goTo(index) {
     if (!this.sub) {
-      this.displayItems = this.settings[index].children;
+      this.displayItems = this.settings[index].children.map((s) => {
+        if (typeof s.value == "string" && s.type == "webview") {
+          s.value = s.value.replace("{{apiUrl}}", environment.apiUrl);
+        }
+        return s;
+      });
       this.sub = true;
       this.mainIndex = index;
       this.currentHeadline = this.settings[index].name;

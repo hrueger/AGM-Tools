@@ -151,6 +151,9 @@
     "projects": "Projects",
     "update": "Update project"
   },
+  "settings": {
+    "settings": "Settings"
+  },
   "share": {
     "share": "Share",
     "sharedFile": "This file has been shared with you. Download it now!",

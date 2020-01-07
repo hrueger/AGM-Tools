@@ -108,6 +108,7 @@
         "ngx-lightbox": "^2.1.1",
         "ngx-onlyoffice": "^0.0.4",
         "ngx-toastr": "^11.2.1",
+        "ngx-ui-switch": "^8.3.0",
         "reflect-metadata": "~0.1.13",
         "rxjs": "^6.5.4",
         "rxjs-compat": "^6.5.4",

@@ -1,3 +1,28 @@
-<p>
-  settings works!
-</p>
+<ngb-tabset>
+  <ngb-tab class="fas fa" *ngFor="let group of settings">
+    <ng-template ngbTabTitle><i [class]="'fas fa-' + group.iconName"></i> {{group.name}}</ng-template>
+    <ng-template ngbTabContent>
+      <div class="card-deck mt-3">
+        <div class="card" *ngFor="let setting of group.children">
+          <div class="card-header">
+            <i [class]="'fas fa-' + setting.iconName"></i> {{setting.name}}
+          </div>
+          <div class="card-body">
+            <div *ngIf="setting.type == 'switch'">
+              <p>{{setting.description}}</p>
+              <ui-switch [(ngModel)]="setting.value"></ui-switch>
+            </div>
+            <div *ngIf="setting.type == 'html'">
+              <p>{{setting.description}}</p>
+              <div [innerHtml]="setting.value | safe:'html'"></div>
+            </div>
+            <div *ngIf="setting.type == 'webview'" class="embed-responsive embed-responsive-16by9">
+              <p>{{setting.description}}</p>
+              <iframe class="embed-responsive-item" [src]="replaceAPIUrl(setting.value) | safe:'resourceUrl'" sandbox="cross-origin"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>

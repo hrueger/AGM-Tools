@@ -30,6 +30,7 @@ import { NgxExtendedPdfViewerModule } from "ngx-extended-pdf-viewer";
 import { LightboxModule } from "ngx-lightbox";
 import { NgxOnlyOfficeModule } from "ngx-onlyoffice";
 import { ToastrModule } from "ngx-toastr";
+import { UiSwitchModule } from "ngx-ui-switch";
 import { environment } from "../environments/environment";
 import { AboutComponent } from "./_components/about/about.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
@@ -124,6 +125,7 @@ registerLocaleData(localeDe);
         AngularFireMessagingModule,
         NgxOnlyOfficeModule,
         TreeViewModule,
+        UiSwitchModule.forRoot({}),
         AngularFireModule.initializeApp(environment.firebase),
         RouterModule.forRoot(routes, { useHash: true, enableTracing: false }),
         ContextMenuModule.forRoot({

@@ -151,6 +151,9 @@
     "projects": "Projects",
     "update": "Projekt aktualisieren"
   },
+  "settings": {
+    "settings": "Einstellungen"
+  },
   "share": {
     "share": "Freigabe",
     "sharedFile": "Diese Datei wurde freigegeben. Laden Sie sie jetzt herunter!",
