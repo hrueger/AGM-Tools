@@ -3,7 +3,7 @@ const request = require('request');
 let d = new Date();
 console.log("\x1b[34mReading packages...\x1b[0m");
 console.log("\x1b[34mThis can take a while!\x1b[0m");
-c.exec("echo 'hi", async () => { // npx npm-license-crawler --start ../../../ --json ./licenses.json.tmp
+c.exec("npx npm-license-crawler --start ../../../ --json ./licenses.json.tmp", async () => {
     console.log(`\x1b[32mReading packages data finished in ${(new Date() - d) / 1000} seconds!\x1b[0m`);
     d = new Date();
     console.log("\x1b[34mCreating HTML file...\x1b[0m");
