@@ -333,14 +333,7 @@ export class FilesComponent implements OnInit {
 
     }
     public download(item) {
-        const url = environment.apiUrl +
-            "?get=" +
-            item.id +
-            "&type=" +
-            item.type +
-            "&token=" +
-            this.authenticationService.currentUserValue.token +
-            "&download";
+        const url = `${environment.apiUrl}files/${item.id}/download?authorization=${this.authenticationService.currentUserValue.token}`;
         this.itemsListView.listView.notifySwipeToExecuteFinished();
         openUrl(url);
     }
