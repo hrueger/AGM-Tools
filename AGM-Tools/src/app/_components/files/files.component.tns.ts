@@ -340,19 +340,14 @@ export class FilesComponent implements OnInit {
 
     public share(item) {
         this.remoteService
-            .getNoCache("post", "filesCreateShare", { type: item.type, fid: item.id })
+            .getNoCache("post", `files/${item.id}/share`)
             .subscribe((data) => {
                 if (data.status == true) {
-                    const shareLink = environment.apiUrl + "share/?l=" + data.link;
+                    const shareLink = `${environment.appUrl}share/${data.link}`;
                     const cfalertDialog = new CFAlertDialog();
                     const options: DialogOptions = {
                         buttons: [{
-                            buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                            buttonStyle: CFAlertActionStyle.DEFAULT,
-                        onClick: () => { /* Clicked */ },
-                            text: "Abbrechen",
-                        }, {
-                            buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
+                            buttonAlignment: CFAlertActionAlignment.END,
                             buttonStyle: CFAlertActionStyle.POSITIVE,
                             onClick: () => {
                                 clipboard.setText(shareLink);
