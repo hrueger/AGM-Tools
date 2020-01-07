@@ -299,7 +299,7 @@ export class FilesComponent implements OnInit {
         const allTagNames = this.tags.map((tag) => tag.name);
         const preselected = [];
         allTags.forEach((tag) => {
-            if (itemTags.map((ntag) => ntag.id).includes(tag.toString())) {
+            if (itemTags.map((ntag) => ntag.id).includes(tag)) {
                 preselected.push(true);
             } else {
                 preselected.push(false);
@@ -312,19 +312,19 @@ export class FilesComponent implements OnInit {
                 items: allTagNames,
                 onClick: (dialogInterface, index) => {
                     this.remoteService
-                        .getNoCache("post", "filesToggleTag", {
-                            fid: item.id,
-                            tagid: this.tags[index].id,
-                            type: item.type,
+                        .getNoCache("post", `files/${item.id}/tags`, {
+                            tagId: this.tags[index].id,
                         })
                         .subscribe((data) => {
                             if (data.status == true) {
                                 this.alertService.success("Gespeichert!");
-                                // this.reloadHere();
                             }
                         });
                 },
                 selectedItems: preselected,
+            },
+            onDismiss: () => {
+                this.reloadHere();
             },
             title: "Tags auswählen",
         };

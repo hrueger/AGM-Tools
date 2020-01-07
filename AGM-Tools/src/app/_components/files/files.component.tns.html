@@ -20,13 +20,13 @@
         <RadListView row="1" #itemsListView [items]="items" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true" *ngIf="!viewFile" id="items" class="list-group" pullToRefresh="true" (pullToRefreshInitiated)="onPullToRefresh()">
             <ng-template let-item="item" let-index="index">
                 <StackLayout>
-                    <GridLayout (tap)="goTo(item)" rows="auto, auto" columns="auto, *, auto" class="list-group-item -seperator">
-                        <Image row="0" col="0" rowSpan="2" [src]="getIcon(item)" class="thumb"></Image>
+                    <GridLayout (tap)="goTo(item)" rows="auto, auto, auto" columns="auto, *, auto" class="list-group-item -separator">
+                        <Image row="0" col="0" rowSpan="3" [src]="getIcon(item)" class="thumb"></Image>
                         <Label row="0" col="1" [text]="item.name"></Label>
                         <Label row="1" col="1" [text]="item.size" class="body"></Label>
-                        <Label row="0" col="2" [text]="item.modificationDate | date" class="body time"></Label>
-                        <StackLayout *ngIf="item.tags" row="1" col="2" orientation="vertical">
-                            <Label [style.color]="tag.color" [style.background-color]="tag.backgroundColor" class="badge" *ngFor="let tag of item.tags" [text]="tag.name"></Label>
+                        <Label row="2" col="1" [text]="item.modificationDate | date" class="body time"></Label>
+                        <StackLayout *ngIf="item.tags" row="0" rowspan="3" col="2" orientation="vertical">
+                            <Label [style.color]="tag.textColor" [style.background-color]="tag.color" class="badge" *ngFor="let tag of item.tags" [text]="tag.name"></Label>
                         </StackLayout>
                     </GridLayout>
                 </StackLayout>
