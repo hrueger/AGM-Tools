@@ -253,34 +253,43 @@ export class FilesComponent implements OnInit {
     public onPullToRefresh() {
         this.reloadHere(true);
     }
-    public openNewFolderModal(content) {
+    public openNewModal() {
         const that = this;
-        dialog.prompt({
+        dialog.action({
+            actions: ["Neuer Ordner", "Neue Datei"],
             cancelButtonText: "Abbrechen",
-            defaultText: "Neuer Ordner",
-            inputType: dialog.inputType.text,
-            message: "in /" + this.currentPath.map((item) => item.name).join("/") + "/",
-            okButtonText: "Erstellen",
-            title: "Neuer Ordner",
+            title: "Neu",
+        }).then((result) => {
+            if (result == "Neuer Ordner") {
+                dialog.prompt({
+                    cancelButtonText: "Abbrechen",
+                    defaultText: "Neuer Ordner",
+                    inputType: dialog.inputType.text,
+                    message: "in " + this.currentPath.map((item) => item.name).join("/") + "/",
+                    okButtonText: "Erstellen",
+                    title: "Neuer Ordner",
 
-        }).then((r) => {
-            if (r.result) {
-                that.remoteService
-                    .getNoCache("post", "files", {
-                        fid: that.currentPath[that.currentPath.length - 1].id,
-                        name: r.text,
-                        pid: that.pid,
-                    })
-                    .subscribe((data) => {
-                        if (data && data.status == true) {
-                            that.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
-                            this.reloadHere();
-                        }
-                    });
+                }).then((r) => {
+                    if (r.result) {
+                        that.remoteService
+                            .getNoCache("post", "files", {
+                                fid: that.currentPath[that.currentPath.length - 1].id,
+                                name: r.text,
+                                pid: that.pid,
+                            })
+                            .subscribe((data) => {
+                                if (data && data.status == true) {
+                                    that.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
+                                    this.reloadHere();
+                                }
+                            });
+                    }
+
+                });
+            } else if (result == "Neue Datei") {
+                this.alertService.info("Das geht leider in dieser Version noch nicht!");
             }
-
         });
-
     }
 
     public editTags(item) {
