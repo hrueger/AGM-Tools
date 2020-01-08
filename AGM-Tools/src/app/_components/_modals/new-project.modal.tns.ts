@@ -3,6 +3,7 @@ import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
 import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
 export class Project {
@@ -25,69 +26,27 @@ export class NewProjectModalComponent {
     public members: any[] = [];
     public noMembersSelectedInvalidMessage: boolean = false;
     @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
-    public dataFormConfig = {
-        commitMode: "Immediate",
-        isReadOnly: false,
-        propertyAnnotations:
-            [
-                {
-                    displayName: "Titel",
-                    index: 0,
-                    name: "title",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Beschreibung",
-                    editor: "MultilineText",
-                    index: 1,
-                    name: "description",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Ort",
-                    index: 2,
-                    name: "location",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Ganztägig",
-                    index: 3,
-                    name: "isAllDay",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Wichtiger Termin",
-                    index: 4,
-                    name: "important",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-            ],
-        validationMode: "Immediate",
-    };
+    public dataFormConfig: any;
     private project: Project;
     private multiSelect: MultiSelect;
     private users: any[] = [];
 
-    public constructor(private params: ModalDialogParams, private remoteService: RemoteService, private zone: NgZone) {
+    public constructor(
+            private params: ModalDialogParams,
+            private remoteService: RemoteService,
+            private zone: NgZone,
+            private fts: FastTranslateService,
+        ) {
         this.multiSelect = new MultiSelect();
-        this.remoteService.get("post", "usersGetUsers").subscribe((data) => {
+        this.remoteService.get("get", "users").subscribe((data) => {
+            this.users = [];
             data.forEach((user) => {
                 this.users.push({ name: user.username, id: user.id });
             });
         });
     }
 
-    public openMembersSelectMenu(): void {
+    public async openMembersSelectMenu(): Promise<void> {
         const options: MSOption = {
             android: {
                 cancelButtonTextColor: "#252323",
@@ -95,8 +54,8 @@ export class NewProjectModalComponent {
                 titleSize: 25,
             },
             bindValue: "id",
-            cancelButtonText: "Abbrechen",
-            confirmButtonText: "Ok",
+            cancelButtonText: await this.fts.t("general.cancel"),
+            confirmButtonText: await this.fts.t("general.select"),
             displayLabel: "name",
             ios: {
                 cancelButtonBgColor: "#252323",
@@ -122,7 +81,7 @@ export class NewProjectModalComponent {
                 });
             },
             selectedItems: this.users,
-            title: "Mitglieder auswählen",
+            title: await this.fts.t("projects.chooseMembers"),
         };
 
         this.multiSelect.show(options);
@@ -142,8 +101,33 @@ export class NewProjectModalComponent {
             });
     }
 
-    public ngOnInit() {
+    public async ngOnInit() {
         this.project = new Project("", "");
+        this.dataFormConfig = {
+            commitMode: "Immediate",
+            isReadOnly: false,
+            propertyAnnotations:
+                [
+                    {
+                        displayName: await this.fts.t("general.title"),
+                        index: 0,
+                        name: "title",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                    {
+                        displayName: await this.fts.t("general.description"),
+                        editor: "MultilineText",
+                        index: 1,
+                        name: "description",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                ],
+            validationMode: "Immediate",
+        };
 
     }
 

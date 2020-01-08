@@ -2,10 +2,10 @@
     <GridLayout rows="36" columns="auto,*,auto" class="action-bar p-10">
         <Button text="&#xf060;" class="fas no-border round action-bar-button" row="0" col="0" (tap)="goBack()">
         </Button>
-        <Label text="Neues Projekt" class="text-center action-bar-title" row="0" col="1"></Label>
+        <Label [text]="'projects.newProject' | translate" class="text-center action-bar-title" row="0" col="1"></Label>
         <Button row="0" col="2" text="&#xf0c7;" class="fas no-border round action-bar-button" (tap)="close()"></Button>
     </GridLayout>
     <RadDataForm class="dataform" #dataform [metadata]="dataFormConfig" [source]="project"></RadDataForm>
-    <Button class="btn btn-primary" text="Mitglieder auswählen" (tap)="openMembersSelectMenu()"></Button>
-    <Label class="form-error-message" text="Keine Mitglieder ausgewählt!" *ngIf="noMembersSelectedInvalidMessage"></Label>
+    <Button class="btn btn-primary" [text]="'projects.chooseMembers' | translate" (tap)="openMembersSelectMenu()"></Button>
+    <Label class="form-error-message" [text]="'errors.noMembersChosen' | translate" *ngIf="noMembersSelectedInvalidMessage"></Label>
 </StackLayout>
