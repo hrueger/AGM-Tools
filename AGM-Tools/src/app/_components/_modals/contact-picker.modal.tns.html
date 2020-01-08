@@ -2,7 +2,7 @@
     <GridLayout row="0" rows="36" columns="auto,*" class="action-bar p-10">
         <Button text="&#xf060;" class="fas no-border round action-bar-button" row="0" col="0" (tap)="goBack()">
         </Button>
-        <Label text="Kontakt auswählen" class="text-center action-bar-title" row="0" col="1"></Label>
+        <Label [text]="'chat.chooseContact' | translate" class="text-center action-bar-title" row="0" col="1"></Label>
     </GridLayout>
 
     <ListView row="1" [items]="contacts" #contactsList>
