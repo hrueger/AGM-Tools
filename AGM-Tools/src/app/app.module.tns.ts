@@ -24,7 +24,6 @@ import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages
 import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
 import { MessagesAreaComponent } from "./_components/chat-messages/messages-area/messages-area.component";
 import { ChatComponent } from "./_components/chat/chat.component";
-import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
 import { DashboardComponent } from "./_components/dashboard/dashboard.component";
 import { DoneComponent } from "./_components/done/done.component";
 import { FilesComponent } from "./_components/files/files.component";
@@ -95,7 +94,6 @@ WebRTC.init();
         ProjectsComponent,
         FilesComponent,
         TemplatesComponent,
-        ClientsoftwareComponent,
         SettingsComponent,
         NavbarComponent,
         SidebarComponent,

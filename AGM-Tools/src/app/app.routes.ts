@@ -3,7 +3,6 @@ import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { CallComponent } from "./_components/call/call.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
 import { ChatComponent } from "./_components/chat/chat.component";
-import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
 import { DashboardComponent } from "./_components/dashboard/dashboard.component";
 import { DoneComponent } from "./_components/done/done.component";
 import { EditTutorialComponent } from "./_components/edit-tutorial/edit-tutorial.component";
@@ -110,11 +109,6 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         component: TemplatesComponent,
         path: "templates",
-    },
-    {
-        canActivate: [AuthGuard],
-        component: ClientsoftwareComponent,
-        path: "clientsoftware",
     },
     {
         canActivate: [AuthGuard],
