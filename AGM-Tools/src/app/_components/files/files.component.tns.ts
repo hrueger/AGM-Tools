@@ -366,24 +366,24 @@ export class FilesComponent implements OnInit {
             });
         this.itemsListView.listView.notifySwipeToExecuteFinished();
     }
-    public rename(item, renameModal) {
+    public rename(item) {
         const that = this;
         dialog.prompt({
             cancelButtonText: "Abbrechen",
             defaultText: item.name,
             inputType: dialog.inputType.text,
-            message: "in /" + this.currentPath.map((itm) => itm.name).join("/") + "/" + item.name,
+            message: this.currentPath.map((itm) => itm.name).join("/") + "/" + item.name,
             okButtonText: "Umbenennen",
-            title: (item.type == "file" ? "Datei" : "Ordner") + " umbenennen",
+            title: (item.isFolder ? "Ordner" : "Datei") + " umbenennen",
 
         }).then((r) => {
             if (r.result) {
                 that.remoteService
-                    .getNoCache("post", "filesRename", { type: item.type, fid: item.id, name: r.text })
+                    .getNoCache("post", `files/${item.id}`, { name: r.text })
                     .subscribe((data) => {
                         if (data.status == true) {
                             that.alertService.success("Das Element wurde erfolgreich umbenannt.");
-                            // this.reloadHere();
+                            this.reloadHere();
                         }
                     });
             }
