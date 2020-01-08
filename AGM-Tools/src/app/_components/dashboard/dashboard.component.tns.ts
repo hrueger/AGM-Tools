@@ -12,6 +12,7 @@ import { FastTranslateService } from "../../_services/fast-translate.service";
 import { PushService } from "../../_services/push.service";
 import { RemoteService } from "../../_services/remote.service";
 import { dateDiff } from "./helpers";
+import { formatDate } from "@angular/common";
 
 @Component({
     selector: "app-dashboard",
@@ -130,16 +131,16 @@ export class DashboardComponent implements OnInit {
                 this.checkForRefreshDone(obj);
                 this.notifications = data.notifications;
                 this.lastUpdated.notifications = data.lastUpdated;
-                this.notifications.forEach((notification) => {
+                this.notifications.forEach(async (notification) => {
                     let type;
 
-                    if (notification.type == "alert-success") {
+                    if (notification.theme == "success") {
                         type = "Erfolg: ";
-                    } else if (notification.type == "alert-warning") {
+                    } else if (notification.theme == "warning") {
                         type = "Warnung: ";
-                    } else if (notification.type == "alert-error") {
+                    } else if (notification.theme == "error") {
                         type = "Fehler: ";
-                    } else if (notification.type == "alert-info") {
+                    } else if (notification.theme == "info") {
                         type = "Info: ";
                     } else {
                         type = "";
@@ -153,17 +154,14 @@ export class DashboardComponent implements OnInit {
                             buttonStyle: CFAlertActionStyle.POSITIVE,
                             onClick: (response) => {
                                 this.remoteService
-                                    .getNoCache("post", "dashboardMakeNotificationSeen", {
-                                        id: notification.id,
-                                    })
+                                    .getNoCache("post", `dashboard/notifications/${notification.id}`)
                                     .subscribe();
                             },
-                            text: "Gelesen",
+                            text: await this.fts.t("general.read"),
                             textColor: "#eee",
                         }],
                         dialogStyle: CFAlertStyle.NOTIFICATION,
-                        message: notification.content.replace("<br>", "\n") + "\n\n" + notification.sender + " am " +
-                            notification.date + " um " + notification.time + " Uhr",
+                        message: `${notification.content.replace("<br>", "\n")}\n\n${notification.creator.username}, ${formatDate(notification.createdAt, "short", "de")}`,
                         onDismiss: (dialog) => { /* dismiss */ },
                         title: type + notification.headline,
                     };
