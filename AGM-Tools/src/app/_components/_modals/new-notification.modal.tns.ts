@@ -8,12 +8,12 @@ import { RemoteService } from "../../_services/remote.service";
 export class Notification {
     public headline: string;
     public content: string;
-    public importance: string;
+    public theme: string;
     public receivers: any[];
-    constructor(headline: string, content: string, importance: string) {
+    constructor(headline: string, content: string, theme: string) {
         this.headline = headline;
         this.content = content;
-        this.importance = importance;
+        this.theme = theme;
     }
 }
 
@@ -49,18 +49,18 @@ export class NewNotificationModalComponent {
             .then(async (result) => {
                 if (result == true) {
                     if (this.receivers.length && this.receivers.length > 0) {
-                        if (this.notification.importance && this.notification.importance != ""
-                        && this.notification.importance != await this.fts.t("general.choose")) {
-                            if (this.notification.importance == await this.fts.t("general.colors.success")) {
-                                this.notification.importance = "1";
-                            } else if (this.notification.importance == await this.fts.t("general.colors.info")) {
-                                this.notification.importance = "2";
-                            } else if (this.notification.importance == await this.fts.t("general.colors.warning")) {
-                                this.notification.importance = "3";
-                            } else if (this.notification.importance == await this.fts.t("general.colors.danger")) {
-                                this.notification.importance = "3";
+                        if (this.notification.theme && this.notification.theme != ""
+                        && this.notification.theme != await this.fts.t("general.choose")) {
+                            if (this.notification.theme == await this.fts.t("general.colors.success")) {
+                                this.notification.theme = "success";
+                            } else if (this.notification.theme == await this.fts.t("general.colors.info")) {
+                                this.notification.theme = "info";
+                            } else if (this.notification.theme == await this.fts.t("general.colors.warning")) {
+                                this.notification.theme = "warning";
+                            } else if (this.notification.theme == await this.fts.t("general.colors.danger")) {
+                                this.notification.theme = "danger";
                             } else {
-                                this.notification.importance = "2";
+                                this.notification.theme = "info";
                             }
                             this.notification.receivers = this.receivers;
                             this.params.closeCallback(this.notification);
@@ -102,7 +102,7 @@ export class NewNotificationModalComponent {
                         displayName: await this.fts.t("general.importance"),
                         editor: "Picker",
                         index: 3,
-                        name: "importance",
+                        name: "theme",
                         validators: [
                             { name: "NonEmpty" },
                         ],
