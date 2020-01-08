@@ -11,6 +11,7 @@ import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-
 import { View } from "tns-core-modules/ui/core/view/view";
 import { Notification } from "../../_models/notification.model";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 import { NewNotificationModalComponent } from "../_modals/new-notification.modal.tns";
 
@@ -25,7 +26,8 @@ export class NotificationsComponent implements OnInit {
     @ViewChild("notificationsListView", { read: RadListViewComponent, static: false })
     public notificationsListView: RadListViewComponent;
     constructor(private remoteService: RemoteService, private modal: ModalDialogService,
-                private vcRef: ViewContainerRef, private alertService: AlertService) { }
+                private vcRef: ViewContainerRef, private alertService: AlertService,
+                private fts: FastTranslateService) { }
 
     public ngOnInit() {
         this.remoteService
@@ -51,11 +53,10 @@ export class NotificationsComponent implements OnInit {
                         receivers: newNotification.receivers,
                         type: newNotification.importance,
                     })
-                    .subscribe((data) => {
+                    .subscribe(async (data) => {
                         if (data && data.status == true) {
                             this.alertService.success(
-                                "Benachrichtigung erfolgreich gesendet!",
-                            );
+                                await this.fts.t("notifications.notificationCreatedSuccessfully"));
                             this.remoteService
                                 .get("post", "notificationsGetNotifications")
                                 .subscribe((res) => {
