@@ -9,6 +9,7 @@ import {
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
 import { View } from "tns-core-modules/ui/core/view/view";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 import { Notification } from "../../_models/notification.model";
 import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
@@ -31,7 +32,7 @@ export class NotificationsComponent implements OnInit {
 
     public ngOnInit() {
         this.remoteService
-            .get("post", "notificationsGetNotifications")
+            .get("get", "notifications")
             .subscribe((data) => {
                 this.notifications = data;
             });
@@ -47,18 +48,18 @@ export class NotificationsComponent implements OnInit {
         this.modal.showModal(NewNotificationModalComponent, options).then((newNotification) => {
             if (newNotification) {
                 this.remoteService
-                    .getNoCache("post", "notificationsNewNotification", {
+                    .getNoCache("post", "notifications", {
                         content: newNotification.content,
                         headline: newNotification.headline,
                         receivers: newNotification.receivers,
-                        type: newNotification.importance,
+                        theme: newNotification.theme,
                     })
                     .subscribe(async (data) => {
                         if (data && data.status == true) {
                             this.alertService.success(
                                 await this.fts.t("notifications.notificationCreatedSuccessfully"));
                             this.remoteService
-                                .get("post", "notificationsGetNotifications")
+                                .get("get", "notifications")
                                 .subscribe((res) => {
                                     this.notifications = res;
                                 });
@@ -71,54 +72,30 @@ export class NotificationsComponent implements OnInit {
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
-        // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.right = rightItem.getMeasuredWidth();
     }
 
-    public onRightSwipeClick(args) {
+    public async onRightSwipeClick(args) {
         const id = args.object.bindingContext.id;
-        const cfalertDialog = new CFAlertDialog();
-        const onNoPressed = (response) => {
-            this.notificationsListView.listView.notifySwipeToExecuteFinished();
-        };
-        const onYesPressed = (response) => {
-            this.notificationsListView.listView.notifySwipeToExecuteFinished();
+
+        this.notificationsListView.listView.notifySwipeToExecuteFinished();
+        if (await dialogs.confirm(await this.fts.t("notifications.confirmDelete"))) {
             this.remoteService
-                .getNoCache("post", "notificationsDeleteNotification", {
+                .getNoCache("delete", `notifications/${id}`, {
                     id,
                 })
-                .subscribe((data) => {
+                .subscribe(async (data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
-                            "Benachrichtigungs erfolgreich gelöscht",
+                            await this.fts.t("notifications.notificationDeletedSuccessfully"),
                         );
-                        this.remoteService.get("post", "notificationsGetNotifications").subscribe((res) => {
+                        this.remoteService.get("get", "notifications").subscribe((res) => {
                             this.notifications = res;
                         },
                         );
                     }
                 });
-
-        };
-        cfalertDialog.show({
-            buttons: [
-                {
-                    buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    buttonStyle: CFAlertActionStyle.POSITIVE,
-                    onClick: onYesPressed,
-                    text: "Ja",
-
-                },
-                {
-                    buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    buttonStyle: CFAlertActionStyle.NEGATIVE,
-                    onClick: onNoPressed,
-                    text: "Nein",
-                }],
-            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
-            message: "Soll diese Benachrichtigung wirklich gelöscht werden?",
-            title: "Bestätigung",
-        });
+        }
     }
 }

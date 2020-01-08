@@ -4,20 +4,14 @@
     <GridLayout rowSpan="2">
         <RadListView #notificationsListView [items]="notifications" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
             <ng-template let-notification="item">
-                <StackLayout>
-
-                    <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item">
-                        <Label class="list-group-heading" row="0" col="1" [text]="notification.headline"></Label>
-                        <Label row="1" col="1" class="body" textWrap="true" [text]="notification.content"></Label>
-                        <StackLayout row="0" col="2" rowSpan="2">
-                            <Label class="body notification seen" *ngFor="let seen of notification.seen" [text]="seen"></Label>
-                            <Label class="body notification notseen" *ngFor="let notseen of notification.notseen" [text]="notseen"></Label>
-                        </StackLayout>
-                    </GridLayout>
-
-                    <StackLayout height="1" class="list-group-seperator">
+                <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item -seperator" [style.backgroundColor]="notification.theme == 'success' ? '#6ab489' : (notification.theme == 'info' ? '#7eb8df' : (notification.theme == 'warning' ? '#f3c06d' : '#e98e84'))">
+                    <Label class="list-group-heading" row="0" col="1" [text]="notification.headline"></Label>
+                    <Label row="1" col="1" class="body" textWrap="true" [text]="notification.content"></Label>
+                    <StackLayout row="0" col="2" rowSpan="2">
+                        <Label class="body notification seen" *ngFor="let seen of notification.seen" [text]="seen"></Label>
+                        <Label class="body notification notseen" *ngFor="let notseen of notification.notseen" [text]="notseen"></Label>
                     </StackLayout>
-                </StackLayout>
+                </GridLayout>
             </ng-template>
             <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
                 <StackLayout id="delete-view" col="2" class="deleteSwipeContainer" (tap)="onRightSwipeClick($event)">
