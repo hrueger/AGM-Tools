@@ -11,6 +11,7 @@
   },
   "chat": {
     "chat": "Chat",
+    "chooseContact": "Kontakt auswählen",
     "contactNumberCopied": "Die Nummer wurde in die Zwischenablage kopiert!",
     "didYouKnow": "<h4>Schon gewusst?</h4><p>Du kannst jetzt im Chat auch</p><ul><li>Bilder</li><li>Kontakte</li><li>Dateien</li><li>und Emojis</li></ul><p>verschicken!</p>",
     "noMessages": "Noch keine Nachrichten. Beginne jetzt!"
@@ -28,6 +29,7 @@
     "info": "<b>Information</b><br><br>Diese Seite ist noch nicht fertig gestellt, da ich nicht weiß, wie die fertigen Daten sortiert / dargestellt werden sollen. Bei Ideen gerne einen <a target='_blank' href='https://github.com/hrueger/AGM-Tools/issues/new'>Issue auf GitHub erstellen</a>!"
   },
   "errors": {
+    "endDateBeforeStartDate": "Der Endzeitpunkt liegt vor dem Startzeitpunkt!",
     "errorWhileSaving": "Fehler beim Speichern...",
     "fillOutPassword": "Das Passwordfeld muss ausgefüllt werden!",
     "fillOutUsername": "Das Benutzernamefeld muss ausgefüllt werden!",
@@ -35,17 +37,33 @@
     "noFilesLinked": "Noch keine Dateien verlinkt!",
     "noHeadlineProvided": "Keine Überschrift angegeben",
     "noLocationProvided": "Kein Ort angegeben",
+    "noMembersChosen": "Keine Mitglieder ausgewählt!",
+    "noReceiversChosen": "Keine Empfänger ausgewählt!",
     "noTasksAssigned": "Noch keine Aufgaben vergeben!",
     "noTutorialsLinked": "Noch keine Tutorials verlinkt!",
+    "noTypeChosen": "Kein Typ ausgewählt!",
+    "noValidEndDate": "Kein gültiger Endzeitpunkt!",
+    "noValidStartDate": "Kein gültiger Startzeitpunkt!",
     "notSupportedFiletype": "Dieser Dateityp wird nicht unterstützt.",
     "oldBrowser": "Bitte verwende einen neueren Browser.",
+    "passwordsDontMatch": "Die Passwörter stimmen nicht überein!",
     "requiredFieldMissing": "Dieses Feld muss ausgefüllt werden!",
     "requiredFieldsMissing": "Bitte füllen Sie alle Pflichtfelder aus!"
   },
   "events": {
     "countdown": "noch {{countdown}}",
+    "descriptionForImportant": "Alle Benutzer werden durch eine Benachrichtigung über dieses neue Event informiert.",
+    "endDate": "Endzeitpunkt",
+    "importantEvent": "Wichtiges Event",
+    "isAllDay": "Ganztägig",
+    "newEvent": "Neues Event",
     "nextEvents": "Nächste Events",
-    "none": "Keine anstehenden Events!"
+    "none": "Keine anstehenden Events!",
+    "pickEndDate": "Enddatum auswählen",
+    "pickEndTime": "Endzeit auswählen",
+    "pickStartDate": "Startdatum auswählen",
+    "pickStartTime": "Startzeit auswählen",
+    "startDate": "Startzeitpunkt"
   },
   "files": {
     "chooseTags": "Tags auswählen",
@@ -77,6 +95,7 @@
     "back": "Zurück",
     "camera": "Kamera",
     "cancel": "Abbrechen",
+    "choose": "Auswählen",
     "colors": {
       "danger": "Gefahr",
       "info": "Information",
@@ -96,6 +115,7 @@
     "general": "Allgemeines",
     "group": "Gruppe",
     "image": "Bild",
+    "importance": "Wichtigkeit",
     "important": "Wichtig!",
     "lastOnline": "Zuletzt online: {{time}}",
     "lastUpdated": "Zuletzt aktualisiert: {{time}}",
@@ -112,6 +132,7 @@
     "receivers": "Empfänger",
     "reset": "Zurücksetzen",
     "save": "Speichern",
+    "select": "Auswählen",
     "send": "Senden",
     "size": "Größe",
     "startingAtDate": "ab dem {{weekday}}, {{day}} um {{time}} Uhr",
@@ -136,6 +157,7 @@
     "toLogin": "Zum Login"
   },
   "notifications": {
+    "chooseReceivers": "Empfänger auswählen",
     "confirmDelete": "Möchten Sie diese Benachrichtigung wirklich löschen?",
     "infoMessage": "Es werden nur diejenigen Benachrichtigungen angezeigt, die von Ihnen erstellt worden sind.",
     "newNotification": "Neue Benachrichtigung",
@@ -145,6 +167,7 @@
     "notifications": "Benachrichtigungen"
   },
   "projects": {
+    "chooseMembers": "Mitglieder auswählen",
     "confirmDelete": "Soll dieses Projekt wirklich gelöscht werden?",
     "newProject": "Neues Projekt",
     "pickFileToLink": "Datei oder Ordner zum Verknüpfen auswählen",
@@ -218,6 +241,7 @@
     "currentUserUpdatedSuccessfully": "Der Benutzer wurde erfolgreich aktualisiert.",
     "newUser": "Neuer Benutzer",
     "oldPassword": "Altes Password",
+    "oldPasswordProvideAlways": "Altes Passwort (immer angeben!)",
     "repeatPassword": "Password wiederholen",
     "userCreatedSuccessfully": "Benutzer erfolgreich erstellt.",
     "userDeletedSuccessfully": "Der Benutzer wurde erfolgreich gelöscht.",

@@ -11,6 +11,7 @@
   },
   "chat": {
     "chat": "Chat",
+    "chooseContact": "Choose contact",
     "contactNumberCopied": "The number has been copied to the clipboard!",
     "didYouKnow": "<h4>Did you know?</h4><p>In the chat you can send</p><ul><li>Bilder</li><li>Contacts</li><li>Files</li><li>and Emojies</li></ul>",
     "noMessages": "No messages. Start now!"
@@ -28,6 +29,7 @@
     "info": "<b>Information</b><br><br>This page is not completed yet, because I don't know how to display and organize all files which are marked as done. If you have an idea, please <a target='_blank' href='https://github.com/hrueger/AGM-Tools/issues/new'>create a issue on GitHub</a>!"
   },
   "errors": {
+    "endDateBeforeStartDate": "End date takes place before the start date!",
     "errorWhileSaving": "Error while saving...",
     "fillOutPassword": "The password field can't be empty!",
     "fillOutUsername": "The username field can't be empty!",
@@ -35,17 +37,33 @@
     "noFilesLinked": "No files linked yet!",
     "noHeadlineProvided": "No headline provided",
     "noLocationProvided": "No location provided",
+    "noMembersChosen": "No members chosen!",
+    "noReceiversChosen": "No receivers selected!",
     "noTasksAssigned": "No tasks assigned yet!",
     "noTutorialsLinked": "No tutorials linked yet!",
+    "noTypeChosen": "No type chosen!",
+    "noValidEndDate": "No valid end date!",
+    "noValidStartDate": "No valid start date!",
     "notSupportedFiletype": "This filetype is not supported. ",
     "oldBrowser": "Please use a newer browser.",
+    "passwordsDontMatch": "The passwords don't match!",
     "requiredFieldMissing": "This field can't be empty!",
     "requiredFieldsMissing": "Please fill all required fields!"
   },
   "events": {
     "countdown": "{{countdown}} left",
+    "descriptionForImportant": "All users will be informed over this new event via notifications.",
+    "endDate": "End date",
+    "importantEvent": "Important event",
+    "isAllDay": "Is all-day",
+    "newEvent": "New event",
     "nextEvents": "Next events",
-    "none": "No upcoming events!"
+    "none": "No upcoming events!",
+    "pickEndDate": "Pick end date",
+    "pickEndTime": "Pick end time",
+    "pickStartDate": "Pick start date",
+    "pickStartTime": "Pick start time",
+    "startDate": "Start date"
   },
   "files": {
     "chooseTags": "Choose tags",
@@ -77,6 +95,7 @@
     "back": "Back",
     "camera": "Camera",
     "cancel": "Cancel",
+    "choose": "Choose",
     "colors": {
       "danger": "Danger",
       "info": "Info",
@@ -96,6 +115,7 @@
     "general": "General",
     "group": "Group",
     "image": "Image",
+    "importance": "Importance",
     "important": "Important!",
     "lastOnline": "Last seen: {{time}}",
     "lastUpdated": "Last updated: {{time}}",
@@ -112,6 +132,7 @@
     "receivers": "Receivers",
     "reset": "Reset",
     "save": "Save",
+    "select": "Select",
     "send": "Send",
     "size": "Size",
     "startingAtDate": "starting {{weekday}}, {{day}} at {{time}} o'clock",
@@ -136,6 +157,7 @@
     "toLogin": "To Login"
   },
   "notifications": {
+    "chooseReceivers": "Select receivers",
     "confirmDelete": "Are you sure that this notification sould be deleted?",
     "infoMessage": "Only the notifications you created are shown!",
     "newNotification": "New Notification",
@@ -145,6 +167,7 @@
     "notifications": "Notifications"
   },
   "projects": {
+    "chooseMembers": "Choose members",
     "confirmDelete": "Are you sure that this project sould be deleted?",
     "newProject": "New Project",
     "pickFileToLink": "Choose file or folder to link",
@@ -216,8 +239,9 @@
     "changesPasswordInfo": "You always have to specify your old password when making changes!",
     "confirmDelete": "Are you sure that this user should be deleted?",
     "currentUserUpdatedSuccessfully": "The current user has been updated successfully.",
-    "newUser": "New User",
+    "newUser": "New user",
     "oldPassword": "Old password",
+    "oldPasswordProvideAlways": "Old password (provide always!)",
     "repeatPassword": "Repeat password",
     "userCreatedSuccessfully": "The user has been created successfully.",
     "userDeletedSuccessfully": "The user has been deleted successfully.",
