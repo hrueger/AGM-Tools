@@ -231,7 +231,7 @@ export class CalendarComponent {
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("calendar.eventSavedSucessfully"));
+                                this.alertService.success(await this.fts.t("calendar.eventSavedSuccessfully"));
                                 this.idsToReplace.push(
                                     {
                                         // @ts-ignore
@@ -257,7 +257,7 @@ export class CalendarComponent {
                             })
                             .subscribe(async (data) => {
                                 if (data && data.status == true) {
-                                    this.alertService.success(await this.fts.t("calendar.eventUpdatedSucessfully"));
+                                    this.alertService.success(await this.fts.t("calendar.eventUpdatedSuccessfully"));
                                 }
                             });
                     }
@@ -271,7 +271,7 @@ export class CalendarComponent {
                             .getNoCache("delete", `events/${evId}`)
                             .subscribe(async (data) => {
                                 if (data && data.status == true) {
-                                    this.alertService.success(await this.fts.t("calendar.eventDeletedSucessfully"));
+                                    this.alertService.success(await this.fts.t("calendar.eventDeletedSuccessfully"));
                                 }
                             });
                     }

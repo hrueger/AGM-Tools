@@ -88,7 +88,7 @@ export class UsersComponent implements OnInit {
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("users.userCreatedSucessfully"));
+                                this.alertService.success(await this.fts.t("users.userCreatedSuccessfully"));
                                 this.remoteService
                                     .get("get", "users/")
                                     .subscribe((res) => {
@@ -127,7 +127,7 @@ export class UsersComponent implements OnInit {
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("users.currentUserUpdatedSucessfully"));
+                                this.alertService.success(await this.fts.t("users.currentUserUpdatedSuccessfully"));
                                 this.remoteService
                                     .get("get", "users/")
                                     .subscribe((res) => {
@@ -145,7 +145,7 @@ export class UsersComponent implements OnInit {
                 .getNoCache("delete", `users/${user.id}`)
                 .subscribe(async (data) => {
                     if (data && data.status == true) {
-                        this.alertService.success(await this.fts.t("users.userDeletedSucessfully"));
+                        this.alertService.success(await this.fts.t("users.userDeletedSuccessfully"));
                         this.remoteService
                             .get("get", "users/")
                             .subscribe((res) => {

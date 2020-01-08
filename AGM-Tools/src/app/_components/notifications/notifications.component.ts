@@ -64,7 +64,7 @@ export class NotificationsComponent implements OnInit {
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("notifications.notificationCreatedSucessfully"));
+                                this.alertService.success(await this.fts.t("notifications.notificationCreatedSuccessfully"));
                                 this.remoteService
                                     .get("get", "notifications")
                                     .subscribe((res) => {
@@ -81,7 +81,7 @@ export class NotificationsComponent implements OnInit {
                 .getNoCache("delete", `notifications/${notification.id}`)
                 .subscribe(async (data) => {
                     if (data && data.status == true) {
-                        this.alertService.success(await this.fts.t("notifications.notificationDeletedSucessfully"));
+                        this.alertService.success(await this.fts.t("notifications.notificationDeletedSuccessfully"));
                         this.remoteService
                             .get("get", "notifications")
                             .subscribe((res) => {

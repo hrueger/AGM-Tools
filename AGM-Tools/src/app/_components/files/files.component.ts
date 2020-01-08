@@ -63,7 +63,7 @@ export class FilesComponent implements OnInit {
     public async onUploadSuccess(args: any): Promise<void> {
         if (args.operation === "upload") {
             this.reloadHere();
-            this.alertService.success(await this.fts.t("files.fileUploadedSucessfully"));
+            this.alertService.success(await this.fts.t("files.fileUploadedSuccessfully"));
         }
     }
 
@@ -172,7 +172,7 @@ export class FilesComponent implements OnInit {
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("files.folderCreatedSucessfully"));
+                                this.alertService.success(await this.fts.t("files.folderCreatedSuccessfully"));
                                 this.reloadHere();
                             }
                         });
@@ -277,7 +277,7 @@ export class FilesComponent implements OnInit {
                     .subscribe(async (data) => {
                         if (data.status == true) {
                             this.alertService.success(
-                                await this.fts.t(item.isFolder ? "files.folderRenamedSucessfully" : "files.fileRenamedSucessfully"));
+                                await this.fts.t(item.isFolder ? "files.folderRenamedSuccessfully" : "files.fileRenamedSuccessfully"));
                             this.reloadHere();
                         }
                     });
@@ -289,7 +289,7 @@ export class FilesComponent implements OnInit {
             this.remoteService.getNoCache("delete", `files/${item.id}`).subscribe(async (data) => {
                 if (data.status == true) {
                     this.alertService.success(
-                        await this.fts.t(item.isFolder ? "files.folderDeletedSucessfully" : "files.fileDeletedSucessfully"));
+                        await this.fts.t(item.isFolder ? "files.folderDeletedSuccessfully" : "files.fileDeletedSuccessfully"));
                     this.reloadHere();
                 }
             });

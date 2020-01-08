@@ -52,7 +52,7 @@ export class EditTutorialComponent implements OnInit {
       })
       .subscribe(async (data) => {
         if (data && data.status == true) {
-          this.alertService.success(await this.fts.t("tutorials.changesSavedSucessfully"));
+          this.alertService.success(await this.fts.t("tutorials.changesSavedSuccessfully"));
           this.remoteService
             .get("get", `tutorials/${this.tutorial.id}`)
             .subscribe((tutorial) => {
@@ -72,7 +72,7 @@ export class EditTutorialComponent implements OnInit {
       .getNoCache("post", `tutorials/${this.tutorial.id}/steps`)
       .subscribe(async (data) => {
         if (data && data.status == true) {
-          this.alertService.success(await this.fts.t("tutorials.stepAddedSucessfully"));
+          this.alertService.success(await this.fts.t("tutorials.stepAddedSuccessfully"));
           this.remoteService
             .get("get", `tutorials/${this.tutorial.id}`)
             .subscribe((tutorial) => {
@@ -100,7 +100,7 @@ export class EditTutorialComponent implements OnInit {
           }
         });
     });
-    this.alertService.success(await this.fts.t("tutorials.stepsSavedSucessfully"));
+    this.alertService.success(await this.fts.t("tutorials.stepsSavedSuccessfully"));
   }
 
   public uploadImage(files, stepIdx, n) {
@@ -135,7 +135,7 @@ export class EditTutorialComponent implements OnInit {
         .subscribe(async (data) => {
           if (data && data.status == true) {
             this.tutorial.steps.splice(index, 1);
-            this.alertService.success(await this.fts.t("tutorials.stepDeletedSucessfully"));
+            this.alertService.success(await this.fts.t("tutorials.stepDeletedSuccessfully"));
           }
         });
     }

@@ -5,9 +5,9 @@
   },
   "calendar": {
     "calendar": "Calendar",
-    "eventDeletedSucessfully": "Event deleted sucessfully!",
-    "eventSavedSucessfully": "Event saved sucessfully!",
-    "eventUpdatedSucessfully": "Event updated sucessfully!"
+    "eventDeletedSuccessfully": "Event deleted successfully!",
+    "eventSavedSuccessfully": "Event saved successfully!",
+    "eventUpdatedSuccessfully": "Event updated successfully!"
   },
   "chat": {
     "chat": "Chat",
@@ -48,25 +48,28 @@
     "none": "No upcoming events!"
   },
   "files": {
+    "chooseTags": "Choose tags",
     "confirmFileDelete": "Are you sure that this file should be deleted?",
     "confirmFolderDelete": "Are you sure that this folder should be deleted?",
     "copy": "Copy",
     "delete": "Delete",
     "download": "Download",
-    "fileDeletedSucessfully": "The file has been deleted sucessfully.",
-    "fileRenamedSucessfully": "The file has been renamed sucessfully.",
-    "fileUploadedSucessfully": "The file has been uploaded sucessfully.",
+    "fileDeletedSuccessfully": "The file has been deleted successfully.",
+    "fileRenamedSuccessfully": "The file has been renamed successfully.",
+    "fileUploadedSuccessfully": "The file has been uploaded successfully.",
     "files": "Files",
-    "folderCreatedSucessfully": "The folder has been created sucessfully.",
-    "folderDeletedSucessfully": "The folder has been deleted sucessfully.",
-    "folderRenamedSucessfully": "The folder has been renamed sucessfully.",
+    "folderCreatedSuccessfully": "The folder has been created successfully.",
+    "folderDeletedSuccessfully": "The folder has been deleted successfully.",
+    "folderRenamedSuccessfully": "The folder has been renamed successfully.",
     "linkCopied": "The link has been copied to the clipboard!",
     "move": "Move",
+    "newFile": "New file",
     "newFolder": "New folder",
     "open": "Open",
     "rename": "Rename",
     "share": "Share",
-    "tags": "Tags"
+    "tags": "Tags",
+    "tagsSavedSuccessfully": "All tags have been saved successfully."
   },
   "general": {
     "audio": "Audio",
@@ -101,6 +104,7 @@
     "members": "Members",
     "message": "Message",
     "name": "Name",
+    "new": "New",
     "next": "Next",
     "password": "Password",
     "pick": "Pick",
@@ -126,7 +130,7 @@
     "inputNewPassword": "New password",
     "login": "Login",
     "lostPassword": "Lost password?",
-    "passwordResetSuccessful": "Your password was sucessfully reset.",
+    "passwordResetSuccessful": "Your password was successfully reset.",
     "repeatNewPassword": "Repeat new password",
     "takeatour": "Take a tour",
     "toLogin": "To Login"
@@ -136,8 +140,8 @@
     "infoMessage": "Only the notifications you created are shown!",
     "newNotification": "New Notification",
     "none": "No new messages!",
-    "notificationCreatedSucessfully": "Notification saved sucessfully!",
-    "notificationDeletedSucessfully": "Notification deleted sucessfully!",
+    "notificationCreatedSuccessfully": "Notification saved successfully!",
+    "notificationDeletedSuccessfully": "Notification deleted successfully!",
     "notifications": "Notifications"
   },
   "projects": {
@@ -145,9 +149,9 @@
     "newProject": "New Project",
     "pickFileToLink": "Choose file or folder to link",
     "pickTutorialToLink": "Choose tutorial to link",
-    "projectCreatesSucessfully": "Project created sucessfully!",
-    "projectDeletedSucessfully": "Project deleted sucessfully!",
-    "projectUpdatedSucessfully": "Project updated sucessfully!",
+    "projectCreatesSuccessfully": "Project created successfully!",
+    "projectDeletedSuccessfully": "Project deleted successfully!",
+    "projectUpdatedSuccessfully": "Project updated successfully!",
     "projects": "Projects",
     "update": "Update project"
   },
@@ -166,7 +170,7 @@
     "confirmDelete": "Are you sure that this template sould be deleted?",
     "groupPlaceholder": "Template group (logo, background etc.)",
     "newTemplate": "New template",
-    "templateCreatedSucessfully": "Template saved sucessfully!",
+    "templateCreatedSuccessfully": "Template saved successfully!",
     "templates": "Templates"
   },
   "tips": {
@@ -193,30 +197,30 @@
   },
   "tutorials": {
     "addStep": "Add step",
-    "changesSavedSucessfully": "Changes saved sucessfully!",
+    "changesSavedSuccessfully": "Changes saved successfully!",
     "confirmStepDelete": "Are you sure that this step sould be deleted?",
     "editTutorial": "Edit tutorial",
     "imageXofY": "Image %1 of %2",
     "newTutorial": "New tutorial",
     "removeImage": "Remove image",
     "removeStep": "Remove step",
-    "stepAddedSucessfully": "Step added sucessfully!",
-    "stepDeletedSucessfully": "Step deleted sucessfully!",
+    "stepAddedSuccessfully": "Step added successfully!",
+    "stepDeletedSuccessfully": "Step deleted successfully!",
     "stepNr": "Step {{nr}}",
-    "stepsSavedSucessfully": "Steps saved sucessfully!",
-    "tutorialCreatedSucessfully": "Tutorial created sucessfully!",
+    "stepsSavedSuccessfully": "Steps saved successfully!",
+    "tutorialCreatedSuccessfully": "Tutorial created successfully!",
     "tutorials": "Tutorials"
   },
   "users": {
     "changeOwnProfile": "Change profile",
     "changesPasswordInfo": "You always have to specify your old password when making changes!",
     "confirmDelete": "Are you sure that this user should be deleted?",
-    "currentUserUpdatedSucessfully": "The current user has been updated sucessfully.",
+    "currentUserUpdatedSuccessfully": "The current user has been updated successfully.",
     "newUser": "New User",
     "oldPassword": "Old password",
     "repeatPassword": "Repeat password",
-    "userCreatedSucessfully": "The user has been created sucessfully.",
-    "userDeletedSucessfully": "The user has been deleted sucessfully.",
+    "userCreatedSuccessfully": "The user has been created successfully.",
+    "userDeletedSuccessfully": "The user has been deleted successfully.",
     "usergroup": "Usergroup",
     "users": "Users"
   }

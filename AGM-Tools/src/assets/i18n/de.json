@@ -5,9 +5,9 @@
   },
   "calendar": {
     "calendar": "Kalender",
-    "eventDeletedSucessfully": "Termin erfolgreich gelöscht!",
-    "eventSavedSucessfully": "Termin erfolgreich gespeichert!",
-    "eventUpdatedSucessfully": "Termin erfolgreich aktualisiert!"
+    "eventDeletedSuccessfully": "Termin erfolgreich gelöscht!",
+    "eventSavedSuccessfully": "Termin erfolgreich gespeichert!",
+    "eventUpdatedSuccessfully": "Termin erfolgreich aktualisiert!"
   },
   "chat": {
     "chat": "Chat",
@@ -48,25 +48,28 @@
     "none": "Keine anstehenden Events!"
   },
   "files": {
+    "chooseTags": "Tags auswählen",
     "confirmFileDelete": "Soll diese Datei wirklich gelöscht werden?",
     "confirmFolderDelete": "Soll dieser Ordner wirklich gelöscht werden?",
     "copy": "Kopieren",
     "delete": "Löschen",
     "download": "Herunterladen",
-    "fileDeletedSucessfully": "Die Datei wurde erfolgreich gelöscht.",
-    "fileRenamedSucessfully": "Die Datei wurde erfolgreich umbenannt.",
-    "fileUploadedSucessfully": "Die Datei wurde erfolgreich hochgeladen.",
+    "fileDeletedSuccessfully": "Die Datei wurde erfolgreich gelöscht.",
+    "fileRenamedSuccessfully": "Die Datei wurde erfolgreich umbenannt.",
+    "fileUploadedSuccessfully": "Die Datei wurde erfolgreich hochgeladen.",
     "files": "Dateien",
-    "folderCreatedSucessfully": "Der neue Ordner wurde erfolgreich erstellt.",
-    "folderDeletedSucessfully": "Der Ordner wurde erfolgreich gelöscht.",
-    "folderRenamedSucessfully": "Der Ordner wurde erfolgreich umbenannt.",
+    "folderCreatedSuccessfully": "Der neue Ordner wurde erfolgreich erstellt.",
+    "folderDeletedSuccessfully": "Der Ordner wurde erfolgreich gelöscht.",
+    "folderRenamedSuccessfully": "Der Ordner wurde erfolgreich umbenannt.",
     "linkCopied": "Link in die Zwischenablage kopiert!",
     "move": "Verschieben",
+    "newFile": "New file",
     "newFolder": "Neuer Ordner",
     "open": "Öffnen",
     "rename": "Umbenennen",
     "share": "Freigeben",
-    "tags": "Tags"
+    "tags": "Tags",
+    "tagsSavedSuccessfully": "Die Tags wurden erfolgreich gespeichert."
   },
   "general": {
     "audio": "Audio",
@@ -101,6 +104,7 @@
     "members": "Mitglieder",
     "message": "Nachricht",
     "name": "Name",
+    "new": "Neu",
     "next": "Weiter",
     "password": "Passwort",
     "pick": "Auswählen",
@@ -136,8 +140,8 @@
     "infoMessage": "Es werden nur diejenigen Benachrichtigungen angezeigt, die von Ihnen erstellt worden sind.",
     "newNotification": "Neue Benachrichtigung",
     "none": "Keine neuen Nachrichten!",
-    "notificationCreatedSucessfully": "Benachrichtigung erfolgreich gespeichert!",
-    "notificationDeletedSucessfully": "Benachrichtigung erfolgreich gelöscht!",
+    "notificationCreatedSuccessfully": "Benachrichtigung erfolgreich gespeichert!",
+    "notificationDeletedSuccessfully": "Benachrichtigung erfolgreich gelöscht!",
     "notifications": "Benachrichtigungen"
   },
   "projects": {
@@ -145,9 +149,9 @@
     "newProject": "Neues Projekt",
     "pickFileToLink": "Datei oder Ordner zum Verknüpfen auswählen",
     "pickTutorialToLink": "Tutorial zum Verknüpfen auswählen",
-    "projectCreatesSucessfully": "Projekt erfolgreich erstellt!",
-    "projectDeletedSucessfully": "Projekt erfolgreich gelöscht!",
-    "projectUpdatedSucessfully": "Projekt erfolgreich aktualisiert!",
+    "projectCreatesSuccessfully": "Projekt erfolgreich erstellt!",
+    "projectDeletedSuccessfully": "Projekt erfolgreich gelöscht!",
+    "projectUpdatedSuccessfully": "Projekt erfolgreich aktualisiert!",
     "projects": "Projects",
     "update": "Projekt aktualisieren"
   },
@@ -166,7 +170,7 @@
     "confirmDelete": "Soll diese Vorlage wirklich gelöscht werden?",
     "groupPlaceholder": "Gruppe der Vorlage (Logo, Hintergrund etc.)",
     "newTemplate": "Neue Vorlage",
-    "templateCreatedSucessfully": "Vorlage erfolgreich gespeichert!",
+    "templateCreatedSuccessfully": "Vorlage erfolgreich gespeichert!",
     "templates": "Templates"
   },
   "tips": {
@@ -193,30 +197,30 @@
   },
   "tutorials": {
     "addStep": "Schritt hinzufügen",
-    "changesSavedSucessfully": "Änderungen erfolgreich gespeichert!",
+    "changesSavedSuccessfully": "Änderungen erfolgreich gespeichert!",
     "confirmStepDelete": "Soll dieser Schritt wirklich gelöscht werden?",
     "editTutorial": "Tutorial bearbeiten",
     "imageXofY": "Bild %1 von %2",
     "newTutorial": "Neues Tutorial",
     "removeImage": "Bild entfernen",
     "removeStep": "Schritt entfernen",
-    "stepAddedSucessfully": "Schritt erfolgreich hinzugefügt!",
-    "stepDeletedSucessfully": "Schritt erfolgreich gelöscht!",
+    "stepAddedSuccessfully": "Schritt erfolgreich hinzugefügt!",
+    "stepDeletedSuccessfully": "Schritt erfolgreich gelöscht!",
     "stepNr": "Schritt {{nr}}",
-    "stepsSavedSucessfully": "Schritte erfolgreich gespeichert!",
-    "tutorialCreatedSucessfully": "Tutorial erfolgreich erstellt!",
+    "stepsSavedSuccessfully": "Schritte erfolgreich gespeichert!",
+    "tutorialCreatedSuccessfully": "Tutorial erfolgreich erstellt!",
     "tutorials": "Tutorials"
   },
   "users": {
     "changeOwnProfile": "Eigene Daten ändern",
     "changesPasswordInfo": "Bei Änderungen muss immer das alte Passwort zusätzlich angegeben werden!",
     "confirmDelete": "Möchten Sie diesen Nutzer wirklich löschen?",
-    "currentUserUpdatedSucessfully": "Der Benutzer wurde erfolgreich aktualisiert.",
+    "currentUserUpdatedSuccessfully": "Der Benutzer wurde erfolgreich aktualisiert.",
     "newUser": "Neuer Benutzer",
     "oldPassword": "Altes Password",
     "repeatPassword": "Password wiederholen",
-    "userCreatedSucessfully": "Benutzer erfolgreich erstellt.",
-    "userDeletedSucessfully": "Der Benutzer wurde erfolgreich gelöscht.",
+    "userCreatedSuccessfully": "Benutzer erfolgreich erstellt.",
+    "userDeletedSuccessfully": "Der Benutzer wurde erfolgreich gelöscht.",
     "usergroup": "Benutzergruppe",
     "users": "Benutzer"
   }

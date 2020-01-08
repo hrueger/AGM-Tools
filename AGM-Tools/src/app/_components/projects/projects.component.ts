@@ -130,7 +130,7 @@ export class ProjectsComponent implements OnInit {
         if (confirm(await this.fts.t("projects.confirmDelete"))) {
             this.remoteService.get("delete", `projects/${project.id}`).subscribe(async (data) => {
                 if (data && data.status == true) {
-                    this.alertService.success(await this.fts.t("projects.projectDeletedSucessfully"));
+                    this.alertService.success(await this.fts.t("projects.projectDeletedSuccessfully"));
                     this.remoteService.get("get", "projects").subscribe((d) => {
                         this.projects = d;
                     });
@@ -158,7 +158,7 @@ export class ProjectsComponent implements OnInit {
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("projects.projectUpdatedSucessfully"));
+                                this.alertService.success(await this.fts.t("projects.projectUpdatedSuccessfully"));
                                 this.remoteService.get("get", "projects").subscribe((d) => {
                                     this.projects = d;
                                 });
@@ -183,7 +183,7 @@ export class ProjectsComponent implements OnInit {
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("projects.projectsCreatedSucessfully"));
+                                this.alertService.success(await this.fts.t("projects.projectsCreatedSuccessfully"));
                                 this.remoteService.get("get", "projects").subscribe((d) => {
                                     this.projects = d;
                                 });

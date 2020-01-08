@@ -58,7 +58,7 @@ export class TutorialsComponent implements OnInit {
             })
             .subscribe(async (data) => {
               if (data && data.status == true) {
-                this.alertService.success(await this.fts.t("tutorials.tutorialCreatedSucessfully"));
+                this.alertService.success(await this.fts.t("tutorials.tutorialCreatedSuccessfully"));
                 this.remoteService
                   .get("get", "tutorials/")
                   .subscribe((res) => {

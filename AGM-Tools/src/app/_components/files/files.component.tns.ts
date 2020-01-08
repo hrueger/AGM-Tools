@@ -253,21 +253,21 @@ export class FilesComponent implements OnInit {
     public onPullToRefresh() {
         this.reloadHere(true);
     }
-    public openNewModal() {
+    public async openNewModal() {
         const that = this;
         dialog.action({
-            actions: ["Neuer Ordner", "Neue Datei"],
-            cancelButtonText: "Abbrechen",
-            title: "Neu",
-        }).then((result) => {
-            if (result == "Neuer Ordner") {
+            actions: [await this.fts.t("files.newFolder"), await this.fts.t("files.newFile")],
+            cancelButtonText: await this.fts.t("general.cancel"),
+            title: await this.fts.t("general.new"),
+        }).then(async (result) => {
+            if (result == await this.fts.t("files.newFolder")) {
                 dialog.prompt({
-                    cancelButtonText: "Abbrechen",
-                    defaultText: "Neuer Ordner",
+                    cancelButtonText: await this.fts.t("general.cancel"),
+                    defaultText: await this.fts.t("files.newFolder"),
                     inputType: dialog.inputType.text,
                     message: "in " + this.currentPath.map((item) => item.name).join("/") + "/",
                     okButtonText: "Erstellen",
-                    title: "Neuer Ordner",
+                    title: await this.fts.t("files.newFolder"),
 
                 }).then((r) => {
                     if (r.result) {
@@ -277,22 +277,22 @@ export class FilesComponent implements OnInit {
                                 name: r.text,
                                 pid: that.pid,
                             })
-                            .subscribe((data) => {
+                            .subscribe(async (data) => {
                                 if (data && data.status == true) {
-                                    that.alertService.success("Der neue Ordner wurde erfolgreich erstellt.");
+                                    that.alertService.success(await this.fts.t("files.folderCreatedSuccessfully"));
                                     this.reloadHere();
                                 }
                             });
                     }
 
                 });
-            } else if (result == "Neue Datei") {
-                this.alertService.info("Das geht leider in dieser Version noch nicht!");
+            } else if (result == await this.fts.t("files.newFile")) {
+                this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
             }
         });
     }
 
-    public editTags(item) {
+    public async editTags(item) {
         this.itemsListView.listView.notifySwipeToExecuteFinished();
         const itemTags = item.tags;
         const allTags = this.tags.map((tag) => tag.id);
@@ -315,9 +315,9 @@ export class FilesComponent implements OnInit {
                         .getNoCache("post", `files/${item.id}/tags`, {
                             tagId: this.tags[index].id,
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data.status == true) {
-                                this.alertService.success("Gespeichert!");
+                                this.alertService.success(await this.fts.t("files.tagsSavedSuccessfully"));
                             }
                         });
                 },
@@ -326,7 +326,7 @@ export class FilesComponent implements OnInit {
             onDismiss: () => {
                 this.reloadHere();
             },
-            title: "Tags auswählen",
+            title: await this.fts.t("files.chooseTags"),
         };
         cfalertDialog.show(options);
         return;
@@ -341,7 +341,7 @@ export class FilesComponent implements OnInit {
     public share(item) {
         this.remoteService
             .getNoCache("post", `files/${item.id}/share`)
-            .subscribe((data) => {
+            .subscribe(async (data) => {
                 if (data.status == true) {
                     const shareLink = `${environment.appUrl}share/${data.link}`;
                     const cfalertDialog = new CFAlertDialog();
@@ -349,40 +349,41 @@ export class FilesComponent implements OnInit {
                         buttons: [{
                             buttonAlignment: CFAlertActionAlignment.END,
                             buttonStyle: CFAlertActionStyle.POSITIVE,
-                            onClick: () => {
+                            onClick: async () => {
                                 clipboard.setText(shareLink);
-                                this.alertService.success("Link kopiert!");
+                                this.alertService.success(await this.fts.t("files.linkCopied"));
                             },
-                            text: "Kopieren",
+                            text: await this.fts.t("files.copy"),
                         }],
                         cancellable: true,
                         dialogStyle: CFAlertStyle.ALERT,
-                        message: "Ein Link wurde generiert:\n" + shareLink,
+                        message: shareLink,
                         textAlignment: CFAlertGravity.START,
-                        title: "Freigeben",
+                        title: await this.fts.t("files.share"),
                     };
                     cfalertDialog.show(options);
                 }
             });
         this.itemsListView.listView.notifySwipeToExecuteFinished();
     }
-    public rename(item) {
+    public async rename(item) {
         const that = this;
         dialog.prompt({
-            cancelButtonText: "Abbrechen",
+            cancelButtonText: await this.fts.t("general.cancel"),
             defaultText: item.name,
             inputType: dialog.inputType.text,
             message: this.currentPath.map((itm) => itm.name).join("/") + "/" + item.name,
-            okButtonText: "Umbenennen",
-            title: (item.isFolder ? "Ordner" : "Datei") + " umbenennen",
+            okButtonText: await this.fts.t("files.rename"),
+            title: await this.fts.t("files.rename"),
 
         }).then((r) => {
             if (r.result) {
                 that.remoteService
                     .getNoCache("post", `files/${item.id}`, { name: r.text })
-                    .subscribe((data) => {
+                    .subscribe(async (data) => {
                         if (data.status == true) {
-                            that.alertService.success("Das Element wurde erfolgreich umbenannt.");
+                            that.alertService.success(await this.fts.t(item.isFolder ?
+                                "files.folderRenamedSuccessfully" : "files.fileRenamedSuccessfully"));
                             this.reloadHere();
                         }
                     });
@@ -391,31 +392,23 @@ export class FilesComponent implements OnInit {
 
     }
     public async delete(item) {
-        if (await confirm("Soll dieses Element wirklich gelöscht werden?")) {
-            this.remoteService.getNoCache("delete", `files/${item.id}`).subscribe((data) => {
+        if (await confirm(await this.fts.t(item.isFolder ?
+            "files.confirmFolderDelete" : "files.confirmFileDelete"))) {
+            this.remoteService.getNoCache("delete", `files/${item.id}`).subscribe(async (data) => {
                 if (data.status == true) {
-                    this.alertService.success("Das Element wurde erfolgreich gelöscht.");
+                    this.alertService.success(await this.fts.t(item.isFolder ?
+                        "files.folderDeletedSuccessfully" : "files.fileDeletedSuccessfully"));
                     this.reloadHere();
                 }
             });
         }
     }
-    public move(item) {
-        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt.\
-        Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+    public async move(item) {
+        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
     }
-    public copy(item) {
-        this.alertService.info("Diese Funktion wird in einer zukünftigen Version hinzugefügt.\
-        Wenn sie jetzt dringend benötigt wird, bitte bei Hannes melden!");
+    public async copy(item) {
+        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
     }
-
-    /*reloadHere() {
-        if (this.lastItem.id == -1) {
-            this.navigate({ id: -1 });
-        } else {
-            this.goTo(this.lastItem, true);
-        }
-    }*/
 
     public onCellSwiping(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;

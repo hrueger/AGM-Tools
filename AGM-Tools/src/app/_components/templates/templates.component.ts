@@ -64,7 +64,7 @@ export class TemplatesComponent implements OnInit {
                         name: this.newTemplateForm.get("name").value,
                     }).subscribe(async (data) => {
                         if (data && data.status == true) {
-                            this.alertService.success(await this.fts.t("templates.templateCreatedSucessfully"));
+                            this.alertService.success(await this.fts.t("templates.templateCreatedSuccessfully"));
                             this.loadTemplates();
                         }
                     });
