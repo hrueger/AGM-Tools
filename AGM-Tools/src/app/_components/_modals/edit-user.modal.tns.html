@@ -2,7 +2,7 @@
     <GridLayout rows="36" columns="auto,*,auto" class="action-bar p-10">
         <Button text="&#xf060;" class="fas no-border round action-bar-button" row="0" col="0" (tap)="goBack()">
         </Button>
-        <Label text="Eigenen Benutzer anpassen" class="text-center action-bar-title" row="0" col="1"></Label>
+        <Label [text]="'users.changeOwnProfile' | translate" class="text-center action-bar-title" row="0" col="1"></Label>
         <Button row="0" col="2" text="&#xf0c7;" class="fas no-border round action-bar-button" (tap)="close()"></Button>
     </GridLayout>
     <RadDataForm (propertyValidate)="onPropertyValidate($event)" class="dataform" #dataform [metadata]="dataFormConfig" [source]="user"></RadDataForm>

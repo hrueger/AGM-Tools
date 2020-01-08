@@ -1,6 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 
 export class User {
     public name: string;
@@ -26,61 +27,9 @@ export class User {
 export class EditUserModalComponent {
     public puser: User;
     @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
-    public dataFormConfig = {
-        commitMode: "Immediate",
-        isReadOnly: false,
-        propertyAnnotations:
-        [
-            {
-                displayName: "Benutzername",
-                index: 0,
-                name: "name",
-                validators: [
-                    { name: "NonEmpty" },
-                ],
-            },
-            {
-                displayName: "Email-Adresse",
-                editor: "Email",
-                index: 1,
-                name: "email",
-                validators: [
-                    { name: "NonEmpty" },
-                    { name: "EmailValidator" },
-                ],
-            },
-            {
-                displayName: "Altes Passwort (immer angeben)",
-                editor: "Password",
-                index: 2,
-                name: "passwordOld",
-                validators: [
-                    { name: "NonEmpty" },
-                ],
-            },
-            {
-                displayName: "Neues Passwort",
-                editor: "Password",
-                index: 3,
-                name: "password1",
-                validators: [
+    public dataFormConfig: any;
 
-                ],
-            },
-            {
-                displayName: "Neues Passwort wiederholen",
-                editor: "Password",
-                index: 4,
-                name: "password2",
-                validators: [
-
-                ],
-            },
-        ],
-        validationMode: "Immediate",
-    };
-
-    public constructor(private params: ModalDialogParams) {
+    public constructor(private params: ModalDialogParams, private fts: FastTranslateService) {
         this.puser = new User(params.context.currentUser.username, params.context.currentUser.email, "", "", "");
 
     }
@@ -94,14 +43,14 @@ export class EditUserModalComponent {
             });
     }
 
-    public onPropertyValidate(args) {
+    public async onPropertyValidate(args) {
         let validationResult = true;
         if (args.propertyName === "password2") {
             const dataForm = args.object;
             const password1 = dataForm.getPropertyByName("password1");
             const password2 = args.entityProperty;
             if (password1.valueCandidate !== password2.valueCandidate) {
-                password2.errorMessage = "Die Passwörter stimmen nicht überein.";
+                password2.errorMessage = await this.fts.t("errors.passwordsDontMatch");
                 validationResult = false;
             }
         }
@@ -114,5 +63,57 @@ export class EditUserModalComponent {
 
     public goBack() {
         this.params.closeCallback(null);
+    }
+
+    public async ngOnInit() {
+        this.dataFormConfig = {
+            commitMode: "Immediate",
+            isReadOnly: false,
+            propertyAnnotations:
+            [
+                {
+                    displayName: await this.fts.t("general.username"),
+                    index: 0,
+                    name: "name",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
+                },
+                {
+                    displayName: await this.fts.t("general.email"),
+                    editor: "Email",
+                    index: 1,
+                    name: "email",
+                    validators: [
+                        { name: "NonEmpty" },
+                        { name: "EmailValidator" },
+                    ],
+                },
+                {
+                    displayName: await this.fts.t("users.oldPasswordProvideAlways"),
+                    editor: "Password",
+                    index: 2,
+                    name: "passwordOld",
+                    validators: [
+                        { name: "NonEmpty" },
+                    ],
+                },
+                {
+                    displayName: await this.fts.t("login.inputNewPassword"),
+                    editor: "Password",
+                    index: 3,
+                    name: "password1",
+                    validators: [],
+                },
+                {
+                    displayName: await this.fts.t("login.repeatNewPassword"),
+                    editor: "Password",
+                    index: 4,
+                    name: "password2",
+                    validators: [],
+                },
+            ],
+            validationMode: "Immediate",
+        };
     }
 }
