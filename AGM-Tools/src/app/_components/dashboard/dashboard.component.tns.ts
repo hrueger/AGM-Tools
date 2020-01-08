@@ -1,3 +1,4 @@
+import { formatDate } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as appversion from "nativescript-appversion";
@@ -12,7 +13,6 @@ import { FastTranslateService } from "../../_services/fast-translate.service";
 import { PushService } from "../../_services/push.service";
 import { RemoteService } from "../../_services/remote.service";
 import { dateDiff } from "./helpers";
-import { formatDate } from "@angular/common";
 
 @Component({
     selector: "app-dashboard",
