@@ -1,22 +1,18 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
-import {
-    CFAlertActionAlignment,
-    CFAlertActionStyle,
-    CFAlertDialog,
-    CFAlertStyle,
-} from "nativescript-cfalert-dialog";
 import { PageChangeEventData } from "nativescript-image-swipe";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { View } from "tns-core-modules/ui/core/view/view";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page/page";
 import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
@@ -40,20 +36,17 @@ export class TemplatesComponent implements OnInit {
         private modal: ModalDialogService,
         private vcRef: ViewContainerRef,
         private authService: AuthenticationService,
+        private fts: FastTranslateService,
         private page: Page) {
     }
 
     public ngOnInit() {
-        this.remoteService.get("post", "templatesGetTemplates").subscribe((data) => {
+        this.remoteService.get("get", "templates").subscribe((data) => {
             this.templates = data;
             this.templatesToShow = [];
             this.templates.forEach((template) => {
                 this.templatesToShow.push({
-                    // credit: template.type,
-                    imageUrl: `${environment.apiUrl}\
-getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.token}`,
-                    // summary: template.description,
-                    // title: template.name,
+                    imageUrl: `${environment.apiUrl}templates/${template.filename}?authorization=${this.authService.currentUserValue.token}`,
                 });
             });
         });
@@ -62,8 +55,8 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
         this.currentTemplateName = this.templates[e.page].name;
         this.currentTemplateDescription = this.templates[e.page].description;
     }
-    public downloadCurrentTemplate() {
-        alert("Herunterladen von Vorlagen wird noch nicht unterstützt!");
+    public async downloadCurrentTemplate() {
+        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
     }
     public onSetupItemView(args: SetupItemViewArgs) {
         args.view.context.third = args.index % 3 === 0;
@@ -85,8 +78,8 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
         this.currentTemplateDescription = "";
     }
 
-    public openNewModal() {
-        this.alertService.info("Gibt's am Handy noch nicht!");
+    public async openNewModal() {
+        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
         /*let options = {
             animated: true,
             context: {},
@@ -133,50 +126,23 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
         swipeLimits.right = rightItem.getMeasuredWidth();
     }
 
-    public onRightSwipeClick(args) {
-        const uid = args.object.bindingContext.id;
-        const cfalertDialog = new CFAlertDialog();
-        const onNoPressed = (response) => {
-            this.templatesListView.listView.notifySwipeToExecuteFinished();
-        };
-        const onYesPressed = (response) => {
-            this.templatesListView.listView.notifySwipeToExecuteFinished();
+    public async onRightSwipeClick(args) {
+        const id = args.object.bindingContext.id;
+        if (await dialogs.confirm(await this.fts.t("templates.confirmDelete"))) {
             this.remoteService
-                .getNoCache("post", "templatesDeleteTemplate", {
-                    id: uid,
-                })
-                .subscribe((data) => {
+                .getNoCache("delete", `templates/${id}`)
+                .subscribe(async (data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
-                            "Vorlage erfolgreich gelöscht",
+                            await this.fts.t("templates.templateDeletedSuccessfully"),
                         );
                         this.remoteService
-                            .get("post", "templatesGetTemplates")
+                            .get("get", "template")
                             .subscribe((res) => {
                                 this.templates = res;
                             });
                     }
                 });
-
-        };
-        cfalertDialog.show({
-            buttons: [
-                {
-                    buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    buttonStyle: CFAlertActionStyle.POSITIVE,
-                    onClick: onYesPressed,
-                    text: "Ja",
-
-                },
-                {
-                    buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    buttonStyle: CFAlertActionStyle.NEGATIVE,
-                    onClick: onNoPressed,
-                    text: "Nein",
-                }],
-            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
-            message: "Soll diese Vorlage wirklich gelöscht werden?",
-            title: "Bestätigung",
-        });
+        }
     }
 }

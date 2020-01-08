@@ -2,17 +2,14 @@
 
 <GridLayout rows="*,auto" *ngIf="!showingTemplate">
     <GridLayout rowSpan="2">
-        <RadListView #templatesListView height="3000" [items]="templates" selectionBehavior="Press" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
+        <RadListView #templatesListView height="3000" [items]="templates" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
             <ng-template let-template="item" let-i="index" let-odd="odd" let-even="even">
                 <StackLayout (tap)="showTemplate(i)">
-                    <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item">
+                    <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item -separator">
                         <Label class="list-group-heading" row="0" col="1" [text]="template.name"></Label>
                         <Label row="1" col="1" class="body" [text]="template.description"></Label>
                         <Label row="0" col="2" class="body" [text]="template.type"></Label>
                     </GridLayout>
-
-                    <StackLayout height="1" class="list-group-seperator">
-                    </StackLayout>
                 </StackLayout>
             </ng-template>
             <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
@@ -31,13 +28,13 @@
 
 <StackLayout *ngIf="showingTemplate">
     <GridLayout rows="36" columns="auto,*,auto" class="action-bar p-10">
-        <Button text="&#xf060;" class="fas no-border round" row="0" col="0" (tap)="back()">
+        <Button text="&#xf060;" class="fas no-border round action-bar-button" row="0" col="0" (tap)="back()">
         </Button>
-        <StackLayout row="0" col="1">
-            <Label [text]="currentTemplateName" class="text-center action-bar-title"></Label>
+        <StackLayout row="0" col="1" class="p-0">
+            <Label [text]="currentTemplateName" class="text-center action-bar-middle"></Label>
             <Label [text]="currentTemplateDescription" class="text-center action-bar-small"></Label>
         </StackLayout>
-        <Button row="0" col="2" text="&#xf019;" class="fas no-border round" (tap)="downloadCurrentTemplate()"></Button>
+        <Button row="0" col="2" text="&#xf019;" class="fas no-border round action-bar-button" (tap)="downloadCurrentTemplate()"></Button>
     </GridLayout>
     <ImageSwipe [items]="templatesToShow" imageUrlProperty="imageUrl" (pageChanged)="onPageChanged($event)" [pageNumber]="pageNumber" backgroundColor="#000000">
     </ImageSwipe>

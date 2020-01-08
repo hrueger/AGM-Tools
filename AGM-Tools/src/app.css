@@ -37,6 +37,10 @@
     font-size: 10;
 }
 
+.action-bar-middle {
+    font-size: 15;
+}
+
 StackLayout.content {
     padding: 8;
 }
