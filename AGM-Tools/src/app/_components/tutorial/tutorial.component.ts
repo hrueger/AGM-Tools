@@ -78,9 +78,9 @@ export class TutorialComponent implements OnInit {
     return `${environment.apiUrl}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
   }
 
-  private gotNewTutorialData(tutorial: any) {
+  private async gotNewTutorialData(tutorial: any) {
     if (tutorial) {
-      this.navbarService.setHeadline(`${this.fts.t("general.tutorial")}: ${tutorial.title}`);
+      this.navbarService.setHeadline(`${await this.fts.t("general.tutorial")}: ${tutorial.title}`);
     }
     this.tutorial = tutorial;
   }
