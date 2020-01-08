@@ -32,7 +32,6 @@ import { NgxOnlyOfficeModule } from "ngx-onlyoffice";
 import { ToastrModule } from "ngx-toastr";
 import { UiSwitchModule } from "ngx-ui-switch";
 import { environment } from "../environments/environment";
-import { AboutComponent } from "./_components/about/about.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { CallComponent } from "./_components/call/call.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
@@ -93,7 +92,6 @@ registerLocaleData(localeDe);
         TemplatesComponent,
         ClientsoftwareComponent,
         SettingsComponent,
-        AboutComponent,
         NavbarComponent,
         SidebarComponent,
         ChatMessagesComponent,
