@@ -7,6 +7,7 @@ import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { Color } from "tns-core-modules/color";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 import { NewCalendarEventModalComponent } from "../_modals/new-calendar-event.modal.tns";
 
@@ -96,8 +97,11 @@ export class CalendarComponent {
     public viewModes = ["Year", "Month", "Day"];
 
     @ViewChild("calendar", { static: false }) public calendar: RadCalendarComponent;
-    constructor(private remoteService: RemoteService, private modal: ModalDialogService,
-                private vcRef: ViewContainerRef, private alertService: AlertService, private zone: NgZone) { }
+    constructor(private remoteService: RemoteService,
+                private modal: ModalDialogService,
+                private vcRef: ViewContainerRef,
+                private alertService: AlertService,
+                private fts: FastTranslateService) { }
 
     public ngAfterViewInit() {
         this.calendar.nativeElement.reload();
@@ -157,11 +161,9 @@ export class CalendarComponent {
                         location: newCalendarEvent.location,
                         startDate: newCalendarEvent.startDate.toString(),
                     })
-                    .subscribe((data) => {
+                    .subscribe(async (data) => {
                         if (data && data.status == true) {
-                            this.alertService.success(
-                                "Termin erfolgreich gespeichert!",
-                            );
+                            this.alertService.success(await this.fts.t("calendar.eventSavedSuccessfully"));
                             this.remoteService
                                 .get("get", "events")
                                 .subscribe((res) => {
