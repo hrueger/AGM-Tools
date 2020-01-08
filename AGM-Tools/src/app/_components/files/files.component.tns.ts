@@ -390,15 +390,12 @@ export class FilesComponent implements OnInit {
         });
 
     }
-    public delete(item) {
-        if (confirm("Soll dieses Element wirklich gelöscht werden?")) {
-            this.remoteService.getNoCache("post", "filesDelete", {
-                fid: item.id,
-                type: item.type,
-            }).subscribe((data) => {
+    public async delete(item) {
+        if (await confirm("Soll dieses Element wirklich gelöscht werden?")) {
+            this.remoteService.getNoCache("delete", `files/${item.id}`).subscribe((data) => {
                 if (data.status == true) {
                     this.alertService.success("Das Element wurde erfolgreich gelöscht.");
-                    // this.reloadHere();
+                    this.reloadHere();
                 }
             });
         }
