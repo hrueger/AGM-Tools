@@ -1,4 +1,4 @@
-<navbar headline="Chat"></navbar>
+<navbar [headline]="'chat.chat' | translate"></navbar>
 
 <ListView #chatsListView [items]="chats" id="chats" class="list-group">
     <ng-template let-chat="item" let-index="index">
