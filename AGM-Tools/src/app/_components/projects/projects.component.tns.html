@@ -1,4 +1,4 @@
-<navbar headline="Projekte"></navbar>
+<navbar [headline]="'projects.projects' | translate"></navbar>
 <GridLayout rows="*,auto">
     <GridLayout rowSpan="2">
         <RadListView #projectsListView [items]="projects" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
