@@ -4,7 +4,7 @@
     <GridLayout rowSpan="2">
         <RadListView #notificationsListView [items]="notifications" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
             <ng-template let-notification="item">
-                <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item -seperator" [style.backgroundColor]="notification.theme == 'success' ? '#6ab489' : (notification.theme == 'info' ? '#7eb8df' : (notification.theme == 'warning' ? '#f3c06d' : '#e98e84'))">
+                <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item -separator" [style.backgroundColor]="notification.theme == 'success' ? '#6ab489' : (notification.theme == 'info' ? '#7eb8df' : (notification.theme == 'warning' ? '#f3c06d' : '#e98e84'))">
                     <Label class="list-group-heading" row="0" col="1" [text]="notification.headline"></Label>
                     <Label row="1" col="1" class="body" textWrap="true" [text]="notification.content"></Label>
                     <StackLayout row="0" col="2" rowSpan="2">
