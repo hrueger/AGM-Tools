@@ -296,10 +296,10 @@ export class FilesComponent implements OnInit {
         }
     }
     public async move(item) {
-        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
     }
     public async copy(item) {
-        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
     }
 
     public async copyShareLink(inputField) {

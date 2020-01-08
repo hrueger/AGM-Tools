@@ -91,7 +91,7 @@
   },
   "general": {
     "audio": "Audio",
-    "avalibleInLaterVersion": "This feature will be avalible in a future version!",
+    "avalibleInFutureVersion": "This feature will be avalible in a future version!",
     "back": "Back",
     "camera": "Camera",
     "cancel": "Cancel",

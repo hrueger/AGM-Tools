@@ -35,22 +35,22 @@ export class MessageBoxComponent {
 
     public async sendDocument() {
         this.showAttachmentContainer = false;
-        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("errors.avalibleInFutureVersion"));
         // console.log("Send document!");
     }
     public async sendPicture() {
         this.showAttachmentContainer = false;
-        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("errors.avalibleInFutureVersion"));
         // console.log("Send image!");
     }
     public async sendGallery() {
         this.showAttachmentContainer = false;
-        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("errors.avalibleInFutureVersion"));
         // console.log("Send gallery!");
     }
     public async sendAudio() {
         this.showAttachmentContainer = false;
-        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("errors.avalibleInFutureVersion"));
         // console.log("Send audio!");
     }
     public sendLocation() {
@@ -68,7 +68,7 @@ export class MessageBoxComponent {
     }
     public async sendContact() {
         this.showAttachmentContainer = false;
-        this.alertService.info(await this.fts.t("errors.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("errors.avalibleInFutureVersion"));
         // console.log("Send contact!");
     }
 }

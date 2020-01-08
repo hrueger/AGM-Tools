@@ -91,7 +91,7 @@
   },
   "general": {
     "audio": "Audio",
-    "avalibleInLaterVersion": "Diese Funktion wird in einer zukünftigen Version hinzugefügt.",
+    "avalibleInFutureVersion": "Diese Funktion wird in einer zukünftigen Version hinzugefügt.",
     "back": "Zurück",
     "camera": "Kamera",
     "cancel": "Abbrechen",

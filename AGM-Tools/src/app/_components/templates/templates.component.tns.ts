@@ -56,7 +56,7 @@ export class TemplatesComponent implements OnInit {
         this.currentTemplateDescription = this.templates[e.page].description;
     }
     public async downloadCurrentTemplate() {
-        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
     }
     public onSetupItemView(args: SetupItemViewArgs) {
         args.view.context.third = args.index % 3 === 0;
@@ -79,7 +79,7 @@ export class TemplatesComponent implements OnInit {
     }
 
     public async openNewModal() {
-        this.alertService.info(await this.fts.t("general.avalibleInLaterVersion"));
+        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
         /*let options = {
             animated: true,
             context: {},
