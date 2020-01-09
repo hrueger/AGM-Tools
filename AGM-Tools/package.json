@@ -67,6 +67,7 @@
         "nativescript-accordion": "^6.0.0-beta.2",
         "nativescript-angular": "8.20.3",
         "nativescript-animated-circle": "^1.2.0",
+        "nativescript-app-shortcuts": "^2.2.0",
         "nativescript-appversion": "^1.4.4",
         "nativescript-background-http": "^4.2.1",
         "nativescript-cache": "^1.0.0",

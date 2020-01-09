@@ -4,15 +4,11 @@
         <StackLayout class="content">
             <StackLayout class="card">
                 <Label [text]="'dashboard.remainingDiskSpace' | translate" class="headline"></Label>
-                <RadPieChart height="200" allowAnimation="true">
-                    <DonutSeries seriesName="pie" tkPieSeries selectionMode="DataPoint" outerRadiusFactor="0.9" expandRadius="0.4" outerRadiusFactor="0.7" innerRadiusFactor="0.4" [items]="spaceChartData" valueProperty="amount" legendLabel="name"></DonutSeries>
-                    <RadLegendView tkPieLegend position="Right" title="" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView>
-                    <Palette tkPiePalette seriesName="pie">
-                        <PaletteEntry tkPiePaletteEntry fillColor="#85C8FF" strokeColor="#85C8FF"></PaletteEntry>
-                        <PaletteEntry tkPiePaletteEntry fillColor="#CFCFCF" strokeColor="#CFCFCF"></PaletteEntry>
-                        <PaletteEntry tkPiePaletteEntry fillColor="#E6E6E6" strokeColor="#E6E6E6"></PaletteEntry>
-                    </Palette>
-                </RadPieChart>
+                <Label textWarp="true">
+                    <FormattedString textWarp="true" >
+                        <Span textWarp="true" *ngFor="let d of spaceChartData" [text]="d.name + ': ' + d.amount + ' &#xa;&#xa;&#xa;'"></Span>
+                    </FormattedString>
+                </Label>
             </StackLayout>
             <StackLayout class="card">
                 <Label class="headline" [text]="'events.nextEvents' | translate"></Label>

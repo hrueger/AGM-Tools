@@ -11,6 +11,7 @@ import {
 } from "nativescript-ui-sidedrawer";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
+import { ShortcutsService } from "./_services/shortcuts.service";
 
 @Component({
     selector: "app-root",
@@ -32,6 +33,7 @@ export class AppComponent {
         private router: Router,
         private authenticationService: AuthenticationService,
         private translate: TranslateService,
+        private shortcutsService: ShortcutsService,
     ) {
     }
 
@@ -41,6 +43,7 @@ export class AppComponent {
         this.router.navigate(["/login"]);
     }
     public ngOnInit() {
+        this.shortcutsService.init();
         this.authenticationService.currentUser.subscribe((x) => {
             if (x) {
                 this.currentUser = x;

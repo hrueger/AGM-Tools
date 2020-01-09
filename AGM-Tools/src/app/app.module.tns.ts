@@ -4,6 +4,7 @@ import localeDe from "@angular/common/locales/de";
 import {
     LOCALE_ID,
     NgModule,
+    NgZone,
     NO_ERRORS_SCHEMA,
     PlatformRef,
 } from "@angular/core";
@@ -50,7 +51,7 @@ import { Carousel, CarouselItem } from "nativescript-carousel";
 registerElement("Carousel", () => Carousel);
 registerElement("CarouselItem", () => CarouselItem);
 import { FormBuilder } from "@angular/forms";
-import { NativeScriptRouterModule } from "nativescript-angular/router";
+import { NativeScriptRouterModule, RouterExtensions } from "nativescript-angular/router";
 import { EmojiPickerModule } from "nativescript-emoji-picker/angular";
 import { LetterAvatarModule } from "nativescript-letter-avatar/angular";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker";
@@ -72,6 +73,7 @@ import { routes } from "./app.routes";
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
 registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { AppShortcuts } from "nativescript-app-shortcuts";
 import { WebRTC } from "nativescript-webrtc-plugin";
 import { WebRTCModule } from "nativescript-webrtc-plugin/angular";
 import { CallComponent } from "./_components/call/call.component";
@@ -165,7 +167,29 @@ WebRTC.init();
     ],
     schemas: [NO_ERRORS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {
+    constructor(private routerExtensions: RouterExtensions, private zone: NgZone) {
+        new AppShortcuts().setQuickActionCallback((shortcutItem) => {
+            // tslint:disable-next-line: no-console
+            console.log(`The app was launched by shortcut with the type '${shortcutItem.type}'`);
+            if (shortcutItem.type === "calendar") {
+                this.deeplink("/calendar");
+            } else if (shortcutItem.type === "projects") {
+                this.deeplink("/projects");
+            } else if (shortcutItem.type === "chat") {
+                this.deeplink("/chat");
+            }
+        });
+    }
+
+    private deeplink(to: string): void {
+        this.zone.run(() => {
+            this.routerExtensions.navigate([to], {
+                animated: false,
+            });
+        });
+    }
+}
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
