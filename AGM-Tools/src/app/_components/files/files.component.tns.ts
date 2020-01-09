@@ -8,8 +8,8 @@ import {
     CFAlertStyle,
     DialogOptions,
 } from "nativescript-cfalert-dialog";
-import * as clipboard from "nativescript-clipboard";
 import { MultiSelect } from "nativescript-multi-select";
+import * as SocialShare from "nativescript-social-share";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
@@ -350,10 +350,10 @@ export class FilesComponent implements OnInit {
                             buttonAlignment: CFAlertActionAlignment.END,
                             buttonStyle: CFAlertActionStyle.POSITIVE,
                             onClick: async () => {
-                                clipboard.setText(shareLink);
-                                this.alertService.success(await this.fts.t("files.linkCopied"));
+                                const s = `${await this.fts.t("share.share")}: ${item.name} - AGM-Tools`;
+                                SocialShare.shareUrl(shareLink, s, s);
                             },
-                            text: await this.fts.t("files.copy"),
+                            text: await this.fts.t("files.share"),
                         }],
                         cancellable: true,
                         dialogStyle: CFAlertStyle.ALERT,
