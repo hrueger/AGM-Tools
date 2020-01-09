@@ -151,12 +151,12 @@ export class EditTutorialComponent implements OnInit {
     }
   }
 
-  private gotNewTutorialData(tutorial: any) {
+  private async gotNewTutorialData(tutorial: any) {
     if (tutorial) {
       this.tutorial = tutorial;
       this.tutorialForm.get("description").setValue(tutorial.description);
       this.tutorialForm.get("title").setValue(tutorial.title);
-      this.navbarService.setHeadline(`${this.fts.t("tutorials.editTutorial")}: ${tutorial.title}`);
+      this.navbarService.setHeadline(`${await this.fts.t("tutorials.editTutorial")}: ${tutorial.title}`);
     }
   }
 
