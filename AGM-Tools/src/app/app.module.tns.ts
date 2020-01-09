@@ -18,6 +18,7 @@ import { NativeScriptUIDataFormModule } from "nativescript-ui-dataform/angular";
 import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
 import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
 import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
+import * as AppUrlSchemes from "nativescript-urlhandler";
 import { AvatarModule } from "ngx-avatar";
 import * as platform from "tns-core-modules/platform";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
@@ -76,6 +77,7 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { AppShortcuts } from "nativescript-app-shortcuts";
 import { WebRTC } from "nativescript-webrtc-plugin";
 import { WebRTCModule } from "nativescript-webrtc-plugin/angular";
+import { environment } from "../environments/environment";
 import { CallComponent } from "./_components/call/call.component";
 import { ShareComponent } from "./_components/share/share.component";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
@@ -168,7 +170,7 @@ WebRTC.init();
     schemas: [NO_ERRORS_SCHEMA],
 })
 export class AppModule {
-    constructor(private routerExtensions: RouterExtensions, private zone: NgZone) {
+    constructor(private router: RouterExtensions, private zone: NgZone) {
         new AppShortcuts().setQuickActionCallback((shortcutItem) => {
             // tslint:disable-next-line: no-console
             console.log(`The app was launched by shortcut with the type '${shortcutItem.type}'`);
@@ -180,11 +182,19 @@ export class AppModule {
                 this.deeplink("/chat");
             }
         });
+        AppUrlSchemes.handleOpenURL((appUrl: AppUrlSchemes.AppURL) => {
+            // tslint:disable-next-line: no-console
+            console.log("###########################\nGot the following appURL", appUrl,
+            "\n###########################"); // ToDo
+            const appUrlString = appUrl.toString().replace(environment.appUrl, "");
+            const parts = appUrlString.split("/");
+            router.navigate(parts);
+        });
     }
 
     private deeplink(to: string): void {
         this.zone.run(() => {
-            this.routerExtensions.navigate([to], {
+            this.router.navigate([to], {
                 animated: false,
             });
         });
