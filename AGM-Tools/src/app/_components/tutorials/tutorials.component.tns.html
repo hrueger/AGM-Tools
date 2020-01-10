@@ -1,1 +1,59 @@
-<Button text="tutorials works!" class="btn btn-primary"></Button>
+<StackLayout>
+    <GridLayout rows="36" columns="auto,*,auto" class="action-bar p-10">
+        <Button [text]="showingTutorial ? '&#xf060;' : '&#xf0c9;'" class="fas no-border round action-bar-button" row="0" col="0" (tap)="showingTutorial ? back() : onDrawerButtonTap()">
+        </Button>
+        <StackLayout row="0" col="1" class="p-0">
+            <Label [text]="currentStep && currentStep.title ? (currentStepIdx + 1) + '.: ' + currentStep.title : (currentTutorial && currentTutorial.title ? currentTutorial.title : ('tutorials.tutorials' | translate))" class="text-center action-bar-title"></Label>
+            <Label text=" Loading..." *ngIf="loading"></Label>
+        </StackLayout>
+    </GridLayout>
+    <GridLayout rows="*,auto" *ngIf="!showingTutorialImage">
+        <GridLayout rowSpan="2">
+            <RadListView *ngIf="!showingTutorial" #tutorialsListView height="3000" [items]="tutorials" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
+                <ng-template let-tutorial="item" let-i="index" let-odd="odd" let-even="even">
+                        <GridLayout (tap)="showTutorial(tutorial)" rows="auto, auto" columns="auto, *, auto" class="list-group-item -separator">
+                            <Label class="list-group-heading" row="0" col="1" [text]="tutorial.title"></Label>
+                            <Label row="1" col="1" colspan="2" textWrap="true" class="body" [text]="tutorial.description"></Label>
+                            <Label row="0" col="2" class="body" [text]="tutorial.createdAt | date:'short'"></Label>
+                        </GridLayout>
+                </ng-template>
+                <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
+                    <StackLayout id="delete-view" col="2" class="deleteSwipeContainer" (tap)="onRightSwipeClick($event)">
+                        <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </StackLayout>
+                </GridLayout>
+            </RadListView>
+
+            <RadListView *ngIf="showingTutorial && !showingTutorialImage" #tutorialStepsListView height="3000" [items]="currentTutorial.steps" (itemSwipeProgressStarted)="onStepSwipeCellStarted($event)" swipeActions="true">
+                <ng-template let-step="item" let-i="index" let-odd="odd" let-even="even">
+                        <GridLayout rows="auto, auto, auto" columns="*" class="list-group-item -separator">
+                            <Label textWrap="true" class="list-group-heading" row="0" col="0">
+                                <FormattedString textWrap="true">
+                                    <Span fontWeight="bold" [text]="(i+1) + '.: '"></Span>
+                                    <Span textWrap="true" [text]="step.title"></Span>
+                                </FormattedString>
+                            </Label>
+                            <Label textWrap="true" row="1" col="0" class="body" [text]="step.content"></Label>
+                            <StackLayout orientation="horizontal" row="2" col="0">
+                                <Image (tap)="openStepImage(step, i, step.image1)" *ngIf="step.image1" [src]="getFileSrc(step.image1)" class="imageThumbnail"></Image>
+                                <Image (tap)="openStepImage(step, i, step.image2)" *ngIf="step.image2" [src]="getFileSrc(step.image2)" class="imageThumbnail"></Image>
+                                <Image (tap)="openStepImage(step, i, step.image3)" *ngIf="step.image3" [src]="getFileSrc(step.image3)" class="imageThumbnail"></Image>
+                            </StackLayout>
+                        </GridLayout>
+                </ng-template>
+                <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
+                    <StackLayout id="delete-view" col="2" class="deleteSwipeContainer" (tap)="onStepRightSwipeClick($event)">
+                        <Label text="&#xf1f8;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
+                    </StackLayout>
+                </GridLayout>
+            </RadListView>
+        </GridLayout>
+        <GridLayout row="1" *ngIf="currentTutorial.editable">
+            <GridLayout columns="*, auto" row="1">
+                <Button col="1" (tap)="openNewModal()" text="+" class="fab-button"></Button>
+            </GridLayout>
+        </GridLayout>
+    </GridLayout>
+    <ImageSwipe *ngIf="showingTutorialImage" [items]="currentStepImages" imageUrlProperty="imageUrl" [pageNumber]="pageNumber" backgroundColor="#000000">
+    </ImageSwipe>
+</StackLayout>

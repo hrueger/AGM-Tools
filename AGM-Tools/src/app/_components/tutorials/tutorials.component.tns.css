@@ -1,1 +1,5 @@
-/* Add mobile styles for the component here.  */
+.imageThumbnail {
+    width: 100;
+    height: 100;
+    object-fit: contain;
+}
