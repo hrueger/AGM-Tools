@@ -22,6 +22,7 @@ x64/
 x86/
 build/
 bld/
+[Pp]ackages/
 [Bb]in/
 [Oo]bj/
 msbuild.log
