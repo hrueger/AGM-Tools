@@ -13,6 +13,7 @@ import templates from "./templates";
 import tutorial from "./tutorial";
 import update from "./update";
 import user from "./user";
+import vfs from "./vfs";
 
 const routes = Router();
 
@@ -30,5 +31,6 @@ routes.use("/templates", templates);
 routes.use("/tutorials", tutorial);
 routes.use("/update", update);
 routes.use("/users", user);
+routes.use("/vfs", vfs);
 
 export default routes;
