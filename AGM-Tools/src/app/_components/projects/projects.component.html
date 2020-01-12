@@ -7,66 +7,68 @@
 >{{ "projects.newProject" | translate }}</button>
 
 <div class="row mt-4" *ngIf="!currentProject">
-    <div class="col-md-3 col-sm-6 card ml-3 mb-3 px-0" *ngFor="let project of projects">
-        <img [src]="getProjectImageSrc(project)" class="card-img project-image" alt="">
-        <div class="card-img-overlay">
-            <div ngbDropdown class="d-inline-block float-right">
-                <button class="btn btn-outline-none text-primary p-1" ngbDropdownToggle><i class="fas fa-cog"></i></button>
-                <div ngbDropdownMenu>
-                    <button ngbDropdownItem class="btn btn-link text-primary btn-outline-primary" (click)="update(project, updateModal)">{{"general.edit" | translate}}</button>
-                    <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(project)">{{"general.delete" | translate}}</button>
+    <div class="col-md-3 col-sm-6 mb-3 px-2" *ngFor="let project of projects">
+        <div class="card">
+            <img [src]="getProjectImageSrc(project)" class="card-img project-image" alt="">
+            <div class="card-img-overlay">
+                <div ngbDropdown class="d-inline-block float-right">
+                    <button class="btn btn-outline-none text-primary p-1" ngbDropdownToggle><i class="fas fa-cog"></i></button>
+                    <div ngbDropdownMenu>
+                        <button ngbDropdownItem class="btn btn-link text-primary btn-outline-primary" (click)="update(project, updateModal)">{{"general.edit" | translate}}</button>
+                        <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(project)">{{"general.delete" | translate}}</button>
+                    </div>
+                </div>
+                <div class="pointer" (click)="goToProject(project)">
+                    <h5 class="card-title">{{project.name}}</h5>
+                    <p class="card-text">{{project.description}}</p>
                 </div>
             </div>
-            <div class="pointer" (click)="goToProject(project)">
-                <h5 class="card-title">{{project.name}}</h5>
-                <p class="card-text">{{project.description}}</p>
-            </div>
-        </div>
-        <div class="alert alert-info mb-0" *ngIf="project.tips.length > 0">{{'tips.tipsAvalible' | translate}} <button class="btn btn-link" (click)="goToProject(project)">{{'tips.viewTips' | translate}} </button></div>
-        <div class="list-group list-group-flush">
-            <a [routerLink]="['/', 'chat', 'project', project.id]" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{'chat.chat' | translate}}</h5>
-                    <small>{{project.chat.lastUpdated}}</small>
-                </div>
-                <div>
-                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.chat.data.length > 0">{{project.chat.data.length}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.chat.data}}</small>
-                </div>
-            </a>
-            
-            <a [routerLink]="['/', 'files', project.id, project.name]" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{"files.files" | translate}}</h5>
-                    <small>{{project.files.lastUpdated}}</small>
-                </div>
-                <div>
-                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.files.totalFiles > 0">{{project.files.totalFiles}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.files.data.length > 0 ? joinWithComma(project.files.data, 'name') : 'errors.noFilesLinked' | translate}}</small>
-                </div>
-            </a>
+            <div class="alert alert-info mb-0" *ngIf="project.tips.length > 0">{{'tips.tipsAvalible' | translate}} <button class="btn btn-link" (click)="goToProject(project)">{{'tips.viewTips' | translate}} </button></div>
+            <div class="list-group list-group-flush">
+                <a [routerLink]="['/', 'chat', 'project', project.id]" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{'chat.chat' | translate}}</h5>
+                        <small>{{project.chat.lastUpdated}}</small>
+                    </div>
+                    <div>
+                        <span class="float-right badge badge-normal badge-primary" *ngIf="project.chat.data.length > 0">{{project.chat.data.length}}</span>
+                        <small class="mb-1 mr-4 truncate">{{project.chat.data}}</small>
+                    </div>
+                </a>
                 
-            <a [routerLink]="['/', 'tasks', project.id]" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{"tasks.tasks" | translate}}</h5>
-                    <small>{{project.tasks.lastUpdated}}</small>
-                </div>
-                <div>
-                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.tasks.data.length > 0">{{project.tasks.data.length}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.tasks.data.length > 0 ? joinWithComma(project.tasks.data, 'title') : 'errors.noTasksAssigned' | translate}}</small>
-                </div>
-            </a>
+                <a [routerLink]="['/', 'files', project.id, project.name]" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{"files.files" | translate}}</h5>
+                        <small>{{project.files.lastUpdated}}</small>
+                    </div>
+                    <div>
+                        <span class="float-right badge badge-normal badge-primary" *ngIf="project.files.totalFiles > 0">{{project.files.totalFiles}}</span>
+                        <small class="mb-1 mr-4 truncate">{{project.files.data.length > 0 ? joinWithComma(project.files.data, 'name') : 'errors.noFilesLinked' | translate}}</small>
+                    </div>
+                </a>
+                    
+                <a [routerLink]="['/', 'tasks', project.id]" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{"tasks.tasks" | translate}}</h5>
+                        <small>{{project.tasks.lastUpdated}}</small>
+                    </div>
+                    <div>
+                        <span class="float-right badge badge-normal badge-primary" *ngIf="project.tasks.data.length > 0">{{project.tasks.data.length}}</span>
+                        <small class="mb-1 mr-4 truncate">{{project.tasks.data.length > 0 ? joinWithComma(project.tasks.data, 'title') : 'errors.noTasksAssigned' | translate}}</small>
+                    </div>
+                </a>
 
-            <a [routerLink]="['/', 'tutorials', project.id]" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{"tutorials.tutorials" | translate}}</h5>
-                    <small>{{project.tutorials.lastUpdated}}</small>
-                </div>
-                <div>
-                    <span class="float-right badge badge-normal badge-primary" *ngIf="project.tutorials.data.length > 0">{{project.tutorials.data.length}}</span>
-                    <small class="mb-1 mr-4 truncate">{{project.tutorials.data.length > 0 ? joinWithComma(project.tutorials.data, 'title') : 'errors.noTutorialsLinked' | translate}}</small>
-                </div>
-            </a>
+                <a [routerLink]="['/', 'tutorials', project.id]" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{"tutorials.tutorials" | translate}}</h5>
+                        <small>{{project.tutorials.lastUpdated}}</small>
+                    </div>
+                    <div>
+                        <span class="float-right badge badge-normal badge-primary" *ngIf="project.tutorials.data.length > 0">{{project.tutorials.data.length}}</span>
+                        <small class="mb-1 mr-4 truncate">{{project.tutorials.data.length > 0 ? joinWithComma(project.tutorials.data, 'title') : 'errors.noTutorialsLinked' | translate}}</small>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 </div>
