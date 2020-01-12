@@ -67,7 +67,6 @@ class VirtualFileSystemController {
             Type: f.isFolder ? itemTypes.folder : itemTypes.file,
           };
         }));
-        console.log("Sent:", files);
       } else {
         const fileRepository = getRepository(File);
         const element = await fileRepository.findOne(req.params.id);
@@ -90,7 +89,6 @@ class VirtualFileSystemController {
             };
           });
           res.send(files);
-          console.log("Sent:", files);
         }
       }
     }
