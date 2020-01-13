@@ -109,12 +109,14 @@ export class ProjectsComponent implements OnInit {
         modal.componentInstance.projectId = this.currentProject.id;
         modal.componentInstance.multiple = true;
         modal.result.then((ids) => {
-            this.remoteService.get("post", `projects/${this.currentProject.id}/linkFiles`,
-                {files: ids}).subscribe((r) => {
-                    if (r && r.status) {
-                        this.getProjects();
-                    }
-            });
+            if (ids != "Close click" && Array.isArray(ids)) {
+                this.remoteService.get("post", `projects/${this.currentProject.id}/linkFiles`,
+                    {files: ids}).subscribe((r) => {
+                        if (r && r.status) {
+                            this.getProjects();
+                        }
+                });
+            }
         }).catch(() => undefined);
     }
 
