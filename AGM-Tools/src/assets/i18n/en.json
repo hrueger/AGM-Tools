@@ -81,6 +81,7 @@
     "folderRenamedSuccessfully": "The folder has been renamed successfully.",
     "linkCopied": "The link has been copied to the clipboard!",
     "move": "Move",
+    "moveTo": "Move to",
     "newFile": "New file",
     "newFolder": "New folder",
     "open": "Open",

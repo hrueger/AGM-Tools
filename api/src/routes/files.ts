@@ -12,6 +12,8 @@ router.post("/:id([0-9]+)/share", [checkJwt], FileController.share);
 router.post("/", [checkJwt], FileController.newFolder);
 router.get("/:id([0-9]+)", [checkJwt], FileController.showElement);
 router.get("/:id([0-9]+)/download", [checkJwt], FileController.downloadElement);
+router.post("/:id([0-9]+)/move", [checkJwt], FileController.moveElement);
+router.post("/:id([0-9]+)/moveToRoot", [checkJwt], FileController.moveElementToRoot);
 router.get("/share/:link", FileController.showShare);
 router.get("/share/:link/download", FileController.downloadShare);
 router.post("/upload", [checkJwt], FileController.uploadFile);

@@ -10,6 +10,8 @@ import { RemoteService } from "../../_services/remote.service";
   export class FilePickerModalComponent {
     @Input() public title;
     @Input() public multiple: boolean = false;
+    @Input() public displayRoot: boolean = false;
+    @Input() public rootName: string = "";
     @Input() public projectId;
     public itemTree: any[];
     public config: any;
@@ -22,6 +24,14 @@ import { RemoteService } from "../../_services/remote.service";
         this.remoteService.get("get", `files/tree/${this.projectId}`).subscribe((data: any[]) => {
             setTimeout(() => {
                 this.itemTree = this.addIconUrls(data);
+                if (this.displayRoot) {
+                    this.itemTree = [{
+                        files: [...this.itemTree],
+                        iconUrl: "assets/icons/folder.png",
+                        id: -1,
+                        name: this.rootName,
+                    }];
+                }
                 this.config = {
                     child: "files",
                     dataSource: this.itemTree,

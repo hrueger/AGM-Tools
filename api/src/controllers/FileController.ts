@@ -5,7 +5,7 @@ import * as i18n from "i18n";
 import * as mergeFiles from "merge-files";
 import * as path from "path";
 import * as request from "request";
-import { getRepository, getTreeRepository } from "typeorm";
+import { getManager, getRepository, getTreeRepository } from "typeorm";
 import config from "../config/config";
 import { File } from "../entity/File";
 import { Project } from "../entity/Project";
@@ -48,6 +48,48 @@ class FileController {
     } else {
       res.sendFile(await getStoragePath(element));
     }
+  }
+
+  public static moveElementToRoot = async (req: Request, res: Response) => {
+    if (!parseInt(req.params.id, undefined)) {
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
+      return;
+    }
+    const fileRepository = getRepository(File);
+    const element = await fileRepository.findOne(req.params.id, {relations: ["project"]});
+    const origPath = await getStoragePath(element);
+    const oldMPath = (await fileRepository.query(`SELECT mpath FROM file WHERE id = ${req.params.id}`))[0].mpath;
+    const filesToAlter = await fileRepository.query(`SELECT id, mpath FROM file WHERE mpath LIKE '${oldMPath}%'`);
+    await fileRepository.query(`UPDATE file SET parentId = NULL, mpath = '${req.params.id}.' WHERE id = ${req.params.id}`);
+    const newMPathStart = `${req.params.id}.`;
+    filesToAlter.forEach(async (f) => {
+      await fileRepository.query(`UPDATE file SET mpath = '${f.mpath.replace(oldMPath, newMPathStart)}' WHERE id = '${f.id}'`);
+    });
+    const newPath = path.join(await getStoragePath(undefined, element.project.id), element.name);
+    fs.renameSync(origPath, newPath);
+    res.send({status: true});
+    return;
+  }
+
+  public static moveElement = async (req: Request, res: Response) => {
+    const newParentId = req.body.newParent;
+    if (!(newParentId && parseInt(newParentId, undefined) && parseInt(req.params.id, undefined))) {
+      res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
+      return;
+    }
+    const fileRepository = getRepository(File);
+    const element = await fileRepository.findOne(req.params.id);
+    const origPath = await getStoragePath(element);
+    const newPath = path.join(await getStoragePath(await fileRepository.findOne(newParentId)), element.name);
+    fs.renameSync(origPath, newPath);
+    const oldMPath = (await fileRepository.query(`SELECT mpath FROM file WHERE id = ${req.params.id}`))[0].mpath;
+    const newMPathStart = (await fileRepository.query(`SELECT mpath FROM file WHERE id = ${newParentId}`))[0].mpath;
+    await fileRepository.query(`UPDATE file SET parentId = ${newParentId} WHERE id = ${req.params.id}`);
+    const filesToAlter = await fileRepository.query(`SELECT id, mpath FROM file WHERE mpath LIKE '${oldMPath}%'`);
+    filesToAlter.forEach(async (f) => {
+      await fileRepository.query(`UPDATE file SET mpath = '${f.mpath.replace(oldMPath, newMPathStart)}' WHERE id = '${f.id}'`);
+    });
+    res.send({status: true});
   }
 
   public static downloadElement = async (req: Request, res: Response) => {
@@ -153,21 +195,7 @@ class FileController {
       } else {
         fs.unlinkSync(await getStoragePath(element));
       }
-
-      const children = await fileRepository.findDescendants(element);
-      let childrenIds = children.map((child) => child.id);
-      while (childrenIds.length > 0) {
-        for (const childId of childrenIds) {
-          try {
-            await fileRepository.delete(childId);
-            childrenIds = childrenIds.filter((cid) => cid != childId);
-          } catch {
-            //
-          }
-        }
-      }
-      await fileRepository.remove(children);
-      await fileRepository.remove(element);
+      await FileController.removeFileElementsFromDB(element);
     } catch (e) {
       res.status(500).send({message: `${i18n.__("errors.errorWhileDeleting")} ${e.toString()}`});
       return;
@@ -283,6 +311,41 @@ class FileController {
     } catch (e) {
       res.status(500).send({message: `${i18n.__("errors.error")} ${e.toString()}`});
     }
+  }
+
+  private static removeIdsFromElement(element: File) {
+    element.id = undefined;
+    if (element.files) {
+      element.files = FileController.removeIdsFromElements(element.files);
+    }
+    return element;
+  }
+  private static removeIdsFromElements(elements: File[]) {
+    for (const element of elements) {
+      element.id = undefined;
+      if (element.files) {
+        element.files = FileController.removeIdsFromElements(element.files);
+      }
+    }
+    return elements;
+  }
+
+  private static async removeFileElementsFromDB(element: File) {
+    const fileRepository = getTreeRepository(File);
+    const children = await fileRepository.findDescendants(element);
+    let childrenIds = children.map((child) => child.id);
+    while (childrenIds.length > 0) {
+      for (const childId of childrenIds) {
+        try {
+          await fileRepository.delete(childId);
+          childrenIds = childrenIds.filter((cid) => cid != childId);
+        } catch {
+          //
+        }
+      }
+    }
+    await fileRepository.remove(children);
+    await fileRepository.remove(element);
   }
 
   private static async sendDownloadElement(element: any, res: Response) {

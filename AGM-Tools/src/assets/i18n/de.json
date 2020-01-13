@@ -81,6 +81,7 @@
     "folderRenamedSuccessfully": "Der Ordner wurde erfolgreich umbenannt.",
     "linkCopied": "Link in die Zwischenablage kopiert!",
     "move": "Verschieben",
+    "moveTo": "Verschieben nach",
     "newFile": "New file",
     "newFolder": "Neuer Ordner",
     "open": "Öffnen",

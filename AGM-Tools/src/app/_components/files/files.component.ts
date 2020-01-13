@@ -11,6 +11,7 @@ import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { FilePickerModalComponent } from "../filePickerModal/filePickerModal";
 
 @Component({
     selector: "app-files",
@@ -296,7 +297,28 @@ export class FilesComponent implements OnInit {
         }
     }
     public async move(item) {
-        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
+        const modal = this.modalService.open(FilePickerModalComponent);
+        modal.componentInstance.title = await this.fts.t("files.moveTo");
+        modal.componentInstance.projectId = this.pid;
+        modal.componentInstance.multiple = false;
+        modal.componentInstance.displayRoot = true;
+        modal.componentInstance.rootName = this.route.snapshot.params.projectName;
+        modal.result.then((ids) => {
+            if (ids != "Close click" && Array.isArray(ids)) {
+                let req;
+                if (ids[0] == -1) {
+                    req = this.remoteService.get("post", `files/${item.id}/moveToRoot`);
+                } else {
+                    req = this.remoteService.get("post", `files/${item.id}/move`,
+                    {newParent: ids[0]});
+                }
+                req.subscribe((r) => {
+                        if (r && r.status) {
+                            this.reloadHere();
+                        }
+                });
+            }
+        }).catch(() => undefined);
     }
     public async copy(item) {
         this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
