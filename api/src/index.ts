@@ -61,7 +61,10 @@ createConnection({
     app.use(bodyParser.json());
 
     // Set all routes from routes folder
-    app.use("/", routes);
+    app.use("/api", routes);
+
+    // Set routes for static built frontend
+    app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
 
     app.listen(3000, () => {
       // tslint:disable-next-line: no-console
