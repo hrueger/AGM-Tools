@@ -122,7 +122,7 @@ registerLocaleData(localeDe);
         NgxOnlyOfficeModule,
         TreeViewModule,
         UiSwitchModule.forRoot({}),
-        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireModule.initializeApp(environment),
         RouterModule.forRoot(routes, { useHash: true, enableTracing: false }),
         ContextMenuModule.forRoot({
             useBootstrap4: true,
