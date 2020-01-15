@@ -23,7 +23,7 @@ import routes from "./routes";
 
 i18n.configure({
   defaultLocale: "en",
-  directory: path.join(__dirname, "i18n"),
+  directory: path.join(__dirname, "../assets/i18n"),
   objectNotation: true,
 });
 
