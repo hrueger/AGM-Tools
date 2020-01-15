@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import * as getFolderSize from "get-folder-size";
 import * as i18n from "i18n";
 import { getRepository, MoreThan } from "typeorm";
-import config from "../config/config";
+import { config } from "../config/config";
 import { Cache } from "../entity/Cache";
 import { Event } from "../entity/Event";
 import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
-import { howLongAgo } from "../utils/utils";
 
 class DashboardController {
 
@@ -57,9 +56,6 @@ class DashboardController {
           return r.id === res.locals.jwtPayload.userId;
         });
       });
-      for (const notification of notifications) {
-        notification.howLongAgo = howLongAgo(notification.createdAt);
-      }
       res.send({notifications, lastUpdated: "gerade eben"});
     } catch (e) {
       res.status(500).send({message: `${i18n.__("errors.errorWhileLoadingMessages")}` + e.toString()});
@@ -124,7 +120,7 @@ class DashboardController {
       await cacheRepository.save(diskSpaceUsed);
       lastUpdated = "gerade eben";
     } else {
-      lastUpdated = howLongAgo(diskSpaceUsed.updatedAt);
+      lastUpdated = diskSpaceUsed.updatedAt;
     }
     res.send({
       free: (config.avalibleDiskSpaceInGB * 1024) - Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),

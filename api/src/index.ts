@@ -7,7 +7,7 @@ import * as i18n from "i18n";
 import * as path from "path";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import config from "./config/config";
+import { config } from "./config/config";
 import { Cache } from "./entity/Cache";
 import { Event } from "./entity/Event";
 import { File } from "./entity/File";

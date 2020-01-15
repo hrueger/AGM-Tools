@@ -1,7 +1,7 @@
 import * as emailTemplates from "email-templates";
 import * as nodeMailer from "nodemailer";
 import * as path from "path";
-import config from "../config/config";
+import { config } from "../config/config";
 
 export function sendMail(from, to, template, locals) {
     return new Promise<any>((resolve, reject) => {

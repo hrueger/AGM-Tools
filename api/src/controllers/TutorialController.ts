@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import * as path from "path";
 import { FindOperator, getRepository } from "typeorm";
-import config from "../config/config";
+import { config } from "../config/config";
 import { Tutorial } from "../entity/Tutorial";
 import { TutorialStep } from "../entity/TutorialStep";
 import { User } from "../entity/User";

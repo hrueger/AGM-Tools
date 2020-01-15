@@ -6,7 +6,7 @@ import * as mergeFiles from "merge-files";
 import * as path from "path";
 import * as request from "request";
 import { getManager, getRepository, getTreeRepository } from "typeorm";
-import config from "../config/config";
+import { config } from "../config/config";
 import { File } from "../entity/File";
 import { Project } from "../entity/Project";
 import { Tag } from "../entity/Tag";

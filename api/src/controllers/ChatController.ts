@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import * as request from "request";
 import { Brackets, getRepository } from "typeorm";
-import config from "../config/config";
+import { config } from "../config/config";
 import { Message } from "../entity/Message";
 import { Project } from "../entity/Project";
 import { User } from "../entity/User";

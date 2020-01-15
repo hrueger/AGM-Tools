@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import * as path from "path";
 import { getRepository } from "typeorm";
-import config from "../config/config";
+import { config } from "../config/config";
 import { Template } from "../entity/Template";
 import { User } from "../entity/User";
 import { RequestWithFiles } from "../utils/iRequestWithFiles";

@@ -4,13 +4,13 @@ import * as fs from "fs";
 import * as i18n from "i18n";
 import * as path from "path";
 import { getRepository } from "typeorm";
-import config from "../config/config";
+import { config } from "../config/config";
 import { File } from "../entity/File";
 import { Message } from "../entity/Message";
 import { Project } from "../entity/Project";
 import { Tutorial } from "../entity/Tutorial";
 import { User } from "../entity/User";
-import { getStoragePath, howLongAgo } from "../utils/utils";
+import { getStoragePath } from "../utils/utils";
 
 class ProjectController {
   public static listAll = async (req: Request, res: Response) => {
@@ -52,20 +52,20 @@ class ProjectController {
 
       project.chat = {
         data: [(lastMessage.sender ? `${lastMessage.sender.username}: ` : "") + lastMessage.content],
-        lastUpdated: lastMessage.date ? howLongAgo(lastMessage.date) : undefined,
+        lastUpdated: lastMessage.date ? lastMessage.date : undefined,
       };
       project.tasks = {
         data: [],
-        lastUpdated: howLongAgo(new Date()),
+        lastUpdated: new Date(),
       };
       project.tutorials = {
         data: project.tutorials,
-        lastUpdated: howLongAgo(new Date()),
+        lastUpdated: new Date(),
       };
 
       project.files = {
         data: project.linkedFiles,
-        lastUpdated: howLongAgo(new Date()),
+        lastUpdated: new Date(),
       };
       project.linkedFiles = undefined;
     }
