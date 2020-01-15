@@ -7,6 +7,7 @@ import * as i18n from "i18n";
 import * as path from "path";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
+import config from "./config/config";
 import { Cache } from "./entity/Cache";
 import { Event } from "./entity/Event";
 import { File } from "./entity/File";
@@ -35,18 +36,18 @@ createConnection({
       migrationsDir: "src/migration",
       subscribersDir: "src/subscriber",
    },
-   database: "testagmtools",
+   database: config.database_name,
    entities: [Cache, Event, File, Message, Notification,
     Project, Tag, Template, Tutorial, TutorialStep, User, Usergroup],
-   host: "localhost",
+   host: config.database_host,
    logging: false,
    migrations: ["src/migration/**/*.ts"],
-   password: "",
-   port: 3306,
+   password: config.database_password,
+   port: config.database_port,
    subscribers: ["src/subscriber/**/*.ts"],
    synchronize: true,
    type: "mysql",
-   username: "root",
+   username: config.database_user,
 })
   .then(async (connection) => {
     await connection.query("SET NAMES utf8mb4;");
