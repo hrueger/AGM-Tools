@@ -66,7 +66,7 @@ class AuthController {
       res.status(500).send({message: i18n.__("errors.errorWhileSavingToken")});
       return;
     }
-    const link = `${config.urlSettings.url}resetPassword/${token}`;
+    const link = `${config.url}resetPassword/${token}`;
     sendMail(config.emailSender, req.params.email, "resetPassword", {
       resetLink: link,
       username: user.username,

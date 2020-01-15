@@ -5,7 +5,14 @@ import config from "../config/config";
 
 export function sendMail(from, to, template, locals) {
     return new Promise<any>((resolve, reject) => {
-        const transporter = nodeMailer.createTransport(config.emailSettings);
+        const transporter = nodeMailer.createTransport({
+            auth: {
+                pass: config.email_auth_pass,
+                user: config.email_auth_user,
+              },
+              host: config.email_host,
+              port: config.email_port,
+        });
         const email = new emailTemplates({
             message: { from },
             preview: false,
