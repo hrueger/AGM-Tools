@@ -67,7 +67,7 @@ createConnection({
     // Set routes for static built frontend
     app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
 
-    app.listen(3000, () => {
+    app.listen(config.port, () => {
       // tslint:disable-next-line: no-console
       console.log("Server started on port 3000!");
     });
