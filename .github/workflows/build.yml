@@ -18,6 +18,9 @@ jobs:
     - name: Install dependencies
       working-directory: api
       run: npm i
+    - name: Create files with api keys
+      working-directory: api
+      run: npm run createFilesWithApiKeys
     - name: Build
       working-directory: api
       run: npm run build
