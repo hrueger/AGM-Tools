@@ -7,6 +7,7 @@ import { Cache } from "../entity/Cache";
 import { Event } from "../entity/Event";
 import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
+import { toInt } from "../utils/utils";
 
 class DashboardController {
 
@@ -101,7 +102,7 @@ class DashboardController {
     let lastUpdated;
     if (update || !diskSpaceUsed || !diskSpaceUsed.value ||
       DashboardController.daysBetween(diskSpaceUsed.updatedAt, new Date()) >
-        parseInt(config.cacheExpireDays, undefined)) {
+        toInt(config.cacheExpireDays)) {
       const size = await new Promise<number>((resolve, reject) => {
         getFolderSize(config.storagePath, (err, s) => {
           if (err) {
@@ -124,11 +125,11 @@ class DashboardController {
       lastUpdated = diskSpaceUsed.updatedAt;
     }
     res.send({
-      free: (parseInt(config.avalibleDiskSpaceInGB, undefined) * 1024) -
+      free: (toInt(config.avalibleDiskSpaceInGB) * 1024) -
         Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
       lastUpdated,
       system: 0,
-      total: parseInt(config.avalibleDiskSpaceInGB, undefined) * 1024,
+      total: toInt(config.avalibleDiskSpaceInGB) * 1024,
       used: Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
     });
   }

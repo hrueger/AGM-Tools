@@ -21,6 +21,7 @@ import { TutorialStep } from "./entity/TutorialStep";
 import { User } from "./entity/User";
 import { Usergroup } from "./entity/Usergroup";
 import routes from "./routes";
+import { toInt } from "./utils/utils";
 
 i18n.configure({
   defaultLocale: "en",
@@ -43,7 +44,7 @@ createConnection({
    logging: false,
    migrations: ["src/migration/**/*.ts"],
    password: config.database_password,
-   port: parseInt(config.database_port, undefined),
+   port: toInt(config.database_port),
    subscribers: ["src/subscriber/**/*.ts"],
    synchronize: true,
    type: "mysql",

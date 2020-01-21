@@ -2,6 +2,7 @@ import * as emailTemplates from "email-templates";
 import * as nodeMailer from "nodemailer";
 import * as path from "path";
 import { config } from "../config/config";
+import { toInt } from "./utils";
 
 export function sendMail(from, to, template, locals) {
     return new Promise<any>((resolve, reject) => {
@@ -11,7 +12,7 @@ export function sendMail(from, to, template, locals) {
                 user: config.email_auth_user,
             },
             host: config.email_host,
-            port: parseInt(config.email_port, undefined),
+            port: toInt(config.email_port),
         });
         const email = new emailTemplates({
             message: { from },
