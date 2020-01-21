@@ -58,14 +58,17 @@ class UserController {
   }
 
   public static editCurrent = async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = res.locals.jwtPayload.userId;
 
     const { username, email, pwNew, pwNew2, pwOld } = req.body;
 
     const userRepository = getRepository(User);
     let user;
     try {
-      user = await userRepository.findOneOrFail(id);
+      user = await userRepository.createQueryBuilder("user")
+        .addSelect("user.password")
+        .where("user.id = :id", { id })
+        .getOne();
     } catch (error) {
       res.status(404).send({message: i18n.__("errors.userNotFound")});
       return;

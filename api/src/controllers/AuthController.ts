@@ -20,7 +20,10 @@ class AuthController {
     const userRepository = getRepository(User);
     let user: User;
     try {
-      user = await userRepository.findOneOrFail({ where: { username } });
+      user = await userRepository.createQueryBuilder("user")
+        .addSelect("user.password")
+        .where("user.username = :username", { username })
+        .getOne();
     } catch (error) {
       res.status(401).end(JSON.stringify({message: i18n.__("errors.wrongUsername")}));
     }
@@ -43,6 +46,7 @@ class AuthController {
       ...user,
       token,
     };
+    response.password = undefined;
 
     // Send the jwt in the response
     res.send(response);
@@ -52,7 +56,10 @@ class AuthController {
     const userRepository = getRepository(User);
     let user: User;
     try {
-      user = await userRepository.findOneOrFail({where: { email: req.params.email}});
+      user = await userRepository.createQueryBuilder("user")
+        .addSelect("user.passwordResetToken")
+        .where("user.email = :email", { email: req.params.email })
+        .getOne();
     } catch {
       res.status(404).send({message: i18n.__("errors.emailNotFound")});
       return;
@@ -89,7 +96,11 @@ class AuthController {
     const userRepository = getRepository(User);
     let user: User;
     try {
-      user = await userRepository.findOneOrFail({where: { passwordResetToken: req.params.resetToken}});
+      user = await userRepository.createQueryBuilder("user")
+        .addSelect("user.password")
+        .addSelect("user.passwordResetToken")
+        .where("user.passwordResetToken = :passwordResetToken", { passwordResetToken: req.params.resetToken })
+        .getOne();
     } catch (id) {
       res.status(404).send({message: i18n.__("errors.userNotFoundWrongLink")});
     }

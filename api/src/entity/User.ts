@@ -31,10 +31,10 @@ export class User {
   @Column()
   public email: string;
 
-  @Column()
+  @Column({select: false})
   public password: string;
 
-  @Column()
+  @Column({select: false})
   public passwordResetToken: string;
 
   @ManyToOne((type) => Usergroup, (usergroup) => usergroup.users)
