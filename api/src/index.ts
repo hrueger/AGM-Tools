@@ -69,7 +69,7 @@ createConnection({
 
     app.listen(config.port, () => {
       // tslint:disable-next-line: no-console
-      console.log("Server started on port 3000!");
+      console.log(`Server started on port ${config.port}!`);
     });
   })
   // tslint:disable-next-line: no-console
