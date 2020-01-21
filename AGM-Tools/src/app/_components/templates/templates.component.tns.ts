@@ -12,6 +12,7 @@ import { Page } from "tns-core-modules/ui/page/page";
 import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { DownloadService } from "../../_services/download.service.tns";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -29,6 +30,7 @@ export class TemplatesComponent implements OnInit {
     public templatesToShow: any[] = [];
     public currentTemplateName: string;
     public currentTemplateDescription: any;
+    private currentPageIdx: number;
 
     constructor(
         private remoteService: RemoteService,
@@ -37,6 +39,7 @@ export class TemplatesComponent implements OnInit {
         private vcRef: ViewContainerRef,
         private authService: AuthenticationService,
         private fts: FastTranslateService,
+        private downloadService: DownloadService,
         private page: Page) {
     }
 
@@ -44,20 +47,31 @@ export class TemplatesComponent implements OnInit {
         this.remoteService.get("get", "templates").subscribe((data) => {
             this.templates = data;
             this.templatesToShow = [];
-            this.templates.forEach((template) => {
-                this.templatesToShow.push({
-                    imageUrl: `${environment.apiUrl}templates/${template.filename}?authorization=${this.authService.currentUserValue.token}`,
+            if (this.templates) {
+                this.templates.forEach((template) => {
+                    this.templatesToShow.push({
+                        imageUrl: `${environment.apiUrl}templates/${template.filename}?authorization=${this.authService.currentUserValue.token}`,
+                    });
                 });
-            });
+            }
         });
     }
     public onPageChanged(e: PageChangeEventData) {
         this.currentTemplateName = this.templates[e.page].name;
         this.currentTemplateDescription = this.templates[e.page].description;
+        this.currentPageIdx = e.page;
     }
+
     public async downloadCurrentTemplate() {
-        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
+        this.downloadService.download(
+            this.templatesToShow[this.currentPageIdx].imageUrl,
+            "downloads",
+            `${this.templates[this.currentPageIdx].name}.${this.templates[this.currentPageIdx].filename.split(".").pop()}`,
+            true,
+            this.currentTemplateName,
+        );
     }
+
     public onSetupItemView(args: SetupItemViewArgs) {
         args.view.context.third = args.index % 3 === 0;
         args.view.context.header = (args.index + 1) % this.templates.length === 1;
@@ -66,6 +80,7 @@ export class TemplatesComponent implements OnInit {
 
     public showTemplate(index: number) {
         this.pageNumber = index;
+        this.currentPageIdx = index;
         this.showingTemplate = true;
         this.page.actionBarHidden = true;
         this.currentTemplateName = this.templates[index].name;
