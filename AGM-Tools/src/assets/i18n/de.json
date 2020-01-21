@@ -28,6 +28,13 @@
     "done": "Fertig",
     "info": "<b>Information</b><br><br>Diese Seite ist noch nicht fertig gestellt, da ich nicht weiß, wie die fertigen Daten sortiert / dargestellt werden sollen. Bei Ideen gerne einen <a target='_blank' href='https://github.com/hrueger/AGM-Tools/issues/new'>Issue auf GitHub erstellen</a>!"
   },
+  "download": {
+    "downloadFileFinished": "Herunterladen von '{file}' abgeschlossen.",
+    "downloadFinished": "Herunterladen abgeschlossen.",
+    "downloading": "Herunterladen",
+    "downloadingFile": "Herunterladen von",
+    "savedToDownloads": "Die Datei wurde in Ihrem 'Downloads' Ordner gespeichert."
+  },
   "errors": {
     "endDateBeforeStartDate": "Der Endzeitpunkt liegt vor dem Startzeitpunkt!",
     "errorWhileSaving": "Fehler beim Speichern...",

@@ -28,6 +28,13 @@
     "done": "Done",
     "info": "<b>Information</b><br><br>This page is not completed yet, because I don't know how to display and organize all files which are marked as done. If you have an idea, please <a target='_blank' href='https://github.com/hrueger/AGM-Tools/issues/new'>create a issue on GitHub</a>!"
   },
+  "download": {
+    "downloadFileFinished": "Download of '{file}' finished.",
+    "downloadFinished": "Download finished.",
+    "downloading": "Downloading",
+    "downloadingFile": "Downloading",
+    "savedToDownloads": "The file was saved to your 'Downloads' folder."
+  },
   "errors": {
     "endDateBeforeStartDate": "End date takes place before the start date!",
     "errorWhileSaving": "Error while saving...",
