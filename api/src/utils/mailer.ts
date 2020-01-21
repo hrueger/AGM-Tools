@@ -9,9 +9,9 @@ export function sendMail(from, to, template, locals) {
             auth: {
                 pass: config.email_auth_pass,
                 user: config.email_auth_user,
-              },
-              host: config.email_host,
-              port: config.email_port,
+            },
+            host: config.email_host,
+            port: parseInt(config.email_port, undefined),
         });
         const email = new emailTemplates({
             message: { from },

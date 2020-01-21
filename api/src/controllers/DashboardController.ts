@@ -100,7 +100,8 @@ class DashboardController {
     });
     let lastUpdated;
     if (update || !diskSpaceUsed || !diskSpaceUsed.value ||
-      DashboardController.daysBetween(diskSpaceUsed.updatedAt, new Date()) > config.cacheExpireDays) {
+      DashboardController.daysBetween(diskSpaceUsed.updatedAt, new Date()) >
+        parseInt(config.cacheExpireDays, undefined)) {
       const size = await new Promise<number>((resolve, reject) => {
         getFolderSize(config.storagePath, (err, s) => {
           if (err) {
@@ -123,10 +124,11 @@ class DashboardController {
       lastUpdated = diskSpaceUsed.updatedAt;
     }
     res.send({
-      free: (config.avalibleDiskSpaceInGB * 1024) - Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
+      free: (parseInt(config.avalibleDiskSpaceInGB, undefined) * 1024) -
+        Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
       lastUpdated,
       system: 0,
-      total: config.avalibleDiskSpaceInGB * 1024,
+      total: parseInt(config.avalibleDiskSpaceInGB, undefined) * 1024,
       used: Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
     });
   }

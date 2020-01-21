@@ -43,7 +43,7 @@ createConnection({
    logging: false,
    migrations: ["src/migration/**/*.ts"],
    password: config.database_password,
-   port: config.database_port,
+   port: parseInt(config.database_port, undefined),
    subscribers: ["src/subscriber/**/*.ts"],
    synchronize: true,
    type: "mysql",
