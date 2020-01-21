@@ -12,7 +12,7 @@
                     </div>
             </div>
             <div class="card-footer">
-                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.space} }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": (lastUpdated.space | howLongAgo)} }}</small>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
                 <span class="text-muted pl-3" *ngIf="notifications.length == 0">{{ "notifications.none" | translate }}</span>
             </div>
             <div class="card-footer">
-                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.notifications} }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": (lastUpdated.notifications | howLongAgo)} }}</small>
             </div>
         </div>
     </div>

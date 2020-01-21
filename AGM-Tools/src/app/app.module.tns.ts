@@ -67,6 +67,7 @@ import { TourComponent } from "./_components/tour/tour.component";
 import { TutorialComponent } from "./_components/tutorial/tutorial.component";
 import { TutorialsComponent } from "./_components/tutorials/tutorials.component";
 import { UpdaterComponent } from "./_components/updater/updater.component";
+import { DateAgoPipe } from "./_pipes/howLongAgo.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
@@ -102,6 +103,7 @@ WebRTC.init();
         NavbarComponent,
         SidebarComponent,
         ShortWhenPipe,
+        DateAgoPipe,
         TruncatePipe,
         ChatMessagesComponent,
         MessagesAreaComponent,

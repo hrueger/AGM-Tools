@@ -63,6 +63,7 @@ import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { RenewJwtTokenInterceptor } from "./_helpers/renewJwtToken.interceptor";
 import { DiffPipe } from "./_pipes/diff.pipe";
 import { DisplayUsernamesPipe } from "./_pipes/displayUsernames.pipe";
+import { DateAgoPipe } from "./_pipes/howLongAgo.pipe";
 import { SafePipe } from "./_pipes/safe.pipe";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
@@ -97,6 +98,7 @@ registerLocaleData(localeDe);
         FilePickerModalComponent,
         ShortWhenPipe,
         TruncatePipe,
+        DateAgoPipe,
         CallComponent,
         ToIconPipe,
         MessagesAreaComponent,
