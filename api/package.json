@@ -25,6 +25,7 @@
       "@types/node": "^13.1.8",
       "@types/nodemailer": "^6.4.0",
       "@types/request": "^2.48.4",
+      "@types/rimraf": "^2.0.3",
       "npx": "^10.2.1",
       "ts-node": "8.6.2",
       "tslint": "^5.20.1",
@@ -52,6 +53,7 @@
       "mysql": "^2.17.1",
       "nodemailer": "^6.4.2",
       "reflect-metadata": "^0.1.13",
+      "rimraf": "^3.0.0",
       "socket.io": "^2.3.0",
       "ts-node-dev": "^1.0.0-pre.44",
       "typeorm": "0.2.22"

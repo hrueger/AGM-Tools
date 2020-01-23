@@ -5,6 +5,7 @@ import * as i18n from "i18n";
 import * as mergeFiles from "merge-files";
 import * as path from "path";
 import * as request from "request";
+import * as rimraf from "rimraf";
 import { getManager, getRepository, getTreeRepository } from "typeorm";
 import { config } from "../config/config";
 import { File } from "../entity/File";
@@ -291,9 +292,11 @@ class FileController {
             const { dest, parentEl } = await FileController.getDestAndParent(fid, pid, req.files.chunkFile.name);
             if (!await mergeFiles(chunkFileList, dest)) {
               res.status(500).send({message: i18n.__("errors.unknown")});
+              return;
             } else {
               await FileController.createFileInDB(req.files.chunkFile.name, res, pid, fid, parentEl);
             }
+            rimraf.sync(tempSaveDir);
           }
         }
       } else {
