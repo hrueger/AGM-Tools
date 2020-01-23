@@ -2,6 +2,7 @@ import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as express from "express";
 import * as fileUpload from "express-fileupload";
+import * as fs from "fs";
 import * as helmet from "helmet";
 import * as i18n from "i18n";
 import * as path from "path";
@@ -53,6 +54,11 @@ createConnection({
   .then(async (connection) => {
     await connection.query("SET NAMES utf8mb4;");
     await connection.synchronize();
+    // Check if all folders exist
+    if (!fs.existsSync(config.storagePath)) { fs.mkdirSync(config.storagePath); }
+    if (!fs.existsSync(config.templateFilesStoragePath)) { fs.mkdirSync(config.templateFilesStoragePath); }
+    if (!fs.existsSync(config.tempFilesStoragePath)) { fs.mkdirSync(config.tempFilesStoragePath); }
+    if (!fs.existsSync(config.tutorialFilesStoragePath)) { fs.mkdirSync(config.tutorialFilesStoragePath); }
     // Create a new express application instance
     const app = express();
 
