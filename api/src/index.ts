@@ -29,6 +29,29 @@ i18n.configure({
   directory: path.join(__dirname, "../assets/i18n"),
   objectNotation: true,
 });
+// tslint:disable-next-line: no-console
+console.log({
+  charset : "utf8mb4",
+  cli: {
+     entitiesDir: "src/entity",
+     migrationsDir: "src/migration",
+     subscribersDir: "src/subscriber",
+  },
+  database: config.database_name,
+  entities: [Cache, Event, File, Message, Notification,
+   Project, Tag, Template, Tutorial, TutorialStep, User, Usergroup],
+  host: config.database_host,
+  logging: false,
+  migrations: ["src/migration/**/*.ts"],
+  password: config.database_password,
+  port: toInt(config.database_port),
+  subscribers: ["src/subscriber/**/*.ts"],
+  synchronize: true,
+  type: "mysql",
+  username: config.database_user,
+});
+// tslint:disable-next-line: no-console
+console.log(config);
 
 // Connects to the Database -> then starts the express
 createConnection({
