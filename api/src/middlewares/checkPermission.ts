@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import * as i18n from "i18n";
 import { getRepository } from "typeorm";
 
 import { User } from "../entity/User";
