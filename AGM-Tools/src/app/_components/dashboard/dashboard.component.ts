@@ -74,39 +74,49 @@ export class DashboardComponent implements OnInit {
 
     public initChart() {
         this.remoteService.get("get", "dashboard/spaceChartData").subscribe((data) => {
-            this.setSpaceChartData(data);
-            this.lastUpdated.space = data.lastUpdated;
+            if (data) {
+                this.setSpaceChartData(data);
+                this.lastUpdated.space = data.lastUpdated;
+            }
         });
         this.remoteService.get("get", "dashboard/whatsnew").subscribe((data) => {
-            this.whatsnew = data.changelog;
-            this.lastUpdated.changelog = data.lastUpdated;
+            if (data) {
+                this.whatsnew = data.changelog;
+                this.lastUpdated.changelog = data.lastUpdated;
+            }
         });
         this.remoteService.get("get", "dashboard/events").subscribe((data) => {
-            this.dates = data.events;
-            this.lastUpdated.events = data.lastUpdated;
-            const that = this;
-            this.countdownInterval = setInterval(() => {
-                for (const event of that.dates) {
-                    const d = dateDiff(new Date().getTime(), new Date(event.start).getTime());
-                    const a = [];
-                    if (d.months) { a.push(`${d.months} Monat${(d.months > 1 ? "e" : "")}`); }
-                    if (d.days) { a.push(`${d.days} Tag${(d.days > 1 ? "e" : "")}`); }
-                    if (d.hours) { a.push(`${d.hours} Stunde${(d.hours > 1 ? "n" : "")}`); }
-                    if (d.minutes) { a.push(`${d.minutes} Minute${(d.minutes > 1 ? "n" : "")}`); }
-                    if (d.seconds) { a.push(`${d.seconds} Sekunde${(d.seconds > 1 ? "n" : "")}`); }
-                    event.countdownTime = a.join(", ");
-                }
-            }, 900);
+            if (data) {
+                this.dates = data.events;
+                this.lastUpdated.events = data.lastUpdated;
+                const that = this;
+                this.countdownInterval = setInterval(() => {
+                    for (const event of that.dates) {
+                        const d = dateDiff(new Date().getTime(), new Date(event.start).getTime());
+                        const a = [];
+                        if (d.months) { a.push(`${d.months} Monat${(d.months > 1 ? "e" : "")}`); }
+                        if (d.days) { a.push(`${d.days} Tag${(d.days > 1 ? "e" : "")}`); }
+                        if (d.hours) { a.push(`${d.hours} Stunde${(d.hours > 1 ? "n" : "")}`); }
+                        if (d.minutes) { a.push(`${d.minutes} Minute${(d.minutes > 1 ? "n" : "")}`); }
+                        if (d.seconds) { a.push(`${d.seconds} Sekunde${(d.seconds > 1 ? "n" : "")}`); }
+                        event.countdownTime = a.join(", ");
+                    }
+                }, 900);
+            }
         });
         this.remoteService.get("get", "dashboard/version").subscribe((data) => {
-            this.version = data.version;
-            this.lastUpdated.version = data.lastUpdated;
+            if (data) {
+                this.version = data.version;
+                this.lastUpdated.version = data.lastUpdated;
+            }
         });
         this.remoteService
             .get("get", "dashboard/notifications/")
             .subscribe((data) => {
-                this.notifications = data.notifications;
-                this.lastUpdated.notifications = data.lastUpdated;
+                if (data) {
+                    this.notifications = data.notifications;
+                    this.lastUpdated.notifications = data.lastUpdated;
+                }
             });
     }
 
@@ -114,8 +124,11 @@ export class DashboardComponent implements OnInit {
         this.remoteService
             .getNoCache("post", "dashboard/spaceChartData")
             .subscribe((data) => {
-                this.setSpaceChartData(data);
-                this.lastUpdated.space = data.lastUpdated;
+                if (data) {
+                    this.setSpaceChartData(data);
+                    this.lastUpdated.space = data.lastUpdated;
+
+                }
             });
     }
 
