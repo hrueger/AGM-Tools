@@ -28,7 +28,7 @@
                 <a [routerLink]="['/', 'chat', 'project', project.id]" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{'chat.chat' | translate}}</h5>
-                        <small>{{project.chat.lastUpdated}}</small>
+                        <small>{{project.chat.lastUpdated | howLongAgo}}</small>
                     </div>
                     <div>
                         <span class="float-right badge badge-normal badge-primary" *ngIf="project.chat.data.length > 0">{{project.chat.data.length}}</span>
@@ -39,7 +39,7 @@
                 <a [routerLink]="['/', 'files', project.id, project.name]" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{"files.files" | translate}}</h5>
-                        <small>{{project.files.lastUpdated}}</small>
+                        <small>{{project.files.lastUpdated | howLongAgo}}</small>
                     </div>
                     <div>
                         <span class="float-right badge badge-normal badge-primary" *ngIf="project.files.totalFiles > 0">{{project.files.totalFiles}}</span>
@@ -50,7 +50,7 @@
                 <a [routerLink]="['/', 'tasks', project.id]" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{"tasks.tasks" | translate}}</h5>
-                        <small>{{project.tasks.lastUpdated}}</small>
+                        <small>{{project.tasks.lastUpdated | howLongAgo}}</small>
                     </div>
                     <div>
                         <span class="float-right badge badge-normal badge-primary" *ngIf="project.tasks.data.length > 0">{{project.tasks.data.length}}</span>
@@ -61,7 +61,7 @@
                 <a [routerLink]="['/', 'tutorials', project.id]" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{"tutorials.tutorials" | translate}}</h5>
-                        <small>{{project.tutorials.lastUpdated}}</small>
+                        <small>{{project.tutorials.lastUpdated | howLongAgo}}</small>
                     </div>
                     <div>
                         <span class="float-right badge badge-normal badge-primary" *ngIf="project.tutorials.data.length > 0">{{project.tutorials.data.length}}</span>
@@ -107,7 +107,7 @@
             <div class="card-body p-0 pb-5">
                 <chat-messages #chatMessages [inputChat]="currentProjectChat" [embedded]="true" class="chat-messages"></chat-messages>
             </div>
-            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
         </div>
         <div class="card">
             <div class="card-header d-flex justify-content-between p-1">
@@ -127,7 +127,7 @@
                     </a>
                 </div>
             </div>
-            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
         </div>
         
         <div class="card">
@@ -146,7 +146,7 @@
                     </a>
                 </div>
             </div>
-            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
         </div>
         
         <div class="card">
@@ -166,7 +166,7 @@
                     </a>
                 </div>
             </div>
-            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated}}</small></div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
         </div>
     </div>
 </div>
