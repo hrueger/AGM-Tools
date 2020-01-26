@@ -1,8 +1,21 @@
 <nav class="navbar  navbar-expand-lg navbar-dark fixed-top bg-dark p-0 shadow">
     <a class="navbar-brand col-md-2 col-sm-3" href><button class="navbar-toggler" type="button" (click)="toggleNavOnMobile($event)">
-        <span class="navbar-toggler-icon"></span>
-    </button> AGM-Tools </a>
-    
+            <span class="navbar-toggler-icon"></span>
+        </button> <span class="m-2">AGM-Tools</span>
+        <div class="mobileNavLinks pt-2 float-right d-inline d-sm-none">
+            <ul class="navbar-nav d-inline">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/users"><i class="mx-3 fas fa-users"></i></a>
+                </li>
+                <li class="nav-item d-inline">
+                    <a class="nav-link" routerLink="/settings"><i class="mx-3 fas fa-cogs"></i></a>
+                </li>
+                <li class="nav-item d-inline">
+                    <a class="nav-link" href="#" (click)="logout()"><i class="mx-3 fas fa-sign-out-alt"></i></a>
+                </li>
+            </ul>
+        </div>
+    </a>
     <div id="navbarNavDropdown" class="navbar-collapse collapse">
         <ul class="navbar-nav mr-auto">
             <li class="headline">
