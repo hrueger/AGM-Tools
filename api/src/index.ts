@@ -43,11 +43,11 @@ createConnection({
     Project, Tag, Template, Tutorial, TutorialStep, User, Usergroup],
    host: config.database_host,
    logging: false,
-   migrations: ["src/migration/**/*.ts"],
+   migrations: ["src/migration/**/*.ts", "migration/**/*.js", "./migration/*.js", "./migration/**/*.js"],
    migrationsRun: true,
    password: config.database_password,
    port: toInt(config.database_port),
-   subscribers: ["src/subscriber/**/*.ts"],
+   subscribers: ["src/subscriber/**/*.ts", "subscriber/**/*.js"],
    synchronize: true,
    type: "mysql",
    username: config.database_user,
@@ -55,6 +55,8 @@ createConnection({
   .then(async (connection) => {
     await connection.query("SET NAMES utf8mb4;");
     await connection.synchronize();
+    // tslint:disable-next-line: no-console
+    console.log("Migrations: ", await connection.runMigrations());
     // Check if all folders exist
     if (!fs.existsSync(config.storagePath)) { fs.mkdirSync(config.storagePath); }
     if (!fs.existsSync(config.templateFilesStoragePath)) { fs.mkdirSync(config.templateFilesStoragePath); }
