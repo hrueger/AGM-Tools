@@ -215,7 +215,7 @@ class ProjectController {
     const id = req.params.id;
     let file = await ProjectController.getProjectImageStoragePath(id);
     if (!file) {
-      file = path.resolve("./assets/imgPlaceholder.png");
+      file = path.resolve(path.join(__dirname, "../../assets/imgPlaceholder.png"));
     }
     res.sendFile(file);
   }
