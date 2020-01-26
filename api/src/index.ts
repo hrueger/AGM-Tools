@@ -44,6 +44,7 @@ createConnection({
    host: config.database_host,
    logging: false,
    migrations: ["src/migration/**/*.ts"],
+   migrationsRun: true,
    password: config.database_password,
    port: toInt(config.database_port),
    subscribers: ["src/subscriber/**/*.ts"],
