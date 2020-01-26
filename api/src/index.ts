@@ -21,6 +21,9 @@ import { Tutorial } from "./entity/Tutorial";
 import { TutorialStep } from "./entity/TutorialStep";
 import { User } from "./entity/User";
 import { Usergroup } from "./entity/Usergroup";
+import { createUsergroups1574018071536 } from "./migration/1574018071536-createUsergroups";
+import { createAdminUser1574018391679 } from "./migration/1574018391679-createAdminUser";
+import { CreateTags1574797035707 } from "./migration/1574797035707-CreateTags";
 import routes from "./routes";
 import { toInt } from "./utils/utils";
 
@@ -43,11 +46,10 @@ createConnection({
     Project, Tag, Template, Tutorial, TutorialStep, User, Usergroup],
    host: config.database_host,
    logging: false,
-   migrations: ["src/migration/**/*.ts", "migration/**/*.js", "./migration/*.js", "./migration/**/*.js"],
+   migrations: [createUsergroups1574018071536, createAdminUser1574018391679, CreateTags1574797035707],
    migrationsRun: true,
    password: config.database_password,
    port: toInt(config.database_port),
-   subscribers: ["src/subscriber/**/*.ts", "subscriber/**/*.js"],
    synchronize: true,
    type: "mysql",
    username: config.database_user,
