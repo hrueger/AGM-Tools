@@ -20,9 +20,9 @@ class UserController {
 
   public static newUser = async (req: Request, res: Response) => {
     // Get parameters from the body
-    const { username, pw, pw2, email } = req.body;
+    const { username, pw, pw2, email, usergroup } = req.body;
 
-    if (!(username && email && pw && pw2)) {
+    if (!(username && email && pw && pw2 && usergroup)) {
       res.status(400).send({message: i18n.__("errors.notAllFieldsProvided")});
       return;
     }
@@ -35,7 +35,12 @@ class UserController {
     user.username = username;
     user.email = email;
     user.password = pw;
-    user.usergroup = await getRepository(Usergroup).findOne({where: { name: "Standard"}});
+    try {
+      user.usergroup = await getRepository(Usergroup).findOne({where: { name: usergroup}});
+    } catch {
+      res.status(400).send({message: i18n.__("errors.usergroupDoesNotExist")});
+      return;
+    }
 
     // Validade if the parameters are ok
     const errors = await validate(user);

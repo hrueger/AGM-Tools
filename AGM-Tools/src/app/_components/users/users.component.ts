@@ -20,7 +20,7 @@ export class UsersComponent implements OnInit {
     public editUserForm: FormGroup;
     public name: string;
     public email: string;
-
+    public usergroup: string;
     public password1: string;
     public password2: string;
     public invalidMessage: boolean = false;
@@ -50,6 +50,7 @@ export class UsersComponent implements OnInit {
             name: [this.name, [Validators.required]],
             password1: [this.password1, [Validators.required]],
             password2: [this.password2, [Validators.required]],
+            usergroup: [this.usergroup, [Validators.required]],
         });
         this.editUserForm = this.fb.group({
             editUserEmail: [this.editUserEmail, [Validators.required]],
@@ -84,6 +85,7 @@ export class UsersComponent implements OnInit {
                             email: this.newUserForm.get("email").value,
                             pw: this.newUserForm.get("password1").value,
                             pw2: this.newUserForm.get("password2").value,
+                            usergroup: this.newUserForm.get("usergroup").value,
                             username: this.newUserForm.get("name").value,
                         })
                         .subscribe(async (data) => {

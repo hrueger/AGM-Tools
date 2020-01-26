@@ -42,6 +42,7 @@
         "unknown": "Unbekannter Fehler!",
         "userNotFound": "Benutzer wurde nicht gefunden!",
         "userNotFoundWrongLink": "Benutzer nicht gefunden, fehlerhafter Link!",
+        "usergroupDoesNotExist": "Die Benutzergruppe existiert nicht!",
         "usernameOrPasswordEmpty": "Benutzername oder Passwort leer!",
         "wrongPassword": "Falsches Passwort!",
         "wrongUsername": "Falscher Benutzername!"
