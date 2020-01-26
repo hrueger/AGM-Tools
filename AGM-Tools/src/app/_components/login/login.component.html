@@ -2,8 +2,9 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-4 offset-sm-4 login-container">
-                <div class="headline">
-                    <h2>AGM-Tools</h2>
+                <div class="headline py-5">
+                    <img class="img-fluid d-inline headerImg" src="assets/logo/AGM-Tools.png">
+                    <h2 class="d-inline ml-2">AGM-Tools</h2>
                 </div>
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!resetPassword && !inputNewPassword">
                     <div class="form-group">
