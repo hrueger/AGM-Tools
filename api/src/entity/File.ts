@@ -43,7 +43,7 @@ import { User } from "./User";
     @Column()
     public name: string;
 
-    @Column()
+    @Column({nullable: true})
     public shareLink: string;
 
     @Column()
