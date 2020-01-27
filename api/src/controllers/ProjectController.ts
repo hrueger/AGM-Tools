@@ -225,8 +225,18 @@ class ProjectController {
     const projectRepository = getRepository(Project);
     try {
       const project = await projectRepository.findOne(id);
-      const file = await fileRepository.findOne({where: {isFolder: false,
-        name: "logo.jpg", project}}); // ToDo: allow png, too
+      let file;
+      const possibleFileNames = [
+        "logo.jpg", "logo.jpeg", "logo.png", "logo.svg", "logo.webp", "logo.bmp", "logo.gif",
+        "Logo.jpg", "Logo.jpeg", "Logo.png", "Logo.svg", "Logo.webp", "Logo.bmp", "Logo.gif",
+        "LOGO.jpg", "LOGO.jpeg", "LOGO.png", "LOGO.svg", "LOGO.webp", "LOGO.bmp", "LOGO.gif",
+      ];
+      let counter = 0;
+      while (!file && counter < possibleFileNames.length) {
+        file = await fileRepository.findOne({where: {isFolder: false,
+          name: possibleFileNames[counter], project}});
+        counter++;
+      }
       if (file) {
         const p = await getStoragePath(file, parseInt(id, undefined));
         if (p && fs.existsSync(p)) {
