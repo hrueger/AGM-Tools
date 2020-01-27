@@ -249,6 +249,7 @@
     "changesPasswordInfo": "You always have to specify your old password when making changes!",
     "confirmDelete": "Are you sure that this user should be deleted?",
     "currentUserUpdatedSuccessfully": "The current user has been updated successfully.",
+    "mailToAll": "Send mail",
     "newUser": "New user",
     "oldPassword": "Old password",
     "oldPasswordProvideAlways": "Old password (provide always!)",
