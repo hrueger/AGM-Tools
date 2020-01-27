@@ -51,6 +51,6 @@
         "unknown": "Unbekannt"
     },
     "tips": {
-        "addProjectLogo": "Füge ein Projektlogo hinzu. Die Datei muss logo.png oder logo.jpg heißen und sich im Hauptverzeichnis des Projekts befinden!"
+        "addProjectLogo": "Füge ein Projektlogo hinzu. Die Datei muss 'logo', 'Logo' oder 'LOGO' heißen, eine JPG, JPEG, PNG, SVG, WebP oder BMP Datei sein und sich im Hauptverzeichnis des Projekts befinden!"
     }
 }

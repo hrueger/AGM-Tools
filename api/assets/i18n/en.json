@@ -50,6 +50,6 @@
         "unknown": "Unknown"
     },
     "tips": {
-        "addProjectLogo": "Add a project logo. The filename must be 'logo.png' or 'logo.jpg' and the file must be in the project's rot folder!"
+        "addProjectLogo": "Add a project logo. The filename must be 'logo', 'Logo' or 'LOGO', it must be a JPG, JPEG, PNG, SVG, WebP or BMP file and the image must be in the project's root folder!"
     }
 }
