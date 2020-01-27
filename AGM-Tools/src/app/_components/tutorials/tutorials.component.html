@@ -1,5 +1,5 @@
+<button class="btn btn-outline-primary mr-1" *ngIf="onlyDisplayingProject" (click)="displayAll()">{{'tutorials.displayAll' | translate}}</button>
 <button class="btn btn-outline-primary" (click)="newTutorial(newTutorialModal)">{{'tutorials.newTutorial' | translate}}</button>
-
 <div class="row mt-4">
     <div class="col-md-4 col-sm-6 d-flex " routerLink="/tutorial/{{tutorial.id}}" *ngFor="let tutorial of tutorials">
         <div class="card flex-fill mb-3" style="cursor: pointer">

@@ -63,6 +63,11 @@ export const routes: Routes = [
     {
         canActivate: [AuthGuard],
         component: TutorialsComponent,
+        path: "tutorials/:projectId/:projectName",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: TutorialsComponent,
         path: "tutorials/new",
     },
     {

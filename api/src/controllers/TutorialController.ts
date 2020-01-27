@@ -21,6 +21,21 @@ class TutorialController {
     });
     res.send(tutorials);
   }
+  public static forProject = async (req: Request, res: Response) => {
+    const pid = parseInt(req.params.pid, undefined);
+    const tutorialRepository = getRepository(Tutorial);
+    let tutorials = await tutorialRepository.find({relations: ["creator", "projects"]});
+    tutorials.forEach((t) => {
+      if (t.creator.id == res.locals.jwtPayload.userId) {
+        t.editable = true;
+      }
+      t.creator = undefined;
+    });
+    tutorials = tutorials.filter((tutorial) => {
+      return (tutorial.projects.filter((project) => project.id == pid).length > 0);
+    });
+    res.send(tutorials);
+  }
   public static getTutorial = async (req: Request, res: Response) => {
     const tutorialRepository = getRepository(Tutorial);
     let tutorial: Tutorial;

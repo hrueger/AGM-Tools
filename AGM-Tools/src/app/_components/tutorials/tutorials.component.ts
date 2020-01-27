@@ -17,6 +17,7 @@ export class TutorialsComponent implements OnInit {
   public title: string;
   public description: string;
   public invalidMessage: boolean;
+  public onlyDisplayingProject: boolean = false;
   public tutorials = [];
   @ViewChild("newTutorialModal", {static: false}) private newTutorialModal;
 
@@ -26,15 +27,22 @@ export class TutorialsComponent implements OnInit {
               private modalService: NgbModal,
               private fts: FastTranslateService,
               private alertService: AlertService,
+              private route: ActivatedRoute,
               private router: Router) { }
 
   public async ngOnInit() {
-    this.remoteService
-    .get("get", "tutorials/")
-    .subscribe((res) => {
-      this.tutorials = res;
-    });
-    this.navbarService.setHeadline(await this.fts.t("tutorials.tutorials"));
+    if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
+      this.onlyDisplayingProject = true;
+      this.remoteService.get("get", `tutorials/project/${this.route.snapshot.params.projectId}`).subscribe((res) => {
+        this.tutorials = res;
+      });
+      this.navbarService.setHeadline(`${await this.fts.t("tutorials.onlyDisplayingProjectName")} ${this.route.snapshot.params.projectName}`);
+    } else {
+      this.remoteService.get("get", "tutorials/").subscribe((res) => {
+        this.tutorials = res;
+      });
+      this.navbarService.setHeadline(await this.fts.t("tutorials.tutorials"));
+    }
     this.newTutorialForm = this.fb.group({
       description: [this.description, [Validators.required]],
       title: [this.title, [Validators.required]],
@@ -42,6 +50,15 @@ export class TutorialsComponent implements OnInit {
     if (this.router.url.endsWith("new")) {
       this.newTutorial(this.newTutorialModal);
     }
+  }
+
+  public async displayAll() {
+    this.navbarService.setHeadline(await this.fts.t("tutorials.tutorials"));
+    this.remoteService.get("get", "tutorials/").subscribe((res) => {
+      this.tutorials = res;
+    });
+    this.router.navigate(["/", "tutorials"]);
+    this.onlyDisplayingProject = false;
   }
 
   public newTutorial(content) {

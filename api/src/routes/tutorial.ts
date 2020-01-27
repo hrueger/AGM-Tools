@@ -5,6 +5,7 @@ import { checkJwt } from "../middlewares/checkJwt";
 const router = Router();
 
 router.get("/", [checkJwt], TutorialController.listAll);
+router.get("/project/:pid", [checkJwt], TutorialController.forProject);
 router.post("/", [checkJwt], TutorialController.newTutorial);
 
 router.get("/:id([0-9]+)", [checkJwt], TutorialController.getTutorial);
