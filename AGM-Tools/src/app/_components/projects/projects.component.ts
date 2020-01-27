@@ -185,7 +185,7 @@ export class ProjectsComponent implements OnInit {
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("projects.projectsCreatedSuccessfully"));
+                                this.alertService.success(await this.fts.t("projects.projectCreatedSuccessfully"));
                                 this.remoteService.get("get", "projects").subscribe((d) => {
                                     this.projects = d;
                                 });

@@ -180,7 +180,7 @@
     "newProject": "Neues Projekt",
     "pickFileToLink": "Datei oder Ordner zum Verknüpfen auswählen",
     "pickTutorialToLink": "Tutorial zum Verknüpfen auswählen",
-    "projectCreatesSuccessfully": "Projekt erfolgreich erstellt!",
+    "projectCreatedSuccessfully": "Projekt erfolgreich erstellt!",
     "projectDeletedSuccessfully": "Projekt erfolgreich gelöscht!",
     "projectUpdatedSuccessfully": "Projekt erfolgreich aktualisiert!",
     "projects": "Projects",
