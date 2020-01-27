@@ -8,7 +8,7 @@
                 {{tutorial.description}}
             </div>
             <div class="card-footer">
-                <small class="text-muted">{{'general.lastUpdated' | translate:{"time": tutorial.createdAt} }}</small>
+                <small class="text-muted">{{'general.lastUpdated' | translate:{"time": tutorial.createdAt | howLongAgo } }}</small>
                 <button class="float-right btn btn-outline-primary p-1 px-2" *ngIf="tutorial.editable" routerLink="/editTutorial/{{tutorial.id}}"><i class="far fa-edit"></i></button>
             </div>
         </div>
