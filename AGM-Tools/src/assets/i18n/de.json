@@ -119,6 +119,7 @@
     "document": "Dokument",
     "edit": "Bearbeiten",
     "email": "Email",
+    "error": "Fehler",
     "gallery": "Gallerie",
     "general": "Allgemeines",
     "group": "Gruppe",
@@ -197,8 +198,8 @@
   },
   "tasks": {
     "due": "Abgabe {{formatted}}, am {{date}}",
-    "dueShort": "Abgabe {{formatted}}",
     "dueOn": "Abgabe am",
+    "dueShort": "Abgabe {{formatted}}",
     "tasks": "Aufgaben"
   },
   "templates": {

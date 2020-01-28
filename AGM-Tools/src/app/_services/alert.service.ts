@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
+import { FastTranslateService } from "./fast-translate.service";
 
 @Injectable({ providedIn: "root" })
 export class AlertService {
@@ -9,23 +10,23 @@ export class AlertService {
     success: 5000,
     warning: 999999,
   };
-  constructor(private toastr: ToastrService) {
+  constructor(private toastr: ToastrService, private fts: FastTranslateService) {
   }
 
-  public success(message: string) {
-    this.toastr.success(message, "Erfolg!", { timeOut: this.timeouts.success });
+  public async success(message: string) {
+    this.toastr.success(message, `${await this.fts.t("general.colors.success")}!`, { timeOut: this.timeouts.success });
   }
 
-  public error(message: string) {
-    this.toastr.error(message, "Fehler!", { timeOut: this.timeouts.error });
+  public async error(message: string) {
+    this.toastr.error(message, `${await this.fts.t("general.error")}!`, { timeOut: this.timeouts.error });
   }
 
-  public info(message: string) {
-    this.toastr.info(message, "Information:", { timeOut: this.timeouts.info });
+  public async info(message: string) {
+    this.toastr.info(message, `${await this.fts.t("general.colors.information")}:`, { timeOut: this.timeouts.info });
   }
 
-  public warning(message: string) {
-    this.toastr.warning(message, "Warnung!", { timeOut: this.timeouts.warning });
+  public async warning(message: string) {
+    this.toastr.warning(message, `${await this.fts.t("general.colors.warning")}!`, { timeOut: this.timeouts.warning });
   }
 
   public snackbar(message) {
