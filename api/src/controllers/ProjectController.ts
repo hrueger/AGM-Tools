@@ -17,15 +17,13 @@ class ProjectController {
     const projectRepository = getRepository(Project);
     const messageRepository = getRepository(Message);
     const fileRepository = getRepository(File);
-    // const projects = await projectRepository
-    //  .find({relations: ["users", "tutorials", "linkedFiles", "tasks"]}) as any;
     const projects = await projectRepository.createQueryBuilder("project")
-      .innerJoinAndSelect("project.users", "users")
-      .innerJoinAndSelect("project.tutorials", "tutorials")
-      .innerJoinAndSelect("project.linkedFiles", "linkedFiles")
-      .innerJoinAndSelect("project.tasks", "tasks")
-      .innerJoinAndSelect("tasks.users", "taskUsers")
-      .innerJoinAndSelect("tasks.creator", "taskCreator")
+      .leftJoinAndSelect("project.users", "users")
+      .leftJoinAndSelect("project.tutorials", "tutorials")
+      .leftJoinAndSelect("project.linkedFiles", "linkedFiles")
+      .leftJoinAndSelect("project.tasks", "tasks")
+      .leftJoinAndSelect("tasks.users", "taskUsers")
+      .leftJoinAndSelect("tasks.creator", "taskCreator")
       .getMany() as any;
     for (const project of projects) {
       const options: any = {
