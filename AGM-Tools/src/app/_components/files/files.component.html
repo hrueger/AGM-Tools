@@ -150,20 +150,20 @@
 
 <ng-template #newFolder let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Neuer Ordner</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{'files.newFolder' | translate}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div *ngIf="newFolderModalInvalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{'errors.requiredFieldsMissing' | translate}}
         </div>
         <form [formGroup]="newFolderForm">
             <div class="form-group">
-                <label for="name">Name: </label>
+                <label for="name">{{'general.name' | translate}}</label>
                 <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Name des neuen Ordners" formControlName="newFolderName" />
+                    <input class="form-control" type="text" [placeholder]="'general.name' | translate" formControlName="newFolderName" />
                 </div>
             </div>
         </form>
@@ -174,7 +174,7 @@
                     ? modal.close('Save click')
                     : (newFolderModalInvalidMessage = true)
             ">
-            Erstellen
+            {{'general.create' | translate}}
         </button>
     </div>
 </ng-template>
