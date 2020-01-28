@@ -40,11 +40,13 @@ export class DashboardComponent implements OnInit {
     public dates: any;
     public cellSpacing: any;
     public version: string;
+    public tasks: any[] = [];
     public notifications: any[] = [];
     public lastUpdated: any = {
         changelog: "",
         events: "",
         space: "",
+        tasks: "",
         version: "",
     };
     public countdownInterval: any;
@@ -83,6 +85,12 @@ export class DashboardComponent implements OnInit {
             if (data) {
                 this.whatsnew = data.changelog;
                 this.lastUpdated.changelog = data.lastUpdated;
+            }
+        });
+        this.remoteService.get("get", "dashboard/tasks").subscribe((data) => {
+            if (data) {
+                this.tasks = data.tasks;
+                this.lastUpdated.tasks = data.lastUpdated;
             }
         });
         this.remoteService.get("get", "dashboard/events").subscribe((data) => {

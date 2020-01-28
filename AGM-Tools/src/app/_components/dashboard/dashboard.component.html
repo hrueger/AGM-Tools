@@ -58,7 +58,29 @@
                 <span class="text-muted" *ngIf="!dates || dates.length == 0">{{ "events.none" | translate }}</span>
             </div>
             <div class="card-footer">
-                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.events} }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.events | howLongAgo} }}</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body px-0 pb-0">
+                <h5 class="card-title px-4">{{"tasks.tasks" | translate}}</h5>
+                <div class="list-group-flush" *ngIf="tasks.length > 0">
+                    <button (click)="displayTask(taskModal, task)" class="list-group-item list-group-item-action" *ngFor="let task of tasks">
+                        <small>{{task.project.name}}</small>
+                        <div class="d-flex w-100 justify-content-between text-right">
+                            <h5 class="card-title">{{task.title}}</h5>
+                            <small>{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
+                          </div>
+                          <small class="card-text">{{task.description}}</small>
+                          <small class="d-block mt-1">{{task.creator.username}}, {{task.createdAt | date:'shortDate'}}</small>
+                    </button>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.tasks | howLongAgo} }}</small>
             </div>
         </div>
     </div>
@@ -87,7 +109,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.changelog} }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.changelog | howLongAgo} }}</small>
             </div>
             </div>
         </div>
@@ -100,7 +122,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.version} }}</small>
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.version | howLongAgo} }}</small>
             </div>
         </div>
     </div>

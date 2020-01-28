@@ -8,6 +8,7 @@ import { Event } from "../entity/Event";
 import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
 import { toInt } from "../utils/utils";
+import { Task } from "../entity/Task";
 
 class DashboardController {
 
@@ -18,7 +19,7 @@ class DashboardController {
         id: 0,
         version: "latest",
       }],
-      lastUpdated: "vor einer Woche",
+      lastUpdated: new Date("25.01.2020"),
     });
   }
   public static events = async (req: Request, res: Response) => {
@@ -33,12 +34,12 @@ class DashboardController {
     });
     res.send({
       events,
-      lastUpdated: "gerade eben",
+      lastUpdated: new Date(),
     });
   }
   public static version = async (req: Request, res: Response) => {
     res.send({
-      lastUpdated: "vor einer Woche",
+      lastUpdated: new Date("25.01.2020"),
       version: "latest ;-)",
     });
   }
@@ -57,7 +58,7 @@ class DashboardController {
           return r.id === res.locals.jwtPayload.userId;
         });
       });
-      res.send({notifications, lastUpdated: "gerade eben"});
+      res.send({notifications, lastUpdated: new Date()});
     } catch (e) {
       res.status(500).send({message: `${i18n.__("errors.errorWhileLoadingMessages")}` + e.toString()});
       return;
@@ -78,6 +79,14 @@ class DashboardController {
       return;
     }
     res.send({status: true});
+  }
+
+  public static tasks = async (req: Request, res: Response) => {
+    res.send({
+      lastUpdated: new Date(),
+      tasks: (await getRepository(Task).find({relations: ["users", "creator", "project"]})).filter((t) =>
+        t.users.filter((u) => u.id == res.locals.jwtPayload.userId).length > 0),
+    });
   }
 
   public static spaceChartData = async (req: Request, res: Response) => {
@@ -120,7 +129,7 @@ class DashboardController {
         value: size.toString(),
       };
       await cacheRepository.save(diskSpaceUsed);
-      lastUpdated = "gerade eben";
+      lastUpdated = new Date();
     } else {
       lastUpdated = diskSpaceUsed.updatedAt;
     }

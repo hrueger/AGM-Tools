@@ -32,7 +32,6 @@ class TaskController {
     try {
       await taskRepository.save(task);
     } catch (e) {
-      console.log(e);
       res.status(500).send({message: i18n.__("errors.errorWhileSavingTask")});
       return;
     }
