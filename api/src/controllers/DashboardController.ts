@@ -6,9 +6,9 @@ import { config } from "../config/config";
 import { Cache } from "../entity/Cache";
 import { Event } from "../entity/Event";
 import { Notification } from "../entity/Notification";
+import { Task } from "../entity/Task";
 import { User } from "../entity/User";
 import { toInt } from "../utils/utils";
-import { Task } from "../entity/Task";
 
 class DashboardController {
 
