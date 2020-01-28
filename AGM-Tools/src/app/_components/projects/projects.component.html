@@ -47,7 +47,7 @@
                     </div>
                 </a>
                     
-                <a [routerLink]="['/', 'tasks', project.id]" class="list-group-item list-group-item-action">
+                <button (click)="displayTasks(tasksModal, project.tasks.data)" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{"tasks.tasks" | translate}}</h5>
                         <small>{{project.tasks.lastUpdated | howLongAgo}}</small>
@@ -56,7 +56,7 @@
                         <span class="float-right badge badge-normal badge-primary" *ngIf="project.tasks.data.length > 0">{{project.tasks.data.length}}</span>
                         <small class="mb-1 mr-4 truncate">{{project.tasks.data.length > 0 ? joinWithComma(project.tasks.data, 'title') : 'errors.noTasksAssigned' | translate}}</small>
                     </div>
-                </a>
+                </button>
 
                 <a [routerLink]="['/', 'tutorials', project.id, project.name]" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
@@ -132,18 +132,22 @@
         
         <div class="card">
             <div class="card-header d-flex justify-content-between p-1">
-                <h6 class="card-title mt-2 mb-0 ml-3"><a [routerLink]="['/', 'tasks', currentProject.id]">{{"tasks.tasks" | translate}}</a></h6>
+                <h6 class="card-title mt-2 mb-0 ml-3"><a [routerLink]="" (click)="displayTasks(tasksModal, currentProject.tasks.data)">{{"tasks.tasks" | translate}}</a></h6>
                 <div>
-                    <a class="btn btn-outline-success py-1" [routerLink]="['/', 'tutorials', 'new']"><i class="fas fa-plus"></i></a>
+                    <a class="btn btn-outline-success py-1" [routerLink]="" (click)="openNewTaskModal(newTaskModal)"><i class="fas fa-plus"></i></a>
                 </div>
             </div>
             <div class="card-body p-0">
                 <p class="m-5 text-center" *ngIf="currentProject.tasks.data.length == 0">{{"errors.noTasksAssigned" | translate}}</p>
                 <div class="list-group-flush" *ngIf="currentProject.tasks.data.length > 0">
-                    <a [routerLink]="['/', 'tasks', task.id]" class="list-group-item list-group-item-action" *ngFor="let task of currentProject.tasks.data">
-                        <h5 class="card-title">{{task.title}}</h5>
-                        <small class="card-text">{{task.description}}</small>
-                    </a>
+                    <button (click)="displayTask(taskModal, task)" class="list-group-item list-group-item-action" *ngFor="let task of currentProject.tasks.data">
+                        <div class="d-flex w-100 justify-content-between text-right">
+                            <h5 class="card-title">{{task.title}}</h5>
+                            <small>{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
+                          </div>
+                          <small class="card-text">{{task.description}}</small>
+                          <small class="d-block mt-1">{{task.creator.username}}, {{task.createdAt | date:'shortDate'}}</small>
+                    </button>
                 </div>
             </div>
             <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
@@ -240,6 +244,93 @@
     </div>
 </ng-template>
 
+<ng-template #newTaskModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{"tasks.newTask" | translate}}</h4>
+        <button
+            type="button"
+            class="close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="newTaskFormInvalidMessage" class="alert alert-danger">
+            {{"errors.requiredFieldsMissing" | translate}}
+        </div>
+        <form [formGroup]="newTaskForm">
+            <div class="form-group">
+                <label for="title">{{"general.title" | translate}}: </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    formControlName="taskTitle"
+                    [placeholder]="'general.title' | translate"
+                />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="description">{{'general.description' | translate}}: </label>
+                <textarea
+                    class="form-control"
+                    formControlName="taskDescription"
+                    id="description"
+                    [placeholder]="'general.description' | translate"
+                ></textarea>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="users" class="">{{'tasks.forUsers' | translate}}:</label>
+                <select
+                    multiple
+                    class="custom-select"
+                    formControlName="taskUsers"
+                >
+                    <option
+                        *ngFor="let user of allusers"
+                        value="{{ user.id }}"
+                        >{{ user.username }}</option
+                    >
+                </select>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="due" class="">{{'tasks.dueOn' | translate}}:</label>
+                <div class="input-group">
+                    <input 
+                        type="text"
+                        class="form-control"
+                        id="due"
+                        formControlName="taskDue"
+                        [placeholder]="'tasks.dueOn' | translate" 
+                        ngbDatepicker
+                        #d="ngbDatepicker"
+                    >
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i class="fa fa-calendar-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-success"
+            (click)="
+                !newTaskForm.invalid
+                    ? modal.close('Save click')
+                    : (newTaskFormInvalidMessage = true)
+            "
+        >
+        {{'general.create' | translate}}
+        </button>
+    </div>
+</ng-template>
+
 <ng-template #updateModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{"projects.update" | translate}}</h4>
@@ -307,5 +398,63 @@
         >
             {{"general.update" | translate}}
         </button>
+    </div>
+</ng-template>
+
+<ng-template #tasksModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{"tasks.tasks" | translate}}</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="list-group">
+            <button class="list-group-item list-group-item-action p-0" *ngFor="let task of tasks">
+                <div class="m-3">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{task.title}}</h5>
+                        <small>{{task.createdAt | howLongAgo}}</small>
+                    </div>
+                    <p class="mb-1">{{task.description}}</p>
+                </div>
+                <div class="alert alert-warning">
+                    {{'tasks.due' | translate:{'date': task.due | date:'shortDate', 'formatted': task.due | howLongAgo } }}
+                </div>
+                <div class="m-3">
+                    {{task.creator.username}}, {{task.createdAt | date:'shortDate'}}
+                </div>
+            </button>
+          </div>
+    </div>
+</ng-template>
+
+<ng-template #taskModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{"general.task" | translate}}: {{currentTask.title}}</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+       {{currentTask.description}}
+    </div>
+    <div class="modal-footer p-0">
+        <div class="alert text-left m-0 w-50">
+            {{currentTask.creator.username}}, {{currentTask.createdAt | date:'shortDate'}}
+        </div>
+        <div class="alert alert-warning m-0 w-50">
+            {{'tasks.due' | translate:{'date': currentTask.due | date:'mediumDate', 'formatted': currentTask.due | howLongAgo } }}
+        </div>
     </div>
 </ng-template>

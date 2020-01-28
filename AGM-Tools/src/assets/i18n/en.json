@@ -144,6 +144,7 @@
     "send": "Send",
     "size": "Size",
     "startingAtDate": "starting {{weekday}}, {{day}} at {{time}} o'clock",
+    "task": "Task",
     "template": "Template",
     "title": "Title",
     "topic": "Topic",
@@ -195,6 +196,9 @@
     "sharedFolder": "This folder has been shared with you. Download it now!"
   },
   "tasks": {
+    "due": "Due {{formatted}}, on {{date}}",
+    "dueShort": "Due {{formatted}}",
+    "dueOn": "Due on",
     "tasks": "Tasks"
   },
   "templates": {

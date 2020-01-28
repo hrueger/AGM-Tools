@@ -144,6 +144,7 @@
     "send": "Senden",
     "size": "Größe",
     "startingAtDate": "ab dem {{weekday}}, {{day}} um {{time}} Uhr",
+    "task": "Aufgabe",
     "template": "Vorlage",
     "title": "Titel",
     "topic": "Thema",
@@ -195,6 +196,9 @@
     "sharedFolder": "Dieser Ordner wurde freigegeben. Laden Sie ihn jetzt herunter!"
   },
   "tasks": {
+    "due": "Abgabe {{formatted}}, am {{date}}",
+    "dueShort": "Abgabe {{formatted}}",
+    "dueOn": "Abgabe am",
     "tasks": "Aufgaben"
   },
   "templates": {

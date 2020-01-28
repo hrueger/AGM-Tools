@@ -16,6 +16,7 @@ import { Message } from "./entity/Message";
 import { Notification } from "./entity/Notification";
 import { Project } from "./entity/Project";
 import { Tag } from "./entity/Tag";
+import { Task } from "./entity/Task";
 import { Template } from "./entity/Template";
 import { Tutorial } from "./entity/Tutorial";
 import { TutorialStep } from "./entity/TutorialStep";
@@ -43,7 +44,7 @@ createConnection({
    },
    database: config.database_name,
    entities: [Cache, Event, File, Message, Notification,
-    Project, Tag, Template, Tutorial, TutorialStep, User, Usergroup],
+    Project, Tag, Template, Tutorial, TutorialStep, User, Usergroup, Task],
    host: config.database_host,
    logging: false,
    migrations: [createUsergroups1574018071536, createAdminUser1574018391679, CreateTags1574797035707],

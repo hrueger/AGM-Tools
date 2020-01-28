@@ -17,7 +17,16 @@ class ProjectController {
     const projectRepository = getRepository(Project);
     const messageRepository = getRepository(Message);
     const fileRepository = getRepository(File);
-    const projects = await projectRepository.find({relations: ["users", "tutorials", "linkedFiles"]}) as any;
+    // const projects = await projectRepository
+    //  .find({relations: ["users", "tutorials", "linkedFiles", "tasks"]}) as any;
+    const projects = await projectRepository.createQueryBuilder("project")
+      .innerJoinAndSelect("project.users", "users")
+      .innerJoinAndSelect("project.tutorials", "tutorials")
+      .innerJoinAndSelect("project.linkedFiles", "linkedFiles")
+      .innerJoinAndSelect("project.tasks", "tasks")
+      .innerJoinAndSelect("tasks.users", "taskUsers")
+      .innerJoinAndSelect("tasks.creator", "taskCreator")
+      .getMany() as any;
     for (const project of projects) {
       const options: any = {
         order: {
@@ -55,7 +64,9 @@ class ProjectController {
         lastUpdated: lastMessage.date ? lastMessage.date : undefined,
       };
       project.tasks = {
-        data: [],
+        data: project.tasks.filter((t) =>
+          t.users.filter((u) => u.id == res.locals.jwtPayload.userId).length > 0 ||
+          t.creator.id == res.locals.jwtPayload.userId),
         lastUpdated: new Date(),
       };
       project.tutorials = {

@@ -3,6 +3,7 @@ import {
 Column,
 CreateDateColumn,
 Entity,
+JoinTable,
 ManyToMany,
 ManyToOne,
 OneToMany,
@@ -15,6 +16,7 @@ import { File } from "./File";
 import { Message } from "./Message";
 import { Notification } from "./Notification";
 import { Project } from "./Project";
+import { Task } from "./Task";
 import { Template } from "./Template";
 import { Tutorial } from "./Tutorial";
 import { Usergroup } from "./Usergroup";
@@ -71,6 +73,12 @@ export class User {
 
   @OneToMany((type) => Tutorial, (tutorial) => tutorial.creator)
   public tutorials: Tutorial[];
+
+  @OneToMany((type) => Task, (task) => task.creator)
+  public createdTasks: Task[];
+
+  @ManyToMany((type) => Task, (task) => task.users)
+  public tasks: Task[];
 
   @OneToMany((type) => Event, (event) => event.creator)
   public events: Event[];

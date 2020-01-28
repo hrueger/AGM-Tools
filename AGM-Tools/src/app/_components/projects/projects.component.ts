@@ -27,13 +27,21 @@ export class ProjectsComponent implements OnInit {
     public allusers: User[] = [];
     public newProjectForm: FormGroup;
     public updateProjectForm: FormGroup;
+    public newTaskForm: FormGroup;
     public name: string;
     public users: number[];
     public description: string;
+    public taskTitle: string;
+    public taskDescription: string;
+    public taskUsers: number[];
+    public taskDue: string;
     public invalidMessage: boolean = false;
     public updateProjectInvalidMessage: boolean = false;
+    public newTaskFormInvalidMessage: boolean = false;
     public currentProject: any;
     public currentProjectChat: any;
+    public tasks: any[] = [];
+    public currentTask: any;
     @ViewChild("chatMessages", {static: false}) private chatMessagesComponent: ElementRef;
     constructor(
         private remoteService: RemoteService,
@@ -64,6 +72,12 @@ export class ProjectsComponent implements OnInit {
             name: ["", [Validators.required]],
             users: [null, [Validators.required]],
         });
+        this.newTaskForm = this.fb.group({
+            taskDescription: [this.taskDescription, [Validators.required]],
+            taskDue: [this.taskDue, [Validators.required]],
+            taskTitle: [this.taskTitle, [Validators.required]],
+            taskUsers: [this.taskUsers, [Validators.required]],
+        });
     }
 
     public goToProject(project) {
@@ -85,6 +99,33 @@ export class ProjectsComponent implements OnInit {
         }
         const name = file.name.split(".");
         return name[name.length - 1];
+    }
+
+    public displayTasks(tasksModal, tasks) {
+        this.tasks = tasks;
+        this.modalService.open(tasksModal);
+    }
+
+    public displayTask(taskModal, task) {
+        this.currentTask = task;
+        this.modalService.open(taskModal);
+    }
+
+    public openNewTaskModal(content) {
+        this.modalService.open(content).result.then((res) => {
+            const due = this.newTaskForm.get("taskDue").value;
+            this.newTaskFormInvalidMessage = false;
+            this.remoteService.getNoCache("post", `tasks/${this.currentProject.id}`, {
+                description: this.newTaskForm.get("taskDescription").value,
+                due: new Date(`${due.year}-${due.month}-${due.day}`),
+                title: this.newTaskForm.get("taskTitle").value,
+                users: this.newTaskForm.get("taskUsers").value,
+            }).subscribe((r) => {
+                if (r && r.status) {
+                    this.ngOnInit();
+                }
+            });
+        }).catch(() => undefined);
     }
 
     public async linkTutorial() {

@@ -8,6 +8,7 @@ import {
   } from "typeorm";
 import { File } from "./File";
 import { Message } from "./Message";
+import { Task } from "./Task";
 import { Tutorial } from "./Tutorial";
 import { User } from "./User";
 
@@ -27,6 +28,9 @@ import { User } from "./User";
     @ManyToMany(() => File, (file) => file.linkedProjects)
     @JoinTable()
     public linkedFiles: File[];
+
+    @OneToMany(() => Task, (task) => task.project)
+    public tasks: Task[];
 
     @Column()
     public name: string;
