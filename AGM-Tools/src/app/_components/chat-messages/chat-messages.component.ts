@@ -4,18 +4,10 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
     Input,
     OnChanges,
-    OnInit,
-    ViewChild,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-
-import { from } from "rxjs";
-import { filter } from "rxjs/operators";
-import { Chat } from "../../_models/chat.model";
-import { Contact } from "../../_models/contact.model";
+import { Router } from "@angular/router";
 import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -26,55 +18,52 @@ import { RemoteService } from "../../_services/remote.service";
     templateUrl: "chat-messages.component.html",
 })
 export class ChatMessagesComponent
-    implements OnInit, OnChanges, AfterViewChecked {
-    @Input() public inputReceiverId: number;
-    public receiverId: number;
-    public chat: Chat = {
-        contact: new Contact(),
-        muted: null,
-        rid: null,
-        text: null,
-        type: null,
-        unread: null,
-        when: null,
-    };
-
+    implements OnChanges, AfterViewChecked {
+    @Input() public inputChat: any;
+    @Input() public embedded: boolean = false;
     public unread: number;
     public messages: Message[];
-    // chats: Chat[];
-
+    public showInfoMessage: boolean = true;
     public messageGotToSend: Event;
+    public attachmentMessageGotToSend: Event;
     private scrolledToBottom: boolean = false;
 
     constructor(
         private remoteService: RemoteService,
         private location: Location,
         private cdr: ChangeDetectorRef,
+        private router: Router,
     ) { }
 
     public messageSentFromChild(event: Event) {
         this.messageGotToSend = event;
     }
-
-    public ngOnInit() {
-        /*this.route.params.subscribe(params => {
-            this.receiverId = +params.index;
-            this.chatsService.getChats().subscribe(chats => {
-                //this.chats = chats;
-                from(chats)
-                    .pipe(filter(chat => chat.rid == this.receiverId))
-                    .subscribe(chat => (this.chat = chat));
-            });
-            this.getMessages(this.receiverId);
-        });*/
-        /*this.route.queryParams.subscribe(params => {
-            this.unread = +params.unread;
-        });*/
+    public attachmentMessageSentFromChild(event: Event) {
+        this.attachmentMessageGotToSend = event;
     }
+
+    public async videoCall() {
+        if (confirm(`Möchtest du einen Videoanruf mit ${this.inputChat.name} starten?`)) {
+            this.router.navigate(["call", "user", this.inputChat.id, "video"]);
+        }
+    }
+
+    public async audioCall()  {
+        if (confirm(`Möchtest du einen Sprachanruf mit ${this.inputChat.name} starten?`)) {
+            this.router.navigate(["call", "user", this.inputChat.id, "audio"]);
+        }
+    }
+
+    public options() {
+        //
+    }
+
     public scrollToBottom(): void {
         const elementList = document.querySelectorAll(".browser");
         const element = elementList[0] as HTMLElement;
-        element.scrollIntoView(false);
+        if (element) {
+            element.scrollIntoView(false);
+        }
     }
     public ngAfterViewChecked() {
         if (this.scrolledToBottom == false) {
@@ -82,46 +71,27 @@ export class ChatMessagesComponent
         }
     }
     public ngOnChanges(data) {
-        if (data.inputReceiverId && data.inputReceiverId.currentValue) {
-            this.receiverId = data.inputReceiverId.currentValue;
-            this.remoteService.get("chatGetContacts").subscribe((chats) => {
-                // this.chats = chats;
-                from(chats)
-                    .pipe(
-                        filter(
-                            // @ts-ignore
-                            (chat) => chat.rid == this.receiverId,
-                        ),
-                    )
-                    .subscribe((chat) => {
-                        // @ts-ignore
-                        this.chat = chat;
-
-                        this.getMessages(this.receiverId);
-                    });
-            });
+        if (this.inputChat && this.inputChat.id) {
+            this.getMessages(this.inputChat);
         } else {
             this.messages = null;
-            this.chat = null;
         }
     }
-    public getMessages(receiverId) {
+    public getMessages(chat) {
         this.remoteService
-            .get("chatGetMessages", { rid: receiverId })
+            .get("get", `chats/${chat.isUser ? "user" : "project"}/${chat.id}`)
             .subscribe((data) => {
-                if (data != null) {
+                if (data) {
                     this.messages = data;
-                    // console.warn(data);
+                    this.showInfoMessage = false;
                     this.cdr.detectChanges();
                 } else {
                     this.messages = [];
                 }
             });
-        // this.scrollToBottom();
     }
 
     public goBack() {
-        // @ts-ignore
         this.location.back();
     }
 }

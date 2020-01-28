@@ -1,5 +1,1 @@
-<div class="alert alert-info">
-    <b>Information</b><br /><br />Diese Seite ist noch nicht fertig gestellt, da
-    ich nicht weiß, wie die fertigen Daten sortiert / dargestellt werden sollen.
-    Bei Ideen gerne an mich schreiben!
-</div>
+<div class="alert alert-info" [innerHTML]="'done.info' | translate | safe:'html'"></div>

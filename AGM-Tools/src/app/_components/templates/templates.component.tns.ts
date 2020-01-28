@@ -1,21 +1,19 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
-import {
-    CFAlertActionAlignment,
-    CFAlertActionStyle,
-    CFAlertDialog,
-    CFAlertStyle,
-} from "nativescript-cfalert-dialog";
 import { PageChangeEventData } from "nativescript-image-swipe";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { View } from "tns-core-modules/ui/core/view/view";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page/page";
+import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { DownloadService } from "../../_services/download.service.tns";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
@@ -31,7 +29,8 @@ export class TemplatesComponent implements OnInit {
     public pageNumber: number;
     public templatesToShow: any[] = [];
     public currentTemplateName: string;
-    currentTemplateDescription: any;
+    public currentTemplateDescription: any;
+    private currentPageIdx: number;
 
     constructor(
         private remoteService: RemoteService,
@@ -39,31 +38,40 @@ export class TemplatesComponent implements OnInit {
         private modal: ModalDialogService,
         private vcRef: ViewContainerRef,
         private authService: AuthenticationService,
+        private fts: FastTranslateService,
+        private downloadService: DownloadService,
         private page: Page) {
     }
 
     public ngOnInit() {
-        this.remoteService.get("templatesGetTemplates").subscribe((data) => {
+        this.remoteService.get("get", "templates").subscribe((data) => {
             this.templates = data;
             this.templatesToShow = [];
-            this.templates.forEach((template) => {
-                this.templatesToShow.push({
-                    // credit: template.type,
-                    imageUrl: `https://agmtools.allgaeu-gymnasium.de/AGM-Tools_NEU_API/\
-getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.token}`,
-                    // summary: template.description,
-                    // title: template.name,
+            if (this.templates) {
+                this.templates.forEach((template) => {
+                    this.templatesToShow.push({
+                        imageUrl: `${environment.apiUrl}templates/${template.filename}?authorization=${this.authService.currentUserValue.token}`,
+                    });
                 });
-            });
+            }
         });
     }
     public onPageChanged(e: PageChangeEventData) {
         this.currentTemplateName = this.templates[e.page].name;
         this.currentTemplateDescription = this.templates[e.page].description;
+        this.currentPageIdx = e.page;
     }
-    public downloadCurrentTemplate() {
-        alert("Herunterladen von Vorlagen wird noch nicht unterstützt!");
+
+    public async downloadCurrentTemplate() {
+        this.downloadService.download(
+            this.templatesToShow[this.currentPageIdx].imageUrl,
+            "downloads",
+            `${this.templates[this.currentPageIdx].name}.${this.templates[this.currentPageIdx].filename.split(".").pop()}`,
+            true,
+            this.currentTemplateName,
+        );
     }
+
     public onSetupItemView(args: SetupItemViewArgs) {
         args.view.context.third = args.index % 3 === 0;
         args.view.context.header = (args.index + 1) % this.templates.length === 1;
@@ -72,6 +80,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
 
     public showTemplate(index: number) {
         this.pageNumber = index;
+        this.currentPageIdx = index;
         this.showingTemplate = true;
         this.page.actionBarHidden = true;
         this.currentTemplateName = this.templates[index].name;
@@ -84,9 +93,10 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
         this.currentTemplateDescription = "";
     }
 
-    public openNewModal() {
-        this.alertService.info("Gibt's am Handy noch nicht!");
+    public async openNewModal() {
+        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
         /*let options = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef
@@ -118,6 +128,7 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
     }
 
     public onDrawerButtonTap(): void {
+        // @ts-ignore
         const sideDrawer = app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }
@@ -125,54 +136,28 @@ getTemplate.php?tid=${template.id}&token=${this.authService.currentUserValue.tok
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
+        // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.right = rightItem.getMeasuredWidth();
     }
 
-    public onRightSwipeClick(args) {
-        const uid = args.object.bindingContext.id;
-        const cfalertDialog = new CFAlertDialog();
-        const onNoPressed = (response) => {
-            this.templatesListView.listView.notifySwipeToExecuteFinished();
-        };
-        const onYesPressed = (response) => {
-            this.templatesListView.listView.notifySwipeToExecuteFinished();
+    public async onRightSwipeClick(args) {
+        const id = args.object.bindingContext.id;
+        if (await dialogs.confirm(await this.fts.t("templates.confirmDelete"))) {
             this.remoteService
-                .getNoCache("templatesDeleteTemplate", {
-                    id: uid,
-                })
-                .subscribe((data) => {
+                .getNoCache("delete", `templates/${id}`)
+                .subscribe(async (data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
-                            "Vorlage erfolgreich gelöscht",
+                            await this.fts.t("templates.templateDeletedSuccessfully"),
                         );
                         this.remoteService
-                            .get("templatesGetTemplates")
+                            .get("get", "template")
                             .subscribe((res) => {
                                 this.templates = res;
                             });
                     }
                 });
-
-        };
-        cfalertDialog.show({
-            buttons: [
-                {
-                    buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    buttonStyle: CFAlertActionStyle.POSITIVE,
-                    onClick: onYesPressed,
-                    text: "Ja",
-
-                },
-                {
-                    buttonAlignment: CFAlertActionAlignment.JUSTIFIED,
-                    buttonStyle: CFAlertActionStyle.NEGATIVE,
-                    onClick: onNoPressed,
-                    text: "Nein",
-                }],
-            dialogStyle: CFAlertStyle.BOTTOM_SHEET,
-            message: "Soll diese Vorlage wirklich gelöscht werden?",
-            title: "Bestätigung",
-        });
+        }
     }
 }

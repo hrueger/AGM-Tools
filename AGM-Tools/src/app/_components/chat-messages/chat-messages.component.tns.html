@@ -1,53 +1,63 @@
-<ActionBar title="Chat" class="action-bar link">
-    <NavigationButton text="unread" icon="res://ic_arrow_back" (tap)="goBack()"></NavigationButton>
-    <GridLayout rows="auto, auto" columns="auto, auto, *" class="action-bar-title">
-        <Image row="0" col="0" rowSpan="2" [src]="chat.contact.avatar" class="thumb"></Image>
-        <Label row="0" col="1" [text]="chat.contact.name" class="title"></Label>
-        <Label row="1" col="1" [text]="chat.contact.lastseen" class="subtitle"></Label>
+<StackLayout>
+    <GridLayout rows="36" columns="auto, auto, *, auto" class="action-bar p-10">
+        <Button text="&#xf060;" class="fas no-border round action-bar-button" row="0" col="0" (tap)="goBack()">
+        </Button>
+        <LetterAvatar row="0" col="1" [text]="getInitials(chat.name ? chat.name : '')"></LetterAvatar>
+        <Label row="0" col="2" textWrap="true" class="text-left">
+            <FormattedString>
+                <Span [text]="chat.name" fontWeight="bold" fontSize="17"></Span>
+                <Span text="&#xa;"></Span>
+                <Span [text]="chat.isUser ? ('general.lastOnline' | translate:{time:chat.lastSeen}) : chat.users"></Span>
+            </FormattedString>
+        </Label>
+        <StackLayout row="0" col="3" orientation="horizontal">
+            <Button text="&#xf03d;" class="fas no-border round action-bar-button" (tap)="videoCall()" *ngIf="chat.isUser"></Button>
+            <Button text="&#xf095;" class="fas no-border round action-bar-button" (tap)="audioCall()" *ngIf="chat.isUser"></Button>
+            <Button text="&#xf142;" class="fas no-border round action-bar-button" (tap)="options()"></Button>
+        </StackLayout>
     </GridLayout>
-</ActionBar>
-<GridLayout rows="*, auto" columns="*" class="wallpaper" [class.dialogOpen]="dialogOpen">
-    <ns-messages-area row="0" column="0" [receiverId]="receiverId" [messageSent]="messageGotToSend" [messages]="messages" class="messages-area">
-    </ns-messages-area>
-    <GridLayout rows="auto, auto" row="1" column="0">
+    <GridLayout rows="*, auto" columns="*" class="wallpaper" [class.dialogOpen]="dialogOpen">
+        <ns-messages-area row="0" column="0" [receiverId]="receiverId" [messageSent]="messageGotToSend" [messages]="messages" class="messages-area">
+        </ns-messages-area>
+        <GridLayout rows="auto, auto" row="1" column="0">
+            <GridLayout row="0" class="dialog" rows="*, *" columns="*, *, *">
+                <StackLayout row="0" col="0" (tap)="sendDocument()">
+                    <Image src="~/assets/attachment/document.png"></Image>
+                    <Label [text]="'general.document' | translate"></Label>
+                </StackLayout>
+                <StackLayout row="0" col="1" (tap)="sendPicture()">
+                    <Image src="~/assets/attachment/camera.png"></Image>
+                    <Label [text]="'general.camera' | translate"></Label>
+                </StackLayout>
+                <StackLayout row="0" col="2" (tap)="sendGallery()">
+                    <Image src="~/assets/attachment/gallery.png"></Image>
+                    <Label [text]="'general.gallery' | translate"></Label>
+                </StackLayout>
+                <StackLayout row="1" col="0" (tap)="sendAudio()">
+                    <Image src="~/assets/attachment/audio.png"></Image>
+                    <Label [text]="'general.audio' | translate"></Label>
+                </StackLayout>
+                <StackLayout row="1" col="1" (tap)="sendLocation()">
+                    <Image src="~/assets/attachment/location.png"></Image>
+                    <Label [text]="'general.location' | translate"></Label>
+                </StackLayout>
+                <StackLayout row="1" col="2" (tap)="sendContact()">
+                    <Image src="~/assets/attachment/contact.png"></Image>
+                    <Label [text]="'general.contact' | translate"></Label>
+                </StackLayout>
+            </GridLayout>
 
-        <GridLayout row="0" class="dialog" rows="*, *" columns="*, *, *">
-            <StackLayout row="0" col="0" (tap)="sendDocument()">
-                <Image src="~/assets/attachment/document.png"></Image>
-                <Label text="Dokument"></Label>
-            </StackLayout>
-            <StackLayout row="0" col="1" (tap)="sendPicture()">
-                <Image src="~/assets/attachment/camera.png"></Image>
-                <Label text="Kamera"></Label>
-            </StackLayout>
-            <StackLayout row="0" col="2" (tap)="sendGallery()">
-                <Image src="~/assets/attachment/gallery.png"></Image>
-                <Label text="Galerie"></Label>
-            </StackLayout>
-            <StackLayout row="1" col="0" (tap)="sendAudio()">
-                <Image src="~/assets/attachment/audio.png"></Image>
-                <Label text="Audio"></Label>
-            </StackLayout>
-            <StackLayout row="1" col="1" (tap)="sendLocation()">
-                <Image src="~/assets/attachment/location.png"></Image>
-                <Label text="Standort"></Label>
-            </StackLayout>
-            <StackLayout row="1" col="2" (tap)="sendContact()">
-                <Image src="~/assets/attachment/contact.png"></Image>
-                <Label text="Kontakt"></Label>
-            </StackLayout>
-        </GridLayout>
-
-        <FlexboxLayout row="1" class="message-box mobile">
-            <FlexboxLayout class="text-area">
-                <Button (tap)="toggleEmojiPicker()" text="&#xf580;" class="no-border fas icon"></Button>
-                <EmojiPicker #inputMessageField hint="Nachricht" class="text-view"></EmojiPicker>
-                <Button text="&#xf030;" (tap)="sendPicture()" class="no-border fas icon"></Button>
-                <Button text="&#xf0c6;" (tap)="toggleAttachmentDialog()" class="no-border fas icon"></Button>
+            <FlexboxLayout row="1" class="message-box mobile">
+                <FlexboxLayout class="text-area">
+                    <Button (tap)="toggleEmojiPicker()" text="&#xf580;" class="no-border fas icon"></Button>
+                    <EmojiPicker #inputMessageField [hint]="'general.message' | translate" class="text-view"></EmojiPicker>
+                    <Button text="&#xf030;" (tap)="sendPicture()" class="no-border fas icon"></Button>
+                    <Button text="&#xf0c6;" (tap)="toggleAttachmentDialog()" class="no-border fas icon"></Button>
+                </FlexboxLayout>
+                <Button text="&#xf1d8;" (tap)="sendMessage()" class="fas icon send"></Button>
             </FlexboxLayout>
-            <Button text="&#xf1d8;" (tap)="sendMessage()" class="fas icon send"></Button>
-        </FlexboxLayout>
-        <!--<emoji-picker (emojiClick)="onEmojiClick($event)" (backspaceClick)="onBackspaceClick()" [showEmojiPicker]="showEmojiPicker">
-        </emoji-picker>-->
+            <!--<emoji-picker (emojiClick)="onEmojiClick($event)" (backspaceClick)="onBackspaceClick()" [showEmojiPicker]="showEmojiPicker">
+            </emoji-picker>-->
+        </GridLayout>
     </GridLayout>
-</GridLayout>
+</StackLayout>

@@ -3,6 +3,7 @@ import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
 import * as ModalPicker from "nativescript-modal-datetimepicker";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
 export class CalendarEvent {
@@ -38,64 +39,16 @@ export class NewCalendarEventModalComponent {
     public startDateToSend = "";
     public endDateToSend = "";
     @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
-    public dataFormConfig = {
-        commitMode: "Immediate",
-        isReadOnly: false,
-        propertyAnnotations:
-            [
-                {
-                    displayName: "Titel",
-                    index: 0,
-                    name: "title",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Beschreibung",
-                    editor: "MultilineText",
-                    index: 1,
-                    name: "description",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Ort",
-                    index: 2,
-                    name: "location",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Ganztägig",
-                    index: 3,
-                    name: "isAllDay",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Wichtiger Termin",
-                    index: 4,
-                    name: "important",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-            ],
-            validationMode: "Immediate",
-    };
+    public dataFormConfig: any;
     private event: CalendarEvent;
 
-    public constructor(private params: ModalDialogParams) {}
+    public constructor(private params: ModalDialogParams, private fts: FastTranslateService) {}
 
-    public pick(what: string) {
+    public async pick(what: string) {
         const picker = new ModalPicker.ModalDatetimepicker();
         picker.pickDate({
-            title: (what == "start" ? "Startdatum auswählen" : "Enddatum auswählen"),
-        }).then((result) => {
+            title: await this.fts.t(what == "start" ? "events.pickStartDate" : "events.pickEndDate"),
+        }).then(async (result) => {
             const res = result.day + "." + result.month + "." + result.year;
             const dateToSend = result.year + "-" + result.month + "-" + result.day;
             if (what == "start") {
@@ -108,7 +61,7 @@ export class NewCalendarEventModalComponent {
             this.startDateInvalidMessage = false;
             this.endDateBeforeStartDateInvalidMessage = false;
             picker.pickTime({
-                title: (what == "start" ? "Startzeit auswählen" : "Endzeit auswählen"),
+                title: await this.fts.t(what == "start" ? "events.pickStartTime" : "events.pickEndTime"),
 
             }).then((data) => {
                 const time = data.hour + ":" + data.minute;
@@ -156,9 +109,57 @@ export class NewCalendarEventModalComponent {
             });
     }
 
-    public ngOnInit() {
+    public async ngOnInit() {
         this.event = new CalendarEvent("", "", "", false, false);
-
+        this.dataFormConfig = {
+            commitMode: "Immediate",
+            isReadOnly: false,
+            propertyAnnotations:
+                [
+                    {
+                        displayName: await this.fts.t("general.title"),
+                        index: 0,
+                        name: "title",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                    {
+                        displayName: await this.fts.t("general.description"),
+                        editor: "MultilineText",
+                        index: 1,
+                        name: "description",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                    {
+                        displayName: await this.fts.t("general.location"),
+                        index: 2,
+                        name: "location",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                    {
+                        displayName: await this.fts.t("events.isAllDay"),
+                        index: 3,
+                        name: "isAllDay",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                    {
+                        displayName: await this.fts.t("events.importantEvent"),
+                        index: 4,
+                        name: "important",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                ],
+                validationMode: "Immediate",
+        };
     }
 
     public goBack() {

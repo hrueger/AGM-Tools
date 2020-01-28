@@ -1,6 +1,5 @@
-@import "~nativescript-theme-core/css/core.css";
-@import "~nativescript-theme-core/css/blue.css";
-
+@import "~@nativescript/theme/css/core.css";
+@import "~@nativescript/theme/css/blue.css";
 /*@import "./custom.css";*/
 
 
@@ -38,6 +37,10 @@
     font-size: 10;
 }
 
+.action-bar-middle {
+    font-size: 15;
+}
+
 StackLayout.content {
     padding: 8;
 }
@@ -60,15 +63,17 @@ StackLayout.content {
 
 .fab-button {
     color: #ffffff;
-    font-size: 36;
-    padding-top: 5;
-    padding-left: 12;
-    background-color: transparent;
-    background-color: #30bcff;
-    border-radius: 28;
+    font-size: 40;
+    background-color: #428bca;
+    border-radius: 100;
     width: 60;
     height: 60;
     margin: 20;
+    padding-top: -3;
+}
+
+.btn-primary {
+    color: #428bca;
 }
 
 .no-border {
@@ -113,47 +118,48 @@ StackLayout.content {
 
 .deleteSwipeContainer {
     background-color: #e74c3c;
-    padding: 16;
+    padding: 10;
 }
 
 .addSwipeContainer {
     background-color: #e7cd3c;
-    padding: 16;
+    padding: 10;
 }
 
 .tagsSwipeContainer {
     background-color: #f1c40f;
-    padding: 16;
+    padding: 10;
 }
 
 .downloadSwipeContainer {
     background-color: #3498db;
-    padding: 16;
+    padding: 10;
 }
 
 .shareSwipeContainer {
     background-color: #2ecc71;
-    padding: 16;
+    padding: 10;
 }
 
 .renameSwipeContainer {
     background-color: #e7cd3c;
-    padding: 16;
+    padding: 10;
 }
 
 .moveSwipeContainer {
     background-color: #3498db;
-    padding: 16;
+    padding: 10;
 }
 
 .copySwipeContainer {
     background-color: #2ecc71;
-    padding: 16;
+    padding: 10;
 }
 
 .swipeLabel {
-    size: 60;
-    line-height: 40;
+    font-size: 20;
+    padding-left: 10;
+    padding-top: 10;
     color: #ffffff;
 }
 
@@ -166,7 +172,7 @@ StackLayout.content {
     font-size: 20;
 }
 
-.list-group-seperator {
+.list-group-separator {
     background-color: #cfcfcf;
 }
 
@@ -175,4 +181,18 @@ StackLayout.content {
     border-radius: 3;
     margin: 2;
     text-align: center;
+}
+
+.action-bar-button {
+    width: 40;
+    color: white;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.action-bar-title {
+    line-height: 36;
+    vertical-align: center;
+    font-weight: normal;
+    font-size: 20;
 }

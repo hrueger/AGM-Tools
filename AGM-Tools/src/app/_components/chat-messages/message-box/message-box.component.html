@@ -1,27 +1,47 @@
-<div class="message-box">
-    <!--<button class="fa icon"></button>
-    <div class="text-area">
-        <button class="fa icon emojis"></button>
-        <input [placeholder]="'Type a message'" class="text-view" />
-        <button class="fa icon attach"></button>
-        <button class="fa icon camera"></button>
+<div class="attachmentContainer" [class.embedded]="embedded" *ngIf="showAttachmentContainer">
+    <div class="row">
+        <div class="col-4" (click)="sendDocument()">
+            <img class="img-fluid" src="assets/attachment/document.png">
+            <span>{{'general.document' | translate}}</span>
+        </div>
+        <div class="col-4" (click)="sendPicture()">
+            <img class="img-fluid" src="assets/attachment/camera.png">
+            <span>{{'general.camera' | translate}}</span>
+        </div>
+        <div class="col-4" (click)="sendGallery()">
+            <img class="img-fluid" src="assets/attachment/gallery.png">
+            <span>{{'general.gallery' | translate}}</span>
+        </div>
     </div>
-    <button class="fa separator"></button>
-    <button class="fa icon send"></button>-->
-
+    <div class="row">
+        <div class="col-4" (click)="sendAudio()">
+            <img class="img-fluid" src="assets/attachment/audio.png">
+            <span>{{'general.audio' | translate}}</span>
+        </div>
+        <div class="col-4" (click)="sendLocation()">
+            <img class="img-fluid" src="assets/attachment/location.png">
+            <span>{{'general.location' | translate}}</span>
+        </div>
+        <div class="col-4" (click)="sendContact()">
+            <img class="img-fluid" src="assets/attachment/contact.png">
+            <span>{{'general.contact' | translate}}</span>
+        </div>    
+    </div>
+</div>
+<div class="message-box">
     <div class="input-group">
         <div class="input-group-prepend" id="button-addon3">
             <button class="far btn btn-outline-secondary" (click)="toggleEmojiPicker()" type="button">
                 &#xf580;
             </button>
+            <button class="btn btn-outline-secondary" (click)="showAttachmentContainer = !showAttachmentContainer">
+                <i class="fas fa-plus fa-xs"></i>
+            </button>
 
             <emoji-mart showPreview="false" set="apple" class="emoji-picker" (emojiClick)="addEmoji($event)" *ngIf="showEmojiPicker" title="Pick your emoji…" [i18n]="emojiI18n"></emoji-mart>
         </div>
-        <input type="text" [(ngModel)]="messageContent" class="form-control" placeholder="Nachricht" />
+        <input type="text" [(ngModel)]="messageContent" class="form-control" [placeholder]="'general.message' | translate" />
         <div class="input-group-append" id="button-addon4">
-            <button class="btn btn-outline-secondary" type="button">
-                +
-            </button>
             <button (click)="sendMessage()" class="fas btn btn-outline-secondary" type="button">
                 &#xf1d8;
             </button>

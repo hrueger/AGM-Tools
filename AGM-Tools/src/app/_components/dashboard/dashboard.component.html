@@ -1,40 +1,95 @@
-<div *ngFor="let notification of notifications" [class]="notification.type + ' alert alert-dismissible'">
-    <button (click)="makeNotificationSeen(notification)" type="button" class="seen btn btn-primary  float-right btn-lg">
-        Gelesen
-    </button>
-    <strong>{{ notification.headline }}</strong>
-    <div [innerHTML]="notification.content | safe:'html'"></div>
-    <br /><br /><small><b>{{ notification.sender }}</b> am {{ notification.date }} um
-        {{ notification.time }} Uhr</small>
-</div>
-<div *ngIf="notifications.length > 0"><br><br><br></div>
-
-
-<div class="control-section">
-    <ejs-dashboardlayout [style.visibility]="showDashboardLayout ? 'visible' : 'hidden'" id='defaultLayout' [allowDragging]="false" [allowFloating]="false" [columns]="3" #defaultLayout [cellSpacing]='cellSpacing'>
-        <div class="e-panel" data-row="0" data-col="0" data-sizeX="1" data-sizeY="1">
-            <div class="card">
-                <div class="card-header">
-                    Verfügbarer Speicherplatz
-                </div>
-                <div class="card-body">
+<div class="row">
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body">
+                    <h5 class="card-title d-inline">{{ "dashboard.remainingDiskSpace" | translate }}</h5>
+                    <button class="btn btn-outline-primary float-right px-2 py-1 m-1" (click)="updateChart()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
                     <div style="display: block">
                         <canvas baseChart [data]="spaceChartData" [labels]="spaceChartLabels" [chartType]="spaceChartType" [colors]="spaceChartColors" [options]="spaceChartOptions">
                         </canvas>
                     </div>
-                    <!--<button class="btn btn-primary" (click)="updateChart()">-->
-                    <button class="btn btn-primary">
-                        Aktualisieren
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": (lastUpdated.space | howLongAgo)} }}</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body px-0 pb-0">
+                <h5 class="card-title px-3">{{ "notifications.notifications" | translate }}</h5>
+                <div class="list-group messages">
+                    <div *ngFor="let notification of notifications"  class="border-right-0 border-left-0 list-group-item list-group-item-action list-group-item-{{notification.theme}}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ notification.headline }}</h5>
+                            <small>{{notification.howLongAgo }}</small>
+                        </div>
+                        <p class="mb-1">{{notification.content}}</p>
+                        <div class="d-flex justify-content-between">
+                            <small>{{notification.creator.username}} {{ "general.atDate" | translate}} {{notification.createdAt | date}}</small>
+                            <button type="button" (click)="seen(notification)" class="close"><span>&times;</span></button>
+                        </div>
+                    </div>
+                </div>
+                <span class="text-muted pl-3" *ngIf="notifications.length == 0">{{ "notifications.none" | translate }}</span>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": (lastUpdated.notifications | howLongAgo)} }}</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ "events.nextEvents" | translate }}</h5>
+                <div class="datelist">
+                    <div *ngFor="let event of dates" class="event" routerLink="/calendar/{{event.id}}">
+                        <span class="headline">{{event.headline}}</span><br>
+                        <i class="m-1 fas fa-calendar-day"></i><span class="text-muted">{{ "general.startingAtDate" | translate:{"weekday": (event.start | date:"EEEE"), "day": (event.start | date:"shortDate"), "time": (event.start | date:"shortTime")} }}</span><br>
+                        <i class="m-1 fas fa-map-marker-alt"></i><span class="text-muted">{{ event.location }}</span><br>
+                        <i class="m-1 fas fa-stopwatch text-primary"></i><span class="text-primary">{{ 'events.countdown' | translate:{'countdown':event.countdownTime} }}</span>
+                        <br />
+                    </div>
+                </div>
+                <span class="text-muted" *ngIf="!dates || dates.length == 0">{{ "events.none" | translate }}</span>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.events | howLongAgo} }}</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body px-0 pb-0">
+                <h5 class="card-title px-4">{{"tasks.tasks" | translate}}</h5>
+                <div class="list-group-flush" *ngIf="tasks.length > 0">
+                    <button (click)="displayTask(taskModal, task)" class="list-group-item list-group-item-action" *ngFor="let task of tasks">
+                        <small>{{task.project.name}}</small>
+                        <div class="d-flex w-100 justify-content-between text-right">
+                            <h5 class="card-title">{{task.title}}</h5>
+                            <small>{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
+                          </div>
+                          <small class="card-text">{{task.description}}</small>
+                          <small class="d-block mt-1">{{task.creator.username}}, {{task.createdAt | date:'shortDate'}}</small>
                     </button>
                 </div>
             </div>
+            <div class="card-footer">
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.tasks | howLongAgo} }}</small>
+            </div>
         </div>
-        <div class="e-panel" data-row="0" data-col="1" data-sizeX="1" data-sizeY="1">
-            <div class="card">
-                <div class="card-header">
-                    What's new
-                </div>
-                <div class="card-body">
+    </div>
+
+    <div class="col-md-4 col-sm-6 d-flex">
+            <div class="card flex-fill mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ "dashboard.whatsnew" | translate }}</h5>
+                <div class="p-0">
                     <ejs-accordion expandMode="Single" *ngFor="let version of whatsnew">
                         <div>
                             <div>
@@ -43,8 +98,8 @@
                             <div>
                                 <div>
                                     <ul>
-                                        <li *ngFor="let news of version.news">
-                                            {{ news }}
+                                        <li *ngFor="let change of version.changes">
+                                            {{ change }}
                                         </li>
                                     </ul>
                                 </div>
@@ -53,24 +108,22 @@
                     </ejs-accordion>
                 </div>
             </div>
-        </div>
-        <div class="e-panel" data-row="0" data-col="2" data-sizeX="1" data-sizeY="1">
-            <div class="card">
-                <div class="card-header">
-                    Nächste Termine
-                </div>
-                <div class="card-body dates">
-                    <ol class="datelist">
-                        <li *ngFor="let date of dates" class="event" routerLink="/calendar/{{date.id}}">
-                            <span class="headline">{{date.name}}</span>
-                            <span class="date">ab dem {{ date.weekday }}, {{ date.date }} um {{ date.starttime }} Uhr</span>
-                            <span class="countdown">noch {{ date.countdown }}</span>
-                            <br />
-                        </li>
-                    </ol>
-                </div>
+            <div class="card-footer">
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.changelog | howLongAgo} }}</small>
+            </div>
             </div>
         </div>
-
-    </ejs-dashboardlayout>
-</div>
+    <div class="col-md-4 col-sm-6 d-flex">
+        <div class="card flex-fill mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ "dashboard.version" | translate }}</h5>
+                <div class="alert alert-primary">
+                    <span>{{version}}</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">{{ "general.lastUpdated" | translate:{"time": lastUpdated.version | howLongAgo} }}</small>
+            </div>
+        </div>
+    </div>
+  </div>

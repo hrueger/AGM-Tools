@@ -12,28 +12,20 @@ import { ActivatedRoute } from "@angular/router";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import { RouterExtensions } from "nativescript-angular/router";
 import * as camera from "nativescript-camera";
-import {
-    AudioPickerOptions, FilePickerOptions, ImagePickerOptions,
-    Mediafilepicker, VideoPickerOptions,
-} from "nativescript-mediafilepicker";
-import * as permissions from "nativescript-permissions";
+import * as geolocation from "nativescript-geolocation";
 import { PhotoEditor } from "nativescript-photo-editor";
-import { from } from "rxjs";
-import { filter } from "rxjs/operators";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { knownFolders, path } from "tns-core-modules/file-system/file-system";
 import { ImageSource } from "tns-core-modules/image-source/image-source";
 import * as dialogs from "tns-core-modules/ui/dialogs";
-import config from "../../_config/config";
-import { Chat } from "../../_models/chat.model";
-import { Contact } from "../../_models/contact.model";
-import { Message } from "../../_models/message.model";
+import { confirm } from "tns-core-modules/ui/dialogs";
+import { Accuracy } from "tns-core-modules/ui/enums";
+import { Page } from "tns-core-modules/ui/page/page";
+import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
 import { ContactPickerComponent } from "../_modals/contact-picker.modal.tns";
-
-declare var android: any;
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,11 +36,14 @@ declare var android: any;
 export class ChatMessagesComponent
     implements OnInit {
     @Input() public inputReceiverId: number;
-    public receiverId: number;
+    public chatId: number;
+    public chatType: string;
     public showEmojiPicker = false;
-    public chat: Chat = {
-        contact: new Contact(),
+    public chat = {
+        id: null,
+        isUser: null,
         muted: null,
+        name: null,
         rid: null,
         text: null,
         type: null,
@@ -57,7 +52,7 @@ export class ChatMessagesComponent
     };
     public dialogOpen: boolean = false;
     public unread: number;
-    public messages: ObservableArray<Message> = new ObservableArray<Message>(0);
+    public messages: ObservableArray<any> = new ObservableArray<any>(0);
 
     @ViewChild("inputMessageField", { static: false }) public inputMessageField: ElementRef;
     constructor(
@@ -69,6 +64,7 @@ export class ChatMessagesComponent
         private alertService: AlertService,
         private modal: ModalDialogService,
         private vcRef: ViewContainerRef,
+        private page: Page,
     ) { }
 
     public toggleAttachmentDialog() {
@@ -123,7 +119,7 @@ export class ChatMessagesComponent
                                             })
                                             .subscribe();*/
 
-                                        const url = config.apiUrl + "?token=" +
+                                        const url = environment.apiUrl + "?token=" +
                                             that.authService.currentUserValue.token.toString();
                                         const name = pathDest.substr(pathDest.lastIndexOf("/") + 1);
 
@@ -142,7 +138,7 @@ export class ChatMessagesComponent
                                             { name: "attachment", filename: pathDest, mimeType: "image/png" },
                                             { name: "type", value: "image" },
                                             {
-                                                name: "sendChatAttachment", value: that.receiverId.toString(),
+                                                name: "sendChatAttachment", value: that.chatId.toString(),
                                             },
                                         ];
                                         const task = session.multipartUpload(params, request);
@@ -177,11 +173,17 @@ export class ChatMessagesComponent
     }
     public sendLocation() {
         this.toggleAttachmentDialog();
-        alert("Leider wird das nicht unterstützt. Den Button gibts nur für die Ästhetik ;-)");
+        geolocation.enableLocationRequest().then(() => {
+            geolocation.getCurrentLocation({desiredAccuracy:  Accuracy.high }).then((l) => {
+                // tslint:disable-next-line: no-console
+                console.log(l);
+            });
+        });
     }
     public sendContact() {
         this.toggleAttachmentDialog();
         const options = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef,
@@ -201,28 +203,7 @@ export class ChatMessagesComponent
                         number: contact.phone[0].number,
                     };
                     if (result) {
-                        let message: Message = {
-                            chat: null,
-                            contactSrc: contactToSend,
-                            created: Date.now(),
-                            fromMe: true,
-                            sendername: "",
-                            sent: "notsent",
-                            text: "",
-                        };
-                        this.messages.push(message);
-                        this.remoteService
-                            .getNoCache("chatSendMessage", {
-                                contactSrc: contactToSend,
-                                message: "Kontakt",
-                                rid: this.receiverId,
-                            })
-                            .subscribe((data) => {
-                                message = this.messages.pop();
-                                message.sent = "sent";
-                                this.messages.push(message);
-                                this.cdr.detectChanges();
-                            });
+                        this.displayAndSendMessage({contact: contactToSend});
                     }
                 });
             }
@@ -231,66 +212,58 @@ export class ChatMessagesComponent
 
     public sendMessage() {
         if (this.inputMessageField.nativeElement.text && this.inputMessageField.nativeElement.text != "") {
-            let message: Message = {
-                chat: null,
-                created: Date.now(),
-                fromMe: true,
-                sendername: "",
-                sent: "notsent",
-                text: this.inputMessageField.nativeElement.text,
-            };
-            this.messages.push(message);
-            this.remoteService
-                .getNoCache("chatSendMessage", {
-                    message: this.inputMessageField.nativeElement.text,
-                    rid: this.receiverId,
-                })
-                .subscribe((data) => {
-                    message = this.messages.pop();
-                    message.sent = "sent";
-                    this.messages.push(message);
-                    // console.log(this.messages);
-                    this.cdr.detectChanges();
-                });
-            this.inputMessageField.nativeElement.text = "";
+            this.displayAndSendMessage({content: this.inputMessageField.nativeElement.text});
         }
     }
 
     public ngOnInit() {
-        this.route.params.subscribe((params) => {
-            this.receiverId = +params.index;
-            this.remoteService.get("chatGetContacts").subscribe((chats) => {
-                // this.chats = chats;
-                from(chats)
-                    .pipe(
-                        filter(
-                            // @ts-ignore
-                            (chat) => chat.rid == this.receiverId,
-                        ),
-                    )
-                    .subscribe((chat) => {
-                        // @ts-ignore
-                        this.chat = chat;
-                        this.getMessages(this.receiverId);
-                    });
+        this.page.actionBarHidden = true;
+        this.chatId = this.route.snapshot.params.id;
+        this.chatType = this.route.snapshot.params.type;
+        setTimeout(() => {
+            this.remoteService.get("get", "chats").subscribe((chats) => {
+                this.chat = chats.filter((chat: any) => chat.id == this.chatId)[0];
+                this.cdr.markForCheck();
+                this.getMessages();
             });
         });
     }
 
-    public getMessages(receiverId) {
-        this.remoteService
-            .get("chatGetMessages", { rid: receiverId })
+    public async videoCall() {
+        if (await confirm(`Möchtest du einen Videoanruf mit ${this.chat.name} starten?`)) {
+            this.router.navigate(["call", "user", this.chat.id, "video"]);
+        }
+    }
+
+    public async audioCall()  {
+        if (await confirm(`Möchtest du einen Sprachanruf mit ${this.chat.name} starten?`)) {
+            this.router.navigate(["call", "user", this.chat.id, "audio"]);
+        }
+    }
+
+    public options() {
+        //
+    }
+
+    public getMessages() {
+        setTimeout(() => {
+            this.remoteService.get("get", `chats/${this.chatType}/${this.chatId}`)
             .subscribe((data) => {
                 if (data != null) {
                     this.messages.length = 0;
                     this.messages.push(...data);
-                    this.cdr.detectChanges();
+                    this.cdr.markForCheck();
                 }
             });
+        }, 0);
+    }
+
+    public getInitials(name: string) {
+        const initials = name.match(/\b\w/g) || [];
+        return ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
     }
 
     public goBack() {
-        // @ts-ignore
         this.router.navigate(["chat"], {
             animated: true,
             transition: {
@@ -303,20 +276,57 @@ export class ChatMessagesComponent
         this.inputMessageField.nativeElement.togglePopup();
     }
 
+    private displayAndSendMessage(options: {
+            contact?: { name: any; number: any; },
+            location?: {lat: number, long: number},
+            content?: string,
+        }) {
+        let message = {
+            chat: null,
+            contactSrc: options.contact,
+            content: options.content,
+            created: Date.now(),
+            fromMe: true,
+            sendername: "",
+            sent: "notsent",
+        };
+        this.messages.push(message);
+        const url = `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}${options.content ? "" : "/attachment"}`;
+        let o: any = {message: options.content};
+        if (options.contact) {
+            o.contactName = options.contact.name;
+            o.contactNumber = options.contact.number;
+        } else if (options.location) {
+            o = {
+                locationLat: options.location.lat,
+                locationLong: options.location.long,
+            };
+        }
+        this.remoteService
+            .getNoCache("post", url, o)
+            .subscribe(() => {
+                message = this.messages.pop();
+                message.sent = "sent";
+                this.messages.push(message);
+                this.cdr.markForCheck();
+                if (options.content) { this.inputMessageField.nativeElement.text = ""; }
+            });
+    }
+
 }
 
-function progressHandler(e) {
+function progressHandler(e: any) {
     //
 }
-function errorHandler(e) {
+function errorHandler(e: { responseCode: string; }) {
     alert("Die Datei konnte nicht erfolgreich hochgeladen werden, Fehlercode " + e.responseCode);
 }
-function respondedHandler(e) {
+function respondedHandler(e: any) {
     // console.log("received " + e.responseCode + " code. Server sent: " + e.data);
 }
-function completeHandler(e) {
+function completeHandler(e: any) {
     //
 }
-function cancelledHandler(e) {
+function cancelledHandler(e: any) {
     //
 }

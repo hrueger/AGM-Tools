@@ -6,9 +6,8 @@ export class NavbarService {
 
     @Output() public change: EventEmitter<string> = new EventEmitter();
 
-    public setHeadline(headline) {
+    public setHeadline(headline: string) {
         this.headline = headline;
-        this.change.emit(this.headline);
-        // console.log("Headline changed");
+        setTimeout(() => { this.change.emit(this.headline); }, 0);
     }
 }

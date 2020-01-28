@@ -13,9 +13,9 @@ import { PageChangeEventData } from "nativescript-image-swipe";
 import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Page } from "tns-core-modules/ui/page/page";
-import config from "../../../_config/config";
+import * as utils from "tns-core-modules/utils/utils";
+import { environment } from "../../../../environments/environment";
 import { Message } from "../../../_models/message.model";
-import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { PushService } from "../../../_services/push.service.tns";
 import { RemoteService } from "../../../_services/remote.service";
@@ -40,13 +40,19 @@ export class MessagesAreaComponent implements OnInit {
     public currentImageIndex: number;
     public shouldScrollWhenImageLoaded: boolean = true;
     constructor(private pushService: PushService,
-        private authService: AuthenticationService,
-        private remoteService: RemoteService,
-        private page: Page) {
+                private authService: AuthenticationService,
+                private remoteService: RemoteService,
+                private authenticationService: AuthenticationService,
+                private page: Page) {
 
     }
+
+    public openLocation(message) {
+        utils.openUrl(`https://www.google.de/maps/place/${message.locationLat},${message.locationLong}/@${message.locationLat},${message.locationLong},17z/`);
+    }
+
     public getImageSrc(imageName, thumbnail = true) {
-        return config.apiUrl +
+        return environment.apiUrl +
             "?getAttachment=" +
             imageName +
             "&token=" +
@@ -57,7 +63,7 @@ export class MessagesAreaComponent implements OnInit {
     public onPageChanged(e: PageChangeEventData) {
         this.currentImageName = (
             this.allImageSources[e.page].sender ==
-                this.authService.currentUserValue.firstName + " " + this.authService.currentUserValue.lastName ?
+                this.authService.currentUserValue.username ?
                 "Ich" :
                 this.allImageSources[e.page].sender);
         this.currentImageDate = this.allImageSources[e.page].date;
@@ -66,10 +72,15 @@ export class MessagesAreaComponent implements OnInit {
         alert("Herunterladen von Bildern in die Gallerie wird noch nicht unterstützt!");
     }
 
+    public getLocationImageSrc(message) {
+        return `${environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
+    }
+
     public newMessageFromPushService(data: any) {
         if (data.action == "newMessage") {
             if (data.data.data.chatID == this.receiverId) {
-                this.remoteService.getNoCache("chatMarkAsRead", { message: data.data.data.messageId }).subscribe();
+                this.remoteService.getNoCache("post", "chatMarkAsRead",
+                { message: data.data.data.messageId }).subscribe();
                 const message = {
                     chat: null,
                     created: Date.now(),
@@ -85,6 +96,7 @@ export class MessagesAreaComponent implements OnInit {
                 }, 300);
             }
         } else {
+            // tslint:disable-next-line: no-console
             console.log(data);
         }
     }
@@ -124,7 +136,7 @@ export class MessagesAreaComponent implements OnInit {
         this.page.actionBarHidden = true;
         this.currentImageName = (
             this.allImageSources[this.currentImageIndex].sender ==
-                this.authService.currentUserValue.firstName + " " + this.authService.currentUserValue.lastName ?
+                this.authService.currentUserValue.username ?
                 "Ich" :
                 this.allImageSources[this.currentImageIndex].sender);
         this.currentImageDate = this.allImageSources[this.currentImageIndex].date;

@@ -4,6 +4,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Notification } from "../../_models/notification.model";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -27,12 +28,13 @@ export class NotificationsComponent implements OnInit {
         private fb: FormBuilder,
         private alertService: AlertService,
         private navbarService: NavbarService,
+        private fts: FastTranslateService,
     ) { }
 
-    public ngOnInit() {
-        this.navbarService.setHeadline("Benachrichtigungen");
+    public async ngOnInit() {
+        this.navbarService.setHeadline(await this.fts.t("notifications.notifications"));
         this.remoteService
-            .get("notificationsGetNotifications")
+            .get("get", "notifications")
             .subscribe((data) => {
                 this.notifications = data;
             });
@@ -42,7 +44,7 @@ export class NotificationsComponent implements OnInit {
             importance: [this.importance, [Validators.required]],
             receivers: [this.receivers, [Validators.required]],
         });
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
+        this.remoteService.get("get", "users").subscribe((data) => {
             this.allusers = data;
         });
     }
@@ -54,19 +56,17 @@ export class NotificationsComponent implements OnInit {
                     this.invalidMessage = false;
 
                     this.remoteService
-                        .getNoCache("notificationsNewNotification", {
+                        .getNoCache("post", "notifications", {
                             content: this.newNotificationForm.get("content").value,
                             headline: this.newNotificationForm.get("headline").value,
                             receivers: this.newNotificationForm.get("receivers").value,
-                            type: this.newNotificationForm.get("importance").value,
+                            theme: this.newNotificationForm.get("importance").value,
                         })
-                        .subscribe((data) => {
+                        .subscribe(async (data) => {
                             if (data && data.status == true) {
-                                this.alertService.success(
-                                    "Benachrichtigung erfolgreich erstellt!",
-                                );
+                                this.alertService.success(await this.fts.t("notifications.notificationCreatedSuccessfully"));
                                 this.remoteService
-                                    .get("notificationsGetNotifications")
+                                    .get("get", "notifications")
                                     .subscribe((res) => {
                                         this.notifications = res;
                                     });
@@ -75,22 +75,15 @@ export class NotificationsComponent implements OnInit {
                 },
             );
     }
-    public deleteNotification(notification: Notification) {
-        if (
-            confirm("Möchten Sie diese Benachrichtigung wirklich löschen?") ==
-            true
-        ) {
+    public async deleteNotification(notification: Notification) {
+        if (confirm(await this.fts.t("notifications.confirmDelete")) == true) {
             this.remoteService
-                .getNoCache("notificationsDeleteNotification", {
-                    id: notification.id,
-                })
-                .subscribe((data) => {
+                .getNoCache("delete", `notifications/${notification.id}`)
+                .subscribe(async (data) => {
                     if (data && data.status == true) {
-                        this.alertService.success(
-                            "Benachrichtigung erfolgreich gelöscht",
-                        );
+                        this.alertService.success(await this.fts.t("notifications.notificationDeletedSuccessfully"));
                         this.remoteService
-                            .get("notificationsGetNotifications")
+                            .get("get", "notifications")
                             .subscribe((res) => {
                                 this.notifications = res;
                             });

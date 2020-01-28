@@ -18,7 +18,7 @@ import { NavbarService } from "../../_services/navbar.service";
     templateUrl: "./navbar.component.html",
 })
 export class NavbarComponent {
-    public headline: string = "Nix";
+    public headline: string = "";
     @Output() public toggleNav = new EventEmitter<any>();
 
     constructor(
@@ -36,7 +36,7 @@ export class NavbarComponent {
             this.navbarService.change.subscribe((headline) => {
                 try {
                     this.headline = headline;
-                    this.cdr.detectChanges();
+                    this.cdr.markForCheck();
                     // tslint:disable-next-line: no-empty
                 } finally {
                 }

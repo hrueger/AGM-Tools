@@ -16,10 +16,14 @@
 .login-container .headline {
     text-align: center;
     text-transform: uppercase;
-    height: 13vh;
 }
 
 .login-container .headline h2 {
     padding-top: 5%;
     padding-bottom: 10%;
+}
+
+img.headerImg {
+    max-height: 3rem;
+    margin-top: -15px;
 }

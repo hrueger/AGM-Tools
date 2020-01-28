@@ -8,10 +8,10 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { Lightbox } from "ngx-lightbox";
-import config from "../../../_config/config";
-import { Message } from "../../../_models/message.model";
+import { environment } from "../../../../environments/environment";
 import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
+import { FastTranslateService } from "../../../_services/fast-translate.service";
 import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
@@ -22,24 +22,26 @@ import { RemoteService } from "../../../_services/remote.service";
     templateUrl: "./messages-area.component.html",
 })
 export class MessagesAreaComponent implements OnInit {
-    @Input() public messages: Message[];
+    @Input() public messages: any[];
     @Input() public messageSent: Event;
-    @Input() public receiverId: number;
+    @Input() public attachmentMessageSent: Event;
+    @Input() public chat: any;
     public allImageSources: any = [];
 
     constructor(
         private remoteService: RemoteService,
         private cdr: ChangeDetectorRef,
-        private authService: AuthenticationService,
+        private authenticationService: AuthenticationService,
         private lightbox: Lightbox,
         private alertService: AlertService,
+        private fts: FastTranslateService,
     ) { }
 
     public ngOnInit() {
         this.messages = this.messages.slice(0, 50);
     }
 
-    public addContact(contact) {
+    public async addContact(contact) {
         const el = document.createElement("textarea");
         el.value = contact.number;
         // @ts-ignore
@@ -49,7 +51,7 @@ export class MessagesAreaComponent implements OnInit {
         el.select();
         document.execCommand("copy");
         document.body.removeChild(el);
-        this.alertService.success("Die Nummer wurde in die Zwischenablage kopiert!");
+        this.alertService.success(await this.fts.t("chat.contactNumberCopied"));
     }
 
     public displayImage(messageIndex) {
@@ -57,10 +59,10 @@ export class MessagesAreaComponent implements OnInit {
         if (this.allImageSources.length == 0) {
             this.messages.forEach((msg) => {
                 if (msg.imageSrc) {
-                    const date = new Date(msg.created);
+                    const date = new Date(msg.date);
                     const datestr = `am ${that.pad(date.getDay())}.${that.pad(date.getMonth())}.${date.getFullYear()} um ${that.pad(date.getHours())}:${that.pad(date.getMinutes())} Uhr`;
                     that.allImageSources.push({
-                        caption: `${msg.sendername} ${datestr}`,
+                        caption: `${msg.sender.username} ${datestr}`,
                         name: msg.imageSrc,
                         src: that.getImageSrc(msg.imageSrc, false),
                     });
@@ -72,11 +74,11 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getImageSrc(imageName, thumbnail = true) {
-        return config.apiUrl +
+        return environment.apiUrl +
             "?getAttachment=" +
             imageName +
             "&token=" +
-            this.authService.currentUserValue.token +
+            this.authenticationService.currentUserValue.token +
             (thumbnail ? "&thumbnail" : "");
     }
 
@@ -86,24 +88,62 @@ export class MessagesAreaComponent implements OnInit {
             changes.messageSent.currentValue != "" &&
             changes.messageSent.currentValue != null
         ) {
-            /*if (this.messages[-1]) {
-                let chat = this.messages[-1].chat
-            }*/
-            let message: Message = {
-                chat: null,
-                created: Date.now(),
+            let message = {
+                content: changes.messageSent.currentValue,
+                date: new Date(),
                 fromMe: true,
-                sendername: "",
+                id: null,
+                sender: {
+                    username: "",
+                },
                 sent: "notsent",
-                text: changes.messageSent.currentValue,
+                toProject: null,
+                toUser: null,
             };
             this.messages.push(message);
             this.remoteService
-                .getNoCache("chatSendMessage", {
+                .getNoCache("post", `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}`, {
                     message: changes.messageSent.currentValue,
-                    rid: this.receiverId,
                 })
                 .subscribe((data) => {
+                    message = this.messages.pop();
+                    message.sent = "sent";
+                    this.messages.push(message);
+                    // console.log(this.messages);
+                    this.cdr.detectChanges();
+                });
+        } else if (
+            changes.attachmentMessageSent &&
+            changes.attachmentMessageSent.currentValue != "" &&
+            changes.attachmentMessageSent.currentValue != null
+        ) {
+            let message;
+            let data;
+            if (changes.attachmentMessageSent.currentValue.type == "location") {
+                message = {
+                    date: new Date(),
+                    fromMe: true,
+                    id: null,
+                    locationLat: changes.attachmentMessageSent.currentValue.data.coords.latitude,
+                    locationLong: changes.attachmentMessageSent.currentValue.data.coords.longitude,
+                    sender: {
+                        username: "",
+                    },
+                    sent: "notsent",
+                    toProject: null,
+                    toUser: null,
+                };
+                data = {
+                    locationLat: changes.attachmentMessageSent.currentValue.data.coords.latitude,
+                    locationLong: changes.attachmentMessageSent.currentValue.data.coords.longitude,
+                };
+            }
+            this.messages.push(message);
+            this.remoteService
+                .getNoCache("post", `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}/attachment`, {
+                    message: data,
+                })
+                .subscribe((d) => {
                     message = this.messages.pop();
                     message.sent = "sent";
                     this.messages.push(message);
@@ -113,8 +153,18 @@ export class MessagesAreaComponent implements OnInit {
         }
     }
 
+    public getLocationImageSrc(message) {
+        return `${environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
+    }
+
+    public openLocationInNewTab(message) {
+        window.open(`https://www.google.de/maps/place/${message.locationLat},${message.locationLong}/@${message.locationLat},${message.locationLong},17z/`, "_blank");
+    }
+
     public trackByFn(index, item) {
-        return item.id;
+        if (item) {
+            return item.id;
+        }
     }
 
     public isContinuation(idx: number) {
@@ -132,8 +182,7 @@ export class MessagesAreaComponent implements OnInit {
         );
     }
 
-    public getIcon(message: Message) {
-        // tslint:disable-next-line: radix
+    public getIcon(message) {
         switch (message.sent) {
             case "notsent":
                 return "&#xf017;";
@@ -145,8 +194,7 @@ export class MessagesAreaComponent implements OnInit {
         // return "T";
     }
 
-    public isViewed(message: Message) {
-        // tslint:disable-next-line: radix
+    public isViewed(message) {
         return message.sent === "seen";
     }
 

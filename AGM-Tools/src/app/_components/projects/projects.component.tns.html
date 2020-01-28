@@ -1,22 +1,22 @@
-<navbar headline="Projekte"></navbar>
+<navbar [headline]="'projects.projects' | translate"></navbar>
 <GridLayout rows="*,auto">
     <GridLayout rowSpan="2">
         <RadListView #projectsListView [items]="projects" selectionBehavior="None" (itemSwipeProgressStarted)="onSwipeCellStarted($event)" swipeActions="true">
             <ng-template let-project="item">
-                <StackLayout>
-                    <GridLayout rows="auto, auto" columns="auto, *, auto" class="list-group-item">
-                        <Label class="list-group-heading" row="0" col="1" [text]="project.name"></Label>
-                        <Label row="1" col="1" class="body" textWrap="true" [text]="project.description"></Label>
-                        <StackLayout row="0" col="2" rowspan="2">
-                            <Label class="body" *ngFor="let member of project.members" [text]="member"></Label>
-                        </StackLayout>
+                <GridLayout rows="auto auto" [style.backgroundImage]="getProjectImageSrc(project)" columns="*" class="p-0  bg-image-holder list-group-item">
+                    <GridLayout row="0" col="0" class="info" rows="auto, auto" columns="auto">
+                        <Label class="list-group-heading" row="0" col="0" [text]="project.name"></Label>
+                        <Label row="1" col="0" class="body" textWrap="true" [text]="project.description"></Label>
                     </GridLayout>
-
-                    <StackLayout height="1" class="list-group-seperator">
-                    </StackLayout>
-                </StackLayout>
+                    <GridLayout row="2" col="0" rows="auto, 20" columns="*, *, *, *" class="bg-white">
+                        <Button [nsRouterLink]="['/', 'chat', 'project', project.id]" row="0" col="0" class="fas btn-primary bar-button" [text]="'&#xf086;  ' + project.chat.data.length"></Button>
+                        <Button [nsRouterLink]="['/', 'files', project.id, project.name]" row="0" col="1" class="fas btn-primary bar-button" [text]="'&#xf15b;  ' + project.files.data.length"></Button>
+                        <Button [nsRouterLink]="['/', 'tasks', project.id]" row="0" col="2" class="fas btn-primary bar-button" [text]="'&#xf0ae;  ' + project.tasks.data.length"></Button>
+                        <Button [nsRouterLink]="['/', 'tutorials', project.id]" row="0" col="3" class="fas btn-primary bar-button" [text]="'&#xf02d;  ' + project.tutorials.data.length"></Button>
+                    </GridLayout>
+                </GridLayout>
             </ng-template>
-            <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout">
+            <GridLayout *tkListItemSwipeTemplate columns="auto, *, auto" class="gridLayoutLayout p-0">
                 <StackLayout id="add-view" col="0" class="addSwipeContainer" (tap)="onLeftSwipeClick($event)">
                     <Label text="&#xf234;" class="fas swipeLabel" verticalAlignment="center" horizontalAlignment="center"></Label>
                 </StackLayout>

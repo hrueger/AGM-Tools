@@ -3,6 +3,27 @@ name: Build
 on: [push]
 
 jobs:
+  build_api:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macOS-latest]
+    name: API on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - name: Install dependencies
+      working-directory: api
+      run: npm i
+    - name: Create files with api keys
+      working-directory: api
+      run: npm run createFilesWithApiKeys
+    - name: Build
+      working-directory: api
+      run: npm run build
   build_web:
     strategy:
       matrix:
@@ -32,9 +53,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: 10
-    - name: Setup Chocolatey
-      run: powershell @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))"
+        node-version: 12
     - name: Setup JDK
       run: powershell choco install adoptopenjdk --version 8.192 
     - name: Setup Android SDK

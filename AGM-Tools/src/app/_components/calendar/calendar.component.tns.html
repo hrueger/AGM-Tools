@@ -3,7 +3,7 @@
     <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
     </ActionItem>
 
-    <Label class="action-bar-title" text="Kalender"></Label>
+    <Label class="action-bar-title" [text]="'calendar.calendar' | translate"></Label>
     <ActionItem ios:visibility="collapsed" icon="res://ic_back" (tap)="up()"></ActionItem>
     <ActionItem ios:visibility="collapsed" icon="res://ic_next" (tap)="down()"></ActionItem>
 </ActionBar>

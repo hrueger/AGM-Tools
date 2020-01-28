@@ -171,6 +171,10 @@
     color: #3498db;
 }
 
+.speech-wrapper {
+    padding-top: 30px;
+}
+
 .speech-wrapper .bubble .name span {
     font-weight: normal;
     color: #b3b3b3;
@@ -222,6 +226,7 @@
 
 .message-image {
     display: block;
+    cursor: pointer;
 }
 
 .contact-copy-btn {

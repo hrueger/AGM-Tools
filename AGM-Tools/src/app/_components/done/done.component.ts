@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 
 @Component({
@@ -7,9 +8,9 @@ import { NavbarService } from "../../_services/navbar.service";
     templateUrl: "./done.component.html",
 })
 export class DoneComponent implements OnInit {
-    constructor(private navbarService: NavbarService) { }
+    constructor(private navbarService: NavbarService, private fts: FastTranslateService) { }
 
-    public ngOnInit() {
-        this.navbarService.setHeadline("Fertig");
+    public async ngOnInit() {
+        this.navbarService.setHeadline(await this.fts.t("done.done"));
     }
 }

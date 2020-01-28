@@ -1,0 +1,67 @@
+.project-image {
+    height: 135px;
+    object-fit: cover;
+}
+
+.project-header {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.project-header-overlay {
+    position: relative;
+    width: 100%;
+    top: -200px;
+    margin-bottom: -200px;
+    height: 200px;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.card-img-overlay {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.card-body {
+    height: calc( 100vh - 440px);
+    overflow: auto;
+}
+
+.file-icon {
+    height: 1.8rem;
+    float: left;
+    margin: 5px;
+}
+
+.chat-messages {
+    display: block;
+    height: 100%;
+    overflow: auto;
+}
+
+.bar-button {
+    border-width: 1;
+    margin: 0;
+    font-size: 20;
+}
+
+GridLayout.holder {
+    margin-top: 20;
+}
+
+.bg-white {
+    background-color: white; 
+}
+.info {
+    padding: 10;
+    padding-bottom: 40;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+.p-0 {
+    padding: 0;
+}
+.bg-image-holder {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}

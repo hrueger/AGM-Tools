@@ -1,10 +1,9 @@
 <StackLayout>
-    <GridLayout rows="36" columns="36,*,36" class="action-bar p-10">
-        <Button [text]="sub ? '&#xf060;' : '&#xf0c9;'" class="fas no-border round" row="0" col="0" (tap)="sub ? back() : onDrawerButtonTap()">
+    <GridLayout rows="36" columns="auto,*" class="action-bar p-10">
+        <Button [text]="sub ? '&#xf060;' : '&#xf0c9;'" class="fas no-border round action-bar-button" row="0" col="0" (tap)="sub ? back() : onDrawerButtonTap()">
         </Button>
         <Label row="0" col="1" [text]="currentHeadline" class="text-center action-bar-title"></Label>
-    </GridLayout>
-    
+    </GridLayout>    
     
     <ListView #settingListView [items]="displayItems" *ngIf="!displayingFull">
         <ng-template let-setting="item" let-i="index" >
@@ -12,9 +11,10 @@
                 <Label row="0" col="0" rowspan="2" class="fas icon" [text]="getIcon(setting.icon)"></Label>
                 <Label class="list-group-heading" row="0" col="1" [text]="setting.name"></Label>
                 <Label row="1" col="1" class="body" textWrap="true" [text]="setting.description"></Label>
-                <Switch [checked]="setting.value" *ngIf="setting.type=='switch'" (checkedChange)="updateSwitch(i)" row="0" rowspan="2" col="3"></Switch>
+                <Switch [checked]="setting.value" *ngIf="setting.type=='switch'" row="0" rowspan="2" col="3"></Switch>
             </GridLayout>
         </ng-template>
     </ListView>
-    <WebView row="1" #myWebView *ngIf="displayingFull && displayingFull.type=='switch'" [src]="displayingFull.value"></WebView>
+    <WebView row="1" #myWebView *ngIf="displayingFull && displayingFull.type=='webview'" [src]="displayingFull.value"></WebView>
+    <HTMLView row="1" #myWebView *ngIf="displayingFull && displayingFull.type=='html'" [html]="displayingFull.value"></HTMLView>
 </StackLayout>

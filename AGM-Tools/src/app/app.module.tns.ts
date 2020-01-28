@@ -1,12 +1,14 @@
 import { registerLocaleData } from "@angular/common";
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClient } from "@angular/common/http";
 import localeDe from "@angular/common/locales/de";
 import {
     LOCALE_ID,
     NgModule,
+    NgZone,
     NO_ERRORS_SCHEMA,
     PlatformRef,
 } from "@angular/core";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
@@ -16,16 +18,14 @@ import { NativeScriptUIDataFormModule } from "nativescript-ui-dataform/angular";
 import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
 import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
 import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
+import * as AppUrlSchemes from "nativescript-urlhandler";
 import { AvatarModule } from "ngx-avatar";
 import * as platform from "tns-core-modules/platform";
-import { AboutComponent } from "./_components/about/about.component";
-import { BugsComponent } from "./_components/bugs/bugs.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
 import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
 import { MessagesAreaComponent } from "./_components/chat-messages/messages-area/messages-area.component";
 import { ChatComponent } from "./_components/chat/chat.component";
-import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
 import { DashboardComponent } from "./_components/dashboard/dashboard.component";
 import { DoneComponent } from "./_components/done/done.component";
 import { FilesComponent } from "./_components/files/files.component";
@@ -38,7 +38,6 @@ import { SidebarComponent } from "./_components/sidebar/sidebar.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
-import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { NavbarService } from "./_services/navbar.service";
 import { AppComponent } from "./app.component";
@@ -53,7 +52,7 @@ import { Carousel, CarouselItem } from "nativescript-carousel";
 registerElement("Carousel", () => Carousel);
 registerElement("CarouselItem", () => CarouselItem);
 import { FormBuilder } from "@angular/forms";
-import { NativeScriptRouterModule } from "nativescript-angular/router";
+import { NativeScriptRouterModule, RouterExtensions } from "nativescript-angular/router";
 import { EmojiPickerModule } from "nativescript-emoji-picker/angular";
 import { LetterAvatarModule } from "nativescript-letter-avatar/angular";
 import { ModalDatetimepicker } from "nativescript-modal-datetimepicker";
@@ -68,12 +67,23 @@ import { TourComponent } from "./_components/tour/tour.component";
 import { TutorialComponent } from "./_components/tutorial/tutorial.component";
 import { TutorialsComponent } from "./_components/tutorials/tutorials.component";
 import { UpdaterComponent } from "./_components/updater/updater.component";
+import { DateAgoPipe } from "./_pipes/howLongAgo.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
 registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
 registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { AppShortcuts } from "nativescript-app-shortcuts";
+import { WebRTC } from "nativescript-webrtc-plugin";
+import { WebRTCModule } from "nativescript-webrtc-plugin/angular";
+import { environment } from "../environments/environment";
+import { CallComponent } from "./_components/call/call.component";
+import { ShareComponent } from "./_components/share/share.component";
+import { JwtInterceptor } from "./_helpers/jwt.interceptor";
+
+WebRTC.init();
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -85,16 +95,15 @@ registerElement("AnimatedCircle", () => require("nativescript-animated-circle").
         ChatComponent,
         NotificationsComponent,
         CalendarComponent,
+        CallComponent,
         ProjectsComponent,
         FilesComponent,
         TemplatesComponent,
-        BugsComponent,
-        ClientsoftwareComponent,
         SettingsComponent,
-        AboutComponent,
         NavbarComponent,
         SidebarComponent,
         ShortWhenPipe,
+        DateAgoPipe,
         TruncatePipe,
         ChatMessagesComponent,
         MessagesAreaComponent,
@@ -111,6 +120,7 @@ registerElement("AnimatedCircle", () => require("nativescript-animated-circle").
         TutorialsComponent,
         TutorialComponent,
         EditTutorialComponent,
+        ShareComponent,
     ],
     entryComponents: [
         NewUserModalComponent,
@@ -133,7 +143,15 @@ registerElement("AnimatedCircle", () => require("nativescript-animated-circle").
         NativeScriptUIGaugeModule,
         LetterAvatarModule,
         AvatarModule,
+        WebRTCModule,
         EmojiPickerModule,
+        TranslateModule.forRoot({
+            loader: {
+                deps: [HttpClient],
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+            },
+        }),
     ],
     providers: [
         FormBuilder,
@@ -148,9 +166,43 @@ registerElement("AnimatedCircle", () => require("nativescript-animated-circle").
             provide: LOCALE_ID,
             useValue: "de-DE",
         },
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
     schemas: [NO_ERRORS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {
+    constructor(private router: RouterExtensions, private zone: NgZone) {
+        new AppShortcuts().setQuickActionCallback((shortcutItem) => {
+            // tslint:disable-next-line: no-console
+            console.log(`The app was launched by shortcut with the type '${shortcutItem.type}'`);
+            if (shortcutItem.type === "calendar") {
+                this.deeplink("/calendar");
+            } else if (shortcutItem.type === "projects") {
+                this.deeplink("/projects");
+            } else if (shortcutItem.type === "chat") {
+                this.deeplink("/chat");
+            }
+        });
+        AppUrlSchemes.handleOpenURL((appUrl: AppUrlSchemes.AppURL) => {
+            // tslint:disable-next-line: no-console
+            console.log("###########################\nGot the following appURL", appUrl,
+            "\n###########################"); // ToDo
+            const appUrlString = appUrl.toString().replace(environment.appUrl, "");
+            const parts = appUrlString.split("/");
+            router.navigate(parts);
+        });
+    }
+
+    private deeplink(to: string): void {
+        this.zone.run(() => {
+            this.router.navigate([to], {
+                animated: false,
+            });
+        });
+    }
+}
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
+}

@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
-import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/directives/dialogs";
+import { ModalDialogOptions, ModalDialogService } from "nativescript-angular/directives/dialogs";
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
     CFAlertDialog,
     CFAlertStyle,
 } from "nativescript-cfalert-dialog";
-import { ListViewEventData } from "nativescript-ui-listview";
+import { ListViewEventData, SwipeActionsEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
@@ -39,7 +39,7 @@ export class UsersComponent implements OnInit {
     ) { }
 
     public ngOnInit() {
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
+        this.remoteService.get("get", "users").subscribe((data) => {
             this.users = data;
         });
     }
@@ -59,7 +59,7 @@ export class UsersComponent implements OnInit {
         this.modal.showModal(NewUserModalComponent, options).then((newUser) => {
             if (newUser) {
                 this.remoteService
-                    .getNoCache("usersNewUser", {
+                    .getNoCache("post", "users", {
                         email: newUser.email,
                         pw: newUser.password,
                         pw2: newUser.password2,
@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit {
                                 "Benutzer erfolgreich erstellt",
                             );
                             this.remoteService
-                                .get("usersGetUsers")
+                                .get("get", "users")
                                 .subscribe((res) => {
                                     this.users = res;
                                 });
@@ -83,13 +83,14 @@ export class UsersComponent implements OnInit {
     }
 
     public onDrawerButtonTap(): void {
-        const sideDrawer =  app.getRootView() as RadSideDrawer;
+        const sideDrawer =  app.getRootView() as any;
         sideDrawer.showDrawer();
     }
 
     public openEditModal() {
         const currentUser = this.authService.currentUserValue;
         const options = {
+            animated: true,
             context: { currentUser },
             fullscreen: true,
             viewContainerRef: this.vcRef,
@@ -97,7 +98,7 @@ export class UsersComponent implements OnInit {
         this.modal.showModal(EditUserModalComponent, options).then((newUser) => {
             if (newUser) {
                 this.remoteService
-                    .getNoCache("usersEditCurrentUser", {
+                    .getNoCache("post", "users/editCurrent", {
                         "email": newUser.email,
                         "id": this.authService.currentUserValue.id,
                         "pw-new": newUser.password1,
@@ -111,7 +112,7 @@ export class UsersComponent implements OnInit {
                                 "Eigene Daten erfolgreich geändert!",
                             );
                             this.remoteService
-                                .get("usersGetUsers")
+                                .get("get", "users")
                                 .subscribe((res) => {
                                     this.users = res;
                                 });
@@ -122,9 +123,10 @@ export class UsersComponent implements OnInit {
         });
     }
 
-    public onSwipeCellStarted(args: ListViewEventData) {
+    public onSwipeCellStarted(args: SwipeActionsEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
+        // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.right = rightItem.getMeasuredWidth();
     }
@@ -138,7 +140,7 @@ export class UsersComponent implements OnInit {
         const onYesPressed = (response) => {
             this.usersListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
-                .getNoCache("usersDeleteUser", {
+                .getNoCache("post", "usersDeleteUser", {
                     id: uid,
                 })
                 .subscribe((data) => {
@@ -147,7 +149,7 @@ export class UsersComponent implements OnInit {
                             "Benutzer erfolgreich gelöscht",
                         );
                         this.remoteService
-                            .get("usersGetUsers")
+                            .get("post", "usersGetUsers")
                             .subscribe((res) => {
                                 this.users = res;
                             });

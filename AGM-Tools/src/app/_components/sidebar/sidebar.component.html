@@ -3,6 +3,7 @@
         <ul class="nav flex-column">
             <li class="nav-item" *ngFor="let navLink of navLinks">
                 <a
+                    *ngIf="!navLink.separator"
                     class="nav-link"
                     routerLinkActive="active"
                     routerLink="{{ navLink.target }}"
@@ -11,6 +12,7 @@
                     <i class="fa fa-{{ navLink.icon }}"></i>
                     {{ navLink.name }}
                 </a>
+                <span *ngIf="navLink.separator" class="mt-2 nav-link border-top border-primary"></span>
             </li>
         </ul>
     </div>

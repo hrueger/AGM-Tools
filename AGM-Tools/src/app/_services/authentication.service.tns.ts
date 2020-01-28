@@ -2,9 +2,9 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import config from "../_config/config";
+import * as applicationSettings from "tns-core-modules/application-settings";
+import { environment } from "../../environments/environment";
 import { User } from "../_models/user.model";
-require("nativescript-localstorage");
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -14,32 +14,35 @@ const httpOptions = {
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
-
-    public get currentUserValue(): User {
-        return this.currentUserSubject.value;
-    }
     public currentUser: Observable<User>;
     private currentUserSubject: BehaviorSubject<User>;
 
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(
-            JSON.parse(localStorage.getItem("currentUser")),
+        let u = applicationSettings.getString("currentUser");
+        if (u) {
+            u = JSON.parse(u);
+        } else {
+            u = null;
+        }
+        this.currentUserSubject = new BehaviorSubject<any>(
+            u,
         );
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public resetPassword(username: string): Observable<boolean> {
+    public resetPassword(arg0: string) {
         return new Observable<boolean>();
     }
 
-    public login(username: string, password: string) {
-        const action = "authenticate";
+    public get currentUserValue(): User {
+        return this.currentUserSubject.value;
+    }
 
+    public login(username: string, password: string) {
         return this.http
             .post<any>(
-                `${config.apiUrl}`,
+                `${environment.apiUrl}auth/login`,
                 {
-                    action,
                     password,
                     username,
                 },
@@ -49,12 +52,13 @@ export class AuthenticationService {
                 map((user) => {
                     // login successful if there's a jwt token in the response
                     if (user && user.token) {
-                        // store user details and jwt token in local
-                        // storage to keep user logged in between page refreshes
-                        localStorage.setItem(
+                        // store user details and jwt token in local storage to
+                        // keep user logged in between page refreshes
+                        applicationSettings.setString(
                             "currentUser",
                             JSON.stringify(user),
                         );
+                        this.saveJwtToken(user);
                         this.currentUserSubject.next(user);
                     }
 
@@ -63,9 +67,13 @@ export class AuthenticationService {
             );
     }
 
+    public saveJwtToken(user: User) {
+        applicationSettings.setString("jwt_token", user.token);
+    }
+
     public logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem("currentUser");
+        applicationSettings.remove("currentUser");
         this.currentUserSubject.next(null);
     }
 }

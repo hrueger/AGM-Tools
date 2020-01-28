@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { catchError, first, tap } from "rxjs/operators";
-import config from "../_config/config";
+import { environment } from "../../environments/environment";
 import { AlertService } from "./alert.service";
 import { CacheService } from "./cache.service";
 
@@ -16,27 +16,21 @@ export class RemoteService {
         private cacheService: CacheService,
     ) { }
 
-    public get(action: string, ...args: any): Observable<any> {
-        // var action = "dashboardGetSpaceChartData";
+    public get(type: "get" | "post" | "put" | "delete", path: string, args?: any): Observable<any> {
         const subject = new BehaviorSubject(null);
         let cacheData = null;
         let echtDaten = false;
-        // console.log("hole internetdaten");
-        this.http
-            .post<any>(`${config.apiUrl}`, {
-                action,
-                args,
-            })
-            .pipe(
+        const req = this.getRequest(type, path, args);
+        req.pipe(
                 tap((_) =>
                     this.log(
                         "fetched " +
-                        action +
+                        path +
                         " with data " +
                         JSON.stringify(args),
                     ),
                 ),
-                catchError(this.handleError<any>(action, false)),
+                catchError(this.handleError<any>(path, false)),
             )
             .subscribe((data) => {
                 // console.log("internetdaten bekommen");
@@ -45,9 +39,9 @@ export class RemoteService {
                     // console.log("Echte Daten: " + data);
                     if (data) {
                         subject.next(data);
-                        this.cacheService.put(data, action, args);
+                        this.cacheService.put(data, path, args);
                     } else {
-                        this.alertService.snackbar("Offline-Modus (Daten können veraltet sein)");
+                        // ToDo this.alertService.snackbar("Offline-Modus (Daten können veraltet sein)");
                     }
 
                     // console.log("cache updated and new data served: " + data);
@@ -59,7 +53,7 @@ export class RemoteService {
             });
         // console.log("hole cachedaten");
         this.cacheService
-            .get(action, args)
+            .get(path, args)
 
             .subscribe((d) => {
                 // console.log("cacheDaten bekommen");
@@ -71,43 +65,70 @@ export class RemoteService {
             });
         return subject.asObservable();
     }
-    public getNoCache(action: string, ...args: any): Observable<any> {
+
+    public getNoCache(type, path: string, args?: any): Observable<any> {
         this.log(
             "fetching " +
-            action +
+            path +
             " with data " +
             JSON.stringify(args),
         );
-        return this.http
-            .post<any>(`${config.apiUrl}`, {
-                action,
-                args,
-            })
+        return this.getRequest(type, path, args)
             .pipe(
                 tap((_) =>
                     this.log(
                         "fetched " +
-                        action +
+                        path +
                         " with data " +
                         JSON.stringify(args),
                     ),
                 ),
-                catchError(this.handleError<any>(action, false)),
+                catchError(this.handleError<any>(path, false)),
             );
     }
-    public uploadTutorialFileNoCache(file: any): Observable<any> {
+    public uploadFile(action: string, name: string, file: any, args: object = {}): Observable<any> {
         this.log("uploading file " + file.name);
         const formData: FormData = new FormData();
-        formData.append("uploadTutorialFile", file, file.name);
-        formData.append("uploadTutorialFile", "true");
+        formData.append(name, file, file.name);
+        for (const key in args) {
+            if (args.hasOwnProperty(key)) {
+                formData.append(key, args[key]);
+            }
+        }
         return this.http
-            .post<any>(`${config.apiUrl}`, formData)
+            .post<any>(`${environment.apiUrl}${action}`, formData)
             .pipe(
                 tap((_) =>
                     this.log("uploading file " + file.name),
                 ),
                 catchError(this.handleError<any>("fileUpload", false)),
             );
+    }
+
+    private getRequest(type: string, path: string, args: any) {
+        let req;
+        if (type == "get") {
+            req = this.http
+                .get<any>(`${environment.apiUrl}${path}`, {
+                    ...args,
+                });
+        } else if (type == "post") {
+            req = this.http
+                .post<any>(`${environment.apiUrl}${path}`, {
+                    ...args,
+                });
+        } else if (type == "put") {
+            req = this.http
+                .put<any>(`${environment.apiUrl}${path}`, {
+                    ...args,
+                });
+        } else if (type == "delete") {
+            req = this.http
+                .delete<any>(`${environment.apiUrl}${path}`, {
+                    ...args,
+                });
+        }
+        return req;
     }
 
     private handleError<T>(operation = "operation", result?: T) {

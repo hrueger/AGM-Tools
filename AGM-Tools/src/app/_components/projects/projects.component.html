@@ -2,47 +2,185 @@
     id="newBtn"
     type="button"
     (click)="openNewModal(content)"
-    class="btn btn-primary"
->
-    Neues Projekt
-</button>
-<br /><br />
-<table id="users" class="table table-responsive table-hover table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Beschreibung</th>
-            <th>Mitglieder</th>
-            <th>Mitglied hinzufügen</th>
-            <th>Löschen</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let project of projects">
-            <td>{{ project.name }}</td>
-            <td>{{ project.description }}</td>
-            <td>{{ project.members.join(", ") }}</td>
-            <td>
-                <button class="btn btn-link" (click)="addUser(project)">
-                    Hinzufügen
+    class="btn btn-outline-primary"
+    *ngIf="!currentProject"
+>{{ "projects.newProject" | translate }}</button>
+
+<div class="row mt-4" *ngIf="!currentProject">
+    <div class="col-md-3 col-sm-6 mb-3 px-2" *ngFor="let project of projects">
+        <div class="card">
+            <img [src]="getProjectImageSrc(project)" class="card-img project-image" alt="">
+            <div class="card-img-overlay">
+                <div ngbDropdown class="d-inline-block float-right">
+                    <button class="btn btn-outline-none text-primary p-1" ngbDropdownToggle><i class="fas fa-cog"></i></button>
+                    <div ngbDropdownMenu>
+                        <button ngbDropdownItem class="btn btn-link text-primary btn-outline-primary" (click)="update(project, updateModal)">{{"general.edit" | translate}}</button>
+                        <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(project)">{{"general.delete" | translate}}</button>
+                    </div>
+                </div>
+                <div class="pointer" (click)="goToProject(project)">
+                    <h5 class="card-title">{{project.name}}</h5>
+                    <p class="card-text">{{project.description}}</p>
+                </div>
+            </div>
+            <div class="alert alert-info mb-0" *ngIf="project.tips.length > 0">{{'tips.tipsAvalible' | translate}} <button class="btn btn-link" (click)="goToProject(project)">{{'tips.viewTips' | translate}} </button></div>
+            <div class="list-group list-group-flush">
+                <a [routerLink]="['/', 'chat', 'project', project.id]" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{'chat.chat' | translate}}</h5>
+                        <small>{{project.chat.lastUpdated | howLongAgo}}</small>
+                    </div>
+                    <div>
+                        <span class="float-right badge badge-normal badge-primary" *ngIf="project.chat.data.length > 0">{{project.chat.data.length}}</span>
+                        <small class="mb-1 mr-4 truncate">{{project.chat.data}}</small>
+                    </div>
+                </a>
+                
+                <a [routerLink]="['/', 'files', project.id, project.name]" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{"files.files" | translate}}</h5>
+                        <small>{{project.files.lastUpdated | howLongAgo}}</small>
+                    </div>
+                    <div>
+                        <span class="float-right badge badge-normal badge-primary" *ngIf="project.files.totalFiles > 0">{{project.files.totalFiles}}</span>
+                        <small class="mb-1 mr-4 truncate">{{project.files.data.length > 0 ? joinWithComma(project.files.data, 'name') : 'errors.noFilesLinked' | translate}}</small>
+                    </div>
+                </a>
+                    
+                <button (click)="displayTasks(tasksModal, project.tasks.data)" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{"tasks.tasks" | translate}}</h5>
+                        <small>{{project.tasks.lastUpdated | howLongAgo}}</small>
+                    </div>
+                    <div>
+                        <span class="float-right badge badge-normal badge-primary" *ngIf="project.tasks.data.length > 0">{{project.tasks.data.length}}</span>
+                        <small class="mb-1 mr-4 truncate">{{project.tasks.data.length > 0 ? joinWithComma(project.tasks.data, 'title') : 'errors.noTasksAssigned' | translate}}</small>
+                    </div>
                 </button>
-            </td>
-            <td>
-                <button class="btn btn-link" (click)="delete(project)">
-                    Löschen
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+
+                <a [routerLink]="['/', 'tutorials', project.id, project.name]" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{"tutorials.tutorials" | translate}}</h5>
+                        <small>{{project.tutorials.lastUpdated | howLongAgo}}</small>
+                    </div>
+                    <div>
+                        <span class="float-right badge badge-normal badge-primary" *ngIf="project.tutorials.data.length > 0">{{project.tutorials.data.length}}</span>
+                        <small class="mb-1 mr-4 truncate">{{project.tutorials.data.length > 0 ? joinWithComma(project.tutorials.data, 'title') : 'errors.noTutorialsLinked' | translate}}</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="currentProject">
+    <img [src]="getProjectImageSrc(currentProject)" class="img-fluid project-header" alt="">
+    <div class="project-header-overlay p-3">
+        <button
+            id="backBtn"
+            type="button"
+            (click)="currentProject = undefined"
+            class="btn btn-outline-primary mb-5"
+        >{{ "general.back" | translate }}</button>
+
+        <div ngbDropdown class="d-inline-block float-right">
+            <button class="btn btn-outline-none text-primary p-1" ngbDropdownToggle><i class="fas fa-cog"></i></button>
+            <div ngbDropdownMenu>
+                <button ngbDropdownItem class="btn btn-link text-primary btn-outline-primary" (click)="update(currentProject, updateModal)">{{"general.edit" | translate}}</button>
+                <button ngbDropdownItem class="btn btn-link text-danger btn-danger" (click)="delete(currentProject)">{{"general.delete" | translate}}</button>
+            </div>
+        </div>
+        <h5 class="card-title">{{currentProject.name}}</h5>
+        <p class="card-text">{{currentProject.description}}</p>
+    </div>
+
+    <div class="alert alert-info mb-0" *ngFor="let tip of currentProject.tips">{{tip}}</div>
+
+    <div class="card-group mt-3 w-100">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3"><a [routerLink]="['/', 'chat', 'project', currentProject.id]">{{"chat.chat" | translate}}</a></h6>
+                <div>
+                    <a class="btn btn-outline-success py-1" [routerLink]="['/', 'chat', 'project', currentProject.id]"><i class="fas fa-expand-alt"></i></a>
+                </div>
+            </div>
+            <div class="card-body p-0 pb-5">
+                <chat-messages #chatMessages [inputChat]="currentProjectChat" [embedded]="true" class="chat-messages"></chat-messages>
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
+        </div>
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3"><a [routerLink]="['/', 'files', currentProject.id, currentProject.name]">{{"files.files" | translate}}</a></h6>
+                <div>
+                    <button class="btn btn-outline-success py-1" (click)="linkFile()"><i class="fas fa-paperclip"></i></button>
+                    <a class="btn btn-outline-success py-1" [routerLink]="['/', 'files', currentProject.id, currentProject.name]"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <p class="m-5 text-center" *ngIf="currentProject.files.data.length == 0">{{"errors.noFilesLinked" | translate}}</p>
+                <div class="list-group-flush" *ngIf="currentProject.files.data.length > 0">
+                    <a [routerLink]="['/', 'files', file.id]" class="list-group-item list-group-item-action" *ngFor="let file of currentProject.files.data">
+                        <img class="img-fluid file-icon" [src]="'assets/icons/extralarge/' + getFileExtension(file) + '.png'">
+                        <h6 class="card-title">{{file.name}}</h6>
+                        <small class="card-text">{{file.createdAt | date:'shortDate'}}</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3"><a [routerLink]="" (click)="displayTasks(tasksModal, currentProject.tasks.data)">{{"tasks.tasks" | translate}}</a></h6>
+                <div>
+                    <a class="btn btn-outline-success py-1" [routerLink]="" (click)="openNewTaskModal(newTaskModal)"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <p class="m-5 text-center" *ngIf="currentProject.tasks.data.length == 0">{{"errors.noTasksAssigned" | translate}}</p>
+                <div class="list-group-flush" *ngIf="currentProject.tasks.data.length > 0">
+                    <button (click)="displayTask(taskModal, task)" class="list-group-item list-group-item-action" *ngFor="let task of currentProject.tasks.data">
+                        <div class="d-flex w-100 justify-content-between text-right">
+                            <h5 class="card-title">{{task.title}}</h5>
+                            <small>{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
+                          </div>
+                          <small class="card-text">{{task.description}}</small>
+                          <small class="d-block mt-1">{{task.creator.username}}, {{task.createdAt | date:'shortDate'}}</small>
+                    </button>
+                </div>
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between p-1">
+                <h6 class="card-title mt-2 mb-0 ml-3"><a [routerLink]="['/', 'tutorials', currentProject.id, currentProject.name]">{{"tutorials.tutorials" | translate}}</a></h6>
+                <div>
+                    <button class="btn btn-outline-success py-1" (click)="linkTutorial()"><i class="fas fa-paperclip"></i></button>
+                    <a class="btn btn-outline-success py-1" [routerLink]="['/', 'tutorials', 'new']"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <p class="m-5 text-center" *ngIf="currentProject.tutorials.data.length == 0">{{"errors.noTutorialsLinked" | translate}}</p>
+                <div class="list-group-flush" *ngIf="currentProject.tutorials.data.length > 0">
+                    <a [routerLink]="['/', 'tutorial', tutorial.id]" class="list-group-item list-group-item-action" *ngFor="let tutorial of currentProject.tutorials.data">
+                        <h5 class="card-title">{{tutorial.title}}</h5>
+                        <small class="card-text">{{tutorial.description}}</small>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-muted"><small>{{currentProject.chat.lastUpdated | howLongAgo}}</small></div>
+        </div>
+    </div>
+</div>
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Neues Projekt</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{"projects.newProject" | translate}}</h4>
         <button
             type="button"
             class="close"
-            aria-label="Close"
             (click)="modal.dismiss('Cross click')"
         >
             <span aria-hidden="true">&times;</span>
@@ -50,36 +188,36 @@
     </div>
     <div class="modal-body">
         <div *ngIf="invalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{"errors.requiredFieldsMissing" | translate}}
         </div>
         <form [formGroup]="newProjectForm">
             <div class="form-group">
-                <label for="name">Name: </label>
+                <label for="name">{{"general.name" | translate}}: </label>
                 <input
                     type="text"
                     class="form-control"
                     id="name"
                     formControlName="name"
-                    placeholder="Name des Projekts"
+                    [placeholder]="'general.name' | translate"
                 />
             </div>
             <br />
             <div class="form-group">
-                <label for="description">Beschreibung: </label>
+                <label for="description">{{'general.description' | translate}}: </label>
                 <textarea
                     class="form-control"
                     formControlName="description"
                     id="description"
-                    placeholder="Beschreibung des Projekts"
+                    [placeholder]="'general.description' | translate"
                 ></textarea>
             </div>
             <br />
             <div class="form-group">
-                <label for="members" class="">Mitglieder:</label>
+                <label for="users" class="">{{'general.members' | translate}}:</label>
                 <select
                     multiple
                     class="custom-select"
-                    formControlName="members"
+                    formControlName="users"
                 >
                     <option
                         *ngFor="let user of allusers"
@@ -94,14 +232,229 @@
     <div class="modal-footer">
         <button
             type="button"
-            class="btn btn-success"
+            class="btn btn-outline-success"
             (click)="
                 !newProjectForm.invalid
                     ? modal.close('Save click')
                     : (invalidMessage = true)
             "
         >
-            Erstellen
+        {{'general.create' | translate}}
         </button>
+    </div>
+</ng-template>
+
+<ng-template #newTaskModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{"tasks.newTask" | translate}}</h4>
+        <button
+            type="button"
+            class="close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="newTaskFormInvalidMessage" class="alert alert-danger">
+            {{"errors.requiredFieldsMissing" | translate}}
+        </div>
+        <form [formGroup]="newTaskForm">
+            <div class="form-group">
+                <label for="title">{{"general.title" | translate}}: </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    formControlName="taskTitle"
+                    [placeholder]="'general.title' | translate"
+                />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="description">{{'general.description' | translate}}: </label>
+                <textarea
+                    class="form-control"
+                    formControlName="taskDescription"
+                    id="description"
+                    [placeholder]="'general.description' | translate"
+                ></textarea>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="users" class="">{{'tasks.forUsers' | translate}}:</label>
+                <select
+                    multiple
+                    class="custom-select"
+                    formControlName="taskUsers"
+                >
+                    <option
+                        *ngFor="let user of allusers"
+                        value="{{ user.id }}"
+                        >{{ user.username }}</option
+                    >
+                </select>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="due" class="">{{'tasks.dueOn' | translate}}:</label>
+                <div class="input-group">
+                    <input 
+                        type="text"
+                        class="form-control"
+                        id="due"
+                        formControlName="taskDue"
+                        [placeholder]="'tasks.dueOn' | translate" 
+                        ngbDatepicker
+                        #d="ngbDatepicker"
+                    >
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i class="fa fa-calendar-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-success"
+            (click)="
+                !newTaskForm.invalid
+                    ? modal.close('Save click')
+                    : (newTaskFormInvalidMessage = true)
+            "
+        >
+        {{'general.create' | translate}}
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #updateModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{"projects.update" | translate}}</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="updateProjectInvalidMessage" class="alert alert-danger">
+            {{"errors.requiredFieldsMissing" | translate}}
+        </div>
+        <form [formGroup]="updateProjectForm">
+            <div class="form-group">
+                <label for="name">{{"general.name" | translate}}: </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    formControlName="name"
+                    [placeholder]="'general.name' | translate"
+                />
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="description">{{"general.description" | translate}}: </label>
+                <textarea
+                    class="form-control"
+                    formControlName="description"
+                    id="description"
+                    [placeholder]="'general.description' | translate"
+                ></textarea>
+            </div>
+            <br />
+            <div class="form-group">
+                <label for="users" class="">{{"general.members" | translate}}:</label>
+                <select
+                    multiple
+                    class="custom-select"
+                    formControlName="users"
+                >
+                    <option
+                        *ngFor="let user of allusers"
+                        value="{{ user.id }}"
+                        >{{ user.username }}</option
+                    >
+                </select>
+            </div>
+            <br />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-success"
+            (click)="
+                !updateProjectForm.invalid
+                    ? modal.close('Save click')
+                    : (updateProjectInvalidMessage = true)
+            "
+        >
+            {{"general.update" | translate}}
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #tasksModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{"tasks.tasks" | translate}}</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="list-group">
+            <button class="list-group-item list-group-item-action p-0" *ngFor="let task of tasks">
+                <div class="m-3">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{task.title}}</h5>
+                        <small>{{task.createdAt | howLongAgo}}</small>
+                    </div>
+                    <p class="mb-1">{{task.description}}</p>
+                </div>
+                <div class="alert alert-warning">
+                    {{'tasks.due' | translate:{'date': task.due | date:'shortDate', 'formatted': task.due | howLongAgo } }}
+                </div>
+                <div class="m-3">
+                    {{task.creator.username}}, {{task.createdAt | date:'shortDate'}}
+                </div>
+            </button>
+          </div>
+    </div>
+</ng-template>
+
+<ng-template #taskModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{"general.task" | translate}}: {{currentTask.title}}</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+       {{currentTask.description}}
+    </div>
+    <div class="modal-footer p-0">
+        <div class="alert text-left m-0 w-50">
+            {{currentTask.creator.username}}, {{currentTask.createdAt | date:'shortDate'}}
+        </div>
+        <div class="alert alert-warning m-0 w-50">
+            {{'tasks.due' | translate:{'date': currentTask.due | date:'mediumDate', 'formatted': currentTask.due | howLongAgo } }}
+        </div>
     </div>
 </ng-template>

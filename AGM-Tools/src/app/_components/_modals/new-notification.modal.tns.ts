@@ -2,18 +2,18 @@ import { Component, NgZone, ViewChild } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
 import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
-import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
 export class Notification {
     public headline: string;
     public content: string;
-    public importance: string;
+    public theme: string;
     public receivers: any[];
-    constructor(headline: string, content: string, importance: string) {
+    constructor(headline: string, content: string, theme: string) {
         this.headline = headline;
         this.content = content;
-        this.importance = importance;
+        this.theme = theme;
     }
 }
 
@@ -25,42 +25,7 @@ export class Notification {
 export class NewNotificationModalComponent {
     public receivers: any[] = [];
     @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
-    public dataFormConfig = {
-        commitMode: "Immediate",
-        isReadOnly: false,
-        propertyAnnotations:
-            [
-                {
-                    displayName: "Thema",
-                    index: 0,
-                    name: "headline",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-                {
-                    displayName: "Nachricht",
-                    editor: "MultilineText",
-                    index: 1,
-                    name: "content",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                },
-
-                {
-                    displayName: "Wichtigkeit",
-                    editor: "Picker",
-                    index: 3,
-                    name: "importance",
-                    validators: [
-                        { name: "NonEmpty" },
-                    ],
-                    valuesProvider: ["Bitte wählen", "Erfolg", "Information", "Warnung", "Gefahr"],
-                },
-            ],
-        validationMode: "Immediate",
-    };
+    public dataFormConfig: any;
     public noReceiversSelectedErrorMessage: boolean = false;
     public noTypeSelectedErrorMessage: boolean = false;
     private notification: Notification;
@@ -69,9 +34,10 @@ export class NewNotificationModalComponent {
 
     public constructor(
         private params: ModalDialogParams, private remoteService: RemoteService,
-        private zone: NgZone) {
+        private zone: NgZone, private fts: FastTranslateService) {
         this.multiSelect = new MultiSelect();
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
+        this.remoteService.get("get", "users").subscribe((data) => {
+            this.users = [];
             data.forEach((user) => {
                 this.users.push({ name: user.username, id: user.id });
             });
@@ -80,21 +46,21 @@ export class NewNotificationModalComponent {
 
     public close() {
         this.dataform.dataForm.validateAll()
-            .then((result) => {
+            .then(async (result) => {
                 if (result == true) {
                     if (this.receivers.length && this.receivers.length > 0) {
-                        if (this.notification.importance && this.notification.importance != ""
-                        && this.notification.importance != "Bitte wählen") {
-                            if (this.notification.importance == "Erfolg") {
-                                this.notification.importance = "1";
-                            } else if (this.notification.importance == "Information") {
-                                this.notification.importance = "2";
-                            } else if (this.notification.importance == "Warnung") {
-                                this.notification.importance = "3";
-                            } else if (this.notification.importance == "Gefahr") {
-                                this.notification.importance = "3";
+                        if (this.notification.theme && this.notification.theme != ""
+                        && this.notification.theme != await this.fts.t("general.choose")) {
+                            if (this.notification.theme == await this.fts.t("general.colors.success")) {
+                                this.notification.theme = "success";
+                            } else if (this.notification.theme == await this.fts.t("general.colors.info")) {
+                                this.notification.theme = "info";
+                            } else if (this.notification.theme == await this.fts.t("general.colors.warning")) {
+                                this.notification.theme = "warning";
+                            } else if (this.notification.theme == await this.fts.t("general.colors.danger")) {
+                                this.notification.theme = "danger";
                             } else {
-                                this.notification.importance = "2";
+                                this.notification.theme = "info";
                             }
                             this.notification.receivers = this.receivers;
                             this.params.closeCallback(this.notification);
@@ -108,16 +74,56 @@ export class NewNotificationModalComponent {
             });
     }
 
-    public ngOnInit() {
+    public async ngOnInit() {
         this.notification = new Notification("", "", "");
-
+        this.dataFormConfig = {
+            commitMode: "Immediate",
+            isReadOnly: false,
+            propertyAnnotations:
+                [
+                    {
+                        displayName: await this.fts.t("general.topic"),
+                        index: 0,
+                        name: "headline",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                    {
+                        displayName: await this.fts.t("general.message"),
+                        editor: "MultilineText",
+                        index: 1,
+                        name: "content",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                    },
+                    {
+                        displayName: await this.fts.t("general.importance"),
+                        editor: "Picker",
+                        index: 3,
+                        name: "theme",
+                        validators: [
+                            { name: "NonEmpty" },
+                        ],
+                        valuesProvider: [
+                            await this.fts.t("general.choose"),
+                            await this.fts.t("general.colors.success"),
+                            await this.fts.t("general.colors.info"),
+                            await this.fts.t("general.colors.warning"),
+                            await this.fts.t("general.colors.danger"),
+                        ],
+                    },
+                ],
+            validationMode: "Immediate",
+        };
     }
 
     public goBack() {
         this.params.closeCallback(null);
     }
 
-    public openReceiversSelectMenu(): void {
+    public async openReceiversSelectMenu(): Promise<void> {
         const options: MSOption = {
             android: {
                 cancelButtonTextColor: "#252323",
@@ -125,8 +131,8 @@ export class NewNotificationModalComponent {
                 titleSize: 25,
             },
             bindValue: "id",
-            cancelButtonText: "Abbrechen",
-            confirmButtonText: "Ok",
+            cancelButtonText: await this.fts.t("general.cancel"),
+            confirmButtonText: await this.fts.t("general.select"),
             displayLabel: "name",
             ios: {
                 cancelButtonBgColor: "#252323",
@@ -153,7 +159,7 @@ export class NewNotificationModalComponent {
                 });
             },
             selectedItems: this.users,
-            title: "Empfänger auswählen",
+            title: await this.fts.t("notifications.chooseReceivers"),
         };
 
         this.multiSelect.show(options);

@@ -29,8 +29,8 @@
         <Label col="0" row="0" text="AGM-TOOLS" class="initial-label"></Label>
         <Label col="0" row="1" [text]="versionLabelText" class="version-label"></Label>
 
-        <Button text="Login" col="0" row="2" (tap)="showMainContent()" class="initial-button"></Button>
-        <Button text="Take a Tour" col="0" row="3" pageTransition="fade" [nsRouterLink]="['/tour']" class="initial-button"></Button>
+        <Button [text]="'login.login' | translate" col="0" row="2" (tap)="showMainContent()" class="initial-button"></Button>
+        <Button [text]="'login.takeatour' | translate" col="0" row="3" pageTransition="fade" [nsRouterLink]="['/tour']" class="initial-button"></Button>
         <Image col="0" row="5" src="~/assets/logo/logo3.png" stretch="none" class="initial-logo"></Image>
     </GridLayout>
 
@@ -44,9 +44,9 @@
             <ActivityIndicator [busy]="isAuthenticating" rowSpan="2"></ActivityIndicator>
         </GridLayout>
 
-        <Button text="Login" [isEnabled]="!isAuthenticating" class="submit-button" (tap)="submit()"></Button>
+        <Button #loginButton [text]="'login.login' | translate" [isEnabled]="!isAuthenticating" class="submit-button" (tap)="submit()"></Button>
 
-        <Label class="forgot-password-label" text="Passwort vergessen?" (tap)="forgotPassword()"></Label>
+        <Label #forgotPasswordLabel class="forgot-password-label" [text]="'login.lostPassword' | translate" (tap)="forgotPassword()"></Label>
     </StackLayout>
 
     <!-- The fruit logo that appears within the container -->

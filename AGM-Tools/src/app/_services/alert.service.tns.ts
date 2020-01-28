@@ -9,7 +9,8 @@ export class AlertService {
     this.feedback = new Feedback();
   }
 
-  public success(message: string) {
+  public success(message) {
+    message = this.checkForObject(message);
     this.feedback.success({
       duration: 2000,
       message,
@@ -17,7 +18,8 @@ export class AlertService {
     });
   }
 
-  public error(message: string) {
+  public error(message) {
+    message = this.checkForObject(message);
     this.feedback.error({
       duration: 2000,
       message,
@@ -25,7 +27,8 @@ export class AlertService {
     });
   }
 
-  public info(message: string) {
+  public info(message) {
+    message = this.checkForObject(message);
     this.feedback.info({
       duration: 2000,
       message,
@@ -33,7 +36,8 @@ export class AlertService {
     });
   }
 
-  public warning(message: string) {
+  public warning(message) {
+    message = this.checkForObject(message);
     this.feedback.warning({
       duration: 2000,
       message,
@@ -41,7 +45,7 @@ export class AlertService {
     });
   }
 
-  public snackbar(message: string) {
+  public snackbar(message) {
     const snackbar = new SnackBar();
 
     const options: SnackBarOptions = {
@@ -56,4 +60,12 @@ export class AlertService {
     snackbar.action(options);
   }
 
+  private checkForObject(message: any) {
+    if (typeof message != "string") {
+      message = message.message + message.stack + "   " + message.toString();
+      // tslint:disable-next-line: no-console
+      console.log(message);
+    }
+    return message;
+  }
 }

@@ -21,5 +21,8 @@
 
 .e-card-content {
     padding-bottom: 20px;
+}
+
+.tutorial-card {
     cursor: pointer;
 }

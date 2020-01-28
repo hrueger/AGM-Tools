@@ -1,14 +1,14 @@
-<div class="navigation" *ngIf="!selectProject">
-    <button class="btn btn-success" (click)="
+<div class="navigation">
+    <button class="btn btn-outline-success" (click)="
             currentPath.length - 2 > -1
                 ? upTo(currentPath[currentPath.length - 2].id)
-                : goToFiles()
+                : goBackToProjects()
         ">
-        Zurück
+        {{'general.back' | translate}}
     </button> &nbsp;
 
-    <button id="newFolderBtn" type="button" (click)="openNewFolderModal(newFolder)" class="btn btn-primary">
-        Neuer Ordner
+    <button id="newFolderBtn" type="button" (click)="openNewFolderModal(newFolder)" class="btn btn-outline-primary">
+        {{'files.newFolder' | translate}}
     </button>
     <div class="btn-group float-right">
         <button type="button" id="btnList" class="btn btn-default">
@@ -21,7 +21,7 @@
     <br /><br />
     <ol class="breadcrumb">
         <li class="breadcrumb-item" [class.active]="currentPath.length == 0">
-            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goToFiles()">Dateien</a>
+            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goBackToProjects()">{{'files.files' | translate}}</a>
         </li>
         <li *ngFor="let path of currentPath; let last = last" [class.active]="last" class="breadcrumb-item">
             <a class="link" *ngIf="!last" (click)="upTo(path.id)">
@@ -31,79 +31,45 @@
         </li>
     </ol>
 </div>
-<div id="projects" class="table-responsive" *ngIf="selectProject && !viewFile">
-    <table id="projectChooser" class="table table-hover">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Beschreibung</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr (click)="goToProject(project)" *ngFor="let project of projects">
-                <td>{{ project.name }}</td>
-                <td>{{ project.description }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
-<div *ngIf="!selectProject && !viewFile">
+<div>
     <div id="dropArea">
-        <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (uploading)="onFileUpload($event)">
+        <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (chunkUploading)="onFileUpload($event)" (uploading)="onFileUpload($event)">
         </ejs-uploader>
     </div>
 
     <context-menu #contextMenu>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item)">
-            <i class="far fa-circle"></i> Öffnen
+        <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item, viewFileModal)">
+            <i class="far fa-circle"></i> {{'files.open' | translate}}
         </ng-template>
         <ng-template contextMenuItem [subMenu]="tagsSubMenu">
-            <i class="fas fa-tags"></i> Tags
+            <i class="fas fa-tags"></i> {{'files.tags' | translate}}
         </ng-template>
         <context-menu #tagsSubMenu>
-            <ng-template contextMenuItem (execute)="toggleTag(1, $event.item)">
-                Fertig
-            </ng-template>
-            <ng-template contextMenuItem (execute)="toggleTag(4, $event.item)">
-                Zu verbessern
-            </ng-template>
-            <ng-template contextMenuItem (execute)="toggleTag(2, $event.item)">
-                In Arbeit
-            </ng-template>
-            <ng-template contextMenuItem (execute)="toggleTag(3, $event.item)">
-                Wichtig
+            <ng-template *ngFor="let tag of tags" contextMenuItem (execute)="toggleTag(tag.id, $event.item)">
+                {{ tag.name }}
             </ng-template>
         </context-menu>
         <ng-template contextMenuItem divider="true"></ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="download($event.item)">
-            <i class="fas fa-cloud-download-alt"></i> Herunterladen
+            <i class="fas fa-cloud-download-alt"></i> {{'files.download' | translate}}
         </ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="share($event.item, shareModal)">
-            <i class="far fa-share-square"></i> Freigeben
+            <i class="far fa-share-square"></i> {{'files.share' | translate}}
         </ng-template>
         <ng-template contextMenuItem divider="true"></ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="rename($event.item, renameModal)">
-            <i class="fas fa-pen"></i> Umbenennen
+            <i class="fas fa-pen"></i> {{'files.rename' | translate}}
         </ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="move($event.item)">
-            <i class="fa fa-arrows-alt"></i> Verschieben
+            <i class="fa fa-arrows-alt"></i> {{'files.move' | translate}}
         </ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="copy($event.item)">
-            <i class="fas fa-copy"></i> Kopieren
+            <i class="fas fa-copy"></i> {{'files.copy' | translate}}
         </ng-template>
         <ng-template class="ctxMenuItem" contextMenuItem (execute)="delete($event.item)">
-            <i class="fas fa-trash"></i> Löschen
+            <i class="fas fa-trash"></i> {{'files.delete' | translate}}
         </ng-template>
-        <!--<ng-template contextMenuItem let-item (execute)="
-                showMessage(
-                    $event.item.name + ' said: ' + $event.item.otherProperty
-                )
-            ">
-            Bye, {{ item?.name }}
-        </ng-template><ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event.item.name)">
-            Say hi!
-        </ng-template>-->
     </context-menu>
 
     <div id="files" class="table-responsive">
@@ -112,16 +78,14 @@
             <thead>
                 <tr>
                     <td></td>
-                    <td>Name</td>
-                    <td>Tags</td>
-
-                    <td>Änderungsdatum</td>
-                    <td>Erstelldatum</td>
-                    <td>Größe</td>
+                    <td>{{'general.name' | translate}}</td>
+                    <td>{{'files.tags' | translate}}</td>
+                    <td>{{'general.creationDate' | translate}}</td>
+                    <td>{{'general.size' | translate}}</td>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items" (click)="goTo(item)" [contextMenu]="contextMenu" [contextMenuSubject]="item">
+                <tr *ngFor="let item of items" (click)="goTo(item, viewFileModal)" [contextMenu]="contextMenu" [contextMenuSubject]="item">
                     <td>
                         <img [src]="getIcon(item)" class="fileIcon" />
                     </td>
@@ -129,15 +93,14 @@
                     <td>
                         <div *ngIf="item.tags.length">
                             <div class="d-inline" *ngFor="let tag of item.tags">
-                                <span [style.color]="tag.color" [style.background-color]="
-                                        tag.backgroundColor
+                                <span [style.color]="tag.textColor" [style.background-color]="
+                                        tag.color
                                     " class="badge">{{ tag.name }}</span> &nbsp;
                             </div>
                         </div>
                     </td>
 
-                    <td>{{ item.modificationDate }}</td>
-                    <td>{{ item.creationDate }}</td>
+                    <td>{{ item.createdAt | date:"medium" }}</td>
                     <td>{{ item.size }}</td>
                 </tr>
             </tbody>
@@ -145,17 +108,45 @@
     </div>
 </div>
 
-<div *ngIf="viewFile">
-    <img *ngIf="getType() == 'image'" class="previewFile img-fluid" alt="Irgendein schönes Bild, das aber leider nicht angezeigt werden kann..." [src]="getSrc()" />
-    <video class="previewFile" controls *ngIf="getType() == 'video'">
-        <source [src]="getSrc()" type="video/mp4" />
-        Bitte verwende einen neueren Browser ;-)
-    </video>
-    <ng2-pdfjs-viewer [pdfSrc]="getSrc()" *ngIf="getType() == 'pdf'"></ng2-pdfjs-viewer>
-    <div *ngIf="getType() == 'other'" class="alert alert-warning">
-        Diese Datei wird leider nicht unterstützt. Wenn das gewünscht ist, gerne mich kontaktieren!
+<ng-template #viewFileModal let-modal>
+    <div class="modal-header">
+        <div class="d-flex justify-content-between w-100 px-5">
+            <button class="btn btn-light" (click)="changeCurrentFile(-1)"><i class="fa fa-chevron-left"></i></button>
+            <h4 class="modal-title">{{currentFile.name}}</h4>
+            <button class="btn btn-light" (click)="changeCurrentFile(1)"><i class="fa fa-chevron-right"></i></button>
+        </div>
+
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-</div>
+    <div class="modal-body">
+        <img *ngIf="getType() == 'image'" class="previewFile img-fluid" alt="Laden..." [src]="getCurrentFileSrc()" />
+        <video class="previewFile" [attr.src]="getCurrentFileSrc()" controls *ngIf="getType() == 'video'">
+            {{'errors.oldBrowser' | translate}}
+        </video>
+        <audio controls [src]="getCurrentFileSrc()" *ngIf="getType() == 'audio'">
+            {{'errors.oldBrowser' | translate}}
+        </audio>
+        <ngx-extended-pdf-viewer *ngIf="getType() == 'pdf'" [src]="getCurrentFileSrc()" height="70vh" useBrowserLocale="true"></ngx-extended-pdf-viewer>
+        <onlyoffice *ngIf="getType() == 'document'" [config]="documentEditorConfig" class="documentEditor"></onlyoffice>
+        <div *ngIf="getType() == 'other'" class="alert alert-warning">
+            Diese Datei wird leider nicht unterstützt.
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+        <div>
+            <button class="btn btn-outline-info" (click)="download(currentFile)"><i class="fas fa-download"></i></button>
+            <button class="btn btn-outline-info mr-2" (click)="share(currentFile, shareModal)"><i class="fas fa-share-square"></i></button>
+
+            <button class="btn btn-outline-primary" (click)="rename(currentFile)"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-outline-success" (click)="move(currentFile)"><i class="fas fa-arrows-alt"></i></button>
+            <button class="btn btn-outline-warning" (click)="copy(currentFile)"><i class="fas fa-arrows-alt"></i></button>
+            <button class="btn btn-outline-danger" (click)="delete(currentFile)"><i class="fas fa-trash-alt"></i></button>
+        </div>
+        <small>{{ currentFile.creator.username }} am {{ currentFile.createdAt | date:"medium"}}<br>{{ currentFile.size }}</small>
+    </div>
+  </ng-template>
 
 <ng-template #newFolder let-modal>
     <div class="modal-header">
@@ -178,7 +169,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="
+        <button type="button" class="btn btn-outline-primary" (click)="
                 !newFolderForm.invalid
                     ? modal.close('Save click')
                     : (newFolderModalInvalidMessage = true)
@@ -209,7 +200,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="
+        <button type="button" class="btn btn-outline-primary" (click)="
                 !renameItemForm.invalid
                     ? modal.close('Save click')
                     : (renameItemFormInvalidMessage = true)
@@ -230,8 +221,8 @@
         <input class="form-control" type="text" #shareLinkField value="{{shareLink}}" placeholder="Link wird generiert..." readonly>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success" (click)="copyShareLink(shareLinkField)">Link in die Zwischenablage
+        <button class="btn btn-outline-success" (click)="copyShareLink(shareLinkField)">Link in die Zwischenablage
             kopieren</button>
-        <button class="btn btn-primary" (click)="openShareLinkInNewTab()">In neuem Tab öffnen</button>
+        <button class="btn btn-outline-primary" (click)="openShareLinkInNewTab()">In neuem Tab öffnen</button>
     </div>
 </ng-template>

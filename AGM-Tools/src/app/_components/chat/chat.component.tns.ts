@@ -46,13 +46,14 @@ export class ChatComponent {
                 this.chatsListView.nativeElement.refresh();
             }
         } else {
+            // tslint:disable-next-line: no-console
             console.log(data);
         }
     }
 
     public ngOnInit() {
         this.navbarService.setHeadline("Chat");
-        this.remoteService.get("chatGetContacts").subscribe((chats) => {
+        this.remoteService.get("get", "chats").subscribe((chats) => {
             this.chats = chats;
         });
         this.pushService.reregisterCallbacks();
@@ -61,8 +62,8 @@ export class ChatComponent {
         });
     }
 
-    public goToChat(rid) {
-        this.router.navigate(["chat-messages", rid], {
+    public goToChat(chat) {
+        this.router.navigate(["chat-messages", chat.isUser ? "user" : "project", chat.id], {
             animated: true,
             transition: {
                 name: "slideLeft",

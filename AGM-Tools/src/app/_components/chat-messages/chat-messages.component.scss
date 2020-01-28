@@ -26,6 +26,13 @@
     }
 }
 
+.message-box-holder-embedded {
+    position: absolute;
+    bottom: 45px;
+    left: 3px;
+    right: -3px;
+}
+
 .dialog {
     padding-top: 30;
     padding-bottom: 30;
@@ -114,7 +121,7 @@ div.messages-header {
     padding: 5px;
     z-index: 4;
     width: 100%;
-    margin-top: -58px;
+    margin-top: -50px;
     margin-left: -20px;
 }
 
@@ -140,7 +147,6 @@ div.messages-header {
     position: fixed;
     bottom: 0px;
     margin-left: -20px;
-    background-color: #f2f2f2;
 }
 
 .message-box {

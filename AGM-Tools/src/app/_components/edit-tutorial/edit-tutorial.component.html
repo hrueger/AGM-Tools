@@ -1,82 +1,84 @@
 <div class="mycard top">
-    <h3>Allgemeines</h3>
+    <h3>{{"general.general" | translate}}</h3>
     <div *ngIf="invalidMessage" class="alert alert-danger">
         <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
     </div>
     <form [formGroup]="tutorialForm">
         <div class="form-group">
-            <label for="title">Titel: </label>
-            <input type="text" class="form-control" id="title" formControlName="title" placeholder="Titel des Tutorials" />
+            <label for="title">{{"general.title" | translate}}: </label>
+            <input type="text" class="form-control" id="title" formControlName="title" [placeholder]="'general.title' | translate" />
         </div>
         <br />
         <div class="form-group">
-            <label for="description">Beschreibung: </label>
-            <textarea class="form-control" id="description" formControlName="description" placeholder="Kurze Beschreibung des Inhalts"></textarea>
+            <label for="description">{{"general.description" | translate}}: </label>
+            <textarea class="form-control" id="description" formControlName="description" [placeholder]="'general.description' | translate"></textarea>
         </div>
     </form>
-    <button type="button" class="btn btn-primary" (click)="addStep()">
-        Schritt hinzufügen
+    <button type="button" class="btn btn-outline-primary" (click)="addStep()">
+        {{"tutorials.addStep" | translate}}
     </button> &nbsp;
-    <button type="button" class="btn btn-success" (click)="
+    <button type="button" class="btn btn-outline-success" (click)="
         !tutorialForm.invalid
             ? updateGeneral()
             : (invalidMessage = true)
     ">
-    Speichern
-</button>
+    {{"general.save" | translate}}
+    </button>
 </div>
 
 <div class="mycard" *ngFor="let step of tutorial.steps; let index = index">
-    <h3 class="d-inline">Schritt {{index + 1}}: <i>{{step.title}}</i></h3>
-    <button class="d-inline btn btn-link" (click)="deleteStep(index)">Schritt löschen</button>
+    <h3 class="d-inline">{{"tutorials.stepNr" | translate:{"nr": (index + 1)} }}: <i>{{step.title}}</i></h3>
+    <button class="d-inline btn btn-link" (click)="deleteStep(index)">{{"tutorials.removeStep" | translate}}</button>
     <div class="form-group">
-        <label for="title">Titel: </label>
-        <input type="text" class="form-control" [(ngModel)]="step.title" placeholder="Titel des Tutorials" />
+        <label for="title">{{"general.title" | translate}}: </label>
+        <input type="text" class="form-control" [(ngModel)]="step.title" [placeholder]="'general.title' | translate" />
     </div>
     <br />
     <div class="form-group">
-        <label for="description">Inhalt: </label>
-        <textarea class="form-control" [(ngModel)]="step.content" placeholder="Kurze Beschreibung des Inhalts"></textarea>
+        <label for="description">{{'general.content' | translate}}: </label>
+        <textarea class="form-control" [(ngModel)]="step.content" [placeholder]="'general.content' | translate"></textarea>
     </div>
     <div>
-        <h6>Bild 1:</h6>
-        <span *ngIf="step.uploadingImage1">Hochladen...</span>
-        <img *ngIf="step.image1" [src]="getSrc(step.image1)" alt="Bild">
-        <button *ngIf="step.image1" class="btn btn-link" (click)="deleteImage(index, 1)">Bild löschen</button>
+        <h6>{{'general.image' | translate}} 1:</h6>
+        <span *ngIf="step.uploadingImage1">{{'general.uploading' | translate}}</span>
+        <img *ngIf="step.image1" [src]="getFileSrc(step.image1)" [alt]="'general.image' | translate">
+        <button *ngIf="step.image1" class="btn btn-link" (click)="deleteImage(index, 1)">{{'tutorials.removeImage' | translate}}</button>
         <div *ngIf="!step.image1" class="form-group">
             <div class="custom-file">
                 <input type="file" (change)="uploadImage($event.target.files, index, 1)" class="custom-file-input" id="customFile">
-                <label class="custom-file-label">Bild hochladen</label>
+                <label class="custom-file-label">{{'general.uploadImage' | translate}}</label>
             </div>
         </div>
-        <h6>Bild 2:</h6>
-        <span *ngIf="step.uploadingImage2">Hochladen...</span>
-        <img *ngIf="step.image2" [src]="getSrc(step.image2)" alt="Bild">
-        <button *ngIf="step.image2" class="btn btn-link" (click)="deleteImage(index, 2)">Bild löschen</button>
+        <h6>{{'general.image' | translate}} 2:</h6>
+        <span *ngIf="step.uploadingImage2">{{'general.uploading' | translate}}</span>
+        <img *ngIf="step.image2" [src]="getFileSrc(step.image2)" [alt]="'general.image' | translate">
+        <button *ngIf="step.image2" class="btn btn-link" (click)="deleteImage(index, 2)">{{'tutorials.removeImage' | translate}}</button>
 
         <div *ngIf="!step.image2" class="form-group">
             <div class="custom-file">
                 <input type="file" (change)="uploadImage($event.target.files, index, 2)" class="custom-file-input" id="customFile">
-                <label class="custom-file-label">Bild hochladen</label>
+                <label class="custom-file-label">{{'general.uploadImage' | translate}}</label>
             </div>
         </div>
-        <h6>Bild 3:</h6>
-        <span *ngIf="step.uploadingImage3">Hochladen...</span>
-        <img *ngIf="step.image3" [src]="getSrc(step.image3)" alt="Bild">
-        <button *ngIf="step.image3" class="btn btn-link" (click)="deleteImage(index, 3)">Bild löschen</button>
+        <h6>{{'general.image' | translate}} 3:</h6>
+        <span *ngIf="step.uploadingImage3">{{'general.uploading' | translate}}</span>
+        <img *ngIf="step.image3" [src]="getFileSrc(step.image3)" [alt]="'general.image' | translate">
+        <button *ngIf="step.image3" class="btn btn-link" (click)="deleteImage(index, 3)">{{'tutorials.removeImage' | translate}}</button>
 
         <div *ngIf="!step.image3" class="form-group">
             <div class="custom-file">
                 <input type="file" (change)="uploadImage($event.target.files, index, 3)" class="custom-file-input" id="customFile">
-                <label class="custom-file-label">Bild hochladen</label>
+                <label class="custom-file-label">{{'general.uploadImage' | translate}}</label>
             </div>
         </div>
     </div>
-
 </div>
-<button type="button" class="btn btn-primary" (click)="addStep()">
-        Schritt hinzufügen
+
+<div class="mycard">
+    <button type="button" class="btn btn-outline-primary" (click)="addStep()">
+        {{'tutorials.addStep' | translate}}
     </button> &nbsp;
-<button type="button" class="btn btn-success" (click)="updateSteps()">
-    Speichern
-</button>
+    <button type="button" class="btn btn-outline-success" (click)="updateSteps()">
+        {{'general.save' | translate}}
+    </button>
+</div>

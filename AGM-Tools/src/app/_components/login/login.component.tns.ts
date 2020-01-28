@@ -24,6 +24,8 @@ export class LoginComponent {
   @ViewChild("mainContainer", { static: false }) public mainContainer: ElementRef;
   @ViewChild("logoContainer", { static: false }) public logoContainer: ElementRef;
   @ViewChild("formControls", { static: false }) public formControls: ElementRef;
+  @ViewChild("loginButton", { static: false }) public loginButton: ElementRef;
+  @ViewChild("forgotPasswordLabel", { static: false }) public forgotPasswordLabel: ElementRef;
   @ViewChild("passwordField", { static: false }) public passwordEl: ElementRef;
 
   constructor(private authService: AuthenticationService,
@@ -60,6 +62,7 @@ export class LoginComponent {
   public login() {
     if (getConnectionType() === connectionType.none) {
       alert("AGM-Tools benötigt eine Internetverbindung.");
+      this.isAuthenticating = false;
       return;
     }
 
@@ -103,6 +106,8 @@ export class LoginComponent {
     const mainContainer =  this.mainContainer.nativeElement as View;
     const logoContainer =  this.logoContainer.nativeElement as View;
     const formControls =  this.formControls.nativeElement as View;
+    const loginButton =  this.loginButton.nativeElement as View;
+    const forgotPasswordLabel =  this.forgotPasswordLabel.nativeElement as View;
     const animations = [];
 
     // Fade out the initial content over one half second
@@ -122,97 +127,13 @@ export class LoginComponent {
       animations.push({ target: logoContainer, opacity: 1, duration: 500 });
 
       // Slide up the form controls and sign up container.
-      animations.push({ target: formControls, translate: { x: 0, y: 0 }, opacity: 1, delay: 650, duration: 150 });
+      const s = {translate: { x: 0, y: 0 }, opacity: 1, delay: 650, duration: 150};
+      animations.push({ target: formControls, ...s });
+      animations.push({ target: loginButton, ...s });
+      animations.push({ target: forgotPasswordLabel, ...s });
 
       // Kick off the animation queue
       new Animation(animations, false).play();
     });
   }
-    /*isLoggingIn = true;
-    user: any;
-    processing = false;
-    username: string;
-    password: string;
-    @ViewChild("passwordField", { static: false }) passwordField: ElementRef;
-    @ViewChild("confirmPassword", { static: false }) confirmPassword: ElementRef;
-
-    constructor(
-        private page: Page,
-        private authService: AuthenticationService,
-        private routerExtensions: RouterExtensions,
-        private alertService: AlertService
-    ) {
-        this.page.actionBarHidden = true;
-
-        this.username = "";
-        this.password = "";
-    }
-
-    toggleForm() {
-        this.isLoggingIn = !this.isLoggingIn;
-    }
-
-    submit() {
-        if (!this.username || !this.password) {
-            this.alertService.error("Bitte gib ein Passwort und einen Benutzernamen an!");
-            return;
-        }
-
-        this.processing = true;
-        if (this.isLoggingIn) {
-            this.login();
-        } else {
-
-        }
-    }
-
-    login() {
-        this.authService.login(this.username, this.password).subscribe(
-            data => {
-                this.processing = false;
-                this.routerExtensions.navigate(["/dashboard"], {
-                    clearHistory: true
-                });
-            },
-            error => {
-                this.processing = false;
-                this.alertService.error(
-                    error ||
-                    "Dein Account wurde leider nicht gefunden. Bitte überprüfe deinen Benutzernamen nochmals!"
-                );
-            }
-        );
-    }
-
-    forgotPassword() {
-        prompt({
-            title: "Passwort zurücksetzen",
-            message:
-                "Gib deine Email-Adresse ein, sodass wir dir ein neues Passwort zuschicken können.",
-            inputType: "email",
-            defaultText: "",
-            okButtonText: "Weiter",
-            cancelButtonText: "Zurück"
-        }).then(data => {
-            this.alertService.info("Diese Funktion gibt's noch nicht ;-), bitte melde dich direkt bei Hannes!")
-            if (data.result) {
-                this.authService.resetPassword(data.text.trim())
-                    .then(() => {
-                        this.alert("Your password was successfully reset.
-                        Please check your username for instructions on choosing a new password.");
-                    }).catch(() => {
-                        this.alert("Unfortunately, an error occurred resetting your password.");
-                    });
-            }
-        });
-    }
-
-    focusPassword() {
-        this.passwordField.nativeElement.focus();
-    }
-    focusConfirmPassword() {
-        if (!this.isLoggingIn) {
-            this.confirmPassword.nativeElement.focus();
-        }
-    }*/
 }

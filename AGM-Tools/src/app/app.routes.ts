@@ -1,11 +1,8 @@
 import { Routes } from "@angular/router";
-
-import { AboutComponent } from "./_components/about/about.component";
-import { BugsComponent } from "./_components/bugs/bugs.component";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
+import { CallComponent } from "./_components/call/call.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
 import { ChatComponent } from "./_components/chat/chat.component";
-import { ClientsoftwareComponent } from "./_components/clientsoftware/clientsoftware.component";
 import { DashboardComponent } from "./_components/dashboard/dashboard.component";
 import { DoneComponent } from "./_components/done/done.component";
 import { EditTutorialComponent } from "./_components/edit-tutorial/edit-tutorial.component";
@@ -14,6 +11,7 @@ import { LoginComponent } from "./_components/login/login.component";
 import { NotificationsComponent } from "./_components/notifications/notifications.component";
 import { ProjectsComponent } from "./_components/projects/projects.component";
 import { SettingsComponent } from "./_components/settings/settings.component";
+import { ShareComponent } from "./_components/share/share.component";
 import { TemplatesComponent } from "./_components/templates/templates.component";
 import { TourComponent } from "./_components/tour/tour.component";
 import { TutorialComponent } from "./_components/tutorial/tutorial.component";
@@ -44,13 +42,33 @@ export const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
+        component: ChatComponent,
+        path: "chat/:type/:id",
+    },
+    {
+        canActivate: [AuthGuard],
         component: ChatMessagesComponent,
-        path: "chat-messages/:index",
+        path: "chat-messages/:type/:id",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: CallComponent,
+        path: "call/:chatType/:id/:callType",
     },
     {
         canActivate: [AuthGuard],
         component: TutorialsComponent,
         path: "tutorials",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: TutorialsComponent,
+        path: "tutorials/:projectId/:projectName",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: TutorialsComponent,
+        path: "tutorials/new",
     },
     {
         canActivate: [AuthGuard],
@@ -84,23 +102,18 @@ export const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
+        component: ProjectsComponent,
+        path: "projects/:id",
+    },
+    {
+        canActivate: [AuthGuard],
         component: FilesComponent,
-        path: "files",
+        path: "files/:projectId/:projectName",
     },
     {
         canActivate: [AuthGuard],
         component: TemplatesComponent,
         path: "templates",
-    },
-    {
-        canActivate: [AuthGuard],
-        component: BugsComponent,
-        path: "bugs",
-    },
-    {
-        canActivate: [AuthGuard],
-        component: ClientsoftwareComponent,
-        path: "clientsoftware",
     },
     {
         canActivate: [AuthGuard],
@@ -114,17 +127,18 @@ export const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
-        component: AboutComponent,
-        path: "about",
-    },
-    {
-        canActivate: [AuthGuard],
         component: UpdaterComponent,
         path: "updater",
     },
 
+    {
+        component: ShareComponent,
+        path: "share/:link",
+    },
+
     /* Authentication paths*/
     { path: "login", component: LoginComponent },
+    { path: "resetPassword/:resetPasswordToken", component: LoginComponent },
     // otherwise redirect to home
     { path: "**", redirectTo: "/dashboard" },
 ];

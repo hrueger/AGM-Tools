@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 
 @Component({
     selector: "app-sidebar",
@@ -8,28 +9,25 @@ import { Component, Input } from "@angular/core";
 export class SidebarComponent {
     @Input() public changed: any;
     public showNav: boolean = true;
-    public navLinks = [
-        { name: "Dashboard", icon: "tachometer-alt", target: "dashboard" },
-        { name: "Benutzer", icon: "user", target: "users" },
-        { name: "Chat", icon: "comments", target: "chat" },
-        { name: "Tutorials", icon: "book", target: "tutorials" },
-        {
-            icon: "envelope",
-            name: "Benachrichtigungen",
-            target: "notifications",
-        },
-        { name: "Kalender", icon: "calendar", target: "calendar" },
-        { name: "Projekte", icon: "folder", target: "projects" },
-        { name: "Dateien", icon: "image", target: "files" },
-        { name: "Vorlagen", icon: "portrait", target: "templates" },
-        {
-            icon: "bug",
-            name: "Fehler / Verbesserungen",
-            target: "bugs",
-        },
-        { name: "Fertig", icon: "check", target: "done" },
-        { name: "Client-Software", icon: "mobile", target: "clientsoftware" },
-    ];
+    public navLinks;
+
+    constructor(private fts: FastTranslateService) {}
+
+    public async ngOnInit() {
+        this.navLinks = [
+            { name: await this.fts.t("dashboard.dashboard"), icon: "tachometer-alt", target: "dashboard" },
+            { name: await this.fts.t("projects.projects"), icon: "folder", target: "projects" },
+            { name: await this.fts.t("calendar.calendar"), icon: "calendar", target: "calendar" },
+            { separator: true},
+            { name: await this.fts.t("chat.chat"), icon: "comments", target: "chat" },
+            { name: await this.fts.t("notifications.notifications"), icon: "envelope", target: "notifications" },
+            { separator: true},
+            { name: await this.fts.t("tutorials.tutorials"), icon: "book", target: "tutorials" },
+            { name: await this.fts.t("templates.templates"), icon: "portrait", target: "templates" },
+            { separator: true},
+            { name: await this.fts.t("done.done"), icon: "check", target: "done" },
+        ];
+    }
 
     public hideNav() {
         this.showNav = false;

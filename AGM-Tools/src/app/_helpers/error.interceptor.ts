@@ -5,14 +5,14 @@ import {
   HttpRequest,
 } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
-
 import { AuthenticationService } from "../_services/authentication.service";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
   public intercept(
     request: HttpRequest<any>,
@@ -20,13 +20,16 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        if (err.status === 401) {
-          // auto logout if 401 response returned from api
-          // this.authenticationService.logout();
-          // location.reload(true);
-        }
+        // tslint:disable-next-line: no-console
+        console.error("Error in error.interceptor.ts: ", err, err.stack);
 
-        const error = err.error.message || err.statusText;
+        if (err && err.error && err.error.logout) {
+          this.authenticationService.logout();
+          this.router.navigate(["login"]);
+        }
+        const error = err.error && err.error.error ?
+          err.error.error : err.error && err.error.message ?
+            err.error.message : err.statusText ? err.statusText : err ? err : "Unknown error!";
         return throwError(error);
       }),
     );

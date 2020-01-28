@@ -1,6 +1,7 @@
 import { Component, ElementRef } from "@angular/core";
 import { OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { Downloader } from "nativescript-downloader";
 import {
@@ -10,6 +11,7 @@ import {
 } from "nativescript-ui-sidedrawer";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
+import { ShortcutsService } from "./_services/shortcuts.service";
 
 @Component({
     selector: "app-root",
@@ -30,21 +32,9 @@ export class AppComponent {
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
+        private translate: TranslateService,
+        private shortcutsService: ShortcutsService,
     ) {
-        this.authenticationService.currentUser.subscribe((x) => {
-            if (x) {
-                this.currentUser = x;
-                this.useremail = x.email;
-                this.username = x.firstName + " " + x.lastName;
-                this.initials = x.firstName.charAt(0) + " " + x.lastName.charAt(0);
-            } else {
-                this.currentUser = new User();
-                this.useremail = "Email";
-                this.username = "Benutzername";
-                this.initials = "XX";
-            }
-
-        });
     }
 
     public logout() {
@@ -53,6 +43,23 @@ export class AppComponent {
         this.router.navigate(["/login"]);
     }
     public ngOnInit() {
+        this.shortcutsService.init();
+        this.authenticationService.currentUser.subscribe((x) => {
+            if (x) {
+                this.currentUser = x;
+                this.useremail = x.email;
+                this.username = x.username;
+                const a = x.username.split(" ");
+                this.initials = (a.length == 1 ? a[0].charAt(0) : a[0].charAt(0) + a[a.length - 1].charAt(0));
+            } else {
+                this.currentUser = new User();
+                this.useremail = "Email";
+                this.username = "Benutzername";
+                this.initials = "XX";
+            }
+
+        });
+        this.translate.setDefaultLang("en");
         this.psideDrawerTransition = new SlideInOnTopTransition();
         Downloader.init();
     }

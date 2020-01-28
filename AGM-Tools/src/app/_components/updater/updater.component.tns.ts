@@ -2,8 +2,7 @@ import { Component, NgZone, OnInit } from "@angular/core";
 import { Downloader, DownloadEventData, ProgressEventData } from "nativescript-downloader";
 import * as permissions from "nativescript-permissions";
 import * as application from "tns-core-modules/application";
-import * as utils from "tns-core-modules/utils/utils";
-import config from "../../_config/config";
+import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 declare var android;
 declare var androidx;
@@ -41,7 +40,7 @@ export class UpdaterComponent implements OnInit {
           const imageDownloaderId = downloader.createDownload({
             fileName: `AGM-Tools_update_${Math.round(Math.random() * 100000000)}.apk`,
             path: dest,
-            url: `${config.apiUrl}?downloadMobileLatest`,
+            url: `${environment.apiUrl}?downloadMobileLatest`,
           });
           this.downloading = true;
           downloader
@@ -64,6 +63,7 @@ export class UpdaterComponent implements OnInit {
             })
             .catch((error) => {
               this.alertService.error(error.message);
+              // tslint:disable-next-line: no-console
               console.error(error.message);
             });
          });

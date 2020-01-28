@@ -1,0 +1,71 @@
+{
+   "name": "agmtools-api",
+   "version": "1.0.0",
+   "description": "The API for AGM-Tools",
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/hrueger/AGM-Tools.git"
+   },
+   "keywords": [
+      "api",
+      "cloud",
+      "platform",
+      "AGM-Tools"
+   ],
+   "author": "H. Rueger",
+   "license": "MIT",
+   "bugs": {
+      "url": "https://github.com/hrueger/AGM-Tools/issues"
+   },
+   "homepage": "https://github.com/hrueger/AGM-Tools#readme",
+   "devDependencies": {
+      "@types/archiver": "^3.0.0",
+      "@types/email-templates": "^6.0.2",
+      "@types/i18n": "^0.8.6",
+      "@types/node": "^13.1.8",
+      "@types/nodemailer": "^6.4.0",
+      "@types/request": "^2.48.4",
+      "@types/rimraf": "^2.0.3",
+      "npx": "^10.2.1",
+      "ts-node": "8.6.2",
+      "tslint": "^5.20.1",
+      "typescript": "3.7.5"
+   },
+   "dependencies": {
+      "@types/bcryptjs": "^2.4.2",
+      "@types/body-parser": "^1.17.1",
+      "@types/cors": "^2.8.6",
+      "@types/helmet": "0.0.45",
+      "@types/jsonwebtoken": "^8.3.6",
+      "archiver": "^3.1.1",
+      "bcryptjs": "^2.4.3",
+      "body-parser": "^1.19.0",
+      "class-validator": "^0.11.0",
+      "cors": "^2.8.5",
+      "email-templates": "^7.0.1",
+      "express": "^4.17.1",
+      "express-fileupload": "^1.1.6",
+      "get-folder-size": "^2.0.1",
+      "helmet": "^3.21.2",
+      "i18n": "^0.8.4",
+      "jsonwebtoken": "^8.5.1",
+      "merge-files": "^0.1.2",
+      "mysql": "^2.17.1",
+      "nodemailer": "^6.4.2",
+      "reflect-metadata": "^0.1.13",
+      "rimraf": "^3.0.0",
+      "socket.io": "^2.3.0",
+      "ts-node-dev": "^1.0.0-pre.44",
+      "typeorm": "0.2.22"
+   },
+   "scripts": {
+      "tsc": "tsc",
+      "start": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/index.ts",
+      "start:rtc": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/rtcServer.ts",
+      "prod": "tsc && node ./build/app.js",
+      "build": "tsc",
+      "lint": "npx tslint --project .",
+      "createFilesWithApiKeys": "node src/scripts/generateSecretFilesWithKeys.js",
+      "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run"
+   }
+}

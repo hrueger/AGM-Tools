@@ -1,5 +1,5 @@
 /* Hide a bunch of things to setup the initial animations */
-.form-controls, .sign-up-stack {
+.form-controls, .sign-up-stack, .submit-button, .forgot-password-label {
     opacity: 0;
   }
   

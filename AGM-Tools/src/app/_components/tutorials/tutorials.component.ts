@@ -1,7 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AlertService } from "../../_services/alert.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -15,25 +17,48 @@ export class TutorialsComponent implements OnInit {
   public title: string;
   public description: string;
   public invalidMessage: boolean;
+  public onlyDisplayingProject: boolean = false;
   public tutorials = [];
+  @ViewChild("newTutorialModal", {static: false}) private newTutorialModal;
 
   constructor(private navbarService: NavbarService,
               private fb: FormBuilder,
               private remoteService: RemoteService,
               private modalService: NgbModal,
-              private alertService: AlertService) { }
+              private fts: FastTranslateService,
+              private alertService: AlertService,
+              private route: ActivatedRoute,
+              private router: Router) { }
 
-  public ngOnInit() {
-    this.remoteService
-    .get("tutorialsGetTutorials")
-    .subscribe((res) => {
-      this.tutorials = res;
-    });
-    this.navbarService.setHeadline("Tutorials");
+  public async ngOnInit() {
+    if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
+      this.onlyDisplayingProject = true;
+      this.remoteService.get("get", `tutorials/project/${this.route.snapshot.params.projectId}`).subscribe((res) => {
+        this.tutorials = res;
+      });
+      this.navbarService.setHeadline(`${await this.fts.t("tutorials.onlyDisplayingProjectName")} ${this.route.snapshot.params.projectName}`);
+    } else {
+      this.remoteService.get("get", "tutorials/").subscribe((res) => {
+        this.tutorials = res;
+      });
+      this.navbarService.setHeadline(await this.fts.t("tutorials.tutorials"));
+    }
     this.newTutorialForm = this.fb.group({
       description: [this.description, [Validators.required]],
       title: [this.title, [Validators.required]],
     });
+    if (this.router.url.endsWith("new")) {
+      this.newTutorial(this.newTutorialModal);
+    }
+  }
+
+  public async displayAll() {
+    this.navbarService.setHeadline(await this.fts.t("tutorials.tutorials"));
+    this.remoteService.get("get", "tutorials/").subscribe((res) => {
+      this.tutorials = res;
+    });
+    this.router.navigate(["/", "tutorials"]);
+    this.onlyDisplayingProject = false;
   }
 
   public newTutorial(content) {
@@ -44,17 +69,15 @@ export class TutorialsComponent implements OnInit {
           this.invalidMessage = false;
 
           this.remoteService
-            .getNoCache("tutorialsNewTutorial", {
+            .getNoCache("post", "tutorials/", {
               description: this.newTutorialForm.get("description").value,
               title: this.newTutorialForm.get("title").value,
             })
-            .subscribe((data) => {
+            .subscribe(async (data) => {
               if (data && data.status == true) {
-                this.alertService.success(
-                  "Tutorial erfolgreich erstellt",
-                );
+                this.alertService.success(await this.fts.t("tutorials.tutorialCreatedSuccessfully"));
                 this.remoteService
-                  .get("tutorialsGetTutorials")
+                  .get("get", "tutorials/")
                   .subscribe((res) => {
                     this.tutorials = res;
                   });

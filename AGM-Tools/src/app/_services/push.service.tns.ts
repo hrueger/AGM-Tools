@@ -90,7 +90,7 @@ export class PushService {
             (token) => {
                 // tslint:disable-next-line: no-console
                 console.log("Firebase plugin received a push token: " + token);
-                this.remoteService.getNoCache("updatePushToken", { pushToken: token }).subscribe();
+                this.remoteService.getNoCache("post", "push/token/update", { pushToken: token }).subscribe();
             },
         );
         this.registerOnReceivedCallback();
@@ -165,8 +165,9 @@ export class PushService {
     }
 
     private handleNewChatMessage(message: Message): number {
+        // tslint:disable-next-line: no-console
         console.log(message.data.messageId);
-        this.remoteService.getNoCache("chatMarkAsReceived", { message: message.data.messageId }).subscribe();
+        this.remoteService.getNoCache("post", "chatMarkAsReceived", { message: message.data.messageId }).subscribe();
         this.chatActionSubject.next({
             action: "newMessage",
             data: message,
@@ -216,12 +217,12 @@ export class PushService {
                                 body: message,
                             },
                         });
-                        that.remoteService.getNoCache("chatMarkAsRead", {
+                        that.remoteService.getNoCache("post", "chatMarkAsRead", {
                             message: message.data.messageId,
                         }).subscribe();
                     } else if (data.event == "input") {
                         this.remoteService
-                            .getNoCache("chatSendMessage", {
+                            .getNoCache("post", "chatSendMessage", {
                                 message: data.response,
                                 rid: message.data.chatID,
                             })
@@ -275,7 +276,7 @@ export class PushService {
             onPushTokenReceivedCallback: (token: string): void => {
                 // tslint:disable-next-line: no-console
                 console.log(">>>> Firebase plugin received a push token: " + token);
-                this.remoteService.getNoCache("updatePushToken", { pushToken: token }).subscribe();
+                this.remoteService.getNoCache("post", "push/token/update", { pushToken: token }).subscribe();
             },
             showNotifications: true,
             showNotificationsWhenInForeground: false,

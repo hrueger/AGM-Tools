@@ -36,6 +36,10 @@ html {
     overflow-x: hidden;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 body {
     font-family: "Open Sans", sans-serif !important;
     font-size: 14px;
@@ -93,14 +97,19 @@ body {
     text-transform: uppercase;
 }
 
-[role="main"] {
-    padding-top: 133px;
+.badge.badge-normal {
+    font-size: 100%;
 }
 
-@media (min-width: 768px) {
-    [role="main"] {
-        padding-top: 72px;
-    }
+.truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+[role="main"] {
+    padding-top: 72px;
 }
 
 .navbar-brand {
@@ -127,3 +136,10 @@ body {
     border-color: transparent;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
+
+    ngb-modal-backdrop {
+        z-index: 1400 !important;
+    }
+    ngb-modal-window {
+        z-index: 1500 !important;
+    }

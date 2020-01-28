@@ -1,9 +1,5 @@
 import { Component, NgZone, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
-import { Project } from "../../_models/project.model";
-import { User } from "../../_models/user.model";
-import { RemoteService } from "../../_services/remote.service";
-
 import {
     CFAlertActionAlignment,
     CFAlertActionStyle,
@@ -14,7 +10,11 @@ import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
 import { View } from "tns-core-modules/ui/core/view/view";
+import { environment } from "../../../environments/environment";
+import { Project } from "../../_models/project.model";
 import { AlertService } from "../../_services/alert.service";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { RemoteService } from "../../_services/remote.service";
 import { NewProjectModalComponent } from "../_modals/new-project.modal.tns";
 
 @Component({
@@ -35,20 +35,22 @@ export class ProjectsComponent implements OnInit {
                 private remoteService: RemoteService,
                 private alertService: AlertService,
                 private zone: NgZone,
+                private authenticationService: AuthenticationService,
 
     ) { this.multiSelect = new MultiSelect(); }
 
     public ngOnInit() {
-        this.remoteService.get("projectsGetProjects").subscribe((data) => {
+        this.remoteService.get("get", "projects").subscribe((data) => {
             this.projects = data;
         });
-        this.remoteService.get("usersGetUsers").subscribe((data) => {
-            this.allusers = data;
-        });
+    }
 
+    public getProjectImageSrc(project) {
+        return `${environment.apiUrl}projects/${project.id}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
     public openNewModal(content) {
         const options = {
+            animated: true,
             context: {},
             fullscreen: true,
             viewContainerRef: this.vcRef,
@@ -56,7 +58,7 @@ export class ProjectsComponent implements OnInit {
         this.modal.showModal(NewProjectModalComponent, options).then((newProject) => {
             if (newProject) {
                 this.remoteService
-                    .getNoCache("projectsNewProject", {
+                    .getNoCache("post", "projects", {
                         description: newProject.description,
                         members: newProject.members,
                         name: newProject.name,
@@ -66,7 +68,7 @@ export class ProjectsComponent implements OnInit {
                             this.alertService.success(
                                 "Projekt erfolgreich erstellt!",
                             );
-                            this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                            this.remoteService.get("get", "projects").subscribe((res) => {
                                 this.projects = res;
                             });
                         }
@@ -78,7 +80,9 @@ export class ProjectsComponent implements OnInit {
     public onSwipeCellStarted(args: ListViewEventData) {
         const swipeLimits = args.data.swipeLimits;
         const swipeView = args.object;
+        // @ts-ignore
         const leftItem = swipeView.getViewById<View>("add-view");
+        // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.left = leftItem.getMeasuredWidth();
         swipeLimits.right = rightItem.getMeasuredWidth();
@@ -121,14 +125,14 @@ export class ProjectsComponent implements OnInit {
                 this.zone.run(() => {
                     this.membersToAdd = selectedItems;
                     if (this.membersToAdd.length) {
-                        this.remoteService.getNoCache("projectsAddMembers", {
+                        this.remoteService.getNoCache("post", "pro", {
                             members: this.membersToAdd,
                             project: id,
                         }).subscribe((data) => {
                             this.alertService.success(
                                 "Mitglieder erfolgreich hinzugefügt!",
                             );
-                            this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                            this.remoteService.get("get", "projects").subscribe((res) => {
                                 this.projects = res;
                             });
                         });
@@ -152,15 +156,13 @@ export class ProjectsComponent implements OnInit {
         const onYesPressed = (response) => {
             this.projectsListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
-                .getNoCache("projectsDeleteProject", {
-                    id,
-                })
+                .getNoCache("delete", `project/${id}`)
                 .subscribe((data) => {
                     if (data && data.status == true) {
                         this.alertService.success(
                             "Projekt erfolgreich gelöscht",
                         );
-                        this.remoteService.get("projectsGetProjects").subscribe((res) => {
+                        this.remoteService.get("get", "projects").subscribe((res) => {
                             this.projects = res;
                         });
                     }
