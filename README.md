@@ -6,7 +6,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/hrueger/AGM-Tools.svg)](https://greenkeeper.io/)
 [![License](https://img.shields.io/badge/License-MIT-blue)](./LICENSE.md)
 [![GitHub last commit](https://img.shields.io/github/last-commit/hrueger/AGM-Tools?color=brightgreen)](https://github.com/hrueger/AGM-Tools/commits)
-[![Maintenance](https://img.shields.io/maintenance/yes/2019)](https://github.com/hrueger/AGM-Tools/commits)
+[![Maintenance](https://img.shields.io/maintenance/yes/2020)](https://github.com/hrueger/AGM-Tools/commits)
 
 
 ## What is it?
@@ -27,8 +27,10 @@ With native apps for web, mobile and Desktop*!
 ### I want to contribute
 1. Clone this repository by typing `git clone https://github.com/hrueger/AGM-Tools` in your command prompt
 2. `cd AGM-Tools/AGM-Tools`
-3. Create files with secret keys using `npm run createFilesWithApiKeys` and enter your keys in these files
+3. Create files with secret keys using `npm run createFilesWithApiKeys` and enter your keys in these files.
 4. Type `npm serve:web` or `npm serve:android` to start your dev session with LiveSync!
-5. Before creating a pull request be sure to check for linting errors with `npm run lint`
+5. In a second terminal run change to the `api` directory, run `npm run createFilesWithApiKeys` and enter your keys in these files.
+6. To start the api, type `npm start`.
+7. Before creating a pull request be sure to check for linting errors with `npm run lint`
 
 *in developement
