@@ -18,10 +18,9 @@
             <span class="fa fa-th"></span>
         </button>
     </div>
-    <br /><br />
-    <ol class="breadcrumb">
+    <ol class="breadcrumb mt-2">
         <li class="breadcrumb-item" [class.active]="currentPath.length == 0">
-            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goBackToProjects()">{{'files.files' | translate}}</a>
+            <a [class.link]="currentPath.length != 0" (click)="currentPath.length != 0 && goBackToProjects()">{{'projects.projects' | translate}}</a>
         </li>
         <li *ngFor="let path of currentPath; let last = last" [class.active]="last" class="breadcrumb-item">
             <a class="link" *ngIf="!last" (click)="upTo(path.id)">
@@ -31,82 +30,87 @@
         </li>
     </ol>
 </div>
-
-<div>
-    <div id="dropArea">
-        <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (chunkUploading)="onFileUpload($event)" (uploading)="onFileUpload($event)">
-        </ejs-uploader>
+<div class="row">
+    <div class="col-2 border-right">
+        <ejs-treeview #treeView *ngIf="fileTree" [fields]='treeConfig' [allowMultiSelection]='false' (nodeSelected)='fileTreeItemClicked($event, viewFileModal)'></ejs-treeview>
     </div>
+    <div class="col-10">
+        <div id="dropArea">
+            <ejs-uploader maxFileSize="21474836480" #uploader locale="de" [asyncSettings]="settings" (success)="onUploadSuccess($event)" (chunkUploading)="onFileUpload($event)" (uploading)="onFileUpload($event)">
+            </ejs-uploader>
+        </div>
 
-    <context-menu #contextMenu>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item, viewFileModal)">
-            <i class="far fa-circle"></i> {{'files.open' | translate}}
-        </ng-template>
-        <ng-template contextMenuItem [subMenu]="tagsSubMenu">
-            <i class="fas fa-tags"></i> {{'files.tags' | translate}}
-        </ng-template>
-        <context-menu #tagsSubMenu>
-            <ng-template *ngFor="let tag of tags" contextMenuItem (execute)="toggleTag(tag.id, $event.item)">
-                {{ tag.name }}
+        <context-menu #contextMenu>
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item, viewFileModal)">
+                <i class="far fa-circle"></i> {{'files.open' | translate}}
+            </ng-template>
+            <ng-template contextMenuItem [subMenu]="tagsSubMenu">
+                <i class="fas fa-tags"></i> {{'files.tags' | translate}}
+            </ng-template>
+            <context-menu #tagsSubMenu>
+                <ng-template *ngFor="let tag of tags" contextMenuItem (execute)="toggleTag(tag.id, $event.item)">
+                    {{ tag.name }}
+                </ng-template>
+            </context-menu>
+            <ng-template contextMenuItem divider="true"></ng-template>
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="download($event.item)">
+                <i class="fas fa-cloud-download-alt"></i> {{'files.download' | translate}}
+            </ng-template>
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="share($event.item, shareModal)">
+                <i class="far fa-share-square"></i> {{'files.share' | translate}}
+            </ng-template>
+            <ng-template contextMenuItem divider="true"></ng-template>
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="rename($event.item, renameModal)">
+                <i class="fas fa-pen"></i> {{'files.rename' | translate}}
+            </ng-template>
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="move($event.item)">
+                <i class="fa fa-arrows-alt"></i> {{'files.move' | translate}}
+            </ng-template>
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="copy($event.item)">
+                <i class="fas fa-copy"></i> {{'files.copy' | translate}}
+            </ng-template>
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="delete($event.item)">
+                <i class="fas fa-trash"></i> {{'files.delete' | translate}}
             </ng-template>
         </context-menu>
-        <ng-template contextMenuItem divider="true"></ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="download($event.item)">
-            <i class="fas fa-cloud-download-alt"></i> {{'files.download' | translate}}
-        </ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="share($event.item, shareModal)">
-            <i class="far fa-share-square"></i> {{'files.share' | translate}}
-        </ng-template>
-        <ng-template contextMenuItem divider="true"></ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="rename($event.item, renameModal)">
-            <i class="fas fa-pen"></i> {{'files.rename' | translate}}
-        </ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="move($event.item)">
-            <i class="fa fa-arrows-alt"></i> {{'files.move' | translate}}
-        </ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="copy($event.item)">
-            <i class="fas fa-copy"></i> {{'files.copy' | translate}}
-        </ng-template>
-        <ng-template class="ctxMenuItem" contextMenuItem (execute)="delete($event.item)">
-            <i class="fas fa-trash"></i> {{'files.delete' | translate}}
-        </ng-template>
-    </context-menu>
 
-    <div id="files" class="table-responsive">
-        <div class="clear"></div>
-        <table #files class="table  table-hover">
-            <thead>
-                <tr>
-                    <td></td>
-                    <td>{{'general.name' | translate}}</td>
-                    <td>{{'files.tags' | translate}}</td>
-                    <td>{{'general.creationDate' | translate}}</td>
-                    <td>{{'general.size' | translate}}</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of items" (click)="goTo(item, viewFileModal)" [contextMenu]="contextMenu" [contextMenuSubject]="item">
-                    <td>
-                        <img [src]="getIcon(item)" class="fileIcon" />
-                    </td>
-                    <td>{{ item.name }}</td>
-                    <td>
-                        <div *ngIf="item.tags.length">
-                            <div class="d-inline" *ngFor="let tag of item.tags">
-                                <span [style.color]="tag.textColor" [style.background-color]="
-                                        tag.color
-                                    " class="badge">{{ tag.name }}</span> &nbsp;
+        <div id="files" class="table-responsive">
+            <div class="clear"></div>
+            <table #files class="table  table-hover">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>{{'general.name' | translate}}</td>
+                        <td>{{'files.tags' | translate}}</td>
+                        <td>{{'general.creationDate' | translate}}</td>
+                        <td>{{'general.size' | translate}}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of items" (click)="goTo(item, viewFileModal)" [contextMenu]="contextMenu" [contextMenuSubject]="item">
+                        <td>
+                            <img [src]="getIcon(item)" class="fileIcon" />
+                        </td>
+                        <td>{{ item.name }}</td>
+                        <td>
+                            <div *ngIf="item.tags.length">
+                                <div class="d-inline" *ngFor="let tag of item.tags">
+                                    <span [style.color]="tag.textColor" [style.background-color]="
+                                            tag.color
+                                        " class="badge">{{ tag.name }}</span> &nbsp;
+                                </div>
                             </div>
-                        </div>
-                    </td>
+                        </td>
 
-                    <td>{{ item.createdAt | date:"medium" }}</td>
-                    <td>{{ item.size }}</td>
-                </tr>
-            </tbody>
-        </table>
+                        <td>{{ item.createdAt | date:"medium" }}</td>
+                        <td>{{ item.size }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
 
 <ng-template #viewFileModal let-modal>
     <div class="modal-header">

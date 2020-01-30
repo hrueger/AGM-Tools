@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NodeSelectEventArgs, TreeViewComponent } from "@syncfusion/ej2-angular-navigations";
 import { EmitType, L10n } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
 import { environment } from "../../../environments/environment";
-import { Project } from "../../_models/project.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
@@ -29,7 +29,7 @@ export class FilesComponent implements OnInit {
         chunkSize: 1024 * 1024, saveUrl: `${environment.apiUrl}files/upload`,
     };
 
-    public currentPath: any = [];
+    public currentPath: any[] = [];
     public lastItem: any;
     public items: any[];
     public newFolderName: string;
@@ -38,6 +38,11 @@ export class FilesComponent implements OnInit {
     public tags: any[] = [];
     public currentFile: any;
     public documentEditorConfig: any;
+    public fileTree: any[];
+    public treeConfig: any;
+    public allFiles: any[] = [];
+    @ViewChild("treeView", {static: false}) public treeView: TreeViewComponent;
+    private currentModalWindow: NgbModalRef;
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
@@ -73,6 +78,20 @@ export class FilesComponent implements OnInit {
         if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
             this.pid = this.route.snapshot.params.projectId;
             this.navigate({ id: -1, name: this.route.snapshot.params.projectName});
+            this.remoteService.get("get",
+                `files/tree/${this.route.snapshot.params.projectId}`).subscribe((data: any[]) => {
+                this.allFiles = data;
+                setTimeout(() => {
+                    this.fileTree = this.addIconUrls(data);
+                    this.treeConfig = {
+                        child: "files",
+                        dataSource: this.fileTree,
+                        id: "id",
+                        imageUrl: "iconUrl",
+                        text: "name",
+                    };
+                }, 0);
+            });
         }
         L10n.load({
             de: {
@@ -111,12 +130,36 @@ export class FilesComponent implements OnInit {
         this.router.navigate(["/", "projects"]);
     }
 
-    public goTo(item: any, viewFile?) {
+    public fileTreeItemClicked(event: NodeSelectEventArgs, modal) {
+        const item = this.findNode(event.nodeData.id, this.allFiles);
+        if (item) {
+            if (item.isFolder) {
+                this.goTo(item, modal);
+            } else {
+                const parent = this.findParent(item.id, this.allFiles);
+                if (parent) {
+                    this.goTo(parent, modal, item.id);
+                } else {
+                    this.navigate({id: -1}, item.id, modal);
+                }
+            }
+        }
+    }
+
+    public goTo(item: any, viewFile?, thenOpenFileId?) {
         if (item.isFolder) {
-            this.navigate(item);
+            this.navigate(item, thenOpenFileId, viewFile);
         } else {
             this.currentFile = item;
-            this.modalService.open(viewFile, {size: "xl", scrollable: true});
+            if (this.currentModalWindow) {
+                this.currentModalWindow.close();
+            }
+            this.currentModalWindow = this.modalService.open(viewFile, {size: "xl", scrollable: true});
+            this.currentModalWindow.result.then(() => {
+                this.currentModalWindow = undefined;
+            }).catch(() => {
+                this.currentModalWindow = undefined;
+            });
         }
     }
     public getIcon(item: any) {
@@ -142,7 +185,7 @@ export class FilesComponent implements OnInit {
         } while (item.id != id);
         this.navigate(item);
     }
-    public navigate(item) {
+    public navigate(item, thenOpenFileId?, thenOpenFileModal?) {
         let r;
         if (item.id == -1) {
             r = this.remoteService.get("get", `files/projects/${this.pid}`);
@@ -150,14 +193,12 @@ export class FilesComponent implements OnInit {
             r = this.remoteService.get("get", `files/${item.id}`);
         }
         r.subscribe((data) => {
-            if (
-                this.currentPath.length == 0 ||
-                this.currentPath[this.currentPath.length - 1].id != item.id
-            ) {
-                this.currentPath.push(item);
-            }
+            this.currentPath = this.buildBreadcrumbs(item);
             this.items = data;
             this.lastItem = item;
+            if (thenOpenFileId) {
+                this.goTo(this.items.filter((i) => i.id == thenOpenFileId)[0], thenOpenFileModal);
+            }
         });
     }
     public openNewFolderModal(content) {
@@ -451,5 +492,75 @@ export class FilesComponent implements OnInit {
             },
             script: "https://agmtools.allgaeu-gymnasium.de:8080/web-apps/apps/api/documents/api.js",
           };
+    }
+
+    private addIconUrls(itemTree) {
+        for (const item of itemTree) {
+            if (item.isFolder) {
+                item.iconUrl = "assets/icons/folder.png";
+            } else {
+                const parts = item.name.split(".");
+                const ext = parts[parts.length - 1];
+                item.iconUrl = `assets/icons/extralarge/${ext}.png`;
+            }
+            if (item.files.length > 0) {
+                item.files = this.addIconUrls(item.files);
+            }
+        }
+        return itemTree;
+    }
+
+    private findNode(id, array) {
+        for (const node of array) {
+            if (parseInt(node.id, undefined) === parseInt(id, undefined)) {
+                return node;
+            }
+            if (node.files) {
+                const child = this.findNode(id, node.files);
+                if (child) {
+                    return child;
+                }
+            }
+        }
+    }
+
+    private findParent(id, array, parent?) {
+        for (const node of array) {
+            if (node.id === id) {
+                return parent;
+            }
+            if (node.files) {
+                const p = this.findParent(id, node.files, node);
+                if (p) {
+                    return p;
+                }
+            }
+        }
+    }
+
+    private findParents(id, array) {
+        const parents = [];
+        let parent;
+        let parentId = id;
+        while (true) {
+            parent = this.findParent(parentId, array);
+            if (parent) {
+                parentId = parent.id;
+                parents.push(parent);
+            } else {
+                break;
+            }
+        }
+        return parents.reverse();
+    }
+
+    private buildBreadcrumbs(item) {
+        const b = [];
+        b.push({id: -1, name: this.route.snapshot.params.projectName});
+        b.push(...this.findParents(item.id, this.allFiles));
+        if (item.id != -1) {
+            b.push(item);
+        }
+        return b;
     }
 }

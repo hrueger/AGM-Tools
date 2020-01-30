@@ -49,3 +49,10 @@ StackLayout.breadcrumbs {
         text-decoration: underline;
     }
 }
+
+ejs-treeview::ng-deep {
+    & > .e-list-parent.e-ul {
+        height: calc(100vh - 13rem);
+        padding: 0;
+    }
+}
