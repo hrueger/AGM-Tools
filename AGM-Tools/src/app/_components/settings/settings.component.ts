@@ -62,7 +62,6 @@ export class SettingsComponent {
       if (data && data.status) {
         this.alertService.success(await this.fts.t("settings.settingSavedSuccessfully"));
         if (langChanged && data.settings) {
-          console.log(data.settings);
           this.settings = data.settings;
         }
       }
