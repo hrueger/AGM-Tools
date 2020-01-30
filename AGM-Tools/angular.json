@@ -52,7 +52,8 @@
                         "styles": [
                             "src/styles.scss",
                             "./node_modules/ngx-lightbox/lightbox.css",
-                            "./node_modules/ngx-ui-switch/ui-switch.component.css"
+                            "./node_modules/ngx-ui-switch/ui-switch.component.css",
+                            "./node_modules/flag-icon-css/css/flag-icon.min.css"
                         ],
                         "scripts": ["node_modules/chart.js/dist/Chart.bundle.min.js",
                             "node_modules/ngx-extended-pdf-viewer/assets/pdf.js",

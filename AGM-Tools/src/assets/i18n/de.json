@@ -185,10 +185,11 @@
     "projectCreatedSuccessfully": "Projekt erfolgreich erstellt!",
     "projectDeletedSuccessfully": "Projekt erfolgreich gelöscht!",
     "projectUpdatedSuccessfully": "Projekt erfolgreich aktualisiert!",
-    "projects": "Projects",
+    "projects": "Projekte",
     "update": "Projekt aktualisieren"
   },
   "settings": {
+    "settingSavedSuccessfully": "Einstellung erfolgreich gespeichert!",
     "settings": "Einstellungen"
   },
   "share": {
@@ -207,7 +208,7 @@
     "groupPlaceholder": "Gruppe der Vorlage (Logo, Hintergrund etc.)",
     "newTemplate": "Neue Vorlage",
     "templateCreatedSuccessfully": "Vorlage erfolgreich gespeichert!",
-    "templates": "Templates"
+    "templates": "Vorlagen"
   },
   "tips": {
     "tipsAvalible": "Neue Tipps erfügbar",

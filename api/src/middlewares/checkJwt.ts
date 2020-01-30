@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import * as i18n from "i18n";
 import * as jwt from "jsonwebtoken";
 import { config } from "../config/config";
+import SettingsController from "../controllers/SettingsController";
 
-export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
+export const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
   // Get the jwt token from the head
   let token = req.headers.authorization as string;
   if (!token) {
@@ -21,6 +22,8 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     jwtPayload = ( jwt.verify(token, config.jwtSecret) as any);
     res.locals.jwtPayload = jwtPayload;
     res.locals.jwtPayload.userId = parseInt(res.locals.jwtPayload.userId, undefined);
+    res.locals.language = await SettingsController.getUserLanguage(res);
+    i18n.setLocale(res.locals.language);
   } catch (error) {
     // If token is not valid, respond with 401 (unauthorized)
     res.status(401).send({message: i18n.__("errors.sessionExpired"), logout: true});

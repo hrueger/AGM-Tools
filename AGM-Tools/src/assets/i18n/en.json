@@ -189,6 +189,7 @@
     "update": "Update project"
   },
   "settings": {
+    "settingSavedSuccessfully": "Setting saved successfully!",
     "settings": "Settings"
   },
   "share": {

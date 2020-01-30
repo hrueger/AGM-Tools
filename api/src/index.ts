@@ -15,6 +15,7 @@ import { File } from "./entity/File";
 import { Message } from "./entity/Message";
 import { Notification } from "./entity/Notification";
 import { Project } from "./entity/Project";
+import { Setting } from "./entity/Setting";
 import { Tag } from "./entity/Tag";
 import { Task } from "./entity/Task";
 import { Template } from "./entity/Template";
@@ -36,24 +37,38 @@ i18n.configure({
 
 // Connects to the Database -> then starts the express
 createConnection({
-   charset : "utf8mb4",
-   cli: {
-      entitiesDir: "src/entity",
-      migrationsDir: "src/migration",
-      subscribersDir: "src/subscriber",
-   },
-   database: config.database_name,
-   entities: [Cache, Event, File, Message, Notification,
-    Project, Tag, Template, Tutorial, TutorialStep, User, Usergroup, Task],
-   host: config.database_host,
-   logging: false,
-   migrations: [createUsergroups1574018071536, createAdminUser1574018391679, CreateTags1574797035707],
-   migrationsRun: true,
-   password: config.database_password,
-   port: toInt(config.database_port),
-   synchronize: true,
-   type: "mysql",
-   username: config.database_user,
+  charset: "utf8mb4",
+  cli: {
+    entitiesDir: "src/entity",
+    migrationsDir: "src/migration",
+    subscribersDir: "src/subscriber",
+  },
+  database: config.database_name,
+  entities: [
+    Cache,
+    Event,
+    File,
+    Message,
+    Notification,
+    Project,
+    Setting,
+    Tag,
+    Task,
+    Template,
+    Tutorial,
+    TutorialStep,
+    User,
+    Usergroup,
+  ],
+  host: config.database_host,
+  logging: false,
+  migrations: [createUsergroups1574018071536, createAdminUser1574018391679, CreateTags1574797035707],
+  migrationsRun: true,
+  password: config.database_password,
+  port: toInt(config.database_port),
+  synchronize: true,
+  type: "mysql",
+  username: config.database_user,
 })
   .then(async (connection) => {
     await connection.query("SET NAMES utf8mb4;");

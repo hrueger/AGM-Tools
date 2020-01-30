@@ -1,56 +1,111 @@
 {
-	"errors": {
-		"emailNotFound": "Email not found!",
-		"error": "Error!",
-		"errorWhileAddingUser": "Error while adding user!",
-		"errorWhileCreatingFolder": "Error while creating folder!",
-		"errorWhileDeleting": "Error while deleting!",
-		"errorWhileDeletingEvent": "Error while deleting event!",
-		"errorWhileDeletingProject": "Error while deleting project!",
-		"errorWhileDeletingTemplate": "Error while deleting template!",
-		"errorWhileDeletingTutorialStep": "Error while deleting step!",
-		"errorWhileDeletingUser": "Error while deleting user!",
-		"errorWhileLoadingMessages": "Error while loading messages!",
-		"errorWhileSavingEvent": "Error while saving event!",
-		"errorWhileSavingFile": "Error while safing file!",
-		"errorWhileSavingProject": "Error while saving project!",
-		"errorWhileSavingTemplate": "Error while saving template!",
-		"errorWhileSavingToken": "Error while saving token!",
-		"errorWhileSavingTutorial": "Error while saving tutorial!",
-		"errorWhileSavingTutorialStep": "Error while saving step!",
-		"errorWhileSendingEmail": "Error while sending email",
-		"errorWhileSendingMessage": "Error while sending message!",
-		"errorWhileUpdatingEvent": "Error while updating event!",
-		"errorWhileUpdatingTutorial": "Error while updating tutorial!",
-		"errorWhileUpdatingTutorialStep": "Error while updating step!",
-		"eventNotFound": "Event not found!",
-		"existingUsername": "Username already exists!",
-		"noFilesUploaded": "No files uploaded yet!",
-		"noMessagesSent": "No messages sent yet!",
-		"notAllFieldsProvided": "Not all data provided!",
-		"notAllowed": "This action is not allowed!",
-		"notificationNotFound": "Notification not found!",
-		"oldPasswordWrong": "Old password is not correct!",
-		"passwordsDontMatch": "Passwords do not match!",
-		"projectNotFound": "Project not found!",
-		"sessionExpired": "Session expired. Please login again!",
-		"shareNotFound": "Share not found!",
-		"tutorialNotFound": "Tutorial not found!",
-		"tutorialStepNotFound": "Step not found!",
-		"unauthorized": "Unauthorized!",
-		"unknown": "Unknown error!",
-		"userNotFound": "User not found!",
-		"userNotFoundWrongLink": "User not found, wrong link!",
-		"usergroupDoesNotExist": "The usergroup doesn't exist!",
-		"usernameOrPasswordEmpty": "Username oder password empty!",
-		"wrongPassword": "Wrong password!",
-		"wrongUsername": "Wrong username!",
-		"errorWhileSavingTask": "errors.errorWhileSavingTask"
-	},
-	"general": {
-		"unknown": "Unknown"
-	},
-	"tips": {
-		"addProjectLogo": "Add a project logo. The filename must be 'logo', 'Logo' or 'LOGO', it must be a JPG, JPEG, PNG, SVG, WebP or BMP file and the image must be in the project's root folder!"
-	}
+    "errors": {
+        "emailNotFound": "Email not found!",
+        "error": "Error!",
+        "errorWhileAddingUser": "Error while adding user!",
+        "errorWhileCreatingFolder": "Error while creating folder!",
+        "errorWhileDeleting": "Error while deleting!",
+        "errorWhileDeletingEvent": "Error while deleting event!",
+        "errorWhileDeletingProject": "Error while deleting project!",
+        "errorWhileDeletingTemplate": "Error while deleting template!",
+        "errorWhileDeletingTutorialStep": "Error while deleting step!",
+        "errorWhileDeletingUser": "Error while deleting user!",
+        "errorWhileLoadingMessages": "Error while loading messages!",
+        "errorWhileSavingEvent": "Error while saving event!",
+        "errorWhileSavingFile": "Error while saving file!",
+        "errorWhileSavingProject": "Error while saving project!",
+        "errorWhileSavingTask": "Error while saving task!",
+        "errorWhileSavingTemplate": "Error while saving template!",
+        "errorWhileSavingToken": "Error while saving token!",
+        "errorWhileSavingTutorial": "Error while saving tutorial!",
+        "errorWhileSavingTutorialStep": "Error while saving step!",
+        "errorWhileSendingEmail": "Error while sending email",
+        "errorWhileSendingMessage": "Error while sending message!",
+        "errorWhileUpdatingEvent": "Error while updating event!",
+        "errorWhileUpdatingTutorial": "Error while updating tutorial!",
+        "errorWhileUpdatingTutorialStep": "Error while updating step!",
+        "eventNotFound": "Event not found!",
+        "existingUsername": "Username already exists!",
+        "noFilesLinked": "No files linked yet!",
+        "noFilesUploaded": "No files uploaded yet!",
+        "noMessagesSent": "No messages sent yet!",
+        "notAllFieldsProvided": "Not all data provided!",
+        "notAllowed": "This action is not allowed!",
+        "notificationNotFound": "Notification not found!",
+        "oldPasswordWrong": "Old password is not correct!",
+        "passwordsDontMatch": "Passwords do not match!",
+        "projectNotFound": "Project not found!",
+        "sessionExpired": "Session expired. Please login again!",
+        "shareNotFound": "Share not found!",
+        "tutorialNotFound": "Tutorial not found!",
+        "tutorialStepNotFound": "Step not found!",
+        "unauthorized": "Unauthorized!",
+        "unknown": "Unknown error!",
+        "userNotFound": "User not found!",
+        "userNotFoundWrongLink": "User not found, wrong link!",
+        "usergroupDoesNotExist": "The usergroup doesn't exist!",
+        "usernameOrPasswordEmpty": "Username oder password empty!",
+        "wrongPassword": "Wrong password!",
+        "wrongUsername": "Wrong username!"
+    },
+    "general": {
+        "unknown": "Unknown"
+    },
+    "settings": {
+        "about": {
+            "description": "Imprint, licenses, ...",
+            "name": "About"
+        },
+        "appNotifications": {
+            "description": "Notifications on your phone",
+            "name": "In-app"
+        },
+        "dataPrivacy": {
+            "description": "Last seen, ...",
+            "name": "Data privacy"
+        },
+        "imprint": {
+            "description": "Imprint",
+            "name": "Imprint"
+        },
+        "language": {
+            "description": "Your preferred language for the webversion and the app.",
+            "name": "Language"
+        },
+        "lastSeen": {
+            "description": "Show information about your last seen timestamp to all other users.",
+            "name": "Last seen"
+        },
+        "licenses": {
+            "description": "Licenses",
+            "name": "OpenSource Licenses"
+        },
+        "online": {
+            "description": "Show information about your online status to all other users.",
+            "name": "Now online"
+        },
+        "personalization": {
+            "description": "Language, timezone, ...",
+            "name": "Personalization"
+        },
+        "pushNotifications": {
+            "description": "Daily updates, manage devices, ...",
+            "name": "Push notifications"
+        },
+        "showEmail": {
+            "description": "Email-Address visible for all users.",
+            "name": "Show Email-Adress"
+        },
+        "summaryPerMail": {
+            "description": "Get a daily summery of all conversations per email.",
+            "name": "Per Mail"
+        },
+        "webNotifications": {
+            "description": "Notifications in the browser",
+            "name": "In the browser"
+        }
+    },
+    "tips": {
+        "addProjectLogo": "Add a project logo. The filename must be 'logo', 'Logo' or 'LOGO', it must be a JPG, JPEG, PNG, SVG, WebP or BMP file and the image must be in the project's root folder!"
+    }
 }

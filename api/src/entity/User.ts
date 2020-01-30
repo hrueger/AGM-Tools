@@ -16,6 +16,7 @@ import { File } from "./File";
 import { Message } from "./Message";
 import { Notification } from "./Notification";
 import { Project } from "./Project";
+import { Setting } from "./Setting";
 import { Task } from "./Task";
 import { Template } from "./Template";
 import { Tutorial } from "./Tutorial";
@@ -85,6 +86,9 @@ export class User {
 
   @OneToMany((type) => File, (file) => file.creator)
   public files: File[];
+
+  @OneToMany((type) => Setting, (setting) => setting.user)
+  public settings: Setting[];
 
   public hashPassword() {
     this.password = bcrypt.hashSync(this.password, 8);

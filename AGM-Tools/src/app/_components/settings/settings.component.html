@@ -10,7 +10,14 @@
           <div class="card-body">
             <div *ngIf="setting.type == 'switch'">
               <p>{{setting.description}}</p>
-              <ui-switch [(ngModel)]="setting.value"></ui-switch>
+              <ui-switch [(ngModel)]="setting.value" (change)="save(setting.id, !setting.value)"></ui-switch>
+            </div>
+            <div ngbDropdown class="d-inline-block" *ngIf="setting.type=='language'">
+              <p>{{setting.description}}</p>
+              <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle><i class="flag-icon flag-icon-{{setting.value == 'en' ? 'gb' : setting.value}}"></i> {{ getNameFromValue(setting.options, setting.value) }}</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem (click)="setting.value = option.value; updateLang(option.value); save(setting.id, option.value, true)" *ngFor="let option of setting.options"><i class="flag-icon flag-icon-{{option.value == 'en' ? 'gb' : option.value}}"></i> {{option.name}}</button>
+              </div>
             </div>
             <div *ngIf="setting.type == 'html'">
               <p>{{setting.description}}</p>

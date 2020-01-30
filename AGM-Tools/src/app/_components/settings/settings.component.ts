@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, NgZone } from "@angular/core";
 import { environment } from "../../../environments/environment";
+import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
@@ -18,6 +19,9 @@ export class SettingsComponent {
     private navbarService: NavbarService,
     private fts: FastTranslateService,
     private authenticationService: AuthenticationService,
+    private cdr: ChangeDetectorRef,
+    private alertService: AlertService,
+    private zone: NgZone,
   ) {}
 
   public async ngOnInit() {
@@ -34,5 +38,34 @@ export class SettingsComponent {
   public replaceAPIUrl(url: string) {
     return url.replace("{{apiUrl}}", environment.apiUrl) +
      "?authorization=" + this.authenticationService.currentUserValue.token;
+  }
+
+  public getNameFromValue(options, value) {
+    return options.filter((o) => o.value == value)[0].name;
+  }
+
+  public updateLang(lang: string) {
+    this.fts.setLang(lang);
+    this.cdr.detectChanges();
+    localStorage.setItem("language", lang);
+  }
+
+  public async save(id: string, value: any, langChanged: boolean = false) {
+    if (value === true) {
+      value = "true";
+    } else if (value === false) {
+      value = "false";
+    }
+    this.remoteService.getNoCache("post", `settings/${id}`, {
+      value,
+    }).subscribe(async (data) => {
+      if (data && data.status) {
+        this.alertService.success(await this.fts.t("settings.settingSavedSuccessfully"));
+        if (langChanged && data.settings) {
+          console.log(data.settings);
+          this.settings = data.settings;
+        }
+      }
+    });
   }
 }

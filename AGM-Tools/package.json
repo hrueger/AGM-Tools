@@ -62,6 +62,7 @@
         "core-js": "^3.6.4",
         "date-fns": "^2.9.0",
         "firebase": "^7.7.0",
+        "flag-icon-css": "^3.4.5",
         "fontawesome": "^5.6.3",
         "nativescript-accordion": "^6.0.0-beta.2",
         "nativescript-angular": "8.20.4",

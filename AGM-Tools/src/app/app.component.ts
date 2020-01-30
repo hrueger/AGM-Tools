@@ -1,9 +1,10 @@
-import { Component } from "@angular/core";
+import { ChangeDetectorRef, Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
 import { PushService } from "./_services/push.service";
+import { RemoteService } from "./_services/remote.service";
 
 @Component({
     selector: "app-root",
@@ -16,13 +17,16 @@ export class AppComponent {
     public showNav: boolean = false;
     public navToHide: boolean = false;
     public isShare: boolean;
+    public showEverything: boolean = true;
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
         // private pushService: PushService,
-        private translate: TranslateService,
+        private translateService: TranslateService,
+        private remoteService: RemoteService,
+        private cdr: ChangeDetectorRef,
     ) {
-        translate.setDefaultLang("en");
+        translateService.setDefaultLang("en");
         this.authenticationService.currentUser.subscribe(
             (x) => (this.currentUser = x),
         );
@@ -45,6 +49,17 @@ export class AppComponent {
                     this.isShare = false;
                 }
             }
+        });
+        this.translateService.setDefaultLang(
+            localStorage.getItem("language") ?
+            localStorage.getItem("language") :
+            this.translateService.getBrowserLang(),
+        );
+        this.translateService.onLangChange.subscribe(() => {
+            this.showEverything = false;
+            setTimeout(() => {
+                this.showEverything = true;
+            }, 0);
         });
     }
     public hideNav() {
