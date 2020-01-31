@@ -22,7 +22,7 @@ export class AlertService {
   }
 
   public async info(message: string) {
-    this.toastr.info(message, `${await this.fts.t("general.colors.information")}:`, { timeOut: this.timeouts.info });
+    this.toastr.info(message, `${await this.fts.t("general.colors.info")}:`, { timeOut: this.timeouts.info });
   }
 
   public async warning(message: string) {
