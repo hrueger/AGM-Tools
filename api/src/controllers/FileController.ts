@@ -6,7 +6,8 @@ import * as mergeFiles from "merge-files";
 import * as path from "path";
 import * as request from "request";
 import * as rimraf from "rimraf";
-import { getManager, getRepository, getTreeRepository } from "typeorm";
+import { getRepository, getTreeRepository, Repository } from "typeorm";
+import * as unzipper from "unzipper";
 import { config } from "../config/config";
 import { File } from "../entity/File";
 import { Project } from "../entity/Project";
@@ -48,6 +49,27 @@ class FileController {
       res.send(files);
     } else {
       res.sendFile(await getStoragePath(element));
+    }
+  }
+
+  public static extract = async (req: Request, res: Response) => {
+    const fileRepository = getRepository(File);
+    const element = await fileRepository.findOne(req.params.id, {relations: ["project"]});
+    if (element && !element.isFolder && element.name.endsWith(".zip")) {
+      const elementPath = await getStoragePath(element, element.project.id);
+      const parentFolderPath = path.join(path.dirname(elementPath), element.name.replace(".zip", ""));
+      fs.mkdirSync(parentFolderPath);
+      fs.createReadStream(elementPath).pipe(unzipper.Extract({ path: parentFolderPath })).on("close", async () => {
+        const currentUser = await getRepository(User).findOne(res.locals.jwtPayload.userId);
+        const f = new File();
+        f.isFolder = true;
+        f.name = path.basename(parentFolderPath);
+        f.creator = currentUser;
+        f.project = element.project;
+        const parentId = (await fileRepository.save(f)).id;
+        registerInDB(parentFolderPath, parentId, currentUser, element.project, fileRepository);
+        res.send({status: true});
+      });
     }
   }
 
@@ -383,3 +405,32 @@ class FileController {
 }
 
 export default FileController;
+
+function registerInDB(dir, parentId: number, creator: User, project: Project, fileRepo: Repository<File>) {
+  fs.readdir(dir, (err, files) => {
+    if (err) { throw err; }
+    files.forEach((file) => {
+      const filepath = path.join(dir, file);
+      fs.stat(filepath, async (e, stats) => {
+        if (stats.isDirectory()) {
+          const f = new File();
+          f.creator = creator;
+          f.name = path.basename(filepath);
+          f.project = project;
+          f.isFolder = true;
+          f.parent = await fileRepo.findOne(parentId);
+          const newParentId = (await fileRepo.save(f)).id;
+          registerInDB(filepath, newParentId, creator, project, fileRepo);
+        } else if (stats.isFile()) {
+          const f = new File();
+          f.creator = creator;
+          f.name = path.basename(filepath);
+          f.project = project;
+          f.isFolder = false;
+          f.parent = await fileRepo.findOne(parentId);
+          await fileRepo.save(f);
+        }
+      });
+    });
+  });
+}

@@ -26,6 +26,7 @@
       "@types/nodemailer": "^6.4.0",
       "@types/request": "^2.48.4",
       "@types/rimraf": "^2.0.3",
+      "@types/unzipper": "^0.10.1",
       "npx": "^10.2.1",
       "ts-node": "8.6.2",
       "tslint": "^5.20.1",
@@ -56,7 +57,8 @@
       "rimraf": "^3.0.0",
       "socket.io": "^2.3.0",
       "ts-node-dev": "^1.0.0-pre.44",
-      "typeorm": "0.2.22"
+      "typeorm": "0.2.22",
+      "unzipper": "^0.10.7"
    },
    "scripts": {
       "tsc": "tsc",

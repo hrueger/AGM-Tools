@@ -44,6 +44,9 @@
             <ng-template class="ctxMenuItem" contextMenuItem (execute)="goTo($event.item, viewFileModal)">
                 <i class="far fa-circle"></i> {{'files.open' | translate}}
             </ng-template>
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="extract($event.item)" [visible]="canExtractItem">
+                <i class="fas fa-box-open"></i> {{'files.extract' | translate}}
+            </ng-template>
             <ng-template contextMenuItem [subMenu]="tagsSubMenu">
                 <i class="fas fa-tags"></i> {{'files.tags' | translate}}
             </ng-template>
@@ -134,8 +137,12 @@
         </audio>
         <ngx-extended-pdf-viewer *ngIf="getType() == 'pdf'" [src]="getCurrentFileSrc()" height="70vh" useBrowserLocale="true"></ngx-extended-pdf-viewer>
         <onlyoffice *ngIf="getType() == 'document'" [config]="documentEditorConfig" class="documentEditor"></onlyoffice>
+        <div *ngIf="getType() == 'archive'" class="alert alert-info">
+            {{'files.fileIsArchiveInfo' | translate}}
+            <button class="btn btn-outline-primary" (click)="extract(currentFile)">{{'files.extract' | translate}}</button>
+        </div>
         <div *ngIf="getType() == 'other'" class="alert alert-warning">
-            Diese Datei wird leider nicht unterstützt.
+            {{'files.notSupported'}}
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-between">

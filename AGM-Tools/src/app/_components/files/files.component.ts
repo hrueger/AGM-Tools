@@ -73,6 +73,23 @@ export class FilesComponent implements OnInit {
         }
     }
 
+    public canExtractItem(item) {
+        return !item.isFolder && item.name.endsWith(".zip");
+    }
+
+    public async extract(item) {
+        if (this.currentModalWindow) {
+            this.currentModalWindow.close();
+        }
+        this.alertService.info(await this.fts.t("files.extractingStarted"));
+        this.remoteService.getNoCache("post", `files/${item.id}/extract`).subscribe(async (data) => {
+            if (data && data.status) {
+                this.alertService.success(await this.fts.t("files.fileExtractedSuccessfully"));
+                this.reloadHere();
+            }
+        });
+    }
+
     public async ngOnInit() {
         this.navbarService.setHeadline(await this.fts.t("files.files"));
         if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
@@ -243,6 +260,7 @@ export class FilesComponent implements OnInit {
         const presentationExtensions = ["fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx"];
 
         const knownExtensions = {
+            archive: ["zip"],
             audio: ["mp3", "wav", "m4a"],
             document: documentExtensions.concat(spreadsheetExtensions).concat(presentationExtensions),
             image: ["jpg", "jpeg", "gif", "png", "svg"],
