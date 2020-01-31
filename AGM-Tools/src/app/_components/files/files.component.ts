@@ -81,16 +81,7 @@ export class FilesComponent implements OnInit {
             this.remoteService.get("get",
                 `files/tree/${this.route.snapshot.params.projectId}`).subscribe((data: any[]) => {
                 this.allFiles = data;
-                setTimeout(() => {
-                    this.fileTree = this.addIconUrls(data);
-                    this.treeConfig = {
-                        child: "files",
-                        dataSource: this.fileTree,
-                        id: "id",
-                        imageUrl: "iconUrl",
-                        text: "name",
-                    };
-                }, 0);
+                this.makeFileTreeConfig(data);
             });
         }
         L10n.load({
@@ -376,11 +367,17 @@ export class FilesComponent implements OnInit {
         win.focus();
     }
     public reloadHere() {
-        if (this.lastItem.id == -1) {
-            this.navigate({ id: -1 });
-        } else {
-            this.goTo(this.lastItem, undefined);
-        }
+        this.remoteService
+        .getNoCache("get", `files/tree/${this.route.snapshot.params.projectId}`).subscribe((data: any[]) => {
+            this.remoteService.get("get", `files/tree/${this.route.snapshot.params.projectId}`).subscribe();
+            this.allFiles = data;
+            this.makeFileTreeConfig(data);
+            if (this.lastItem.id == -1) {
+                this.navigate({ id: -1 });
+            } else {
+                this.goTo(this.lastItem, undefined);
+            }
+        });
     }
 
     private async setupDocumentEditorConfig(ext, type) {
@@ -562,5 +559,18 @@ export class FilesComponent implements OnInit {
             b.push(item);
         }
         return b;
+    }
+
+    private makeFileTreeConfig(data: any[]) {
+        setTimeout(() => {
+            this.fileTree = this.addIconUrls(data);
+            this.treeConfig = {
+                child: "files",
+                dataSource: this.fileTree,
+                id: "id",
+                imageUrl: "iconUrl",
+                text: "name",
+            };
+        }, 0);
     }
 }
