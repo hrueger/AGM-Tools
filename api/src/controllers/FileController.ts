@@ -54,6 +54,7 @@ class FileController {
 
   public static extract = async (req: Request, res: Response) => {
     const fileRepository = getRepository(File);
+    const fileTreeRepository = getTreeRepository(File);
     const element = await fileRepository.findOne(req.params.id, {relations: ["project"]});
     if (element && !element.isFolder && element.name.endsWith(".zip")) {
       const elementPath = await getStoragePath(element, element.project.id);
@@ -66,6 +67,8 @@ class FileController {
         f.name = path.basename(parentFolderPath);
         f.creator = currentUser;
         f.project = element.project;
+        const ancestors = await fileTreeRepository.findAncestors(element);
+        f.parent = ancestors[ancestors.length - 2];
         const parentId = (await fileRepository.save(f)).id;
         registerInDB(parentFolderPath, parentId, currentUser, element.project, fileRepository);
         res.send({status: true});
