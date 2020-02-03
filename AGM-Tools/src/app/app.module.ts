@@ -61,6 +61,7 @@ import { UsersComponent } from "./_components/users/users.component";
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { RenewJwtTokenInterceptor } from "./_helpers/renewJwtToken.interceptor";
+import { SortableHeader } from "./_helpers/sortable.directive";
 import { DiffPipe } from "./_pipes/diff.pipe";
 import { DisplayUsernamesPipe } from "./_pipes/displayUsernames.pipe";
 import { DateAgoPipe } from "./_pipes/howLongAgo.pipe";
@@ -87,6 +88,7 @@ registerLocaleData(localeDe);
         ChatComponent,
         NotificationsComponent,
         CalendarComponent,
+        SortableHeader,
         ProjectsComponent,
         FilesComponent,
         TemplatesComponent,

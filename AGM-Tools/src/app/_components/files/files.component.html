@@ -82,11 +82,11 @@
             <table #files class="table  table-hover">
                 <thead>
                     <tr>
-                        <td></td>
-                        <td>{{'general.name' | translate}}</td>
-                        <td>{{'files.tags' | translate}}</td>
-                        <td>{{'general.creationDate' | translate}}</td>
-                        <td>{{'general.size' | translate}}</td>
+                        <th></th>
+                        <th class="sortable" sortable="name" (sort)="onSort($event)">{{'general.name' | translate}}</th>
+                        <th class="sortable" sortable="tags" (sort)="onSort($event)">{{'files.tags' | translate}}</th>
+                        <th class="sortable" sortable="createdAt" (sort)="onSort($event)">{{'general.creationDate' | translate}}</th>
+                        <th class="sortable" sortable="size" (sort)="onSort($event)">{{'general.size' | translate}}</th>
                     </tr>
                 </thead>
                 <tbody>

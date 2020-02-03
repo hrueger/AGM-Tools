@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -6,6 +6,7 @@ import { NodeSelectEventArgs, TreeViewComponent } from "@syncfusion/ej2-angular-
 import { EmitType, L10n } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
 import { environment } from "../../../environments/environment";
+import { compare, ISortEvent, SortableHeader } from "../../_helpers/sortable.directive";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
@@ -42,6 +43,8 @@ export class FilesComponent implements OnInit {
     public treeConfig: any;
     public allFiles: any[] = [];
     @ViewChild("treeView", {static: false}) public treeView: TreeViewComponent;
+    @ViewChildren(SortableHeader) public headers: QueryList<SortableHeader>;
+
     private currentModalWindow: NgbModalRef;
     constructor(
         private remoteService: RemoteService,
@@ -54,6 +57,26 @@ export class FilesComponent implements OnInit {
         private router: Router,
         private fts: FastTranslateService,
     ) { }
+
+    public onSort({column, direction}: ISortEvent) {
+
+        // resetting other headers
+        this.headers.forEach((header) => {
+          if (header.sortable !== column) {
+            header.direction = "";
+          }
+        });
+
+        // sorting countries
+        if (direction === "") {
+          // this.items = items;
+        } else {
+          this.items = [...this.items].sort((a, b) => {
+            const res = compare(a[column], b[column]);
+            return direction === "asc" ? res : -res;
+          });
+        }
+      }
 
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
         // add addition data as key-value pair.

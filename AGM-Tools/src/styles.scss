@@ -143,3 +143,30 @@ body {
     ngb-modal-window {
         z-index: 1500 !important;
     }
+
+.sortable::before {
+    content: "\f0dc";
+    display: block;
+    font-family: 'Font Awesome 5 Free';
+    width: 15px;
+    height: 15px;
+    float: left;
+    margin-left: -15px;
+    color: rgba(0, 0, 0, 0.2);
+}
+.sortedAsc::before, .sortedDesc::before {
+    content: "\f0de";
+    display: block;
+    font-family: 'Font Awesome 5 Free';
+    width: 15px;
+    height: 15px;
+    float: left;
+    margin-left: -15px;
+    color: #000;
+}
+.sortedDesc::before {
+    content: "\f0dd";
+}
+th.sortable {
+    cursor: pointer;
+}
