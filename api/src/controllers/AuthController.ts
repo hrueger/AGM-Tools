@@ -74,9 +74,17 @@ class AuthController {
       return;
     }
     const link = `${config.url}resetPassword/${token}`;
-    sendMail(config.emailSender, req.params.email, "resetPassword", {
-      resetLink: link,
-      username: user.username,
+    sendMail(req.params.email, {
+      btnText: i18n.__("resetPassword.resetPassword"),
+      btnUrl: link,
+      cardSubtitle: "",
+      cardTitle: "",
+      content: i18n.__("resetPassword.message").replace("%s", user.username),
+      secondTitle: "",
+      subject: i18n.__("resetPassword.resetPassword"),
+      subtitle: i18n.__("resetPassword.at").replace("%s", new Date().toLocaleString()),
+      summary: i18n.__("resetPassword.message").replace("%s", user.username),
+      title: i18n.__("resetPassword.resetPassword"),
     }).then(() => {
       res.send({status: true});
     }).catch((err) => {

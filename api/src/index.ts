@@ -30,7 +30,8 @@ import routes from "./routes";
 import { toInt } from "./utils/utils";
 
 i18n.configure({
-  defaultLocale: "en",
+  // tslint:disable-next-line: no-bitwise
+  defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
   directory: path.join(__dirname, "../assets/i18n"),
   objectNotation: true,
 });

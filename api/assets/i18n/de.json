@@ -50,6 +50,16 @@
   "general": {
     "unknown": "Unbekannt"
   },
+  "mail": {
+      "info": "Wenn Sie diese Mail versehentlich erhalten haben, bitten wir Sie sie zu löschen und nicht weiterzuleiten, da diese Mail vertrauliche Informationen enthalten kann.",
+      "sentTo": "Diese Mail wurde an %s gesendet.",
+      "unsubscribe": "Abmelden"
+  },
+  "resetPassword": {
+      "at": "angefordert am %s",
+      "message": "Ein Link zum Zurücksetzen des Passworts für %s wurde angefordert. Wenn das nicht Ihre Absicht war, ignorieren Sie diese Mail einfach. Ihr Passwort wird nicht geändert.",
+      "resetPassword": "Passwort zurücksetzen"
+  },
   "settings": {
     "about": {
       "description": "Impressum, Lizenzen, ...",

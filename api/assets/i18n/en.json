@@ -51,6 +51,16 @@
     "general": {
         "unknown": "Unknown"
     },
+    "mail": {
+        "info": "If you got this email by mistake, please notify us and delete it. We kindly ask you to not forward this mail as it may contain sensitive information.",
+        "sentTo": "This mail was sent to %s",
+        "unsubscribe": "Unsubscribe"
+    },
+    "resetPassword": {
+        "at": "requested on %s",
+        "message": "A link to reset the password for %s was requested. If this was done by accident, just ignore this mail. Your password won't be changed.",
+        "resetPassword": "Reset password"
+    },
     "settings": {
         "about": {
             "description": "Imprint, licenses, ...",
