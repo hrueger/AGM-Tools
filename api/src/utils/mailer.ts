@@ -49,3 +49,20 @@ export function sendMail(to: string, data: {summary: string,
             });
     });
 }
+
+export function sendMultipleMails(to: string[], data: {summary: string,
+    title: string, subtitle: string, secondTitle: string, content: string, subject: string,
+    // tslint:disable-next-line: align
+    cardTitle: string, cardSubtitle: string, btnText: string, btnUrl: string}, template = "base") {
+    for (const recipient of to) {
+        sendMail(recipient, data, template);
+    }
+}
+
+export function sendMailIfAgreed(to: string, data: {summary: string,
+    title: string, subtitle: string, secondTitle: string, content: string, subject: string,
+    // tslint:disable-next-line: align
+    cardTitle: string, cardSubtitle: string, btnText: string, btnUrl: string}, template = "base") {
+    // ToDo check if user agreed!
+    sendMail(to, data, template);
+}
