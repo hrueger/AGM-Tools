@@ -142,7 +142,7 @@
                 <div class="list-group-flush" *ngIf="currentProject.tasks.data.length > 0">
                     <button (click)="displayTask(taskModal, task)" class="list-group-item list-group-item-action" *ngFor="let task of currentProject.tasks.data">
                         <div class="d-flex w-100 justify-content-between text-right">
-                            <h5 class="card-title">{{task.title}}</h5>
+                            <h5 class="card-title text-left">{{task.title}}</h5>
                             <small>{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
                           </div>
                           <small class="card-text">{{task.description}}</small>
