@@ -115,6 +115,14 @@
             "name": "In the browser"
         }
     },
+    "tasks": {
+        "by": "by %s",
+        "dueOn": "Due on %s",
+        "newTask": "New task: %s",
+        "newTaskBy": "New task '%s' by %s",
+        "project": "Project: %s",
+        "viewTask": "View task"
+    },
     "tips": {
         "addProjectLogo": "Add a project logo. The filename must be 'logo', 'Logo' or 'LOGO', it must be a JPG, JPEG, PNG, SVG, WebP or BMP file and the image must be in the project's root folder!"
     }

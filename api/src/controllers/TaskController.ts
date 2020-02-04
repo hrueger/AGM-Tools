@@ -4,6 +4,8 @@ import { getRepository } from "typeorm";
 import { Project } from "../entity/Project";
 import { Task } from "../entity/Task";
 import { User } from "../entity/User";
+import { sendMail, sendMultipleMails } from "../utils/mailer";
+import { config } from "../config/config";
 
 class TaskController {
   public static newTask = async (req: Request, res: Response) => {
@@ -35,6 +37,19 @@ class TaskController {
       res.status(500).send({message: i18n.__("errors.errorWhileSavingTask")});
       return;
     }
+
+    sendMultipleMails(task.users.map((u) => u.email), {
+      btnText: i18n.__("tasks.viewTask"),
+      btnUrl: `${config.url}projects/${task.project.id}`,
+      cardSubtitle: "",
+      cardTitle: i18n.__("tasks.dueOn").replace("%s", task.due.toLocaleDateString()),
+      content: task.description.replace(new RegExp("\n", "g"), "<br>"),
+      secondTitle: i18n.__("tasks.project").replace("%s", task.project.name),
+      subject: i18n.__("tasks.newTask").replace("%s", task.title),
+      subtitle: i18n.__("tasks.by").replace("%s", task.creator.username),
+      summary: i18n.__("tasks.newTaskBy").replace("%s", task.title).replace("%s", task.creator.username),
+      title: i18n.__("tasks.newTask").replace("%s", task.title),
+    });
 
     res.status(200).send({status: true});
   }
