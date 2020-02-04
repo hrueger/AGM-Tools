@@ -206,6 +206,8 @@
     "due": "Abgabe {{formatted}}, am {{date}}",
     "dueOn": "Abgabe am",
     "dueShort": "Abgabe {{formatted}}",
+    "forUsers": "Für diese Benutzer",
+    "newTask": "Neue Aufgabe",
     "tasks": "Aufgaben"
   },
   "templates": {

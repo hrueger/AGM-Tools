@@ -206,6 +206,8 @@
     "due": "Due {{formatted}}, on {{date}}",
     "dueOn": "Due on",
     "dueShort": "Due {{formatted}}",
+    "forUsers": "For those users",
+    "newTask": "New task",
     "tasks": "Tasks"
   },
   "templates": {
