@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import * as i18n from "i18n";
 import { getRepository } from "typeorm";
+import { config } from "../config/config";
 import { Project } from "../entity/Project";
 import { Task } from "../entity/Task";
 import { User } from "../entity/User";
-import { sendMail, sendMultipleMails } from "../utils/mailer";
-import { config } from "../config/config";
+import { sendMultipleMails } from "../utils/mailer";
 
 class TaskController {
   public static newTask = async (req: Request, res: Response) => {
