@@ -55,18 +55,17 @@ class AuthController {
   public static sendPasswordResetMail = async (req: Request, res: Response) => {
     const userRepository = getRepository(User);
     let user: User;
+    const token = genID(32);
     try {
       user = await userRepository.createQueryBuilder("user")
         .addSelect("user.passwordResetToken")
         .where("user.email = :email", { email: req.params.email })
         .getOne();
+      user.passwordResetToken = token;
     } catch {
       res.status(404).send({message: i18n.__("errors.emailNotFound")});
       return;
     }
-
-    const token = genID(32);
-    user.passwordResetToken = token;
     try {
       await userRepository.save(user);
     } catch {
