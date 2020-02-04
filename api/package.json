@@ -65,7 +65,7 @@
       "tsc": "tsc",
       "start": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/index.ts",
       "start:rtc": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/rtcServer.ts",
-      "prod": "tsc && node ./build/app.js",
+      "prod": "tsc && node ./build/index.js",
       "build": "tsc",
       "lint": "npx tslint --project .",
       "createFilesWithApiKeys": "node src/scripts/generateSecretFilesWithKeys.js",
