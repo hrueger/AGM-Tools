@@ -32,7 +32,7 @@ export function sendMail(to: string, data: {summary: string,
                 options: {
                     extension: "ejs",
                 },
-                root: path.resolve(__dirname, "emailTemplates"),
+                root: path.resolve(__dirname, "../../assets/mail-templates"),
             },
         });
         email
