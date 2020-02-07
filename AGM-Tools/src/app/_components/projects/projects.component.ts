@@ -42,7 +42,7 @@ export class ProjectsComponent implements OnInit {
     public currentProjectChat: any;
     public tasks: any[] = [];
     public currentTask: any;
-    @ViewChild("chatMessages", {static: false}) private chatMessagesComponent: ElementRef;
+    @ViewChild("chatMessages") private chatMessagesComponent: ElementRef;
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,

@@ -8,8 +8,8 @@ import * as SocketIO from "socket.io-client";
     templateUrl: "./call.component.html",
 })
 export class CallComponent {
-    @ViewChild("localVideo", { static: false }) public localVideo: ElementRef;
-    @ViewChild("remoteVideo", { static: false }) public remoteVideo: ElementRef;
+    @ViewChild("localVideo") public localVideo: ElementRef;
+    @ViewChild("remoteVideo") public remoteVideo: ElementRef;
     public remoteStream: any;
     public localStream: any;
     public localTracksAdded = false;

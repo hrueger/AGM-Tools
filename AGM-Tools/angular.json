@@ -16,12 +16,14 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+                        "aot": true,
                         "outputPath": "dist/agmtools",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "src/tsconfig.app.json",
-                        "assets": [{
+                        "assets": [
+                            {
                                 "glob": "**/*",
                                 "input": "src/assets/",
                                 "output": "/assets/"
@@ -41,10 +43,10 @@
                                 "input": "node_modules/ngx-extended-pdf-viewer/assets/images",
                                 "output": "/assets/images/"
                             },
-                            { 
+                            {
                                 "glob": "pdf.worker.js",
-                                "input": "node_modules/ngx-extended-pdf-viewer/assets", 
-                                "output": "/assets/" 
+                                "input": "node_modules/ngx-extended-pdf-viewer/assets",
+                                "output": "/assets/"
                             },
                             "src/firebase-messaging-sw.js",
                             "src/manifest.json"
@@ -55,16 +57,26 @@
                             "./node_modules/ngx-ui-switch/ui-switch.component.css",
                             "./node_modules/flag-icon-css/css/flag-icon.min.css"
                         ],
-                        "scripts": ["node_modules/chart.js/dist/Chart.bundle.min.js",
+                        "scripts": [
+                            "node_modules/chart.js/dist/Chart.bundle.min.js",
                             "node_modules/ngx-extended-pdf-viewer/assets/pdf.js",
-                            "node_modules/ngx-extended-pdf-viewer/assets/viewer.js"]
+                            "node_modules/ngx-extended-pdf-viewer/assets/viewer.js"
+                        ]
                     },
                     "configurations": {
                         "production": {
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.prod.ts"
-                            }],
+                            "budgets": [
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb"
+                                }
+                            ],
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.prod.ts"
+                                }
+                            ],
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
@@ -106,7 +118,8 @@
                             "./node_modules/ngx-ui-switch/ui-switch.component.css"
                         ],
                         "scripts": [],
-                        "assets": [{
+                        "assets": [
+                            {
                                 "glob": "**/*",
                                 "input": "src/assets/",
                                 "output": "/assets/"

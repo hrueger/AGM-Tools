@@ -16,7 +16,6 @@ import { RemoteService } from "../../../_services/remote.service";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    moduleId: module.id,
     selector: "ns-messages-area",
     styleUrls: ["./messages-area.component.scss"],
     templateUrl: "./messages-area.component.html",

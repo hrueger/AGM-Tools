@@ -16,7 +16,7 @@ import { RemoteService } from "../../_services/remote.service";
     public itemTree: any[];
     public config: any;
 
-    @ViewChild("treeView", { static: false }) private treeView: TreeViewComponent;
+    @ViewChild("treeView") private treeView: TreeViewComponent;
 
     constructor(public activeModal: NgbActiveModal, public remoteService: RemoteService) {}
 

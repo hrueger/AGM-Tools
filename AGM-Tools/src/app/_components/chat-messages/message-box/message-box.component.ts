@@ -3,7 +3,6 @@ import { AlertService } from "../../../_services/alert.service";
 import { FastTranslateService } from "../../../_services/fast-translate.service";
 
 @Component({
-    moduleId: module.id,
     selector: "ns-message-box",
     styleUrls: ["./message-box.component.scss"],
     templateUrl: "./message-box.component.html",
