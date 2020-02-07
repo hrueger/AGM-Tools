@@ -20,7 +20,7 @@ import { dateDiff } from "./helpers";
     templateUrl: "./dashboard.component.html",
 })
 export class DashboardComponent implements OnInit {
-    public spaceChartData: Array<{ name: string; amount: string }> = [];
+    public spaceChartData: { name: string; amount: string }[] = [];
     public whatsnew;
     public dates;
     public selectedIndexes = [0, 3];
