@@ -42,7 +42,7 @@ export class FilesComponent implements OnInit {
     public fileTree: any[];
     public treeConfig: any;
     public allFiles: any[] = [];
-    @ViewChild("treeView", {static: false}) public treeView: TreeViewComponent;
+    @ViewChild("treeView") public treeView: TreeViewComponent;
     @ViewChildren(SortableHeader) public headers: QueryList<SortableHeader>;
 
     private currentModalWindow: NgbModalRef;

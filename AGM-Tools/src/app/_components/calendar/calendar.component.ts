@@ -148,7 +148,7 @@ loadCldr(
     ],
 })
 export class CalendarComponent {
-    @ViewChild("calendar", { static: false }) public calendar;
+    @ViewChild("calendar") public calendar;
     public weekFirstDay: number = 1;
     public showCalendar = false;
     public selectedDate: Date = new Date();

@@ -19,7 +19,7 @@ export class TutorialsComponent implements OnInit {
   public invalidMessage: boolean;
   public onlyDisplayingProject: boolean = false;
   public tutorials = [];
-  @ViewChild("newTutorialModal", {static: false}) private newTutorialModal;
+  @ViewChild("newTutorialModal") private newTutorialModal;
 
   constructor(private navbarService: NavbarService,
               private fb: FormBuilder,
