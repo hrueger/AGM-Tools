@@ -126,9 +126,13 @@ L10n.load({
 });
 
 loadCldr(
+    // @ts-ignore
     require("../../../../node_modules/cldr-data/supplemental/numberingSystems.json"),
+    // @ts-ignore
     require("../../../../node_modules/cldr-data/main/de/ca-gregorian.json"),
+    // @ts-ignore
     require("../../../../node_modules/cldr-data/main/de/numbers.json"),
+    // @ts-ignore
     require("../../../../node_modules/cldr-data/main/de/timeZoneNames.json"),
 );
 
