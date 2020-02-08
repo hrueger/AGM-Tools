@@ -109,7 +109,7 @@
     "ngx-extended-pdf-viewer": "^1.8.4",
     "ngx-lightbox": "^2.1.1",
     "ngx-onlyoffice": "^0.0.4",
-    "ngx-toastr": "^11.3.3",
+    "ngx-toastr": "^12.0.0",
     "ngx-ui-switch": "^8.3.0",
     "reflect-metadata": "~0.1.13",
     "rxjs": "^6.5.4",
