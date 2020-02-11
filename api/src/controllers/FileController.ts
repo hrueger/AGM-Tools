@@ -286,7 +286,7 @@ class FileController {
   public static uploadFile = async (req: RequestWithFiles, res: Response) => {
     try {
       if (req.files && req.files.chunkFile) {
-        let {chunkIndex, totalChunk, pid, fid} = req.body;
+        let {chunkIndex, totalChunk, pid, fid, userId} = req.body;
         chunkIndex = parseInt(chunkIndex, undefined);
         totalChunk = parseInt(totalChunk, undefined);
         pid = parseInt(pid, undefined);
@@ -300,7 +300,15 @@ class FileController {
           fs.mkdirSync(tempSaveDir);
         }
         req.files.chunkFile.mv(path.join(tempSaveDir, `${chunkIndex}.part`));
+        if (!fs.existsSync(path.join(tempSaveDir, "info.json"))) {
+          fs.writeFileSync(path.join(tempSaveDir, "info.json"), JSON.stringify({pid, fid, userId}));
 
+        } else {
+          const content = JSON.parse(fs.readFileSync(path.join(tempSaveDir, "info.json")).toString());
+          pid = content.pid ? content.pid : pid;
+          fid = content.fid ? content.fid : fid;
+          userId = content.userId ? content.userId : userId;
+        }
         // create total file if it is the last chunk
         if (chunkIndex + 1 == totalChunk) {
           let ok = true;
@@ -319,7 +327,7 @@ class FileController {
               res.status(500).send({message: i18n.__("errors.unknown")});
               return;
             } else {
-              await FileController.createFileInDB(req.files.chunkFile.name, res, pid, fid, parentEl);
+              await FileController.createFileInDB(req.files.chunkFile.name, res, pid, fid, parentEl, userId);
             }
             rimraf.sync(tempSaveDir);
           }
@@ -331,7 +339,7 @@ class FileController {
           fid = parseInt(fid, undefined);
           const { dest, parentEl } = await FileController.getDestAndParent(fid, pid, req.files.UploadFiles.name);
           req.files.UploadFiles.mv(dest);
-          await FileController.createFileInDB(req.files.UploadFiles.name, res, pid, fid, parentEl);
+          await FileController.createFileInDB(req.files.UploadFiles.name, res, pid, fid, parentEl, req.body.userId);
         }
       }
       res.send("");
@@ -394,10 +402,10 @@ class FileController {
     return { dest, parentEl };
   }
 
-  private static async createFileInDB(filename: string, res: Response, pid: any, fid: any, parentEl: File) {
+  private static async createFileInDB(filename: string, res: Response, pid: any, fid: any, parentEl: File, userId) {
     const file = new File();
     file.name = filename;
-    file.creator = await getRepository(User).findOneOrFail(res.locals.jwtPayload.userId);
+    file.creator = await getRepository(User).findOneOrFail(userId);
     file.isFolder = false;
     file.project = await getRepository(Project).findOneOrFail(pid);
     if (fid != -1 && parentEl != undefined) {

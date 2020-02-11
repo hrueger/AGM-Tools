@@ -81,11 +81,9 @@ export class FilesComponent implements OnInit {
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
         // add addition data as key-value pair.
         args.customFormData = [
-            {
-                pid: this.pid,
-            },
+            { pid: this.pid },
             { fid: this.currentPath[this.currentPath.length - 1].id.toString() },
-
+            { userId: this.authenticationService.currentUserValue.id },
         ];
         args.currentRequest.setRequestHeader("Authorization", this.authenticationService.currentUserValue.token);
     }

@@ -17,7 +17,7 @@ router.post("/:id([0-9]+)/moveToRoot", [checkJwt], FileController.moveElementToR
 router.post("/:id([0-9]+)/extract", [checkJwt], FileController.extract);
 router.get("/share/:link", FileController.showShare);
 router.get("/share/:link/download", FileController.downloadShare);
-router.post("/upload", [checkJwt], FileController.uploadFile);
+router.post("/upload", FileController.uploadFile);
 router.post("/:id([0-9]+)", [checkJwt], FileController.renameElement);
 router.delete("/:id([0-9]+)", [checkJwt], FileController.deleteFile);
 
