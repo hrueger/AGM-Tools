@@ -136,7 +136,7 @@
     "karma-coverage-istanbul-reporter": "^2.1.1",
     "karma-jasmine": "~3.1.0",
     "karma-jasmine-html-reporter": "^1.5.2",
-    "nativescript-dev-webpack": "1.4.1",
+    "nativescript-dev-webpack": "1.5.0",
     "node-sass": "4.13.1",
     "protractor": "~5.4.3",
     "systemjs-plugin-json": "^0.3.0",
