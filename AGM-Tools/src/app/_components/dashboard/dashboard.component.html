@@ -118,7 +118,16 @@
             <div class="card-body">
                 <h5 class="card-title">{{ "dashboard.version" | translate }}</h5>
                 <div class="alert alert-primary">
-                    <span>{{version}}</span>
+                    <span>{{version.currentVersion}}</span><br>
+                    <small>Containerizer v{{version.containerizerVersion}}</small>
+                </div>
+                <div class="alert alert-warning" *ngIf="version.updatesAvalible">
+                    {{version.updateCount}} {{"dashboard.updatesAvalible" | translate}}<br>
+                    <button class="btn btn-link pl-0 d-block" (click)="viewUpdateDetails = !viewUpdateDetails">{{(viewUpdateDetails ? "general.hideDetails" : "general.showDetails") | translate}}</button>
+                    <div *ngIf="viewUpdateDetails" class="my-2">
+                        <span *ngFor="let t of version.updates" class="d-block">{{t}}</span>
+                    </div>
+                    <button class="btn btn-outline-primary my-2" (click)="update()">{{"general.update" | translate}}{{updating ? "..." : ""}}</button>
                 </div>
             </div>
             <div class="card-footer">

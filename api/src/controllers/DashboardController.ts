@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
+import * as findUp from "find-up";
+import * as fs from "fs";
 import * as getFolderSize from "get-folder-size";
+import * as http from "http";
 import * as i18n from "i18n";
 import { getRepository, MoreThan } from "typeorm";
 import { config } from "../config/config";
@@ -38,10 +41,25 @@ class DashboardController {
     });
   }
   public static version = async (req: Request, res: Response) => {
-    res.send({
-      lastUpdated: new Date("25.01.2020"),
-      version: "latest ;-)",
-    });
+    try {
+      const data = JSON.parse(await new Promise((resolve, reject) => {
+        http.get("http://localhost:8314", (d) => {
+          let body = "";
+          d.on("data", (chunk) => {
+            body += chunk;
+          });
+          d.on("end", () => {
+            resolve(body);
+          });
+        }).on("error", (er) => {
+          reject(er);
+        });
+      }));
+      data.data.currentVersion = JSON.parse(fs.readFileSync(await findUp("package.json")).toString()).version;
+      res.send(data);
+    } catch (e) {
+      res.status(500).send({message: e.toString()});
+    }
   }
   public static notifications = async (req: Request, res: Response) => {
     const notificationRepository = getRepository(Notification);

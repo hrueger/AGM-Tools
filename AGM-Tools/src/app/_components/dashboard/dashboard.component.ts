@@ -16,6 +16,7 @@ import { dateDiff } from "./helpers";
 export class DashboardComponent implements OnInit {
     public spaceChartLabels: Label[] = ["", "", ""];
     public spaceChartData: MultiDataSet = [[0, 0, 0]]; // [[350, 450, 100]];
+    public updating: boolean = false;
     public spaceChartColors = [
         {
             backgroundColor: [
@@ -35,11 +36,12 @@ export class DashboardComponent implements OnInit {
             },
         },
     };
+    public viewUpdateDetails: boolean = false;
     public spaceChartPlugins = [pluginDataLabels];
     public whatsnew: any;
     public dates: any;
     public cellSpacing: any;
-    public version: string;
+    public version: any = {};
     public tasks: any[] = [];
     public notifications: any[] = [];
     public lastUpdated: any = {
@@ -72,6 +74,15 @@ export class DashboardComponent implements OnInit {
 
     public ngOnDestroy() {
         clearInterval(this.countdownInterval);
+    }
+
+    public update() {
+        this.remoteService.get("post", "update").subscribe((res) => {
+            this.updating = true;
+        });
+        setTimeout(() => {
+            location.reload();
+        }, 10000);
     }
 
     public initChart() {
@@ -114,8 +125,8 @@ export class DashboardComponent implements OnInit {
         });
         this.remoteService.get("get", "dashboard/version").subscribe((data) => {
             if (data) {
-                this.version = data.version;
-                this.lastUpdated.version = data.lastUpdated;
+                this.version = data.data;
+                this.lastUpdated.version = data.data.time;
             }
         });
         this.remoteService

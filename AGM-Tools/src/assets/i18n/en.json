@@ -21,6 +21,7 @@
     "diskSpaceUsedByData": "Data",
     "diskSpaceUsedBySystem": "System",
     "remainingDiskSpace": "Available Diskspace",
+    "updatesAvalible": "Aktualisierungen verfügbar",
     "version": "Version",
     "whatsnew": "What's new"
   },
@@ -128,6 +129,7 @@
     "gallery": "Gallery",
     "general": "General",
     "group": "Group",
+    "hideDetails": "Hide details",
     "image": "Image",
     "importance": "Importance",
     "important": "Important!",
@@ -148,6 +150,7 @@
     "save": "Save",
     "select": "Select",
     "send": "Send",
+    "showDetails": "Show details",
     "size": "Size",
     "startingAtDate": "starting {{weekday}}, {{day}} at {{time}} o'clock",
     "task": "Task",
