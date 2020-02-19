@@ -42,7 +42,7 @@ class DashboardController {
   }
   public static version = async (req: Request, res: Response) => {
     try {
-      const data = JSON.parse(await new Promise((resolve, reject) => {
+      let data = JSON.parse(await new Promise((resolve, reject) => {
         http.get("http://localhost:8314", (d) => {
           let body = "";
           d.on("data", (chunk) => {
@@ -55,6 +55,10 @@ class DashboardController {
           reject(er);
         });
       }));
+      if (!data) {
+        data = {};
+        data.data = {};
+      }
       data.data.currentVersion = "1.0.0";
       // JSON.parse(fs.readFileSync(await findUp("package.json")).toString()).version;
       res.send(data);
