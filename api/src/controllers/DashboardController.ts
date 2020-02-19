@@ -57,6 +57,8 @@ class DashboardController {
       }));
       if (!data) {
         data = {};
+      }
+      if (!data.data) {
         data.data = {};
       }
       data.data.currentVersion = "1.0.0";
