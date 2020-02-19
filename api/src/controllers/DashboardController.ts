@@ -55,7 +55,8 @@ class DashboardController {
           reject(er);
         });
       }));
-      data.data.currentVersion = JSON.parse(fs.readFileSync(await findUp("package.json")).toString()).version;
+      data.data.currentVersion = "1.0.0";
+      // JSON.parse(fs.readFileSync(await findUp("package.json")).toString()).version;
       res.send(data);
     } catch (e) {
       res.status(500).send({message: e.toString()});
