@@ -38,7 +38,7 @@
     "@angular/platform-browser": "9.0.0",
     "@angular/platform-browser-dynamic": "9.0.0",
     "@angular/router": "9.0.0",
-    "@ctrl/ngx-emoji-mart": "1.0.6",
+    "@ctrl/ngx-emoji-mart": "2.0.0",
     "@fortawesome/fontawesome-free": "5.12.1",
     "@nativescript/theme": "2.3.0",
     "@ng-bootstrap/ng-bootstrap": "5.3.0",
