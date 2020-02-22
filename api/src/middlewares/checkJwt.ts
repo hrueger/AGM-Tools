@@ -30,11 +30,11 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
     return;
   }
 
-  // The token is valid for 1 hour
+  // The token is valid for 12 hours, because of long uploads
   // We want to send a new token on every request
   const { userId, username } = jwtPayload;
   const newToken = jwt.sign({ userId, username }, config.jwtSecret, {
-    expiresIn: "1h",
+    expiresIn: "12h",
   });
   res.setHeader("Authorization", newToken);
 
