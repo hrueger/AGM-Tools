@@ -23,12 +23,12 @@ import { Tutorial } from "./entity/Tutorial";
 import { TutorialStep } from "./entity/TutorialStep";
 import { User } from "./entity/User";
 import { Usergroup } from "./entity/Usergroup";
+import { addFileEditTags1239083953412 } from "./migration/1239083953412-addFileEditTags";
 import { createUsergroups1574018071536 } from "./migration/1574018071536-createUsergroups";
 import { createAdminUser1574018391679 } from "./migration/1574018391679-createAdminUser";
 import { CreateTags1574797035707 } from "./migration/1574797035707-CreateTags";
 import routes from "./routes";
 import { toInt } from "./utils/utils";
-import { addFileEditTags1239083953412 } from "./migration/1239083953412-addFileEditTags";
 
 i18n.configure({
   // tslint:disable-next-line: no-bitwise
