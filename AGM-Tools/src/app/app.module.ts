@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, DatePipe } from "@angular/common";
 import { Location } from "@angular/common";
 import { registerLocaleData } from "@angular/common";
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
@@ -167,9 +167,10 @@ registerLocaleData(localeDe);
         Location,
         NavbarService,
         PushService,
+        DatePipe,
         {
             provide: LOCALE_ID,
-            useValue: "de-DE",
+            useValue: `${environment.defaultLanguage}-${environment.defaultLanguage.toUpperCase}`,
         },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: RenewJwtTokenInterceptor, multi: true },

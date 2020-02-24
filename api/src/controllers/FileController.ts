@@ -1,6 +1,7 @@
 import * as archiver from "archiver";
 import { Request, Response } from "express";
 import * as fs from "fs";
+import * as http from "http";
 import * as i18n from "i18n";
 import * as mergeFiles from "merge-files";
 import * as path from "path";
@@ -253,32 +254,26 @@ class FileController {
   }
 
   public static trackDocument = async (req: Request, res: Response) => {
-    const pathForSave = "C:/Users/Hannes/Desktop/Angular/AGM-Tools/filestest/21/AG_ventskalender_2019_fehlermeldung_herz_03_anmerkungen_hannes.docx";
-    const updateFile = (response, body, p) => {
-      if (body.status == 2) {
-          const file = request.get("GET", body.url);
-          fs.writeFileSync(p, file.body);
+    const {status, key} = req.body;
+    if (status == 2 && key && req.body.url) {
+      try {
+        const dest = await getStoragePath(
+          await (getRepository(File).findOne({where: {editKey: key}})));
+        request(req.body.url).pipe(fs.createWriteStream(dest)).on("close", async () => {
+          res.send({error: 0});
+        });
+      } catch (e) {
+        // tslint:disable-next-line: no-console
+        console.log(e);
+        res.send({error: e.toString()});
       }
-
-      response.send({error: 0});
-      response.end();
-    };
-
-    const readbody = (r, response, p) => {
-      let content = "";
-      r.on("data", (data) => {
-          content += data;
-      });
-      r.on("end", () => {
-          const body = JSON.parse(content);
-          updateFile(response, body, p);
-      });
-    };
-
-    if (req.body.hasOwnProperty("status")) {
-      updateFile(res, req.body, pathForSave);
     } else {
-      readbody(req, res, pathForSave);
+      /* console.log("************************");
+      console.log("************************");
+      console.log(req.body);
+      console.log("************************");
+      console.log("************************"); */
+      res.send({error: 0});
     }
   }
 
@@ -406,6 +401,7 @@ class FileController {
     file.name = filename;
     file.creator = await getRepository(User).findOneOrFail(userId);
     file.isFolder = false;
+    file.editKey = genID(15);
     file.project = await getRepository(Project).findOneOrFail(pid);
     if (fid != -1 && parentEl != undefined) {
       file.parent = parentEl;
@@ -437,6 +433,7 @@ function registerInDB(dir, parentId: number, creator: User, project: Project, fi
           f.name = path.basename(filepath);
           f.project = project;
           f.isFolder = false;
+          f.editKey = genID(15);
           f.parent = await fileRepo.findOne(parentId);
           await fileRepo.save(f);
         }

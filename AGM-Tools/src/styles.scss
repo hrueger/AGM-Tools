@@ -170,3 +170,10 @@ body {
 th.sortable {
     cursor: pointer;
 }
+
+*:fullscreen {
+    .modal-content { 
+        height: 100vh;
+        max-height: unset;
+    }
+}

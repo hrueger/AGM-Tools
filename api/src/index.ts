@@ -28,6 +28,7 @@ import { createAdminUser1574018391679 } from "./migration/1574018391679-createAd
 import { CreateTags1574797035707 } from "./migration/1574797035707-CreateTags";
 import routes from "./routes";
 import { toInt } from "./utils/utils";
+import { addFileEditTags1239083953412 } from "./migration/1239083953412-addFileEditTags";
 
 i18n.configure({
   // tslint:disable-next-line: no-bitwise
@@ -63,7 +64,12 @@ createConnection({
   ],
   host: config.database_host,
   logging: false,
-  migrations: [createUsergroups1574018071536, createAdminUser1574018391679, CreateTags1574797035707],
+  migrations: [
+    createUsergroups1574018071536,
+    createAdminUser1574018391679,
+    CreateTags1574797035707,
+    addFileEditTags1239083953412,
+  ],
   migrationsRun: true,
   password: config.database_password,
   port: toInt(config.database_port),

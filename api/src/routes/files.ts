@@ -21,6 +21,6 @@ router.post("/upload", FileController.uploadFile);
 router.post("/:id([0-9]+)", [checkJwt], FileController.renameElement);
 router.delete("/:id([0-9]+)", [checkJwt], FileController.deleteFile);
 
-router.post("/documents/save", FileController.trackDocument);
+router.post("/track", FileController.trackDocument);
 
 export default router;

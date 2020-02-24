@@ -13,6 +13,7 @@ import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 import { FilePickerModalComponent } from "../filePickerModal/filePickerModal";
+import { DatePipe } from "@angular/common";
 
 @Component({
     selector: "app-files",
@@ -42,6 +43,7 @@ export class FilesComponent implements OnInit {
     public fileTree: any[];
     public treeConfig: any;
     public allFiles: any[] = [];
+    public isFullScreen: boolean = false;
     @ViewChild("treeView") public treeView: TreeViewComponent;
     @ViewChildren(SortableHeader) public headers: QueryList<SortableHeader>;
 
@@ -56,27 +58,28 @@ export class FilesComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private fts: FastTranslateService,
+        private datePipe: DatePipe,
     ) { }
 
-    public onSort({column, direction}: ISortEvent) {
+    public onSort({ column, direction }: ISortEvent) {
 
         // resetting other headers
         this.headers.forEach((header) => {
-          if (header.sortable !== column) {
-            header.direction = "";
-          }
+            if (header.sortable !== column) {
+                header.direction = "";
+            }
         });
 
         // sorting countries
         if (direction === "") {
-          // this.items = items;
+            // this.items = items;
         } else {
-          this.items = [...this.items].sort((a, b) => {
-            const res = compare(a[column], b[column]);
-            return direction === "asc" ? res : -res;
-          });
+            this.items = [...this.items].sort((a, b) => {
+                const res = compare(a[column], b[column]);
+                return direction === "asc" ? res : -res;
+            });
         }
-      }
+    }
 
     public onFileUpload: EmitType<SelectedEventArgs> = (args: any) => {
         // add addition data as key-value pair.
@@ -111,16 +114,26 @@ export class FilesComponent implements OnInit {
         });
     }
 
+    public fullscreenEventHandler() {
+        if (!document.fullscreen) {
+            this.isFullScreen = false;
+        }
+    }
+
     public async ngOnInit() {
+        document.addEventListener("fullscreenchange", this.fullscreenEventHandler, false);
+        document.addEventListener("mozfullscreenchange", this.fullscreenEventHandler, false);
+        document.addEventListener("MSFullscreenChange", this.fullscreenEventHandler, false);
+        document.addEventListener("webkitfullscreenchange", this.fullscreenEventHandler, false);
         this.navbarService.setHeadline(await this.fts.t("files.files"));
         if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
             this.pid = this.route.snapshot.params.projectId;
-            this.navigate({ id: -1, name: this.route.snapshot.params.projectName});
+            this.navigate({ id: -1, name: this.route.snapshot.params.projectName });
             this.remoteService.get("get",
                 `files/tree/${this.route.snapshot.params.projectId}`).subscribe((data: any[]) => {
-                this.allFiles = data;
-                this.makeFileTreeConfig(data);
-            });
+                    this.allFiles = data;
+                    this.makeFileTreeConfig(data);
+                });
         }
         L10n.load({
             de: {
@@ -169,7 +182,7 @@ export class FilesComponent implements OnInit {
                 if (parent) {
                     this.goTo(parent, modal, item.id);
                 } else {
-                    this.navigate({id: -1}, item.id, modal);
+                    this.navigate({ id: -1 }, item.id, modal);
                 }
             }
         }
@@ -183,7 +196,7 @@ export class FilesComponent implements OnInit {
             if (this.currentModalWindow) {
                 this.currentModalWindow.close();
             }
-            this.currentModalWindow = this.modalService.open(viewFile, {size: "xl", scrollable: true});
+            this.currentModalWindow = this.modalService.open(viewFile, { size: "xl", scrollable: true, windowClass: "fileModal" });
             this.currentModalWindow.result.then(() => {
                 this.currentModalWindow = undefined;
             }).catch(() => {
@@ -381,12 +394,12 @@ export class FilesComponent implements OnInit {
                     req = this.remoteService.get("post", `files/${item.id}/moveToRoot`);
                 } else {
                     req = this.remoteService.get("post", `files/${item.id}/move`,
-                    {newParent: ids[0]});
+                        { newParent: ids[0] });
                 }
                 req.subscribe((r) => {
-                        if (r && r.status) {
-                            this.reloadHere();
-                        }
+                    if (r && r.status) {
+                        this.reloadHere();
+                    }
                 });
             }
         }).catch(() => undefined);
@@ -407,16 +420,58 @@ export class FilesComponent implements OnInit {
     }
     public reloadHere() {
         this.remoteService
-        .getNoCache("get", `files/tree/${this.route.snapshot.params.projectId}`).subscribe((data: any[]) => {
-            this.remoteService.get("get", `files/tree/${this.route.snapshot.params.projectId}`).subscribe();
-            this.allFiles = data;
-            this.makeFileTreeConfig(data);
-            if (this.lastItem.id == -1) {
-                this.navigate({ id: -1 });
+            .getNoCache("get", `files/tree/${this.route.snapshot.params.projectId}`).subscribe((data: any[]) => {
+                this.remoteService.get("get", `files/tree/${this.route.snapshot.params.projectId}`).subscribe();
+                this.allFiles = data;
+                this.makeFileTreeConfig(data);
+                if (this.lastItem.id == -1) {
+                    this.navigate({ id: -1 });
+                } else {
+                    this.goTo(this.lastItem, undefined);
+                }
+            });
+    }
+
+    public toggleFullscreen() {
+        const modals = document.getElementsByClassName("fileModal");
+        if (modals && modals[0]) {
+            const modal = modals[0].firstElementChild;
+            if (this.isFullScreen) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    // @ts-ignore
+                } else if (document.mozCancelFullScreen) { /* Firefox */
+                    // @ts-ignore
+                    document.mozCancelFullScreen();
+                    // @ts-ignore
+                } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                    // @ts-ignore
+                    document.webkitExitFullscreen();
+                    // @ts-ignore
+                } else if (document.msExitFullscreen) { /* IE/Edge */
+                    // @ts-ignore
+                    document.msExitFullscreen();
+                }
+                this.isFullScreen = false;
             } else {
-                this.goTo(this.lastItem, undefined);
+                if (modal.requestFullscreen) {
+                    modal.requestFullscreen();
+                    // @ts-ignore
+                } else if (modal.mozRequestFullScreen) { /* Firefox */
+                    // @ts-ignore
+                    modal.mozRequestFullScreen();
+                    // @ts-ignore
+                } else if (modal.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                    // @ts-ignore
+                    modal.webkitRequestFullscreen();
+                    // @ts-ignore
+                } else if (modal.msRequestFullscreen) { /* IE/Edge */
+                    // @ts-ignore
+                    modal.msRequestFullscreen();
+                }
+                this.isFullScreen = true;
             }
-        });
+        }
     }
 
     private async setupDocumentEditorConfig(ext, type) {
@@ -425,12 +480,11 @@ export class FilesComponent implements OnInit {
               document: {
                 fileType: ext,
                 info: {
-                  author: this.currentFile.creator.username,
-                  folder: this.lastItem.name,
+                  folder: `${this.currentPath.map((i) => i.name).join(" / ")} / ${this.currentFile.name}`,
                   owner: this.currentFile.creator.username,
-                  uploaded: this.currentFile.createdAt,
+                  uploaded: `${this.datePipe.transform(this.currentFile.createdAt, "shortDate")}, ${this.datePipe.transform(this.currentFile.createdAt, "shortTime")}`,
                 },
-                key: "3277238458",
+                key: this.currentFile.editKey,
                 permissions: {
                     comment: true,
                     download: true,
@@ -444,8 +498,6 @@ export class FilesComponent implements OnInit {
               },
               documentType: type,
               editorConfig: {
-                // callbackUrl: `${environment.apiUrl}files/documents/save`,
-                /*createUrl: "https://example.com/url-to-create-document/",*/
                 customization: {
                     autosave: true,
                     chat: true,
@@ -453,44 +505,28 @@ export class FilesComponent implements OnInit {
                     comments: true,
                     compactHeader: false,
                     compactToolbar: false,
-                    customer: {
-                        address: await this.fts.t("about.hostedOnGitHub"),
-                        info: await this.fts.t("about.description") + "(https://hrueger.github.io/AGM-Tools)",
-                        /* logo: "https://example.com/logo-big.png", ToDo */
-                        name: "AGM-Tools",
-                        www: "https://github.com/hrueger/AGM-Tools",
-                    },
                     feedback: {
                         url: "https://github.com/hrueger/AGM-Tools/issues/new",
                         visible: true,
                     },
                     forcesave: false,
-                    goback: {
-                        blank: true,
-                        text: "Dokumente",
-                        url: "https://example.com",
-                    },
                     help: true,
                     hideRightMenu: false,
-                    logo: {
-                        image: "https://example.com/logo.png",
-                        imageEmbedded: "https://example.com/logo_em.png",
-                        url: "https://example.com",
-                    },
                     showReviewChanges: false,
                     toolbarNoTabs: false,
                     zoom: 100,
                 },
-                embedded: {
+                callbackUrl: `${environment.apiUrl}files/track`,
+                /*embedded: {
                     embedUrl: "https://example.com/embedded?doc=exampledocument1.docx",
                     fullscreenUrl: "https://example.com/embedded?doc=exampledocument1.docx#fullscreen",
                     saveUrl: "https://example.com/download?doc=exampledocument1.docx",
                     shareUrl: "https://example.com/view?doc=exampledocument1.docx",
                     toolbarDocked: "top",
-                },
-                lang: "de",
+                },*/
+                lang: this.fts.getLang(),
                 mode: "edit",
-                recent: [
+                /*recent: [
                     {
                         folder: "Example Files",
                         title: "exampledocument1.docx",
@@ -501,11 +537,11 @@ export class FilesComponent implements OnInit {
                         title: "exampledocument2.docx",
                         url: "https://example.com/exampledocument2.docx",
                     },
-                ],
-                region: "de-DE",
+                ],*/
+                region: `${this.fts.getLang()}-${this.fts.getLang().toUpperCase()}`,
                 user: {
-                    id: this.authenticationService.currentUserValue.id,
-                    name: this.authenticationService.currentUserValue.id,
+                    id: (Math.random()*100000).toString(), // this.authenticationService.currentUserValue.id,
+                    name: this.authenticationService.currentUserValue.username,
                 },
             },
               events: {
@@ -526,8 +562,8 @@ export class FilesComponent implements OnInit {
               type: "desktop",
               width: "100%",
             },
-            script: "https://agmtools.allgaeu-gymnasium.de:8080/web-apps/apps/api/documents/api.js",
-          };
+            script: `${environment.documentServerUrl}/web-apps/apps/api/documents/api.js`,
+        };
     }
 
     private addIconUrls(itemTree) {
@@ -592,7 +628,7 @@ export class FilesComponent implements OnInit {
 
     private buildBreadcrumbs(item) {
         const b = [];
-        b.push({id: -1, name: this.route.snapshot.params.projectName});
+        b.push({ id: -1, name: this.route.snapshot.params.projectName });
         b.push(...this.findParents(item.id, this.allFiles));
         if (item.id != -1) {
             b.push(item);

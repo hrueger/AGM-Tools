@@ -46,6 +46,9 @@ import { User } from "./User";
     @Column({nullable: true})
     public shareLink: string;
 
+    @Column({nullable: true})
+    public editKey: string;
+
     @Column()
     @CreateDateColumn()
     public createdAt: Date;
