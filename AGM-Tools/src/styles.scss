@@ -172,8 +172,20 @@ th.sortable {
 }
 
 *:fullscreen {
-    .modal-content { 
+    .modal-content {
+        .modal-body {
+            padding: 0;
+            :not(.documentEditor):not(iframe) {
+                margin: 1rem;
+            }
+        }
         height: 100vh;
         max-height: unset;
+    }
+}
+
+.fileModal {
+    .modal-dialog {
+        height: 100%;
     }
 }
