@@ -73,6 +73,7 @@ import { NavbarService } from "./_services/navbar.service";
 import { PushService } from "./_services/push.service";
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
+import { EmojiModule } from "@ctrl/ngx-emoji-mart/ngx-emoji/public_api";
 
 registerLocaleData(localeDe);
 
@@ -151,6 +152,7 @@ registerLocaleData(localeDe);
         FormsModule,
         ReactiveFormsModule,
         PickerModule,
+        EmojiModule,
         BrowserAnimationsModule,
         AccordionModule,
         NgxExtendedPdfViewerModule,
