@@ -7,6 +7,7 @@ const router = Router();
 router.get("/projects/:pid([0-9]+)", [checkJwt], FileController.listAll);
 router.get("/tree/:pid([0-9]+)", [checkJwt], FileController.projectTree);
 router.get("/tags", [checkJwt], FileController.listTags);
+router.post("/convert", [checkJwt], FileController.convert);
 router.post("/:id([0-9]+)/tags", [checkJwt], FileController.toggleTag);
 router.post("/:id([0-9]+)/share", [checkJwt], FileController.share);
 router.post("/", [checkJwt], FileController.newFolder);

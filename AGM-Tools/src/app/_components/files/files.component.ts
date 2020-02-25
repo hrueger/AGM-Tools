@@ -48,6 +48,9 @@ export class FilesComponent implements OnInit {
     @ViewChildren(SortableHeader) public headers: QueryList<SortableHeader>;
 
     private currentModalWindow: NgbModalRef;
+    private documentExtensions = ["doc", "docm", "docx", "dot", "dotm", "dotx", "epub", "fodt", "htm", "html", "mht", "odt", "ott", "pdf", "rtf", "txt", "djvu", "xps"];
+    private spreadsheetExtensions = ["csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx"];
+    private presentationExtensions = ["fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx"];
     constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
@@ -112,6 +115,51 @@ export class FilesComponent implements OnInit {
                 this.reloadHere();
             }
         });
+    }
+
+    public canDownloadAs(item) {
+        const officeExtensions = [
+            "doc", "docm", "docx", "dot", "dotm", "dotx", "epub", "fodt", "htm", "html", "mht", "odt", "ott", "pdf", "rtf", "txt", "djvu", "xps",
+            "fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx",
+            "csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx"
+        ];
+         return officeExtensions.includes(item.name.split(".").pop());
+    }
+
+    public async downloadAs(item, format) {
+        const url = this.getFileSrc(item);
+        const filetype = item.name.split(".").pop();
+        if (filetype == format) {
+            window.open(url, "_blank");
+            return;
+        }
+        this.alertService.info(await this.fts.t("files.conversionStarted"));
+        let title = item.name.split(".");
+        title.pop();
+        title = `${title.join(".")}.${format}`
+        this.remoteService.get("post", "files/convert", {
+            filetype,
+            outputtype: format,
+            title,
+            url,
+        }).subscribe((data) => {
+            if (data && data.endConvert && data.fileUrl) {
+                window.open(data.fileUrl, "_blank");
+            }
+        });
+    }
+
+    public isText(item) {
+        const documentExtensions = ["doc", "docm", "docx", "dot", "dotm", "dotx", "epub", "fodt", "htm", "html", "mht", "odt", "ott", "pdf", "rtf", "txt", "djvu", "xps"];
+        return documentExtensions.includes(item.name.split(".").pop());
+    }
+    public isSpreadsheet(item) {
+        const spreadsheetExtensions = ["csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx"];
+        return spreadsheetExtensions.includes(item.name.split(".").pop());
+    }
+    public isPresentation(item) {
+        const presentationExtensions = ["fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx"];
+        return presentationExtensions.includes(item.name.split(".").pop());
     }
 
     public fullscreenEventHandler() {
@@ -289,14 +337,10 @@ export class FilesComponent implements OnInit {
     public getType() {
         const filename: string = this.currentFile.name.toLowerCase();
 
-        const documentExtensions = ["doc", "docm", "docx", "dot", "dotm", "dotx", "epub", "fodt", "htm", "html", "mht", "odt", "ott", "pdf", "rtf", "txt", "djvu", "xps"];
-        const spreadsheetExtensions = ["csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx"];
-        const presentationExtensions = ["fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx"];
-
         const knownExtensions = {
             archive: ["zip"],
             audio: ["mp3", "wav", "m4a"],
-            document: documentExtensions.concat(spreadsheetExtensions).concat(presentationExtensions),
+            document: this.documentExtensions.concat(this.spreadsheetExtensions).concat(this.presentationExtensions),
             image: ["jpg", "jpeg", "gif", "png", "svg"],
             pdf: ["pdf"],
             video: ["mp4", "mov", "avi"],
@@ -307,11 +351,11 @@ export class FilesComponent implements OnInit {
                 if (filename.endsWith(ext)) {
                     if (type == "document") {
                         let t;
-                        if (documentExtensions.includes(ext)) {
+                        if (this.documentExtensions.includes(ext)) {
                             t = "text";
-                        } else if (spreadsheetExtensions.includes(ext)) {
+                        } else if (this.spreadsheetExtensions.includes(ext)) {
                             t = "spreadsheet";
-                        } else if (presentationExtensions.includes(ext)) {
+                        } else if (this.presentationExtensions.includes(ext)) {
                             t = "presentation";
                         }
                         this.setupDocumentEditorConfig(ext, t);

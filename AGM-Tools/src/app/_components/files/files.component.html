@@ -59,6 +59,33 @@
             <ng-template class="ctxMenuItem" contextMenuItem (execute)="download($event.item)">
                 <i class="fas fa-cloud-download-alt"></i> {{'files.download' | translate}}
             </ng-template>
+            <ng-template contextMenuItem [subMenu]="downloadAsSubmenu" [visible]="canDownloadAs">
+                <i class="fas fa-file-export"></i> {{'files.downloadAs' | translate}}
+            </ng-template>
+            <context-menu #downloadAsSubmenu>
+                <ng-template contextMenuItem [visible]="isText" (execute)="downloadAs($event.item, 'docx')">docx</ng-template>
+                <ng-template contextMenuItem [visible]="isText" (execute)="downloadAs($event.item, 'odt')">odt</ng-template>
+                <ng-template contextMenuItem [visible]="isText" (execute)="downloadAs($event.item, 'rtf')">rtf</ng-template>
+                <ng-template contextMenuItem [visible]="isText" (execute)="downloadAs($event.item, 'txt')">txt</ng-template>
+
+                <ng-template contextMenuItem [visible]="isSpreadsheet" (execute)="downloadAs($event.item, 'csv')">csv</ng-template>
+                <ng-template contextMenuItem [visible]="isSpreadsheet" (execute)="downloadAs($event.item, 'ods')">ods</ng-template>
+                <ng-template contextMenuItem [visible]="isSpreadsheet" (execute)="downloadAs($event.item, 'xlsx')">xlsx</ng-template>
+
+                <ng-template contextMenuItem [visible]="isPresentation" (execute)="downloadAs($event.item, 'odp')">odp</ng-template>
+                <ng-template contextMenuItem [visible]="isPresentation" (execute)="downloadAs($event.item, 'pptx')">pptx</ng-template>
+
+                <ng-template contextMenuItem divider="true"></ng-template>
+
+                <ng-template contextMenuItem (execute)="downloadAs($event.item, 'pdf')">pdf</ng-template>
+
+                <ng-template contextMenuItem divider="true"></ng-template>
+
+                <ng-template contextMenuItem (execute)="downloadAs($event.item, 'bmp')">bmp</ng-template>
+                <ng-template contextMenuItem (execute)="downloadAs($event.item, 'gif')">gif</ng-template>
+                <ng-template contextMenuItem (execute)="downloadAs($event.item, 'png')">png</ng-template>
+                <ng-template contextMenuItem (execute)="downloadAs($event.item, 'jpg')">jpg</ng-template>
+            </context-menu>
             <ng-template class="ctxMenuItem" contextMenuItem (execute)="share($event.item, shareModal)">
                 <i class="far fa-share-square"></i> {{'files.share' | translate}}
             </ng-template>

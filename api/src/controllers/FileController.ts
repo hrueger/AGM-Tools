@@ -1,7 +1,6 @@
 import * as archiver from "archiver";
 import { Request, Response } from "express";
 import * as fs from "fs";
-import * as http from "http";
 import * as i18n from "i18n";
 import * as mergeFiles from "merge-files";
 import * as path from "path";
@@ -9,6 +8,7 @@ import * as request from "request";
 import * as rimraf from "rimraf";
 import { getRepository, getTreeRepository, Repository } from "typeorm";
 import * as unzipper from "unzipper";
+import * as url from "url";
 import { config } from "../config/config";
 import { File } from "../entity/File";
 import { Project } from "../entity/Project";
@@ -37,6 +37,31 @@ class FileController {
     }
     /// to work
     res.send(files);
+  }
+
+  public static convert = async (req: Request, res: Response) => {
+    const convertServiceUrl = `${config.documentServerUrl}/ConvertService.ashx`;
+    request.post(convertServiceUrl, {
+      body: {
+        async: false,
+        codePage: 65001,
+        filetype: req.body.filetype,
+        key: Math.floor(Math.random() * 100000).toString(),
+        outputtype: req.body.outputtype,
+        title: req.body.title,
+        url: req.body.url,
+      },
+      headers: {
+        accept: "application/json",
+      },
+      json: true,
+    }, (error, r, body) => {
+      if (error) {
+        res.status(500).send(error.toString());
+        return;
+      }
+      res.send(body);
+    });
   }
 
   public static showElement = async (req: Request, res: Response) => {
