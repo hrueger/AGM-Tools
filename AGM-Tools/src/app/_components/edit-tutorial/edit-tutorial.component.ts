@@ -7,6 +7,8 @@ import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { TinyConfigService } from "../../_services/tiny-config.service";
+import { MarkdownService } from "../../_services/markdown.service";
 
 @Component({
   selector: "app-edit-tutorial",
@@ -21,6 +23,7 @@ export class EditTutorialComponent implements OnInit {
   public title: string;
   public description: string;
   public invalidMessage: boolean;
+  public TINYCONFIG = {};
 
   constructor(private remoteService: RemoteService,
               private navbarService: NavbarService,
@@ -28,7 +31,9 @@ export class EditTutorialComponent implements OnInit {
               private alertService: AlertService,
               private authenticationService: AuthenticationService,
               private fts: FastTranslateService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private tinyConfigService: TinyConfigService,
+              private markdownService: MarkdownService) { }
 
   public async ngOnInit() {
     this.tutorialForm = this.fb.group({
@@ -41,13 +46,14 @@ export class EditTutorialComponent implements OnInit {
         this.gotNewTutorialData(tutorial);
       });
     });
+    this.TINYCONFIG = this.tinyConfigService.get();
   }
 
   public updateGeneral() {
     this.invalidMessage = false;
     this.remoteService
       .getNoCache("post", `tutorials/${this.tutorial.id}`, {
-        description: this.tutorialForm.get("description").value,
+        description: this.markdownService.from(this.tutorialForm.get("description").value),
         title: this.tutorialForm.get("title").value,
       })
       .subscribe(async (data) => {
@@ -88,7 +94,7 @@ export class EditTutorialComponent implements OnInit {
     this.tutorial.steps.forEach((step) => {
       this.remoteService
         .getNoCache("post", `tutorials/${this.tutorial.id}/steps/${step.id}`, {
-          content: step.content,
+          content: this.markdownService.from(step.content),
           image1: step.image1,
           image2: step.image2,
           image3: step.image3,

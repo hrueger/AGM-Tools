@@ -34,9 +34,6 @@ export class TutorialComponent implements OnInit {
       });
     });
   }
-  public getContent(content: string) {
-    return content.replace("\n", "<br>");
-  }
 
   public async showImage(i, n) {
     const that = this;

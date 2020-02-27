@@ -5,7 +5,7 @@
         <div class="card flex-fill mb-3" style="cursor: pointer">
             <div class="card-body">
                 <h5 class="card-title">{{tutorial.title}}</h5>
-                {{tutorial.description}}
+                <p markdown ngPreserveWhitespace>{{tutorial.description}}</p>
             </div>
             <div class="card-footer">
                 <small class="text-muted">{{'general.lastUpdated' | translate:{"time": tutorial.createdAt | howLongAgo } }}</small>
@@ -34,7 +34,11 @@
             <br />
             <div class="form-group">
                 <label for="description">{{'general.description' | translate}}: </label>
-                <textarea class="form-control" id="description" formControlName="description" [placeholder]="'general.description' | translate"></textarea>
+                <editor
+                    [init]="TINYCONFIG"
+                    formControlName="description"
+                    id="description"
+                ></editor>
             </div>
             <br />
         </form>

@@ -11,7 +11,11 @@
         <br />
         <div class="form-group">
             <label for="description">{{"general.description" | translate}}: </label>
-            <textarea class="form-control" id="description" formControlName="description" [placeholder]="'general.description' | translate"></textarea>
+            <editor
+                [init]="TINYCONFIG"
+                formControlName="description"
+                id="description"
+            ></editor>
         </div>
     </form>
     <button type="button" class="btn btn-outline-primary" (click)="addStep()">
@@ -36,7 +40,10 @@
     <br />
     <div class="form-group">
         <label for="description">{{'general.content' | translate}}: </label>
-        <textarea class="form-control" [(ngModel)]="step.content" [placeholder]="'general.content' | translate"></textarea>
+        <editor
+            [init]="TINYCONFIG"
+            [(ngModel)]="step.content"
+        ></editor>
     </div>
     <div>
         <h6>{{'general.image' | translate}} 1:</h6>

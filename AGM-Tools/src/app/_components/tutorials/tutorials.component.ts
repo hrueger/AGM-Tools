@@ -6,6 +6,8 @@ import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { TinyConfigService } from "../../_services/tiny-config.service";
+import { MarkdownService } from "../../_services/markdown.service";
 
 @Component({
   selector: "app-tutorials",
@@ -19,6 +21,7 @@ export class TutorialsComponent implements OnInit {
   public invalidMessage: boolean;
   public onlyDisplayingProject: boolean = false;
   public tutorials = [];
+  public TINYCONFIG = {};
   @ViewChild("newTutorialModal") private newTutorialModal;
 
   constructor(private navbarService: NavbarService,
@@ -28,7 +31,9 @@ export class TutorialsComponent implements OnInit {
               private fts: FastTranslateService,
               private alertService: AlertService,
               private route: ActivatedRoute,
-              private router: Router) { }
+              private router: Router,
+              private tinyConfigService: TinyConfigService,
+              private markdownService: MarkdownService) { }
 
   public async ngOnInit() {
     if (this.route.snapshot.params.projectId && this.route.snapshot.params.projectName) {
@@ -50,6 +55,7 @@ export class TutorialsComponent implements OnInit {
     if (this.router.url.endsWith("new")) {
       this.newTutorial(this.newTutorialModal);
     }
+    this.TINYCONFIG = this.tinyConfigService.get();
   }
 
   public async displayAll() {
@@ -63,14 +69,14 @@ export class TutorialsComponent implements OnInit {
 
   public newTutorial(content) {
     this.modalService
-      .open(content, { ariaLabelledBy: "modal-basic-title" })
+      .open(content, { size: "lg" })
       .result.then(
         (result) => {
           this.invalidMessage = false;
 
           this.remoteService
             .getNoCache("post", "tutorials/", {
-              description: this.newTutorialForm.get("description").value,
+              description: this.markdownService.from(this.newTutorialForm.get("description").value),
               title: this.newTutorialForm.get("title").value,
             })
             .subscribe(async (data) => {
