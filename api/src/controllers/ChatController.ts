@@ -81,7 +81,9 @@ class ChatController {
   }
 
   public static mapProxy = async (req: Request, res: Response) => {
-    fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${req.params.location}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:%7C${req.params.location}&key=${config.googleMapsApiKey}`).then((r) => r.body.pipe(res));
+    const parts = req.params.location.split(",");
+    const location = `${parts[1]},${parts[0]}`;
+    fetch(`https://api.mapbox.com/v4/mapbox.streets/pin-l-marker+ff0000(${location})/${location},15/600x300.png?access_token=${config.mapboxApiKey}`).then((r) => r.body.pipe(res));
   }
 
   private static sendMessage = async (req: Request, res: Response, toUser: boolean, withAttachment: boolean) => {
