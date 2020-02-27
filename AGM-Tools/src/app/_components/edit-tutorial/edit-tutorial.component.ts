@@ -160,7 +160,11 @@ export class EditTutorialComponent implements OnInit {
   private async gotNewTutorialData(tutorial: any) {
     if (tutorial) {
       this.tutorial = tutorial;
-      this.tutorialForm.get("description").setValue(tutorial.description);
+      this.tutorial.steps = this.tutorial.steps.map((s) => {
+        s.content = this.markdownService.to(s.content);
+        return s;
+      });
+      this.tutorialForm.get("description").setValue(this.markdownService.to(tutorial.description));
       this.tutorialForm.get("title").setValue(tutorial.title);
       this.navbarService.setHeadline(`${await this.fts.t("tutorials.editTutorial")}: ${tutorial.title}`);
     }
