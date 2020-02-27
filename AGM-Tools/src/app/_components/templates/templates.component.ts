@@ -13,6 +13,8 @@ import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { TinyConfigService } from "../../_services/tiny-config.service";
+import { MarkdownService } from "../../_services/markdown.service";
 
 @Component({
     selector: "app-templates",
@@ -27,6 +29,7 @@ export class TemplatesComponent implements OnInit {
     public group: string;
     public description: string;
     public invalidMessage: boolean = false;
+    public TINYCONFIG = {};
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
@@ -34,6 +37,8 @@ export class TemplatesComponent implements OnInit {
         private navbarService: NavbarService,
         private fts: FastTranslateService,
         private alertService: AlertService,
+        private tinyConfigService: TinyConfigService,
+        private markdownService: MarkdownService,
     ) { }
     public async ngOnInit() {
         this.navbarService.setHeadline(await this.fts.t("templates.templates"));
@@ -44,6 +49,7 @@ export class TemplatesComponent implements OnInit {
             group: new FormControl(null, Validators.required),
             name: new FormControl(null, Validators.required),
         });
+        this.TINYCONFIG = this.tinyConfigService.get();
     }
     public show(template, content) {
         this.imgUrl = `${environment.apiUrl}templates/${template.filename}?authorization=${this.authenticationService.currentUserValue.token}`;
@@ -53,13 +59,13 @@ export class TemplatesComponent implements OnInit {
     }
     public openNewModal(content) {
         this.modalService
-            .open(content, { ariaLabelledBy: "modal-basic-title" })
+            .open(content, { size: "lg" })
             .result.then(
                 async (result) => {
                     this.invalidMessage = false;
                     this.alertService.success(await this.fts.t("general.uploadStartedPleaseWait"));
                     this.remoteService.uploadFile("templates", "file", this.newTemplateForm.get("file").value, {
-                        description: this.newTemplateForm.get("description").value,
+                        description: this.markdownService.from(this.newTemplateForm.get("description").value),
                         group: this.newTemplateForm.get("group").value,
                         name: this.newTemplateForm.get("name").value,
                     }).subscribe(async (data) => {

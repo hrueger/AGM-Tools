@@ -16,7 +16,7 @@
             <tr *ngFor="let template of templates" (click)="show(template, showModal)">
                 <td>{{ template.group }}</td>
                 <td>{{ template.name }}</td>
-                <td>{{ template.description }}</td>
+                <td markdown ngPreserveWhitespace>{{ template.description }}</td>
                 <td>
                     <button class="btn btn-link" (click)="delete(template, $event)">
                         {{'general.delete' | translate}}
@@ -73,12 +73,11 @@
             <br />
             <div class="form-group">
                 <label for="description">{{'general.description' | translate}}: </label>
-                <textarea
-                    class="form-control"
+                <editor
+                [init]="TINYCONFIG"
                     formControlName="description"
                     id="description"
-                    [placeholder]="'general.description' | translate"
-                ></textarea>
+                ></editor>
             </div>
             <br />
             <div class="form-group">
