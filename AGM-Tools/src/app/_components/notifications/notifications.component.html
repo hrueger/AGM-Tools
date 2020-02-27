@@ -17,7 +17,9 @@
             <tr *ngFor="let notification of notifications">
                 <td>{{ notification.receivers | displayUsernames }}</td>
                 <td>{{ notification.headline }}</td>
-                <td [innerHTML]="notification.content | safe:'html'"></td>
+                <td markdown ngPreserveWhitespaces>
+                    {{notification.content}}
+                </td>
                 <td>
                     <span class="text-success">{{ notification.seenBy | displayUsernames }}</span><br>
                     <span class="text-danger">{{ (notification.receivers | subtractArray: notification.seenBy) | displayUsernames }}</span>
@@ -59,7 +61,11 @@
             <br />
             <div class="form-group">
                 <label for="content">{{"general.message" | translate}}: </label>
-                <textarea class="form-control" formControlName="content" id="content" [placeholder]="'general.message' | translate"></textarea>
+                <editor
+                [init]="TINYCONFIG"
+                    formControlName="content"
+                    id="content"
+                ></editor>
             </div>
             <br />
             <div class="form-group">

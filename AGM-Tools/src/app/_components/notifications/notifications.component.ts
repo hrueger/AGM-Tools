@@ -7,6 +7,8 @@ import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { TinyConfigService } from "../../_services/tiny-config.service";
+import { MarkdownService } from "../../_services/markdown.service";
 
 @Component({
     selector: "app-notifications",
@@ -14,6 +16,7 @@ import { RemoteService } from "../../_services/remote.service";
     templateUrl: "./notifications.component.html",
 })
 export class NotificationsComponent implements OnInit {
+    public TINYCONFIG = {};
     public notifications: Notification[] = [];
     public headline: string;
     public content: string;
@@ -29,6 +32,8 @@ export class NotificationsComponent implements OnInit {
         private alertService: AlertService,
         private navbarService: NavbarService,
         private fts: FastTranslateService,
+        private tinyConfigService: TinyConfigService,
+        private markdownService: MarkdownService,
     ) { }
 
     public async ngOnInit() {
@@ -47,17 +52,17 @@ export class NotificationsComponent implements OnInit {
         this.remoteService.get("get", "users").subscribe((data) => {
             this.allusers = data;
         });
+        this.TINYCONFIG = this.tinyConfigService.get();
     }
     public openNewModal(content) {
         this.modalService
-            .open(content, { ariaLabelledBy: "modal-basic-title" })
+            .open(content, { ariaLabelledBy: "modal-basic-title", size: "lg" })
             .result.then(
                 (result) => {
                     this.invalidMessage = false;
-
                     this.remoteService
                         .getNoCache("post", "notifications", {
-                            content: this.newNotificationForm.get("content").value,
+                            content: this.markdownService.from(this.newNotificationForm.get("content").value),
                             headline: this.newNotificationForm.get("headline").value,
                             receivers: this.newNotificationForm.get("receivers").value,
                             theme: this.newNotificationForm.get("importance").value,

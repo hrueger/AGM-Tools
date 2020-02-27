@@ -27,7 +27,7 @@
                             <h5 class="mb-1">{{ notification.headline }}</h5>
                             <small>{{notification.howLongAgo }}</small>
                         </div>
-                        <p class="mb-1">{{notification.content}}</p>
+                        <p class="mb-1" markdown ngPreserveWhitespaces>{{notification.content}}</p>
                         <div class="d-flex justify-content-between">
                             <small>{{notification.creator.username}} {{ "general.atDate" | translate}} {{notification.createdAt | date}}</small>
                             <button type="button" (click)="seen(notification)" class="close"><span>&times;</span></button>
