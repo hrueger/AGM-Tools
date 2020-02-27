@@ -189,7 +189,7 @@ export class ProjectsComponent implements OnInit {
 
     public update(project, modal) {
         this.updateProjectForm.setValue({
-            description: project.description,
+            description: this.markdownService.to(project.description),
             name: project.name,
             users: project.users.map((user) => user.id),
         });
