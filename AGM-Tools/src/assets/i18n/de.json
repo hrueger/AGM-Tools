@@ -106,6 +106,7 @@
     "tagsSavedSuccessfully": "Die Tags wurden erfolgreich gespeichert."
   },
   "general": {
+    "atDate": "am",
     "audio": "Audio",
     "avalibleInFutureVersion": "Diese Funktion wird in einer zukünftigen Version hinzugefügt.",
     "back": "Zurück",
