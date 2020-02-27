@@ -25,13 +25,13 @@
                     <div *ngFor="let notification of notifications"  class="border-right-0 border-left-0 list-group-item list-group-item-action list-group-item-{{notification.theme}}">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{{ notification.headline }}</h5>
-                            <small>{{notification.howLongAgo }}</small>
+                            <div>
+                                <small>{{notification.createdAt | howLongAgo }}</small>
+                                <button type="button" (click)="seen(notification)" class="close ml-2"><span>&times;</span></button>
+                            </div>
                         </div>
                         <p class="mb-1" markdown ngPreserveWhitespaces>{{notification.content}}</p>
-                        <div class="d-flex justify-content-between">
-                            <small>{{notification.creator.username}} {{ "general.atDate" | translate}} {{notification.createdAt | date}}</small>
-                            <button type="button" (click)="seen(notification)" class="close"><span>&times;</span></button>
-                        </div>
+                        <small>{{notification.creator.username}} {{ "general.atDate" | translate}} {{notification.createdAt | date}}</small>
                     </div>
                 </div>
                 <span class="text-muted pl-3" *ngIf="notifications.length == 0">{{ "notifications.none" | translate }}</span>
