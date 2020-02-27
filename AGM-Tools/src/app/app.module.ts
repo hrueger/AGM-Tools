@@ -73,6 +73,10 @@ import { NavbarService } from "./_services/navbar.service";
 import { PushService } from "./_services/push.service";
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
+import { EditorModule } from '@tinymce/tinymce-angular';
+import { TinyConfigService } from "./_services/tiny-config.service";
+import { MarkdownService } from "./_services/markdown.service";
+import { MarkdownModule } from "ngx-markdown";
 
 registerLocaleData(localeDe);
 
@@ -134,6 +138,8 @@ registerLocaleData(localeDe);
         BrowserAnimationsModule,
         DashboardLayoutModule,
         BrowserModule,
+        EditorModule,
+        MarkdownModule.forRoot(),
         TabModule,
         NgbModule,
         LightboxModule,
@@ -168,6 +174,8 @@ registerLocaleData(localeDe);
         NavbarService,
         PushService,
         DatePipe,
+        TinyConfigService,
+        MarkdownService,
         {
             provide: LOCALE_ID,
             useValue: `${environment.defaultLanguage}-${environment.defaultLanguage.toUpperCase}`,

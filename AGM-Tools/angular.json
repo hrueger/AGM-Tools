@@ -48,6 +48,26 @@
                                 "input": "node_modules/ngx-extended-pdf-viewer/assets",
                                 "output": "/assets/"
                             },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/tinymce/skins",
+                                "output": "/assets/tinymce/skins/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/tinymce/themes",
+                                "output": "/assets/tinymce/themes/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/tinymce/plugins",
+                                "output": "/assets/tinymce/plugins/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/tinymce-i18n/langs5",
+                                "output": "/assets/tinymce/langs/"
+                            },
                             "src/firebase-messaging-sw.js",
                             "src/manifest.json"
                         ],
@@ -60,7 +80,9 @@
                         "scripts": [
                             "node_modules/chart.js/dist/Chart.bundle.min.js",
                             "node_modules/ngx-extended-pdf-viewer/assets/pdf.js",
-                            "node_modules/ngx-extended-pdf-viewer/assets/viewer.js"
+                            "node_modules/ngx-extended-pdf-viewer/assets/viewer.js",
+                            "node_modules/tinymce/tinymce.min.js",
+                            "node_modules/marked/lib/marked.js"
                         ]
                     },
                     "configurations": {
