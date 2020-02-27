@@ -20,7 +20,7 @@
                 </div>
                 <div class="pointer" (click)="goToProject(project)">
                     <h5 class="card-title">{{project.name}}</h5>
-                    <p class="card-text">{{project.description}}</p>
+                    <p class="card-text" markdown ngPreserveWhitespace>{{project.description}}</p>
                 </div>
             </div>
             <div class="alert alert-info mb-0" *ngIf="project.tips.length > 0">{{'tips.tipsAvalible' | translate}} <button class="btn btn-link" (click)="goToProject(project)">{{'tips.viewTips' | translate}} </button></div>
@@ -91,7 +91,7 @@
             </div>
         </div>
         <h5 class="card-title">{{currentProject.name}}</h5>
-        <p class="card-text">{{currentProject.description}}</p>
+        <p class="card-text" markdown ngPreserveWhitespace>{{currentProject.description}}</p>
     </div>
 
     <div class="alert alert-info mb-0" *ngFor="let tip of currentProject.tips">{{tip}}</div>
@@ -145,7 +145,7 @@
                             <h5 class="card-title text-left">{{task.title}}</h5>
                             <small>{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
                           </div>
-                          <small class="card-text">{{task.description}}</small>
+                          <small class="card-text" markdown ngPreserveWhitespace>{{task.description}}</small>
                           <small class="d-block mt-1">{{task.creator.username}}, {{task.createdAt | date:'shortDate'}}</small>
                     </button>
                 </div>
@@ -166,7 +166,7 @@
                 <div class="list-group-flush" *ngIf="currentProject.tutorials.data.length > 0">
                     <a [routerLink]="['/', 'tutorial', tutorial.id]" class="list-group-item list-group-item-action" *ngFor="let tutorial of currentProject.tutorials.data">
                         <h5 class="card-title">{{tutorial.title}}</h5>
-                        <small class="card-text">{{tutorial.description}}</small>
+                        <small class="card-text" markdown ngPreserveWhitespace>{{tutorial.description}}</small>
                     </a>
                 </div>
             </div>
@@ -204,12 +204,11 @@
             <br />
             <div class="form-group">
                 <label for="description">{{'general.description' | translate}}: </label>
-                <textarea
-                    class="form-control"
+                <editor
+                    [init]="TINYCONFIG"
                     formControlName="description"
                     id="description"
-                    [placeholder]="'general.description' | translate"
-                ></textarea>
+                ></editor>
             </div>
             <br />
             <div class="form-group">
@@ -273,12 +272,11 @@
             <br />
             <div class="form-group">
                 <label for="description">{{'general.description' | translate}}: </label>
-                <textarea
-                    class="form-control"
+                <editor
+                    [init]="TINYCONFIG"
                     formControlName="taskDescription"
                     id="description"
-                    [placeholder]="'general.description' | translate"
-                ></textarea>
+                ></editor>
             </div>
             <br />
             <div class="form-group">
@@ -361,12 +359,11 @@
             <br />
             <div class="form-group">
                 <label for="description">{{"general.description" | translate}}: </label>
-                <textarea
-                    class="form-control"
+                <editor
+                    [init]="TINYCONFIG"
                     formControlName="description"
                     id="description"
-                    [placeholder]="'general.description' | translate"
-                ></textarea>
+                ></editor>
             </div>
             <br />
             <div class="form-group">
@@ -421,7 +418,7 @@
                         <h5 class="mb-1">{{task.title}}</h5>
                         <small>{{task.createdAt | howLongAgo}}</small>
                     </div>
-                    <p class="mb-1">{{task.description}}</p>
+                    <p class="mb-1" markdown ngPreserveWhitespace>{{task.description}}</p>
                 </div>
                 <div class="alert alert-warning">
                     {{'tasks.due' | translate:{'date': task.due | date:'shortDate', 'formatted': task.due | howLongAgo } }}
@@ -446,7 +443,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" markdown ngPreserveWhitespace>
        {{currentTask.description}}
     </div>
     <div class="modal-footer p-0">

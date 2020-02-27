@@ -16,6 +16,8 @@ import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 import { FilePickerModalComponent } from "../filePickerModal/filePickerModal";
 import { PickerModalComponent } from "../pickerModal/pickerModal";
+import { TinyConfigService } from "../../_services/tiny-config.service";
+import { MarkdownService } from "../../_services/markdown.service";
 
 @Component({
     selector: "app-projects",
@@ -43,6 +45,7 @@ export class ProjectsComponent implements OnInit {
     public tasks: any[] = [];
     public currentTask: any;
     @ViewChild("chatMessages") private chatMessagesComponent: ElementRef;
+    public TINYCONFIG = {};
     constructor(
         private remoteService: RemoteService,
         private modalService: NgbModal,
@@ -53,7 +56,8 @@ export class ProjectsComponent implements OnInit {
         private navbarService: NavbarService,
         private router: Router,
         private route: ActivatedRoute,
-        private zone: NgZone,
+        private tinyConfigService: TinyConfigService,
+        private markdownService: MarkdownService,
     ) { }
 
     public async ngOnInit() {
@@ -78,6 +82,7 @@ export class ProjectsComponent implements OnInit {
             taskTitle: [this.taskTitle, [Validators.required]],
             taskUsers: [this.taskUsers, [Validators.required]],
         });
+        this.TINYCONFIG = this.tinyConfigService.get();
     }
 
     public goToProject(project) {
@@ -103,20 +108,20 @@ export class ProjectsComponent implements OnInit {
 
     public displayTasks(tasksModal, tasks) {
         this.tasks = tasks;
-        this.modalService.open(tasksModal);
+        this.modalService.open(tasksModal, {size: "lg"});
     }
 
     public displayTask(taskModal, task) {
         this.currentTask = task;
-        this.modalService.open(taskModal);
+        this.modalService.open(taskModal, {size: "lg"});
     }
 
     public openNewTaskModal(content) {
-        this.modalService.open(content).result.then((res) => {
+        this.modalService.open(content, {size: "lg"}).result.then((res) => {
             const due = this.newTaskForm.get("taskDue").value;
             this.newTaskFormInvalidMessage = false;
             this.remoteService.getNoCache("post", `tasks/${this.currentProject.id}`, {
-                description: this.newTaskForm.get("taskDescription").value,
+                description: this.markdownService.from(this.newTaskForm.get("taskDescription").value),
                 due: new Date(`${due.year}-${due.month}-${due.day}`),
                 title: this.newTaskForm.get("taskTitle").value,
                 users: this.newTaskForm.get("taskUsers").value,
@@ -189,13 +194,13 @@ export class ProjectsComponent implements OnInit {
             users: project.users.map((user) => user.id),
         });
         this.modalService
-            .open(modal)
+            .open(modal, {size: "lg"})
             .result.then(
                 (result) => {
                     this.updateProjectInvalidMessage = false;
                     this.remoteService
                         .getNoCache("post", `projects/${project.id}`, {
-                            description: this.updateProjectForm.get("description").value,
+                            description: this.markdownService.from(this.updateProjectForm.get("description").value),
                             name: this.updateProjectForm.get("name").value,
                             users: this.updateProjectForm.get("users").value,
                         })
@@ -213,14 +218,14 @@ export class ProjectsComponent implements OnInit {
 
     public openNewModal(content) {
         this.modalService
-            .open(content, { ariaLabelledBy: "modal-basic-title" })
+            .open(content, {size: "lg"})
             .result.then(
                 (result) => {
                     this.invalidMessage = false;
 
                     this.remoteService
                         .getNoCache("post", "projects", {
-                            description: this.newProjectForm.get("description").value,
+                            description: this.markdownService.from(this.newProjectForm.get("description").value),
                             name: this.newProjectForm.get("name").value,
                             users: this.newProjectForm.get("users").value,
                         })
