@@ -70,12 +70,12 @@
                 <div class="list-group-flush" *ngIf="tasks.length > 0">
                     <button (click)="displayTask(taskModal, task)" class="list-group-item list-group-item-action" *ngFor="let task of tasks">
                         <small>{{task.project.name}}</small>
-                        <div class="d-flex w-100 justify-content-between text-right">
+                        <div class="d-flex w-100 justify-content-between">
                             <h5 class="card-title">{{task.title}}</h5>
-                            <small>{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
+                            <small class="text-right">{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
                           </div>
                           <small class="card-text">{{task.description}}</small>
-                          <small class="d-block mt-1">{{task.creator.username}}, {{task.createdAt | date:'shortDate'}}</small>
+                          <small class="d-block mt-3">{{task.creator.username}} {{ "general.atDate" | translate}} {{task.createdAt | date:'shortDate'}}</small>
                     </button>
                 </div>
             </div>
