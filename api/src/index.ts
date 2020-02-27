@@ -29,7 +29,6 @@ import { createAdminUser1574018391679 } from "./migration/1574018391679-createAd
 import { CreateTags1574797035707 } from "./migration/1574797035707-CreateTags";
 import routes from "./routes";
 import { toInt } from "./utils/utils";
-require("https").globalAgent.options.ca = require("ssl-root-cas/latest").create();
 
 i18n.configure({
   // tslint:disable-next-line: no-bitwise
