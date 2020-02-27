@@ -420,11 +420,13 @@
                     </div>
                     <p class="mb-1" markdown ngPreserveWhitespace>{{task.description}}</p>
                 </div>
-                <div class="alert alert-warning">
-                    {{'tasks.due' | translate:{'date': task.due | date:'shortDate', 'formatted': task.due | howLongAgo } }}
-                </div>
-                <div class="m-3">
-                    {{task.creator.username}}, {{task.createdAt | date:'shortDate'}}
+                <div class="d-flex">
+                    <div class="alert text-left m-0 w-50">
+                        {{task.creator.username}}, {{task.createdAt | date:'shortDate'}}
+                    </div>
+                    <div class="alert alert-warning m-0 w-50">
+                        {{'tasks.due' | translate:{'date': task.due | date:'mediumDate', 'formatted': task.due | howLongAgo } }}
+                    </div>
                 </div>
             </button>
           </div>
