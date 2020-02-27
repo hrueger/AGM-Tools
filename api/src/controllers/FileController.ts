@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import * as fs from "fs";
 import * as i18n from "i18n";
 import * as mergeFiles from "merge-files";
+import fetch from "node-fetch";
 import * as path from "path";
-import * as request from "request";
 import * as rimraf from "rimraf";
 import { getRepository, getTreeRepository, Repository } from "typeorm";
 import * as unzipper from "unzipper";
@@ -41,8 +41,8 @@ class FileController {
 
   public static convert = async (req: Request, res: Response) => {
     const convertServiceUrl = `${config.documentServerUrl}/ConvertService.ashx`;
-    request.post(convertServiceUrl, {
-      body: {
+    fetch(convertServiceUrl, {
+      body: JSON.stringify({
         async: false,
         codePage: 65001,
         filetype: req.body.filetype,
@@ -50,17 +50,13 @@ class FileController {
         outputtype: req.body.outputtype,
         title: req.body.title,
         url: req.body.url,
-      },
-      headers: {
-        accept: "application/json",
-      },
-      json: true,
-    }, (error, r, body) => {
-      if (error) {
-        res.status(500).send(error.toString());
-        return;
-      }
-      res.send(body);
+      }),
+      headers: { "Content-Type": "application/json", "accept": "application/json" },
+      method: "post",
+    }).then(async (r) => {
+      res.send(await r.json());
+    }).catch((e) => {
+      res.status(500).send(e.toString());
     });
   }
 
@@ -284,9 +280,9 @@ class FileController {
       try {
         const dest = await getStoragePath(
           await (getRepository(File).findOne({where: {editKey: key}})));
-        request(req.body.url).pipe(fs.createWriteStream(dest)).on("close", async () => {
+        fetch(req.body.url).then((r) => r.body.pipe(fs.createWriteStream(dest)).on("close", async () => {
           res.send({error: 0});
-        });
+        }));
       } catch (e) {
         // tslint:disable-next-line: no-console
         console.log(e);

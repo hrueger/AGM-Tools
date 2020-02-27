@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as i18n from "i18n";
-import * as request from "request";
+import fetch from "node-fetch";
 import { Brackets, getRepository } from "typeorm";
 import { config } from "../config/config";
 import { Message } from "../entity/Message";
@@ -81,7 +81,7 @@ class ChatController {
   }
 
   public static mapProxy = async (req: Request, res: Response) => {
-    request(`https://maps.googleapis.com/maps/api/staticmap?center=${req.params.location}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:%7C${req.params.location}&key=${config.googleMapsApiKey}`).pipe(res);
+    fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${req.params.location}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:%7C${req.params.location}&key=${config.googleMapsApiKey}`).then((r) => r.body.pipe(res));
   }
 
   private static sendMessage = async (req: Request, res: Response, toUser: boolean, withAttachment: boolean) => {
