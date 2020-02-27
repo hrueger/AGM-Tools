@@ -1,0 +1,57 @@
+agmtools:
+    container_name: agmtools
+    image: hrueger/agm-tools:v1.0.19
+    ports:
+        - "88:80"
+    restart: always
+    depends_on:
+        - agmtoolsdb
+    environment:
+        baseHref: /AGM-Tools/
+        apiUrl: https://your.domain.tld/AGM-Tools/api/
+        appUrl: https://your.domain.tld/AGM-Tools/#/
+        documentServerUrl: https://onlyoffice.your.domain.tls:80
+        firebase_apiKey: valueFor_firebase_apiKeys
+        firebase_appId: valueFor_firebase_appId
+        firebase_authDomain: valueFor_firebase_authDomain
+        firebase_databaseURL: valueFor_firebase_databaseURL
+        firebase_messagingSenderId: valueFor_firebase_messagingSenderId
+        firebase_projectId: valueFor_firebase_projectId
+        firebase_storageBucket: valueFor_firebase_storageBucket1
+        avalibleDiskSpaceInGB: 100
+        cacheExpireDays: 1
+        database_host: db
+        database_name: databaseName
+        database_password: databasePassword
+        database_port: 3306
+        database_user: databaseUser
+        defaultLanguage: en
+        emailSender: no-reply@your.domain.tld
+        email_auth_pass: secureEmailPassword
+        email_auth_user: secureEmailUsername
+        email_host: email.host.tld
+        email_port: 1234
+        mapboxApiKey: yourMapboxApiKey
+        jwtSecret: aVerySecretSecret
+        storagePath: /data/
+        tempFilesStoragePath: /data/temp/
+        templateFilesStoragePath: /data/templates/
+        tutorialFilesStoragePath: /data/tutorials/
+        url: https://your.domain.tld/AGM-Tools/#/
+        url_domain: your.domain.tld
+        url_path: /AGM-Tools/#/
+        url_protocoll: https
+    volumes:
+        - type: bind
+          source: /path/on/your/host/to/put/data
+          target: /data
+
+agmtoolsdb:
+    image: mariadb
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: someSecureRootPassword
+        MYSQL_DATABASE: databaseName
+        MYSQL_USER: databaseUser
+        MYSQL_PASSWORD: databasePassword
+
