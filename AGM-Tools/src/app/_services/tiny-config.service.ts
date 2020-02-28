@@ -7,7 +7,7 @@ export class TinyConfigService {
     constructor(private fts: FastTranslateService) {}
     public get() {
         return {
-            base_url: `${environment.appUrl.replace("/#/", "/")}assets/tinymce"`,
+            base_url: `${environment.appUrl.replace("/#/", "/")}assets/tinymce`,
             suffix: ".min",
             statusbar: false,
             menubar: false,
