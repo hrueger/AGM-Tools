@@ -13,7 +13,7 @@ import { User } from "./User";
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column()
+    @Column({length: 10000})
     public content: string;
 
     @Column()

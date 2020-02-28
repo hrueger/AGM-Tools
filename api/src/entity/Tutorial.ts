@@ -19,7 +19,7 @@ import { User } from "./User";
     @Column()
     public title: string;
 
-    @Column()
+    @Column({length: 10000})
     public description: string;
 
     @OneToMany((type) => TutorialStep, (step) => step.tutorial)

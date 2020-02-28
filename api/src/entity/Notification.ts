@@ -17,7 +17,7 @@ import { User } from "./User";
     @Column()
     public headline: string;
 
-    @Column()
+    @Column({length: 10000})
     public content: string;
 
     @Column()

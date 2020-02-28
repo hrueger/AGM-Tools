@@ -17,7 +17,7 @@ import { Tutorial } from "./Tutorial";
     @Column()
     public title: string;
 
-    @Column()
+    @Column({length: 10000})
     public content: string;
 
     @Column()
