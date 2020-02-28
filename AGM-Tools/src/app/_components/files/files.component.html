@@ -226,7 +226,7 @@
     </div>
     <div class="modal-body">
         <div *ngIf="renameItemFormInvalidMessage" class="alert alert-danger">
-            <b>Fehler!</b><br />Bitte füllen Sie alle Felder aus!
+            {{'errors.requiredFieldsMissing' | translate}}
         </div>
         <form [formGroup]="renameItemForm">
             <div class="form-group">
@@ -243,24 +243,23 @@
                     ? modal.close('Save click')
                     : (renameItemFormInvalidMessage = true)
             ">
-            Umbenennen
+            {{'files.rename' | translate}}
         </button>
     </div>
 </ng-template>
 
 <ng-template #shareModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Freigeben</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{'files.share' | translate}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        <input class="form-control" type="text" #shareLinkField value="{{shareLink}}" placeholder="Link wird generiert..." readonly>
+        <input class="form-control" type="text" #shareLinkField value="{{shareLink}}" placeholder="..." readonly>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-outline-success" (click)="copyShareLink(shareLinkField)">Link in die Zwischenablage
-            kopieren</button>
-        <button class="btn btn-outline-primary" (click)="openShareLinkInNewTab()">In neuem Tab öffnen</button>
+        <button class="btn btn-outline-success" (click)="copyShareLink(shareLinkField)">{{'general.copyToClipboard' | translate}}</button>
+        <button class="btn btn-outline-primary" (click)="openShareLinkInNewTab()">{{'general.openInNewTab' | translate}}</button>
     </div>
 </ng-template>
