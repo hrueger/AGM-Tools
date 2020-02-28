@@ -1,9 +1,12 @@
 import { validate } from "class-validator";
 import { Request, Response } from "express";
 import * as i18n from "i18n";
+import * as Markdown from "markdown-it";
 import { getRepository } from "typeorm";
+import { config } from "../config/config";
 import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
+import { sendMultipleMails } from "../utils/mailer";
 
 class NotificationController {
   public static listAll = async (req: Request, res: Response) => {
@@ -49,6 +52,21 @@ class NotificationController {
     let id;
     try {
       id = (await notificationRepository.save(notification)).id;
+      const md = new Markdown();
+      sendMultipleMails(notification.receivers.map((u) => u.email), {
+        btnText: i18n.__("notifications.viewNotification"),
+        btnUrl: `${config.url}`,
+        cardSubtitle: i18n.__("notifications.goToDashboard"),
+        cardTitle: "",
+        content: md.render(notification.content),
+        secondTitle: notification.headline,
+        subject: i18n.__("notifications.newNotification").replace("%s", notification.headline),
+        subtitle: i18n.__("notifications.by").replace("%s", notification.creator.username),
+        summary: i18n.__("notifications.newNotificationBy")
+          .replace("%s", notification.headline).replace("%s", notification.creator.username),
+        title: i18n.__("notifications.newNotification"),
+      });
+
     } catch (e) {
       res.status(500).send({message: `${i18n.__("errors.errorWhileSendingMessage")} ${e.toString()}`});
       return;

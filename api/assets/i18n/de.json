@@ -55,6 +55,13 @@
 		"sentTo": "Diese Mail wurde an %s gesendet.",
 		"unsubscribe": "Abmelden"
 	},
+	"notifications": {
+		"by": "von %s",
+		"goToDashboard": "Rufe das Dashboard auf um die Benachrichtigung als gelesen zu markieren.",
+		"newNotification": "Neue Benachrichtigung",
+		"newNotificationBy": "Neue Benachrichtigung '%s' von %s",
+		"viewNotification": "Benachrichtigung ansehen"
+	},
 	"resetPassword": {
 		"at": "angefordert am %s",
 		"message": "Ein Link zum Zurücksetzen des Passworts für %s wurde angefordert. Wenn das nicht Ihre Absicht war, ignorieren Sie diese Mail einfach. Ihr Passwort wird nicht geändert.",
@@ -114,15 +121,15 @@
 			"name": "In der Webversion"
 		}
 	},
+	"tasks": {
+		"by": "von %s",
+		"dueOn": "Abgabe am %s",
+		"newTask": "Neue Aufgabe: %s",
+		"newTaskBy": "Neue Aufgabe '%s' von %s",
+		"project": "Projekt: %s",
+		"viewTask": "Aufgabe ansehen"
+	},
 	"tips": {
 		"addProjectLogo": "Füge ein Projektlogo hinzu. Die Datei muss 'logo', 'Logo' oder 'LOGO' heißen, eine JPG, JPEG, PNG, SVG, WebP oder BMP Datei sein und sich im Hauptverzeichnis des Projekts befinden!"
-	},
-	"tasks": {
-		"viewTask": "Aufgabe ansehen",
-		"dueOn": "Abgabe am %s",
-		"project": "Projekt: %s",
-		"newTask": "Neue Aufgabe: %s",
-		"by": "von %s",
-		"newTaskBy": "Neue Aufgabe '%s' von %s"
 	}
 }

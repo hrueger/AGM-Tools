@@ -56,6 +56,13 @@
         "sentTo": "This mail was sent to %s",
         "unsubscribe": "Unsubscribe"
     },
+    "notifications": {
+        "by": "by %s",
+        "goToDashboard": "Go to the dashboard to mark the notification as read.",
+        "newNotification": "New notification",
+        "newNotificationBy": "New notification '%s' by %s",
+        "viewNotification": "View notification"
+    },
     "resetPassword": {
         "at": "requested on %s",
         "message": "A link to reset the password for %s was requested. If this was done by accident, just ignore this mail. Your password won't be changed.",
