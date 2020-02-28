@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as i18n from "i18n";
+import * as Markdown from "markdown-it";
 import { getRepository } from "typeorm";
 import { config } from "../config/config";
 import { Project } from "../entity/Project";
@@ -37,13 +38,13 @@ class TaskController {
       res.status(500).send({message: i18n.__("errors.errorWhileSavingTask")});
       return;
     }
-
+    const md = new Markdown();
     sendMultipleMails(task.users.map((u) => u.email), {
       btnText: i18n.__("tasks.viewTask"),
       btnUrl: `${config.url}projects/${task.project.id}`,
       cardSubtitle: "",
       cardTitle: i18n.__("tasks.dueOn").replace("%s", task.due.toLocaleDateString()),
-      content: task.description.replace(new RegExp("\n", "g"), "<br>"),
+      content: md.render(task.description),
       secondTitle: i18n.__("tasks.project").replace("%s", task.project.name),
       subject: i18n.__("tasks.newTask").replace("%s", task.title),
       subtitle: i18n.__("tasks.by").replace("%s", task.creator.username),
