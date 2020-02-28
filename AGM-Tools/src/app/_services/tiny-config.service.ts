@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FastTranslateService } from "./fast-translate.service";
-import { environment } from "~/environments/environment";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class TinyConfigService {
