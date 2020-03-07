@@ -50,7 +50,7 @@
       "express-fileupload": "^1.1.6",
       "find-up": "^4.1.0",
       "get-folder-size": "^2.0.1",
-      "helmet": "^3.21.2",
+      "helmet": "^3.21.3",
       "i18n": "^0.8.4",
       "jsonwebtoken": "^8.5.1",
       "markdown-it": "^10.0.0",
