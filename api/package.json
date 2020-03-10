@@ -63,7 +63,7 @@
       "socket.io": "^2.3.0",
       "ts-node-dev": "^1.0.0-pre.44",
       "typeorm": "0.2.24",
-      "unzipper": "^0.10.7"
+      "unzipper": "^0.10.10"
    },
    "scripts": {
       "tsc": "tsc",
