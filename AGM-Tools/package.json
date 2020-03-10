@@ -52,7 +52,7 @@
     "@syncfusion/ej2-angular-popups": "^17.4.51",
     "@syncfusion/ej2-angular-schedule": "^17.4.51",
     "@syncfusion/ej2-layouts": "^17.4.51",
-    "@tinymce/tinymce-angular": "^3.4.0",
+    "@tinymce/tinymce-angular": "^3.5.0",
     "@types/socket.io-client": "^1.4.32",
     "ajv": "^6.12.0",
     "angularx-flatpickr": "^6.2.0",
