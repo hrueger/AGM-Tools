@@ -42,7 +42,7 @@
     "@fortawesome/fontawesome-free": "5.12.1",
     "@nativescript/theme": "2.3.2",
     "@ng-bootstrap/ng-bootstrap": "6.0.0",
-    "@ngx-translate/core": "^12.0.0",
+    "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
     "@nstudio/nativescript-pulltorefresh": "1.1.1",
     "@nstudio/nativescript-snackbar": "^1.1.2",
