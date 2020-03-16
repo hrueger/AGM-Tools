@@ -87,7 +87,7 @@
     "nativescript-local-notifications": "^4.2.0",
     "nativescript-localstorage": "^2.0.1",
     "nativescript-mediafilepicker": "^3.0.0",
-    "nativescript-modal-datetimepicker": "^1.2.1",
+    "nativescript-modal-datetimepicker": "^1.2.2",
     "nativescript-multi-select": "^1.0.6",
     "nativescript-ngx-fonticon": "^6.0.3",
     "nativescript-pdf-view": "^2.1.0",
