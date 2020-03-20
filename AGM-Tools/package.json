@@ -143,7 +143,7 @@
     "karma-jasmine-html-reporter": "^1.5.2",
     "nativescript-dev-webpack": "1.5.1",
     "node-sass": "4.13.1",
-    "protractor": "~5.4.3",
+    "protractor": "~6.0.0",
     "systemjs-plugin-json": "^0.3.0",
     "tns-platform-declarations": "6.5.0",
     "ts-node": "^8.7.0",
