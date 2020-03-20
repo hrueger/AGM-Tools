@@ -145,7 +145,7 @@
     "node-sass": "4.13.1",
     "protractor": "~5.4.3",
     "systemjs-plugin-json": "^0.3.0",
-    "tns-platform-declarations": "6.4.2",
+    "tns-platform-declarations": "6.5.0",
     "ts-node": "^8.7.0",
     "tslint": "~6.1.0",
     "typescript": "3.7.5"
