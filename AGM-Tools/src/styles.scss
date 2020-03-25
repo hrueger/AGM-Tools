@@ -193,3 +193,7 @@ th.sortable {
 .tox-tinymce-aux {
     z-index: 20000 !important;
 }
+
+.nav-item, .close, .close:focus {
+    outline: none;
+}
