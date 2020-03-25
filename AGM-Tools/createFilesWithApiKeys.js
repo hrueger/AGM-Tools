@@ -1,4 +1,4 @@
-import { existsSync, writeFileSync } from "fs";
+const fs = require("fs");
 
 const files = {
     "src/environments/environment.ts": "export const environment = {apiUrl: \"\", defaultLanguage: \"\", documentServerUrl: \"\", appUrl: \"\", firebase: {apiKey: \"\",appId: \"\",authDomain: \"\",databaseURL: \"\",messagingSenderId: \"\",projectId: \"\",storageBucket: \"\"},production: false};",
@@ -10,12 +10,12 @@ const args = process.argv.slice(2);
 let counter = 0;
 // eslint-disable-next-line guard-for-in
 for (const key in files) {
-    if (!existsSync(key)) {
+    if (!fs.existsSync(key)) {
         let value = files[key];
         if (args[counter]) {
             value = Buffer.from(args[counter], "base64").toString("ascii");
         }
-        writeFileSync(key, value);
+        fs.writeFileSync(key, value);
         // eslint-disable-next-line no-console
         console.info("File", key, "created, please insert your credentials there!");
     } else {
