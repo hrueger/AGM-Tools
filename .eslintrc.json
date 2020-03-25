@@ -40,7 +40,8 @@
       "@typescript-eslint/no-this-alias": "off",
       "import/no-cycle": "off",
       "no-underscore-dangle": "off",
-      "no-await-in-loop": "off"
+      "no-await-in-loop": "off",
+      "import/no-extraneous-dependencies": "off"
     },
     "env": {
         "browser": true,
