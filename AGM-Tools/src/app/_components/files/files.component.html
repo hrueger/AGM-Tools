@@ -96,7 +96,7 @@
             <ng-template class="ctxMenuItem" contextMenuItem (execute)="move($event.item)">
                 <i class="fa fa-arrows-alt"></i> {{'files.move' | translate}}
             </ng-template>
-            <ng-template class="ctxMenuItem" contextMenuItem (execute)="copy($event.item)">
+            <ng-template class="ctxMenuItem" contextMenuItem (execute)="copy()">
                 <i class="fas fa-copy"></i> {{'files.copy' | translate}}
             </ng-template>
             <ng-template class="ctxMenuItem" contextMenuItem (execute)="delete($event.item)">

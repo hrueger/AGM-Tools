@@ -125,16 +125,10 @@ L10n.load({
     },
 });
 
-loadCldr(
-    // eslint-disable-next-line
-    require("../../../../node_modules/cldr-data/supplemental/numberingSystems.json"),
-    // eslint-disable-next-line
-    require("../../../../node_modules/cldr-data/main/de/ca-gregorian.json"),
-    // eslint-disable-next-line
-    require("../../../../node_modules/cldr-data/main/de/numbers.json"),
-    // eslint-disable-next-line
-    require("../../../../node_modules/cldr-data/main/de/timeZoneNames.json"),
-);
+/* eslint-disable */
+// @ts-ignore
+loadCldr(require("../../../../node_modules/cldr-data/supplemental/numberingSystems.json"), require("../../../../node_modules/cldr-data/main/de/ca-gregorian.json"), require("../../../../node_modules/cldr-data/main/de/numbers.json"), require("../../../../node_modules/cldr-data/main/de/timeZoneNames.json"));
+/* eslint-enable */
 
 @Component({
     selector: "app-calendar",
