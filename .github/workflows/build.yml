@@ -54,15 +54,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12
-    - name: Setup JDK
-      run: powershell choco install adoptopenjdk --version 8.192 
-    - name: Setup Android SDK
-      run: choco install android-sdk -y
-    - name: Setup platform tools
-      run: powershell "%ANDROID_HOME%/tools/bin/sdkmanager platform-tools platforms;android-28 build-tools;28.0.3"
-      # extras;android;m2repository extras;google;m2repository
-    - name: Install Nativescript CLI
-      run: npm i -g nativescript
+    - name: Setup NativeScript
+      uses: hrueger/setup-nativescript@v1.0.0
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
