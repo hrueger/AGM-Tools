@@ -9,7 +9,7 @@ export class User {
     public password: string;
     public password2: string;
 
-    constructor(name: string, email: string, password: string, password2: string) {
+    public constructor(name: string, email: string, password: string, password2: string) {
         this.name = name;
         this.password = password;
         this.password2 = password2;
@@ -17,7 +17,7 @@ export class User {
     }
 }
 
-// tslint:disable-next-line: max-classes-per-file
+
 @Component({
     selector: "new-user-mdoal",
     templateUrl: "new-user.modal.tns.html",
@@ -30,16 +30,16 @@ export class NewUserModalComponent {
     public constructor(private params: ModalDialogParams, private fts: FastTranslateService) {
     }
 
-    public close() {
+    public close(): void {
         this.dataform.dataForm.validateAll()
-            .then((result) => {
+            .then((result): void => {
                 if (result == true) {
                     this.params.closeCallback(this.puser);
                 }
             });
     }
 
-    public async onPropertyValidate(args) {
+    public async onPropertyValidate(args): Promise<void> {
         let validationResult = true;
         if (args.propertyName === "password2") {
             const dataForm = args.object;
@@ -53,7 +53,7 @@ export class NewUserModalComponent {
         args.returnValue = validationResult;
     }
 
-    public async ngOnInit() {
+    public async ngOnInit(): Promise<void> {
         this.puser = new User("", "", "", "");
         this.dataFormConfig = {
             commitMode: "Immediate",
@@ -100,11 +100,11 @@ export class NewUserModalComponent {
         };
     }
 
-    get user(): User {
+    public get user(): User {
         return this.puser;
     }
 
-    public goBack() {
+    public goBack(): void {
         this.params.closeCallback(null);
     }
 }

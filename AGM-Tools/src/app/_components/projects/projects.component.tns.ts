@@ -1,4 +1,6 @@
-import { Component, NgZone, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import {
+    Component, NgZone, OnInit, ViewChild, ViewContainerRef,
+} from "@angular/core";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import {
     CFAlertActionAlignment,
@@ -31,13 +33,13 @@ export class ProjectsComponent implements OnInit {
 
     private multiSelect: MultiSelect;
     constructor(private modal: ModalDialogService,
-                private vcRef: ViewContainerRef,
-                private remoteService: RemoteService,
-                private alertService: AlertService,
-                private zone: NgZone,
-                private authenticationService: AuthenticationService,
-
-    ) { this.multiSelect = new MultiSelect(); }
+        private vcRef: ViewContainerRef,
+        private remoteService: RemoteService,
+        private alertService: AlertService,
+        private zone: NgZone,
+        private authenticationService: AuthenticationService) {
+        this.multiSelect = new MultiSelect();
+    }
 
     public ngOnInit() {
         this.remoteService.get("get", "projects").subscribe((data) => {
@@ -48,7 +50,7 @@ export class ProjectsComponent implements OnInit {
     public getProjectImageSrc(project) {
         return `${environment.apiUrl}projects/${project.id}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
-    public openNewModal(content) {
+    public openNewModal() {
         const options = {
             animated: true,
             context: {},
@@ -78,7 +80,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     public onSwipeCellStarted(args: ListViewEventData) {
-        const swipeLimits = args.data.swipeLimits;
+        const { swipeLimits } = args.data;
         const swipeView = args.object;
         // @ts-ignore
         const leftItem = swipeView.getViewById<View>("add-view");
@@ -90,7 +92,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     public onLeftSwipeClick(args) {
-        const id = args.object.bindingContext.id;
+        const { id } = args.object.bindingContext;
         const alreadyMembers = args.object.bindingContext.members;
         // console.log(alreadyMembers);
         const usersToPick = [];
@@ -128,7 +130,7 @@ export class ProjectsComponent implements OnInit {
                         this.remoteService.getNoCache("post", "pro", {
                             members: this.membersToAdd,
                             project: id,
-                        }).subscribe((data) => {
+                        }).subscribe(() => {
                             this.alertService.success(
                                 "Mitglieder erfolgreich hinzugefügt!",
                             );
@@ -139,7 +141,7 @@ export class ProjectsComponent implements OnInit {
                     }
                 });
             },
-            onItemSelected: (selectedItem) => { /* selected */ },
+            onItemSelected: () => { /* selected */ },
             selectedItems: usersToPick,
             title: "Mitglieder hinzufügen",
         };
@@ -148,12 +150,12 @@ export class ProjectsComponent implements OnInit {
     }
 
     public onRightSwipeClick(args) {
-        const id = args.object.bindingContext.id;
+        const { id } = args.object.bindingContext;
         const cfalertDialog = new CFAlertDialog();
-        const onNoPressed = (response) => {
+        const onNoPressed = () => {
             this.projectsListView.listView.notifySwipeToExecuteFinished();
         };
-        const onYesPressed = (response) => {
+        const onYesPressed = () => {
             this.projectsListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
                 .getNoCache("delete", `project/${id}`)
@@ -167,7 +169,6 @@ export class ProjectsComponent implements OnInit {
                         });
                     }
                 });
-
         };
         cfalertDialog.show({
             buttons: [

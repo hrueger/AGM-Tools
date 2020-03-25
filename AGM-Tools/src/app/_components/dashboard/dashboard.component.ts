@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ChartOptions, ChartType } from "chart.js";
 import { Label, MultiDataSet } from "ng2-charts";
-// tslint:disable-next-line: max-line-length
 import * as pluginDataLabels from "../../../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
@@ -16,7 +15,7 @@ import { dateDiff } from "./helpers";
 export class DashboardComponent implements OnInit {
     public spaceChartLabels: Label[] = ["", "", ""];
     public spaceChartData: MultiDataSet = [[0, 0, 0]]; // [[350, 450, 100]];
-    public updating: boolean = false;
+    public updating = false;
     public spaceChartColors = [
         {
             backgroundColor: [
@@ -30,13 +29,11 @@ export class DashboardComponent implements OnInit {
     public spaceChartOptions: ChartOptions = {
         plugins: {
             datalabels: {
-                formatter: (value, ctx) => {
-                    return "";
-                },
+                formatter: () => "",
             },
         },
     };
-    public viewUpdateDetails: boolean = false;
+    public viewUpdateDetails = false;
     public spaceChartPlugins = [pluginDataLabels];
     public whatsnew: any;
     public dates: any;
@@ -68,7 +65,7 @@ export class DashboardComponent implements OnInit {
         this.initChart();
     }
 
-    public getTimeDifference(time) {
+    public getTimeDifference() {
         return new Date().getTime();
     }
 
@@ -77,10 +74,11 @@ export class DashboardComponent implements OnInit {
     }
 
     public update() {
-        this.remoteService.get("post", "update").subscribe((res) => {
+        this.remoteService.get("post", "update").subscribe(() => {
             this.updating = true;
         });
         setTimeout(() => {
+            // eslint-disable-next-line no-restricted-globals
             location.reload();
         }, 10000);
     }
@@ -146,7 +144,6 @@ export class DashboardComponent implements OnInit {
                 if (data) {
                     this.setSpaceChartData(data);
                     this.lastUpdated.space = data.lastUpdated;
-
                 }
             });
     }

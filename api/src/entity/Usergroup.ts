@@ -3,18 +3,18 @@ import {
     Entity,
     OneToMany,
     PrimaryGeneratedColumn,
-  } from "typeorm";
+} from "typeorm";
 import { User } from "./User";
 
 @Entity()
-  export class Usergroup {
+export class Usergroup {
     @PrimaryGeneratedColumn()
     public id: number;
 
     @Column()
     public name: string;
 
-    @OneToMany((type) => User, (user) => user.usergroup)
+    @OneToMany(() => User, (user) => user.usergroup)
     public users: User[];
 
     /* Permissions */
@@ -44,4 +44,4 @@ import { User } from "./User";
 
     @Column()
     public REMOVE_PROJECT: boolean;
-  }
+}

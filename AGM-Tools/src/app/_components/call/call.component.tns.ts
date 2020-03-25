@@ -8,12 +8,12 @@ import { Quality, WebRTC, WebRTCView } from "nativescript-webrtc-plugin";
     templateUrl: "./call.component.html",
 })
 export class CallComponent {
-    @ViewChild("remoteVideoView", {static: false}) public remoteVideoView: WebRTCView;
+    @ViewChild("remoteVideoView", { static: false }) public remoteVideoView: WebRTCView;
     public remoteStream: any;
     public localStream: any;
 
-    constructor(private route: ActivatedRoute) {}
-    public ngOnInit() {
+    public constructor(private route: ActivatedRoute) {}
+    public ngOnInit(): void {
         if (this.route.snapshot.params.chatType == "user") {
             this.call();
         } else if (this.route.snapshot.params.chatType == "project") {
@@ -23,7 +23,7 @@ export class CallComponent {
         }
     }
 
-    public async call() {
+    public async call(): Promise<void> {
         const webrtc = new WebRTC({
             enableAudio: true,
             enableVideo: false,
@@ -33,15 +33,15 @@ export class CallComponent {
                 },
             ],
         });
-        webrtc.on("webRTCClientDidReceiveRemoteVideoTrackStream", (args) => {
-        const object = args.object;
-        const remoteVideoTrack = object.get("remoteVideoTrack");
-        this.remoteStream = object.get("stream");
-        const video = this.remoteVideoView;
-        video.videoTrack = remoteVideoTrack;
+        webrtc.on("webRTCClientDidReceiveRemoteVideoTrackStream", (args): void => {
+            const { object } = args;
+            const remoteVideoTrack = object.get("remoteVideoTrack");
+            this.remoteStream = object.get("stream");
+            const video = this.remoteVideoView;
+            video.videoTrack = remoteVideoTrack;
         });
 
-        webrtc.on("webRTCClientStartCallWithSdp", (args) => {
+        webrtc.on("webRTCClientStartCallWithSdp", (args): void => {
             const sdp = args.object.get("sdp");
             const type = args.object.get("type");
             if (type === "answer") {
@@ -51,17 +51,17 @@ export class CallComponent {
                 });
             } else {
                 // send data to signaling server
-                // tslint:disable-next-line: no-console
+                // eslint-disable-next-line no-console
                 console.log("type:", type);
-                // tslint:disable-next-line: no-console
+                // eslint-disable-next-line no-console
                 console.log("sdp:", sdp);
             }
         });
 
-        webrtc.on("webRTCClientDidGenerateIceCandidate", (args) => {
+        webrtc.on("webRTCClientDidGenerateIceCandidate", (args): void => {
             const iceCandidate = args.object.get("iceCandidate");
             // send data to signaling server
-            // tslint:disable-next-line: no-console
+            // eslint-disable-next-line no-console
             console.log("iceCandidate:", iceCandidate);
         });
 
@@ -70,7 +70,7 @@ export class CallComponent {
                 await WebRTC.requestPermissions();
                 this.localStream = await webrtc.getUserMedia(Quality.HIGHEST);
             } catch (e) {
-                // tslint:disable-next-line: no-console
+                // eslint-disable-next-line no-console
                 console.error(e);
             }
         }

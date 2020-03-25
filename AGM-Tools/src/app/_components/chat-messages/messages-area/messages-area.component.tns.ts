@@ -2,10 +2,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    Inject,
     Input,
     OnInit,
-    SimpleChanges,
     ViewChild,
 } from "@angular/core";
 import * as clipboard from "nativescript-clipboard";
@@ -33,53 +31,49 @@ export class MessagesAreaComponent implements OnInit {
     @Input() public receiverId: number;
     @ViewChild("messagesListView", { static: false }) public messagesListView: ElementRef;
     public allImageSources: any[] = [];
-    public showingMedia: boolean = false;
+    public showingMedia = false;
     public currentImageName: string;
     public currentImageDate: string;
     public currentImageIndex: number;
-    public shouldScrollWhenImageLoaded: boolean = true;
-    constructor(private pushService: PushService,
-                private authService: AuthenticationService,
-                private remoteService: RemoteService,
-                private authenticationService: AuthenticationService,
-                private page: Page) {
+    public shouldScrollWhenImageLoaded = true;
+    public constructor(private pushService: PushService,
+        private authService: AuthenticationService,
+        private remoteService: RemoteService,
+        private authenticationService: AuthenticationService,
+        private page: Page) {
 
     }
 
-    public openLocation(message) {
+    public openLocation(message): void {
         utils.openUrl(`https://www.google.de/maps/place/${message.locationLat},${message.locationLong}/@${message.locationLat},${message.locationLong},17z/`);
     }
 
-    public getImageSrc(imageName, thumbnail = true) {
-        return environment.apiUrl +
-            "?getAttachment=" +
-            imageName +
-            "&token=" +
-            this.authService.currentUserValue.token +
-            (thumbnail ? "&thumbnail" : "");
+    public getImageSrc(imageName, thumbnail = true): string {
+        return `${environment.apiUrl}?getAttachment=${imageName}&token=${this.authService.currentUserValue.token}${thumbnail ? "&thumbnail" : ""}`;
     }
 
-    public onPageChanged(e: PageChangeEventData) {
+    public onPageChanged(e: PageChangeEventData): void {
         this.currentImageName = (
-            this.allImageSources[e.page].sender ==
-                this.authService.currentUserValue.username ?
-                "Ich" :
-                this.allImageSources[e.page].sender);
+            this.allImageSources[e.page].sender
+                == this.authService.currentUserValue.username
+                ? "Ich"
+                : this.allImageSources[e.page].sender);
         this.currentImageDate = this.allImageSources[e.page].date;
     }
-    public downloadCurrentImage() {
+    public downloadCurrentImage(): void {
+        // eslint-disable-next-line no-alert
         alert("Herunterladen von Bildern in die Gallerie wird noch nicht unterstützt!");
     }
 
-    public getLocationImageSrc(message) {
+    public getLocationImageSrc(message): string {
         return `${environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
-    public newMessageFromPushService(data: any) {
+    public newMessageFromPushService(data: any): void {
         if (data.action == "newMessage") {
             if (data.data.data.chatID == this.receiverId) {
                 this.remoteService.getNoCache("post", "chatMarkAsRead",
-                { message: data.data.data.messageId }).subscribe();
+                    { message: data.data.data.messageId }).subscribe();
                 const message = {
                     chat: null,
                     created: Date.now(),
@@ -90,35 +84,36 @@ export class MessagesAreaComponent implements OnInit {
                 };
                 this.messages.push(message);
                 this.scrollToBottom(this.messagesListView.nativeElement);
-                setTimeout(() => {
+                setTimeout((): void => {
                     this.scrollToBottom(this.messagesListView.nativeElement);
                 }, 300);
             }
         } else {
-            // tslint:disable-next-line: no-console
+            // eslint-disable-next-line no-console
             console.log(data);
         }
     }
 
-    public imageLoaded() {
+    public imageLoaded(): void {
         if (this.shouldScrollWhenImageLoaded) {
             this.scrollToBottom(this.messagesListView.nativeElement);
-            setTimeout(() => {
+            setTimeout((): void => {
                 this.scrollToBottom(this.messagesListView.nativeElement);
             }, 300);
         }
     }
 
-    public addContact(contact: { name: string, number: string }) {
-        clipboard.setText(contact.number).then(() => {
+    public addContact(contact: { name: string; number: string }): void {
+        clipboard.setText(contact.number).then((): void => {
+            // eslint-disable-next-line no-alert
             alert("Die Nummer wurde kopiert. Fügen Sie jetzt den Kontakt in Ihrem Adressbuch hinzu!");
         });
     }
 
-    public displayImage(messageIndex) {
+    public displayImage(messageIndex): void {
         const that = this;
         if (this.allImageSources.length == 0) {
-            this.messages.forEach((msg) => {
+            this.messages.forEach((msg): void => {
                 if (msg.imageSrc) {
                     that.allImageSources.push({
                         date: msg.created,
@@ -129,15 +124,16 @@ export class MessagesAreaComponent implements OnInit {
                 }
             });
         }
-        this.currentImageIndex = this.allImageSources.findIndex((img) =>
-            img.name == that.messages.getItem(messageIndex).imageSrc);
+        this.currentImageIndex = this.allImageSources.findIndex(
+            (img): boolean => img.name == that.messages.getItem(messageIndex).imageSrc,
+        );
         this.showingMedia = true;
         this.page.actionBarHidden = true;
         this.currentImageName = (
-            this.allImageSources[this.currentImageIndex].sender ==
-                this.authService.currentUserValue.username ?
-                "Ich" :
-                this.allImageSources[this.currentImageIndex].sender);
+            this.allImageSources[this.currentImageIndex].sender
+                == this.authService.currentUserValue.username
+                ? "Ich"
+                : this.allImageSources[this.currentImageIndex].sender);
         this.currentImageDate = this.allImageSources[this.currentImageIndex].date;
     }
 
@@ -155,7 +151,7 @@ export class MessagesAreaComponent implements OnInit {
         this.currentImageDate = "";
     }
 
-    public scrollToBottom(lv: ListView) {
+    public scrollToBottom(lv: ListView): void {
         if (lv && lv.items.length > 0) {
             lv.scrollToIndex(lv.items.length);
             lv.android.setSelection(lv.items.length - 1);
@@ -163,69 +159,69 @@ export class MessagesAreaComponent implements OnInit {
         }
     }
 
-    public ngOnInit() {
-        setTimeout(() => {
+    public ngOnInit(): void {
+        setTimeout((): void => {
             this.shouldScrollWhenImageLoaded = false;
         }, 1000);
         this.pushService.reregisterCallbacks();
-        this.pushService.getChatActions().subscribe((data) => {
+        this.pushService.getChatActions().subscribe((data): void => {
             this.newMessageFromPushService(data);
         });
-        setTimeout(() => {
+        setTimeout((): void => {
             this.scrollToBottom(this.messagesListView.nativeElement);
         }, 500);
     }
 
-    public listviewLoaded() {
+    public listviewLoaded(): void {
         this.scrollToBottom(this.messagesListView.nativeElement);
     }
 
-    public isContinuation(idx: number) {
+    public isContinuation(idx: number): boolean {
         if (idx && this.messages.getItem(idx)) {
-            if ((this.messages.getItem(idx - 1) &&
-                this.messages.getItem(idx).fromMe == this.messages.getItem(idx - 1).fromMe &&
-                this.messages.getItem(idx).sendername == this.messages.getItem(idx - 1).sendername &&
-                !this.messages.getItem(idx).system)) {
+            if ((this.messages.getItem(idx - 1)
+                && this.messages.getItem(idx).fromMe == this.messages.getItem(idx - 1).fromMe
+                && this.messages.getItem(idx).sendername
+                    == this.messages.getItem(idx - 1).sendername
+                && !this.messages.getItem(idx).system)) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
             return false;
         }
-
+        return false;
     }
 
-    public getIcon(message: Message) {
-        // tslint:disable-next-line: radix
+    public getIcon(message: Message): string {
         switch (message.sent) {
-            case "notsent":
-                return "not_sent";
-            case "sent":
-                return "sent";
-            default:
-                return "default";
+        case "notsent":
+            return "not_sent";
+        case "sent":
+            return "sent";
+        default:
+            return "default";
         }
         // return "T";
     }
 
-    public isSent(message: Message) {
+    public isSent(message: Message): boolean {
         if (message.sent == "sent") {
             return true;
         }
+        return undefined;
     }
-    public isNotSent(message: Message) {
+    public isNotSent(message: Message): boolean {
         if (message.sent == "notsent") {
             return true;
         }
+        return undefined;
     }
-    public isDefault(message: Message) {
+    public isDefault(message: Message): boolean {
         if (message.sent == "received" || message.sent == "seen") {
             return true;
         }
+        return undefined;
     }
 
-    public isViewed(message: Message) {
+    public isViewed(message: Message): boolean {
         return message.sent === "seen";
     }
 }

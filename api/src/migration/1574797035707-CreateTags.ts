@@ -1,9 +1,8 @@
-import {getRepository, MigrationInterface, QueryRunner} from "typeorm";
+import { getRepository, MigrationInterface } from "typeorm";
 import { Tag } from "../entity/Tag";
 
 export class CreateTags1574797035707 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<any> {
+    public async up(): Promise<any> {
         const tagRepository = getRepository(Tag);
 
         let tag = new Tag();
@@ -31,8 +30,7 @@ export class CreateTags1574797035707 implements MigrationInterface {
         await tagRepository.save(tag);
     }
 
-    public async down(queryRunner: QueryRunner): Promise<any> {
+    public async down(): Promise<any> {
         //
     }
-
 }

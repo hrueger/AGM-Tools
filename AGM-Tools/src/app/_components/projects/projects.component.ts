@@ -1,4 +1,6 @@
-import { Component, ElementRef, NgZone, OnInit, ViewChild } from "@angular/core";
+import {
+    Component, ElementRef, OnInit, ViewChild,
+} from "@angular/core";
 import {
     FormBuilder,
     FormGroup,
@@ -7,7 +9,7 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { environment } from "../../../environments/environment";
-import { AuthenticationService } from "../..//_services/authentication.service";
+import { AuthenticationService } from "../../_services/authentication.service";
 import { Project } from "../../_models/project.model";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
@@ -37,9 +39,9 @@ export class ProjectsComponent implements OnInit {
     public taskDescription: string;
     public taskUsers: number[];
     public taskDue: string;
-    public invalidMessage: boolean = false;
-    public updateProjectInvalidMessage: boolean = false;
-    public newTaskFormInvalidMessage: boolean = false;
+    public invalidMessage = false;
+    public updateProjectInvalidMessage = false;
+    public newTaskFormInvalidMessage = false;
     public currentProject: any;
     public currentProjectChat: any;
     public tasks: any[] = [];
@@ -108,16 +110,16 @@ export class ProjectsComponent implements OnInit {
 
     public displayTasks(tasksModal, tasks) {
         this.tasks = tasks;
-        this.modalService.open(tasksModal, {size: "lg"});
+        this.modalService.open(tasksModal, { size: "lg" });
     }
 
     public displayTask(taskModal, task) {
         this.currentTask = task;
-        this.modalService.open(taskModal, {size: "lg"});
+        this.modalService.open(taskModal, { size: "lg" });
     }
 
     public openNewTaskModal(content) {
-        this.modalService.open(content, {size: "lg"}).result.then((res) => {
+        this.modalService.open(content, { size: "lg" }).result.then(() => {
             const due = this.newTaskForm.get("taskDue").value;
             this.newTaskFormInvalidMessage = false;
             this.remoteService.getNoCache("post", `tasks/${this.currentProject.id}`, {
@@ -141,10 +143,10 @@ export class ProjectsComponent implements OnInit {
         modal.componentInstance.multiple = true;
         modal.result.then((res) => {
             this.remoteService.get("post", `projects/${this.currentProject.id}/linkTutorials`,
-                {tutorials: res.map((tutorial) => tutorial.id)}).subscribe((r) => {
-                    if (r && r.status) {
-                        this.getProjects();
-                    }
+                { tutorials: res.map((tutorial) => tutorial.id) }).subscribe((r) => {
+                if (r && r.status) {
+                    this.getProjects();
+                }
             });
         }).catch(() => undefined);
     }
@@ -157,10 +159,10 @@ export class ProjectsComponent implements OnInit {
         modal.result.then((ids) => {
             if (ids != "Close click" && Array.isArray(ids)) {
                 this.remoteService.get("post", `projects/${this.currentProject.id}/linkFiles`,
-                    {files: ids}).subscribe((r) => {
-                        if (r && r.status) {
-                            this.getProjects();
-                        }
+                    { files: ids }).subscribe((r) => {
+                    if (r && r.status) {
+                        this.getProjects();
+                    }
                 });
             }
         }).catch(() => undefined);
@@ -175,6 +177,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     public async delete(project) {
+        // eslint-disable-next-line
         if (confirm(await this.fts.t("projects.confirmDelete"))) {
             this.remoteService.get("delete", `projects/${project.id}`).subscribe(async (data) => {
                 if (data && data.status == true) {
@@ -194,9 +197,9 @@ export class ProjectsComponent implements OnInit {
             users: project.users.map((user) => user.id),
         });
         this.modalService
-            .open(modal, {size: "lg"})
+            .open(modal, { size: "lg" })
             .result.then(
-                (result) => {
+                () => {
                     this.updateProjectInvalidMessage = false;
                     this.remoteService
                         .getNoCache("post", `projects/${project.id}`, {
@@ -218,9 +221,9 @@ export class ProjectsComponent implements OnInit {
 
     public openNewModal(content) {
         this.modalService
-            .open(content, {size: "lg"})
+            .open(content, { size: "lg" })
             .result.then(
-                (result) => {
+                () => {
                     this.invalidMessage = false;
 
                     this.remoteService
@@ -245,7 +248,9 @@ export class ProjectsComponent implements OnInit {
         this.remoteService.get("get", "projects").subscribe((data) => {
             this.projects = data;
             if (this.route.snapshot.params.id) {
-                this.goToProject(this.projects.filter((project) => project.id == this.route.snapshot.params.id)[0]);
+                this.goToProject(this.projects.filter(
+                    (project) => project.id == this.route.snapshot.params.id,
+                )[0]);
             }
         });
     }

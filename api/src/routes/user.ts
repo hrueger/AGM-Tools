@@ -16,9 +16,9 @@ router.post("/editCurrent", [checkJwt, checkPermission(["CREATE_USER"])], UserCo
 
 // Delete one user
 router.delete(
-  "/:id([0-9]+)",
-  [checkJwt, checkPermission(["DELETE_USER"])],
-  UserController.deleteUser,
+    "/:id([0-9]+)",
+    [checkJwt, checkPermission(["DELETE_USER"])],
+    UserController.deleteUser,
 );
 
 export default router;

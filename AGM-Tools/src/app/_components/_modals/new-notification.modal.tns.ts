@@ -10,14 +10,13 @@ export class Notification {
     public content: string;
     public theme: string;
     public receivers: any[];
-    constructor(headline: string, content: string, theme: string) {
+    public constructor(headline: string, content: string, theme: string) {
         this.headline = headline;
         this.content = content;
         this.theme = theme;
     }
 }
 
-// tslint:disable-next-line: max-classes-per-file
 @Component({
     selector: "new-notification-modal",
     templateUrl: "new-notification.modal.tns.html",
@@ -26,27 +25,28 @@ export class NewNotificationModalComponent {
     public receivers: any[] = [];
     @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
     public dataFormConfig: any;
-    public noReceiversSelectedErrorMessage: boolean = false;
-    public noTypeSelectedErrorMessage: boolean = false;
+    public noReceiversSelectedErrorMessage = false;
+    public noTypeSelectedErrorMessage = false;
     private notification: Notification;
     private multiSelect: MultiSelect;
     private users: any[] = [];
 
     public constructor(
         private params: ModalDialogParams, private remoteService: RemoteService,
-        private zone: NgZone, private fts: FastTranslateService) {
+        private zone: NgZone, private fts: FastTranslateService,
+    ) {
         this.multiSelect = new MultiSelect();
-        this.remoteService.get("get", "users").subscribe((data) => {
+        this.remoteService.get("get", "users").subscribe((data): void => {
             this.users = [];
-            data.forEach((user) => {
+            data.forEach((user): void => {
                 this.users.push({ name: user.username, id: user.id });
             });
         });
     }
 
-    public close() {
+    public close(): void {
         this.dataform.dataForm.validateAll()
-            .then(async (result) => {
+            .then(async (result): Promise<void> => {
                 if (result == true) {
                     if (this.receivers.length && this.receivers.length > 0) {
                         if (this.notification.theme && this.notification.theme != ""
@@ -74,7 +74,7 @@ export class NewNotificationModalComponent {
             });
     }
 
-    public async ngOnInit() {
+    public async ngOnInit(): Promise<void> {
         this.notification = new Notification("", "", "");
         this.dataFormConfig = {
             commitMode: "Immediate",
@@ -119,7 +119,7 @@ export class NewNotificationModalComponent {
         };
     }
 
-    public goBack() {
+    public goBack(): void {
         this.params.closeCallback(null);
     }
 
@@ -142,19 +142,19 @@ export class NewNotificationModalComponent {
                 showType: AShowType.TypeBounceIn,
             },
             items: this.users,
-            onCancel: () => {
+            onCancel: (): void => {
                 // console.log('CANCEL');
             },
-            onConfirm: (selectedItems) => {
-                this.zone.run(() => {
+            onConfirm: (selectedItems): void => {
+                this.zone.run((): void => {
                     this.receivers = selectedItems;
                     // this.users = selectedItems;
                     // console.log("SELECTED ITEMS => ", selectedItems);
                 });
             },
-            onItemSelected: (selectedItem) => {
+            onItemSelected: (): void => {
                 // console.log("SELECTED ITEM => ", selectedItem);
-                this.zone.run(() => {
+                this.zone.run((): void => {
                     this.noReceiversSelectedErrorMessage = false;
                 });
             },

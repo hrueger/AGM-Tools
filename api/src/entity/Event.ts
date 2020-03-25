@@ -3,18 +3,18 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
-  } from "typeorm";
+} from "typeorm";
 import { User } from "./User";
 
 @Entity()
-  export class Event {
+export class Event {
     @PrimaryGeneratedColumn()
     public id: number;
 
     @Column()
     public headline: string;
 
-    @Column({length: 10000})
+    @Column({ length: 10000 })
     public description: string;
 
     @Column()
@@ -26,6 +26,6 @@ import { User } from "./User";
     @Column()
     public end: Date;
 
-    @ManyToOne((type) => User, (user) => user.events)
+    @ManyToOne(() => User, (user) => user.events)
     public creator: User;
-  }
+}

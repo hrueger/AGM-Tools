@@ -18,15 +18,15 @@ import { RemoteService } from "../../_services/remote.service";
     templateUrl: "chat-messages.component.html",
 })
 export class ChatMessagesComponent
-    implements OnChanges, AfterViewChecked {
+implements OnChanges, AfterViewChecked {
     @Input() public inputChat: any;
-    @Input() public embedded: boolean = false;
+    @Input() public embedded = false;
     public unread: number;
     public messages: Message[];
-    public showInfoMessage: boolean = true;
+    public showInfoMessage = true;
     public messageGotToSend: Event;
     public attachmentMessageGotToSend: Event;
-    private scrolledToBottom: boolean = false;
+    private scrolledToBottom = false;
 
     constructor(
         private remoteService: RemoteService,
@@ -43,12 +43,14 @@ export class ChatMessagesComponent
     }
 
     public async videoCall() {
+        // eslint-disable-next-line
         if (confirm(`Möchtest du einen Videoanruf mit ${this.inputChat.name} starten?`)) {
             this.router.navigate(["call", "user", this.inputChat.id, "video"]);
         }
     }
 
-    public async audioCall()  {
+    public async audioCall() {
+        // eslint-disable-next-line
         if (confirm(`Möchtest du einen Sprachanruf mit ${this.inputChat.name} starten?`)) {
             this.router.navigate(["call", "user", this.inputChat.id, "audio"]);
         }
@@ -70,7 +72,7 @@ export class ChatMessagesComponent
             this.scrollToBottom();
         }
     }
-    public ngOnChanges(data) {
+    public ngOnChanges() {
         if (this.inputChat && this.inputChat.id) {
             this.getMessages(this.inputChat);
         } else {

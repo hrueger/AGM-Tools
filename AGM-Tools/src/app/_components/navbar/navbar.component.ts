@@ -1,12 +1,8 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     EventEmitter,
-    Input,
-    OnInit,
     Output,
-    SimpleChanges,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../../_services/authentication.service";
@@ -18,7 +14,7 @@ import { NavbarService } from "../../_services/navbar.service";
     templateUrl: "./navbar.component.html",
 })
 export class NavbarComponent {
-    public headline: string = "";
+    public headline = "";
     @Output() public toggleNav = new EventEmitter<any>();
 
     constructor(
@@ -37,12 +33,12 @@ export class NavbarComponent {
                 try {
                     this.headline = headline;
                     this.cdr.markForCheck();
-                    // tslint:disable-next-line: no-empty
                 } finally {
+                    //
                 }
             });
-            // tslint:disable-next-line: no-empty
         } finally {
+            //
         }
     }
     public toggleNavOnMobile(event) {

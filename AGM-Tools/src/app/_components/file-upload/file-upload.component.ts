@@ -1,4 +1,6 @@
-import { Component, ElementRef, HostListener, Input } from "@angular/core";
+import {
+    Component, ElementRef, HostListener, Input,
+} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
@@ -6,6 +8,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
         {
             multi: true,
             provide: NG_VALUE_ACCESSOR,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: FileUploadComponent,
         },
     ],
@@ -14,7 +17,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 })
 export class FileUploadComponent implements ControlValueAccessor {
     @Input() public progress;
-    // tslint:disable-next-line: ban-types
     public onChange: Function;
     public file: File | null = null;
 
@@ -28,17 +30,16 @@ export class FileUploadComponent implements ControlValueAccessor {
         this.file = file;
     }
 
-    public writeValue(value: null) {
+    public writeValue() {
         // clear file input
         this.host.nativeElement.value = "";
         this.file = null;
     }
 
-    // tslint:disable-next-line: ban-types
     public registerOnChange(fn: Function) {
         this.onChange = fn;
     }
 
-    // tslint:disable-next-line: ban-types tslint:disable-next-line: no-empty
-    public registerOnTouched(fn: Function) { }
+    // eslint-disable-next-line
+    public registerOnTouched() { }
 }

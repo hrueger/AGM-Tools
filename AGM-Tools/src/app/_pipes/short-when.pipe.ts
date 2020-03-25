@@ -8,7 +8,6 @@ import { isToday, isYesterday, toDate } from "date-fns";
     pure: true,
 })
 export class ShortWhenPipe implements PipeTransform {
-
     public transform(value: string): string {
         try {
             const datePipe = new DatePipe("de-DE");

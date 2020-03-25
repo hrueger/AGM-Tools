@@ -3,7 +3,6 @@ import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
-import { PushService } from "./_services/push.service";
 import { RemoteService } from "./_services/remote.service";
 
 @Component({
@@ -14,10 +13,10 @@ import { RemoteService } from "./_services/remote.service";
 export class AppComponent {
     public currentUser: User;
     public pushMessage: any;
-    public showNav: boolean = false;
-    public navToHide: boolean = false;
+    public showNav = false;
+    public navToHide = false;
     public isShare: boolean;
-    public showEverything: boolean = true;
+    public showEverything = true;
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
@@ -27,9 +26,9 @@ export class AppComponent {
         private cdr: ChangeDetectorRef,
     ) {
         translateService.setDefaultLang("en");
-        this.authenticationService.currentUser.subscribe(
-            (x) => (this.currentUser = x),
-        );
+        this.authenticationService.currentUser.subscribe((x) => {
+            this.currentUser = x;
+        });
     }
 
     public logout() {
@@ -37,7 +36,7 @@ export class AppComponent {
         this.router.navigate(["/login"]);
     }
     public ngOnInit() {
-        const userId = Math.round(Math.random() * 10000);
+        // const userId = Math.round(Math.random() * 10000);
         // this.pushService.requestPermission(userId);
         // this.pushService.receiveMessage();
         // this.pushMessage = this.pushService.currentMessage;
@@ -51,9 +50,9 @@ export class AppComponent {
             }
         });
         this.translateService.setDefaultLang(
-            localStorage.getItem("language") ?
-            localStorage.getItem("language") :
-            this.translateService.getBrowserLang(),
+            localStorage.getItem("language")
+                ? localStorage.getItem("language")
+                : this.translateService.getBrowserLang(),
         );
         this.translateService.onLangChange.subscribe(() => {
             this.showEverything = false;

@@ -84,7 +84,6 @@ export class DashboardComponent implements OnInit {
             }
             this.gotSpaceChartData = true;
             this.checkForRefreshDone(obj);
-
         });
         this.remoteService.get("get", "dashboard/whatsnew").subscribe((data) => {
             this.whatsnew = data.changelog;
@@ -152,7 +151,7 @@ export class DashboardComponent implements OnInit {
                             backgroundColor: "#5cb85c",
                             buttonAlignment: CFAlertActionAlignment.END,
                             buttonStyle: CFAlertActionStyle.POSITIVE,
-                            onClick: (response) => {
+                            onClick: () => {
                                 this.remoteService
                                     .getNoCache("post", `dashboard/notifications/${notification.id}`)
                                     .subscribe();
@@ -162,11 +161,10 @@ export class DashboardComponent implements OnInit {
                         }],
                         dialogStyle: CFAlertStyle.NOTIFICATION,
                         message: `${notification.content.replace("<br>", "\n")}\n\n${notification.creator.username}, ${formatDate(notification.createdAt, "short", "de")}`,
-                        onDismiss: (dialog) => { /* dismiss */ },
+                        onDismiss: () => { /* dismiss */ },
                         title: type + notification.headline,
                     };
                     this.cfalertDialog.show(options);
-
                 });
             });
     }

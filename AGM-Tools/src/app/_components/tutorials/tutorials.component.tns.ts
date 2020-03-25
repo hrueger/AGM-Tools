@@ -1,24 +1,25 @@
-    import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
-    import { SetupItemViewArgs } from "nativescript-angular/directives";
-    import { ModalDialogService } from "nativescript-angular/directives/dialogs";
-    import { PageChangeEventData } from "nativescript-image-swipe";
-    import { ListViewEventData } from "nativescript-ui-listview";
-    import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
-    import * as app from "tns-core-modules/application";
-    import * as dialogs from "tns-core-modules/ui/dialogs";
-    import { Page } from "tns-core-modules/ui/page/page";
-    import { environment } from "../../../environments/environment";
-    import { AlertService } from "../../_services/alert.service";
-    import { AuthenticationService } from "../../_services/authentication.service";
-    import { FastTranslateService } from "../../_services/fast-translate.service";
-    import { RemoteService } from "../../_services/remote.service";
+import {
+    Component, OnInit, ViewChild, ViewContainerRef,
+} from "@angular/core";
+import { SetupItemViewArgs } from "nativescript-angular/directives";
+import { ModalDialogService } from "nativescript-angular/directives/dialogs";
+import { ListViewEventData } from "nativescript-ui-listview";
+import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
+import * as app from "tns-core-modules/application";
+import * as dialogs from "tns-core-modules/ui/dialogs";
+import { Page } from "tns-core-modules/ui/page/page";
+import { environment } from "../../../environments/environment";
+import { AlertService } from "../../_services/alert.service";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { FastTranslateService } from "../../_services/fast-translate.service";
+import { RemoteService } from "../../_services/remote.service";
 
-    @Component({
+@Component({
     selector: "app-tutorials",
     styleUrls: ["./tutorials.component.css"],
     templateUrl: "./tutorials.component.html",
-    })
-    export class TutorialsComponent implements OnInit {
+})
+export class TutorialsComponent implements OnInit {
     @ViewChild("tutorialsListView", { read: RadListViewComponent, static: false })
     public tutorialsListView: RadListViewComponent;
     @ViewChild("tutorialStepsListView", { read: RadListViewComponent, static: false })
@@ -27,10 +28,10 @@
     public pageNumber: number;
     public stepsImages: any[] = [];
     public currentTutorial: any = {};
-    public showingTutorial: boolean = false;
-    public showingTutorialImage: boolean = false;
+    public showingTutorial = false;
+    public showingTutorialImage = false;
     public currentStepImages: any[] = [];
-    public loading: boolean = false;
+    public loading = false;
     public currentStep: any;
     public currentStepIdx: number;
 
@@ -41,16 +42,17 @@
         private vcRef: ViewContainerRef,
         private authService: AuthenticationService,
         private fts: FastTranslateService,
-        private page: Page) {
+        private page: Page,
+    ) {
     }
 
     public ngOnInit() {
-    this.page.actionBarHidden = true;
-    this.remoteService.get("get", "tutorials").subscribe((data) => {
-        this.tutorials = data;
-    });
+        this.page.actionBarHidden = true;
+        this.remoteService.get("get", "tutorials").subscribe((data) => {
+            this.tutorials = data;
+        });
     }
-    public onPageChanged(e: PageChangeEventData) {
+    public onPageChanged() {
         //
     }
     public onSetupItemView(args: SetupItemViewArgs) {
@@ -66,7 +68,9 @@
     public openStepImage(step, i, imageUrl) {
         this.showingTutorialImage = true;
         this.currentStepImages = this.stepsImages[i];
-        this.pageNumber = this.currentStepImages.findIndex((n) => n.imageUrl == this.getFileSrc(imageUrl));
+        this.pageNumber = this.currentStepImages.findIndex(
+            (n) => n.imageUrl == this.getFileSrc(imageUrl),
+        );
         this.currentStep = step;
         this.currentStepIdx = i;
     }
@@ -115,7 +119,7 @@
 
     public async openNewModal() {
         this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
-        /*let options = {
+        /* let options = {
             animated: true,
             context: {},
             fullscreen: true,
@@ -144,7 +148,7 @@
                     });
             }
 
-        });*/
+        }); */
     }
 
     public onDrawerButtonTap(): void {
@@ -154,7 +158,7 @@
     }
 
     public onSwipeCellStarted(args: ListViewEventData) {
-        const swipeLimits = args.data.swipeLimits;
+        const { swipeLimits } = args.data;
         const swipeView = args.object;
         // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
@@ -162,7 +166,7 @@
     }
 
     public async onRightSwipeClick(args) {
-        const id = args.object.bindingContext.id;
+        const { id } = args.object.bindingContext;
         if (await dialogs.confirm(await this.fts.t("tutorials.confirmDelete"))) {
             this.remoteService
                 .getNoCache("delete", `tutorials/${id}`)

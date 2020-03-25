@@ -1,11 +1,7 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
-import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import {
-    CFAlertActionAlignment,
-    CFAlertActionStyle,
-    CFAlertDialog,
-    CFAlertStyle,
-} from "nativescript-cfalert-dialog";
+    Component, OnInit, ViewChild, ViewContainerRef,
+} from "@angular/core";
+import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import { ListViewEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-directives";
 import { View } from "tns-core-modules/ui/core/view/view";
@@ -23,12 +19,12 @@ import { NewNotificationModalComponent } from "../_modals/new-notification.modal
 })
 export class NotificationsComponent implements OnInit {
     public notifications: Notification[] = [];
-    public itemsSelected: boolean = false;
+    public itemsSelected = false;
     @ViewChild("notificationsListView", { read: RadListViewComponent, static: false })
     public notificationsListView: RadListViewComponent;
     constructor(private remoteService: RemoteService, private modal: ModalDialogService,
-                private vcRef: ViewContainerRef, private alertService: AlertService,
-                private fts: FastTranslateService) { }
+        private vcRef: ViewContainerRef, private alertService: AlertService,
+        private fts: FastTranslateService) { }
 
     public ngOnInit() {
         this.remoteService
@@ -57,7 +53,8 @@ export class NotificationsComponent implements OnInit {
                     .subscribe(async (data) => {
                         if (data && data.status == true) {
                             this.alertService.success(
-                                await this.fts.t("notifications.notificationCreatedSuccessfully"));
+                                await this.fts.t("notifications.notificationCreatedSuccessfully"),
+                            );
                             this.remoteService
                                 .get("get", "notifications")
                                 .subscribe((res) => {
@@ -70,14 +67,14 @@ export class NotificationsComponent implements OnInit {
     }
 
     public onSwipeCellStarted(args: ListViewEventData) {
-        const swipeLimits = args.data.swipeLimits;
+        const { swipeLimits } = args.data;
         const swipeView = args.object;
         const rightItem = swipeView.getViewById<View>("delete-view");
         swipeLimits.right = rightItem.getMeasuredWidth();
     }
 
     public async onRightSwipeClick(args) {
-        const id = args.object.bindingContext.id;
+        const { id } = args.object.bindingContext;
 
         this.notificationsListView.listView.notifySwipeToExecuteFinished();
         if (await dialogs.confirm(await this.fts.t("notifications.confirmDelete"))) {
@@ -92,8 +89,7 @@ export class NotificationsComponent implements OnInit {
                         );
                         this.remoteService.get("get", "notifications").subscribe((res) => {
                             this.notifications = res;
-                        },
-                        );
+                        });
                     }
                 });
         }

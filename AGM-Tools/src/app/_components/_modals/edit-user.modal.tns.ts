@@ -10,7 +10,11 @@ export class User {
     public password1: string;
     public password2: string;
 
-    constructor(name: string, email: string, passwordOld: string, password1: string, password2: string) {
+    public constructor(name: string,
+        email: string,
+        passwordOld: string,
+        password1: string,
+        password2: string) {
         this.name = name;
         this.passwordOld = passwordOld;
         this.password1 = password1;
@@ -19,7 +23,6 @@ export class User {
     }
 }
 
-// tslint:disable-next-line: max-classes-per-file
 @Component({
     selector: "edit-user-mdoal",
     templateUrl: "edit-user.modal.tns.html",
@@ -31,19 +34,18 @@ export class EditUserModalComponent {
 
     public constructor(private params: ModalDialogParams, private fts: FastTranslateService) {
         this.puser = new User(params.context.currentUser.username, params.context.currentUser.email, "", "", "");
-
     }
 
-    public close() {
+    public close(): void {
         this.dataform.dataForm.validateAll()
-            .then((result) => {
+            .then((result): void => {
                 if (result == true) {
                     this.params.closeCallback(this.puser);
                 }
             });
     }
 
-    public async onPropertyValidate(args) {
+    public async onPropertyValidate(args): Promise<void> {
         let validationResult = true;
         if (args.propertyName === "password2") {
             const dataForm = args.object;
@@ -57,7 +59,7 @@ export class EditUserModalComponent {
         args.returnValue = validationResult;
     }
 
-    get user(): User {
+    public get user(): User {
         return this.puser;
     }
 

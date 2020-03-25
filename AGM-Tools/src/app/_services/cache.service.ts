@@ -16,8 +16,8 @@ export class CacheService {
         return new Observable((observer) => {
             observer.next(
                 JSON.parse(
-                    localStorage.getItem(JSON.stringify({ action, ...args })) ||
-                    null,
+                    localStorage.getItem(JSON.stringify({ action, ...args }))
+                    || null,
                 ) || null,
             );
             observer.complete();

@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from "@angular/core";
+import { Component } from "@angular/core";
 
 @Component({
     selector: "ns-message-box",

@@ -4,10 +4,10 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 @Component({
     selector: "picker-modal-content",
     templateUrl: "./pickerModal.html",
-  })
-  export class PickerModalComponent {
+})
+export class PickerModalComponent {
     @Input() public title;
-    @Input() public multiple: boolean = false;
+    @Input() public multiple = false;
     @Input() public items: [];
     constructor(public activeModal: NgbActiveModal) {}
     public pick() {
@@ -22,4 +22,4 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
         }
         item.selected = !item.selected;
     }
-  }
+}

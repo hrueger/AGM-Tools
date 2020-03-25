@@ -1,6 +1,8 @@
-import { CommonModule, DatePipe } from "@angular/common";
-import { Location } from "@angular/common";
-import { registerLocaleData } from "@angular/common";
+import {
+    CommonModule, DatePipe, Location, registerLocaleData,
+} from "@angular/common";
+
+
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
 import localeDe from "@angular/common/locales/de";
 import { LOCALE_ID, NgModule } from "@angular/core";
@@ -8,16 +10,16 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFireMessagingModule } from "@angular/fire/messaging";
-import { ReactiveFormsModule } from "@angular/forms";
-import { FormsModule } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import { NgbModule, NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
+
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
 import { DashboardLayoutModule } from "@syncfusion/ej2-angular-layouts";
 import { AccordionModule, TabModule, TreeViewModule } from "@syncfusion/ej2-angular-navigations";
@@ -31,6 +33,8 @@ import { LightboxModule } from "ngx-lightbox";
 import { NgxOnlyOfficeModule } from "ngx-onlyoffice";
 import { ToastrModule } from "ngx-toastr";
 import { UiSwitchModule } from "ngx-ui-switch";
+import { EditorModule } from "@tinymce/tinymce-angular";
+import { MarkdownModule } from "ngx-markdown";
 import { environment } from "../environments/environment";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { CallComponent } from "./_components/call/call.component";
@@ -73,12 +77,14 @@ import { NavbarService } from "./_services/navbar.service";
 import { PushService } from "./_services/push.service";
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
-import { EditorModule } from '@tinymce/tinymce-angular';
 import { TinyConfigService } from "./_services/tiny-config.service";
 import { MarkdownService } from "./_services/markdown.service";
-import { MarkdownModule } from "ngx-markdown";
 
 registerLocaleData(localeDe);
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+    return new TranslateHttpLoader(http, `${environment.appUrl.replace("/#/", "")}/assets/i18n/`, ".json");
+}
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -186,7 +192,3 @@ registerLocaleData(localeDe);
     ],
 })
 export class AppModule { }
-
-export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, `${environment.appUrl.replace("/#/", "")}/assets/i18n/`, ".json");
-}

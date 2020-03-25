@@ -1,10 +1,8 @@
-import { Component, NgZone, ViewChild } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
 import * as ModalPicker from "nativescript-modal-datetimepicker";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
-import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
-import { RemoteService } from "../../_services/remote.service";
 
 export class CalendarEvent {
     public id: number;
@@ -16,7 +14,11 @@ export class CalendarEvent {
     public isAllDay: boolean;
     public important: boolean;
 
-    constructor(title: string, description: string, location: string, isAllDay: boolean, important: boolean) {
+    public constructor(title: string,
+        description: string,
+        location: string,
+        isAllDay: boolean,
+        important: boolean) {
         this.title = title;
         this.description = description;
         this.location = location;
@@ -25,14 +27,13 @@ export class CalendarEvent {
     }
 }
 
-// tslint:disable-next-line: max-classes-per-file
 @Component({
     selector: "new-calendar-event-modal",
     templateUrl: "new-calendar-event.modal.tns.html",
 })
 export class NewCalendarEventModalComponent {
-    public startDate: string = "";
-    public endDate: string = "";
+    public startDate = "";
+    public endDate = "";
     public endDateInvalidMessage = false;
     public startDateInvalidMessage = false;
     public endDateBeforeStartDateInvalidMessage = false;
@@ -44,13 +45,13 @@ export class NewCalendarEventModalComponent {
 
     public constructor(private params: ModalDialogParams, private fts: FastTranslateService) {}
 
-    public async pick(what: string) {
+    public async pick(what: string): Promise<void> {
         const picker = new ModalPicker.ModalDatetimepicker();
         picker.pickDate({
             title: await this.fts.t(what == "start" ? "events.pickStartDate" : "events.pickEndDate"),
-        }).then(async (result) => {
-            const res = result.day + "." + result.month + "." + result.year;
-            const dateToSend = result.year + "-" + result.month + "-" + result.day;
+        }).then(async (result): Promise<any> => {
+            const res = `${result.day}.${result.month}.${result.year}`;
+            const dateToSend = `${result.year}-${result.month}-${result.day}`;
             if (what == "start") {
                 this.startDate = res;
                 this.startDateToSend = dateToSend;
@@ -63,34 +64,33 @@ export class NewCalendarEventModalComponent {
             picker.pickTime({
                 title: await this.fts.t(what == "start" ? "events.pickStartTime" : "events.pickEndTime"),
 
-            }).then((data) => {
-                const time = data.hour + ":" + data.minute;
+            }).then((data): void => {
+                const time = `${data.hour}:${data.minute}`;
                 if (what == "start") {
-                    this.startDate += " " + time;
-                    this.startDateToSend += " " + time;
+                    this.startDate += ` ${time}`;
+                    this.startDateToSend += ` ${time}`;
                 } else {
-                    this.endDate += " " + time;
-                    this.endDateToSend += " " + time;
+                    this.endDate += ` ${time}`;
+                    this.endDateToSend += ` ${time}`;
                 }
                 this.endDateInvalidMessage = false;
                 this.endDateBeforeStartDateInvalidMessage = false;
-            }).catch((error) => {
-                // tslint:disable-next-line: no-console
-                console.log("Error: " + error);
+            }).catch((error): void => {
+                // eslint-disable-next-line no-console
+                console.log(`Error: ${error}`);
             });
-        }).catch((error) => {
-            // tslint:disable-next-line: no-console
-            console.log("Error: " + error);
+        }).catch((error): void => {
+            // eslint-disable-next-line no-console
+            console.log(`Error: ${error}`);
         });
     }
 
-    public close() {
+    public close(): void {
         this.dataform.dataForm.validateAll()
-            .then((result) => {
+            .then((result): void => {
                 if (result == true) {
                     if (this.startDate && this.startDate != "") {
                         if (this.endDate && this.endDate != "") {
-
                             if (new Date(this.startDate) >= new Date(this.endDate)) {
                                 this.endDateBeforeStartDateInvalidMessage = true;
                             } else {
@@ -98,7 +98,6 @@ export class NewCalendarEventModalComponent {
                                 this.event.endDate = this.endDateToSend;
                                 this.params.closeCallback(this.event);
                             }
-
                         } else {
                             this.endDateInvalidMessage = true;
                         }
@@ -109,7 +108,7 @@ export class NewCalendarEventModalComponent {
             });
     }
 
-    public async ngOnInit() {
+    public async ngOnInit(): Promise<void> {
         this.event = new CalendarEvent("", "", "", false, false);
         this.dataFormConfig = {
             commitMode: "Immediate",
@@ -158,12 +157,11 @@ export class NewCalendarEventModalComponent {
                         ],
                     },
                 ],
-                validationMode: "Immediate",
+            validationMode: "Immediate",
         };
     }
 
-    public goBack() {
+    public goBack(): void {
         this.params.closeCallback(null);
     }
-
 }

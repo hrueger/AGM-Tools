@@ -32,7 +32,6 @@ export class ChatComponent {
         if (data.action == "newMessage") {
             let index = null;
             this.chats.some((cht, i) => {
-                // tslint:disable-next-line: radix
                 if (parseInt(cht.rid) == parseInt(data.data.data.chatID)) {
                     index = i;
                     return true;
@@ -40,13 +39,14 @@ export class ChatComponent {
                 return false;
             });
             if (this.chats[index]) {
-                this.chats[index].unread = (this.chats[index].unread > 0 ? this.chats[index].unread++ : 1);
+                this.chats[index].unread = (this.chats[index].unread > 0
+                    ? this.chats[index].unread++ : 1);
                 this.chats[index].text = data.data.body;
                 this.chats[index].when = new Date();
                 this.chatsListView.nativeElement.refresh();
             }
         } else {
-            // tslint:disable-next-line: no-console
+            // eslint-disable-next-line no-console
             console.log(data);
         }
     }
@@ -69,6 +69,5 @@ export class ChatComponent {
                 name: "slideLeft",
             },
         });
-
     }
 }

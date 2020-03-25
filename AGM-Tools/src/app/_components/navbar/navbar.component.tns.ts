@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
@@ -23,7 +23,7 @@ export class NavbarComponent {
 
     public onDrawerButtonTap(): void {
         // @ts-ignore
-        const sideDrawer =  app.getRootView() as RadSideDrawer;
+        const sideDrawer = app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }
 }

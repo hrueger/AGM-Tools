@@ -5,7 +5,7 @@ import {
     ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
-  } from "typeorm";
+} from "typeorm";
 import { File } from "./File";
 import { Message } from "./Message";
 import { Task } from "./Task";
@@ -13,7 +13,7 @@ import { Tutorial } from "./Tutorial";
 import { User } from "./User";
 
 @Entity()
-  export class Project {
+export class Project {
     @PrimaryGeneratedColumn()
     public id: number;
 
@@ -35,7 +35,7 @@ import { User } from "./User";
     @Column()
     public name: string;
 
-    @Column({length: 10000})
+    @Column({ length: 10000 })
     public description: string;
 
     @OneToMany(() => File, (file) => file.project)
@@ -43,4 +43,4 @@ import { User } from "./User";
 
     @OneToMany(() => Message, (message) => message.toProject)
     public messages: Message[];
-  }
+}

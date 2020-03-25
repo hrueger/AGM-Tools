@@ -23,7 +23,7 @@ export class NotificationsComponent implements OnInit {
     public receivers: number[];
     public allusers: User[] = [];
     public importance: number;
-    public invalidMessage: boolean = false;
+    public invalidMessage = false;
     public newNotificationForm: FormGroup;
     constructor(
         private remoteService: RemoteService,
@@ -58,7 +58,7 @@ export class NotificationsComponent implements OnInit {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title", size: "lg" })
             .result.then(
-                (result) => {
+                () => {
                     this.invalidMessage = false;
                     this.remoteService
                         .getNoCache("post", "notifications", {
@@ -81,6 +81,7 @@ export class NotificationsComponent implements OnInit {
             );
     }
     public async deleteNotification(notification: Notification) {
+        // eslint-disable-next-line
         if (confirm(await this.fts.t("notifications.confirmDelete")) == true) {
             this.remoteService
                 .getNoCache("delete", `notifications/${notification.id}`)

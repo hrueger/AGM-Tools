@@ -1,12 +1,12 @@
-import { Component, ElementRef } from "@angular/core";
-import { OnInit, ViewChild } from "@angular/core";
+import {
+    Component, ElementRef, ViewChild,
+} from "@angular/core";
+
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
-import { RouterExtensions } from "nativescript-angular/router";
 import { Downloader } from "nativescript-downloader";
 import {
     DrawerTransitionBase,
-    RadSideDrawer,
     SlideInOnTopTransition,
 } from "nativescript-ui-sidedrawer";
 import { User } from "./_models/user.model";
@@ -50,14 +50,14 @@ export class AppComponent {
                 this.useremail = x.email;
                 this.username = x.username;
                 const a = x.username.split(" ");
-                this.initials = (a.length == 1 ? a[0].charAt(0) : a[0].charAt(0) + a[a.length - 1].charAt(0));
+                this.initials = (a.length == 1
+                    ? a[0].charAt(0) : a[0].charAt(0) + a[a.length - 1].charAt(0));
             } else {
                 this.currentUser = new User();
                 this.useremail = "Email";
                 this.username = "Benutzername";
                 this.initials = "XX";
             }
-
         });
         this.translate.setDefaultLang("en");
         this.psideDrawerTransition = new SlideInOnTopTransition();

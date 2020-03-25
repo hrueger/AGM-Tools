@@ -5,23 +5,22 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
     Tree,
     TreeChildren,
     TreeParent,
-  } from "typeorm";
+} from "typeorm";
 import { Project } from "./Project";
 import { Tag } from "./Tag";
 import { User } from "./User";
 
 @Entity()
 @Tree("materialized-path")
-  export class File {
+export class File {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToOne((type) => Project, (project) => project.files)
+    @ManyToOne(() => Project, (project) => project.files)
     public project: Project;
 
     @Column()
@@ -33,26 +32,26 @@ import { User } from "./User";
     @TreeChildren()
     public files: File[];
 
-    @ManyToMany((type) => Tag, (tag) => tag.files)
+    @ManyToMany(() => Tag, (tag) => tag.files)
     @JoinTable()
     public tags: Tag[];
 
-    @ManyToMany((type) => Project, (project) => project.linkedFiles)
+    @ManyToMany(() => Project, (project) => project.linkedFiles)
     public linkedProjects: Project[];
 
     @Column()
     public name: string;
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     public shareLink: string;
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     public editKey: string;
 
     @Column()
     @CreateDateColumn()
     public createdAt: Date;
 
-    @ManyToOne((type) => User, (user) => user.files)
+    @ManyToOne(() => User, (user) => user.files)
     public creator: User;
-  }
+}

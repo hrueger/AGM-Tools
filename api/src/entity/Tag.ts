@@ -1,15 +1,13 @@
 import {
     Column,
-    CreateDateColumn,
     Entity,
     ManyToMany,
-    ManyToOne,
     PrimaryGeneratedColumn,
-  } from "typeorm";
+} from "typeorm";
 import { File } from "./File";
 
 @Entity()
-  export class Tag {
+export class Tag {
     @PrimaryGeneratedColumn()
     public id: number;
 
@@ -22,6 +20,6 @@ import { File } from "./File";
     @Column()
     public textColor: string;
 
-    @ManyToMany((type) => File, (file) => file.tags)
+    @ManyToMany(() => File, (file) => file.tags)
     public files: File[];
-  }
+}

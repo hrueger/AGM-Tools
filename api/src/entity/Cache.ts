@@ -4,11 +4,11 @@ import {
     PrimaryGeneratedColumn,
     Unique,
     UpdateDateColumn,
-  } from "typeorm";
+} from "typeorm";
 
 @Entity()
   @Unique(["name"])
-  export class Cache {
+export class Cache {
     @PrimaryGeneratedColumn()
     public id: number;
 
@@ -22,6 +22,6 @@ import {
     public random: number;
 
     @Column()
-    @UpdateDateColumn({update: true})
+    @UpdateDateColumn({ update: true })
     public updatedAt: Date;
-  }
+}

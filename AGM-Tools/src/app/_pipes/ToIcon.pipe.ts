@@ -4,8 +4,7 @@ import { Pipe, PipeTransform } from "@angular/core";
     name: "ToIcon",
 })
 export class ToIconPipe implements PipeTransform {
-
-    public transform(value: string, args: string[]): string {
+    public transform(value: string): string {
         return String.fromCharCode(parseInt(value, 16));
     }
 }

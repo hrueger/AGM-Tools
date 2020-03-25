@@ -1,7 +1,5 @@
-import { HttpClient, HttpEventType } from "@angular/common/http";
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
-    FormBuilder,
     FormControl,
     FormGroup,
     Validators,
@@ -28,7 +26,7 @@ export class TemplatesComponent implements OnInit {
     public name: string;
     public group: string;
     public description: string;
-    public invalidMessage: boolean = false;
+    public invalidMessage = false;
     public TINYCONFIG = {};
     constructor(
         private remoteService: RemoteService,
@@ -61,7 +59,7 @@ export class TemplatesComponent implements OnInit {
         this.modalService
             .open(content, { size: "lg" })
             .result.then(
-                async (result) => {
+                async () => {
                     this.invalidMessage = false;
                     this.alertService.success(await this.fts.t("general.uploadStartedPleaseWait"));
                     this.remoteService.uploadFile("templates", "file", this.newTemplateForm.get("file").value, {
@@ -79,6 +77,7 @@ export class TemplatesComponent implements OnInit {
     }
 
     public async delete(template, event) {
+        // eslint-disable-next-line
         if (confirm(await this.fts.t("templates.confirmDelete"))) {
             this.remoteService.get("delete", `templates/${template.id}`).subscribe((data) => {
                 if (data && data.status == true) {

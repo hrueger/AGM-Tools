@@ -4,16 +4,16 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
-  } from "typeorm";
+} from "typeorm";
 import { Project } from "./Project";
 import { User } from "./User";
 
 @Entity()
-  export class Message {
+export class Message {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column({length: 10000})
+    @Column({ length: 10000 })
     public content: string;
 
     @Column()
@@ -38,15 +38,15 @@ import { User } from "./User";
     @CreateDateColumn()
     public date: Date;
 
-    @ManyToOne((type) => User, (user) => user.receivedMessages)
+    @ManyToOne(() => User, (user) => user.receivedMessages)
     public toUser: User;
 
-    @ManyToOne((type) => Project, (project) => project.messages)
+    @ManyToOne(() => Project, (project) => project.messages)
     public toProject: Project;
 
-    @ManyToOne((type) => User, (user) => user.sentMessages)
+    @ManyToOne(() => User, (user) => user.sentMessages)
     public sender: User;
 
     public fromMe?: boolean;
     public sent?: string;
-  }
+}

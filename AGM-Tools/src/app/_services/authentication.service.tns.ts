@@ -30,7 +30,7 @@ export class AuthenticationService {
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public resetPassword(arg0: string) {
+    public resetPassword() {
         return new Observable<boolean>();
     }
 

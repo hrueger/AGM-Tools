@@ -2,7 +2,6 @@ import { Component, NgZone, ViewChild } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/directives/dialogs";
 import { AShowType, MSOption, MultiSelect } from "nativescript-multi-select";
 import { RadDataFormComponent } from "nativescript-ui-dataform/angular/dataform-directives";
-import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -11,20 +10,20 @@ export class Project {
     public description: string;
     public members: any[];
 
-    constructor(name: string, description: string) {
+    public constructor(name: string, description: string) {
         this.name = name;
         this.description = description;
     }
 }
 
-// tslint:disable-next-line: max-classes-per-file
+
 @Component({
     selector: "new-project-modal",
     templateUrl: "new-project.modal.tns.html",
 })
 export class NewProjectModalComponent {
     public members: any[] = [];
-    public noMembersSelectedInvalidMessage: boolean = false;
+    public noMembersSelectedInvalidMessage = false;
     @ViewChild("dataform", { static: false }) public dataform: RadDataFormComponent;
     public dataFormConfig: any;
     private project: Project;
@@ -32,15 +31,15 @@ export class NewProjectModalComponent {
     private users: any[] = [];
 
     public constructor(
-            private params: ModalDialogParams,
-            private remoteService: RemoteService,
-            private zone: NgZone,
-            private fts: FastTranslateService,
-        ) {
+        private params: ModalDialogParams,
+        private remoteService: RemoteService,
+        private zone: NgZone,
+        private fts: FastTranslateService,
+    ) {
         this.multiSelect = new MultiSelect();
-        this.remoteService.get("get", "users").subscribe((data) => {
+        this.remoteService.get("get", "users").subscribe((data): void => {
             this.users = [];
-            data.forEach((user) => {
+            data.forEach((user: { username: any; id: any }): void => {
                 this.users.push({ name: user.username, id: user.id });
             });
         });
@@ -65,18 +64,16 @@ export class NewProjectModalComponent {
                 showType: AShowType.TypeBounceIn,
             },
             items: this.users,
-            onCancel: () => {
+            onCancel: (): void => {
                 // Cancel
             },
-            onConfirm: (selectedItems) => {
-                this.zone.run(() => {
+            onConfirm: (selectedItems): void => {
+                this.zone.run((): void => {
                     this.members = selectedItems;
-
                 });
             },
-            onItemSelected: (selectedItem) => {
-
-                this.zone.run(() => {
+            onItemSelected: (): void => {
+                this.zone.run((): void => {
                     this.noMembersSelectedInvalidMessage = false;
                 });
             },
@@ -87,9 +84,9 @@ export class NewProjectModalComponent {
         this.multiSelect.show(options);
     }
 
-    public close() {
+    public close(): void {
         this.dataform.dataForm.validateAll()
-            .then((result) => {
+            .then((result): void => {
                 if (result == true) {
                     if (this.members.length && this.members.length > 0) {
                         this.project.members = this.members;
@@ -101,7 +98,7 @@ export class NewProjectModalComponent {
             });
     }
 
-    public async ngOnInit() {
+    public async ngOnInit(): Promise<void> {
         this.project = new Project("", "");
         this.dataFormConfig = {
             commitMode: "Immediate",
@@ -128,11 +125,9 @@ export class NewProjectModalComponent {
                 ],
             validationMode: "Immediate",
         };
-
     }
 
-    public goBack() {
+    public goBack(): void {
         this.params.closeCallback(null);
     }
-
 }

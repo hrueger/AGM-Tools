@@ -1,6 +1,5 @@
 import { Router } from "express";
 import VirtualFileSystemController from "../controllers/VirtualFileSystemController";
-import { checkJwt } from "../middlewares/checkJwt";
 
 const router = Router();
 

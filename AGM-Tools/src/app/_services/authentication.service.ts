@@ -23,7 +23,8 @@ export class AuthenticationService {
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public resetPassword(arg0: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public resetPassword(name: string) {
         return new Observable<boolean>();
     }
 

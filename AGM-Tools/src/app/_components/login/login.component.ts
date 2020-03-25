@@ -22,11 +22,11 @@ export class LoginComponent implements OnInit {
     public rpSubmitted = false;
     public inpSubmitted = false;
 
-    public resetPassword: boolean = false;
-    public inputNewPassword: boolean = false;
+    public resetPassword = false;
+    public inputNewPassword = false;
 
-    public passwordResetSucceeded: boolean = false;
-    public inputNewPasswordSucceeded: boolean = false;
+    public passwordResetSucceeded = false;
+    public inputNewPasswordSucceeded = false;
 
     public returnUrl: string;
 
@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit {
             .login(this.f.username.value, this.f.password.value)
             .pipe(first())
             .subscribe(
-                (data) => {
+                () => {
                     this.router.navigate([this.returnUrl]);
                     // this.router.navigate(['dashboard'], { skipLocationChange: false });
                     // location.reload();
@@ -129,9 +129,9 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         this.remoteService.getNoCache("post",
             `auth/passwordReset/${this.route.snapshot.params.resetPasswordToken}`, {
-            password1: this.inpf.password1.value,
-            password2: this.inpf.password2.value,
-        }).subscribe((data) => {
+                password1: this.inpf.password1.value,
+                password2: this.inpf.password2.value,
+            }).subscribe((data) => {
             this.loading = false;
             if (data.status == true) {
                 this.inputNewPasswordSucceeded = true;

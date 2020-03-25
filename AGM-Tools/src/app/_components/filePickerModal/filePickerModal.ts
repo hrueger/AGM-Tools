@@ -6,12 +6,12 @@ import { RemoteService } from "../../_services/remote.service";
 @Component({
     selector: "picker-modal-content",
     templateUrl: "./filePickerModal.html",
-  })
-  export class FilePickerModalComponent {
+})
+export class FilePickerModalComponent {
     @Input() public title;
-    @Input() public multiple: boolean = false;
-    @Input() public displayRoot: boolean = false;
-    @Input() public rootName: string = "";
+    @Input() public multiple = false;
+    @Input() public displayRoot = false;
+    @Input() public rootName = "";
     @Input() public projectId;
     public itemTree: any[];
     public config: any;
@@ -62,4 +62,4 @@ import { RemoteService } from "../../_services/remote.service";
         }
         return itemTree;
     }
-  }
+}

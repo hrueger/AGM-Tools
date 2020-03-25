@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import {
+    Component, OnInit, ViewChild, ViewContainerRef,
+} from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
 import { ModalDialogOptions, ModalDialogService } from "nativescript-angular/directives/dialogs";
 import {
@@ -7,15 +9,13 @@ import {
     CFAlertDialog,
     CFAlertStyle,
 } from "nativescript-cfalert-dialog";
-import { ListViewEventData, SwipeActionsEventData } from "nativescript-ui-listview";
+import { SwipeActionsEventData } from "nativescript-ui-listview";
 import { RadListViewComponent } from "nativescript-ui-listview/angular";
-import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { View } from "tns-core-modules/ui/core/view/view";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
-import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 import { EditUserModalComponent } from "../_modals/edit-user.modal.tns";
 import { NewUserModalComponent } from "../_modals/new-user.modal.tns";
@@ -78,12 +78,11 @@ export class UsersComponent implements OnInit {
                         }
                     });
             }
-
         });
     }
 
     public onDrawerButtonTap(): void {
-        const sideDrawer =  app.getRootView() as any;
+        const sideDrawer = app.getRootView() as any;
         sideDrawer.showDrawer();
     }
 
@@ -99,12 +98,12 @@ export class UsersComponent implements OnInit {
             if (newUser) {
                 this.remoteService
                     .getNoCache("post", "users/editCurrent", {
-                        "email": newUser.email,
-                        "id": this.authService.currentUserValue.id,
+                        email: newUser.email,
+                        id: this.authService.currentUserValue.id,
                         "pw-new": newUser.password1,
                         "pw-new2": newUser.password2,
                         "pw-old": newUser.passwordOld,
-                        "username": newUser.name,
+                        username: newUser.name,
                     })
                     .subscribe((data) => {
                         if (data && data.status == true) {
@@ -119,12 +118,11 @@ export class UsersComponent implements OnInit {
                         }
                     });
             }
-
         });
     }
 
     public onSwipeCellStarted(args: SwipeActionsEventData) {
-        const swipeLimits = args.data.swipeLimits;
+        const { swipeLimits } = args.data;
         const swipeView = args.object;
         // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
@@ -134,10 +132,10 @@ export class UsersComponent implements OnInit {
     public onRightSwipeClick(args) {
         const uid = args.object.bindingContext.id;
         const cfalertDialog = new CFAlertDialog();
-        const onNoPressed = (response) => {
+        const onNoPressed = () => {
             this.usersListView.listView.notifySwipeToExecuteFinished();
         };
-        const onYesPressed = (response) => {
+        const onYesPressed = () => {
             this.usersListView.listView.notifySwipeToExecuteFinished();
             this.remoteService
                 .getNoCache("post", "usersDeleteUser", {
@@ -155,7 +153,6 @@ export class UsersComponent implements OnInit {
                             });
                     }
                 });
-
         };
         cfalertDialog.show({
             buttons: [
@@ -220,5 +217,5 @@ export class UsersComponent implements OnInit {
 
  deleteUser(user: User) {
 
- }*/
+ } */
 }

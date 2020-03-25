@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export class MarkdownService {
-    public from(content: string) {
+    public from() {
         return undefined;
     }
-    public to(content: string) {
+    public to() {
         return undefined;
     }
 }

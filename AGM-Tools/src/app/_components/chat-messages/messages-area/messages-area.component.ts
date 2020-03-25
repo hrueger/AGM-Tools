@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Inject,
     Input,
     OnInit,
     SimpleChanges,
@@ -68,24 +67,26 @@ export class MessagesAreaComponent implements OnInit {
                 }
             });
         }
-        const index = this.allImageSources.findIndex((img) => img.name == that.messages[messageIndex].imageSrc);
+        const index = this.allImageSources.findIndex(
+            (img) => img.name == that.messages[messageIndex].imageSrc,
+        );
         this.lightbox.open(this.allImageSources, index);
     }
 
     public getImageSrc(imageName, thumbnail = true) {
-        return environment.apiUrl +
-            "?getAttachment=" +
-            imageName +
-            "&token=" +
-            this.authenticationService.currentUserValue.token +
-            (thumbnail ? "&thumbnail" : "");
+        return `${environment.apiUrl
+        }?getAttachment=${
+            imageName
+        }&token=${
+            this.authenticationService.currentUserValue.token
+        }${thumbnail ? "&thumbnail" : ""}`;
     }
 
     public ngOnChanges(changes: SimpleChanges) {
         if (
-            changes.messageSent &&
-            changes.messageSent.currentValue != "" &&
-            changes.messageSent.currentValue != null
+            changes.messageSent
+            && changes.messageSent.currentValue != ""
+            && changes.messageSent.currentValue != null
         ) {
             let message = {
                 content: changes.messageSent.currentValue,
@@ -104,7 +105,7 @@ export class MessagesAreaComponent implements OnInit {
                 .getNoCache("post", `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}`, {
                     message: changes.messageSent.currentValue,
                 })
-                .subscribe((data) => {
+                .subscribe(() => {
                     message = this.messages.pop();
                     message.sent = "sent";
                     this.messages.push(message);
@@ -112,9 +113,9 @@ export class MessagesAreaComponent implements OnInit {
                     this.cdr.detectChanges();
                 });
         } else if (
-            changes.attachmentMessageSent &&
-            changes.attachmentMessageSent.currentValue != "" &&
-            changes.attachmentMessageSent.currentValue != null
+            changes.attachmentMessageSent
+            && changes.attachmentMessageSent.currentValue != ""
+            && changes.attachmentMessageSent.currentValue != null
         ) {
             let message;
             let data;
@@ -142,7 +143,7 @@ export class MessagesAreaComponent implements OnInit {
                 .getNoCache("post", `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}/attachment`, {
                     message: data,
                 })
-                .subscribe((d) => {
+                .subscribe(() => {
                     message = this.messages.pop();
                     message.sent = "sent";
                     this.messages.push(message);
@@ -164,31 +165,32 @@ export class MessagesAreaComponent implements OnInit {
         if (item) {
             return item.id;
         }
+        return undefined;
     }
 
     public isContinuation(idx: number) {
         if (!this.messages[idx - 1]) { return false; }
         return (
-            /*(!this.messages[idx].fromMe &&
+        /* (!this.messages[idx].fromMe &&
                 this.messages[idx - 1] &&
                 !this.messages[idx - 1].fromMe) ||
             (this.messages[idx].fromMe &&
                 this.messages[idx - 1] &&
-                this.messages[idx - 1].fromMe)*/
+                this.messages[idx - 1].fromMe) */
 
-            this.messages[idx].fromMe == this.messages[idx - 1].fromMe &&
-            this.messages[idx].sendername == this.messages[idx - 1].sendername
+            this.messages[idx].fromMe == this.messages[idx - 1].fromMe
+            && this.messages[idx].sendername == this.messages[idx - 1].sendername
         );
     }
 
     public getIcon(message) {
         switch (message.sent) {
-            case "notsent":
-                return "&#xf017;";
-            case "sent":
-                return "&#xf00c;";
-            default:
-                return "&#xf560;";
+        case "notsent":
+            return "&#xf017;";
+        case "sent":
+            return "&#xf00c;";
+        default:
+            return "&#xf560;";
         }
         // return "T";
     }
@@ -198,8 +200,8 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     private pad(num, size = 2) {
-        let s = num + "";
-        while (s.length < size) { s = "0" + s; }
+        let s = `${num}`;
+        while (s.length < size) { s = `0${s}`; }
         return s;
     }
 }

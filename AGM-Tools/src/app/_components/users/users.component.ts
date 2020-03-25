@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit {
     public usergroup: string;
     public password1: string;
     public password2: string;
-    public invalidMessage: boolean = false;
+    public invalidMessage = false;
     public editUserName: any;
     public editUserEmail: any;
     public editUserPasswordOld: any;
@@ -74,6 +74,7 @@ export class UsersComponent implements OnInit {
     }
 
     public mailToAll() {
+        // eslint-disable-next-line no-restricted-globals
         location.href = `mailto:${this.users.map((user) => user.email).join(",")}`;
     }
 
@@ -81,7 +82,7 @@ export class UsersComponent implements OnInit {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
             .result.then(
-                (result) => {
+                () => {
                     this.invalidMessage = false;
 
                     this.remoteService
@@ -109,7 +110,7 @@ export class UsersComponent implements OnInit {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
             .result.then(
-                (result) => {
+                () => {
                     this.invalidMessage = false;
                     let pwnew1val = "";
                     if (this.editUserForm.get("editUserPassword1")) {
@@ -127,7 +128,8 @@ export class UsersComponent implements OnInit {
                             pwNew: pwnew1val,
                             pwNew2: pwnew2val,
                             pwOld: this.editUserForm.get(
-                                "editUserPasswordOld").value,
+                                "editUserPasswordOld",
+                            ).value,
                             username: this.editUserForm.get("editUserName")
                                 .value,
                         })
@@ -146,6 +148,7 @@ export class UsersComponent implements OnInit {
     }
 
     public async deleteUser(user: User) {
+        // eslint-disable-next-line
         if (confirm(await this.fts.t("users.confirmDelete")) == true) {
             this.remoteService
                 .getNoCache("delete", `users/${user.id}`)

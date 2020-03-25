@@ -1,10 +1,9 @@
-import {getRepository, MigrationInterface, QueryRunner} from "typeorm";
+import { getRepository, MigrationInterface } from "typeorm";
 import { Usergroup } from "../entity/Usergroup";
 
-// tslint:disable-next-line: class-name
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 export class createUsergroups1574018071536 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<any> {
+    public async up(): Promise<any> {
         const standarduser = new Usergroup();
         standarduser.name = "Standard";
         standarduser.ADD_USER_TO_PROJECT = false;
@@ -31,8 +30,7 @@ export class createUsergroups1574018071536 implements MigrationInterface {
         await getRepository(Usergroup).save(superuser);
     }
 
-    // tslint:disable-next-line: no-empty
-    public async down(queryRunner: QueryRunner): Promise<any> {
+    public async down(): Promise<any> {
+        //
     }
-
 }

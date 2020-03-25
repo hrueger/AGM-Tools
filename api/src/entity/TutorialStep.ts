@@ -1,23 +1,20 @@
 import {
     Column,
-    CreateDateColumn,
     Entity,
-    ManyToMany,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
-  } from "typeorm";
+} from "typeorm";
 import { Tutorial } from "./Tutorial";
 
 @Entity()
-  export class TutorialStep {
+export class TutorialStep {
     @PrimaryGeneratedColumn()
     public id: number;
 
     @Column()
     public title: string;
 
-    @Column({length: 10000})
+    @Column({ length: 10000 })
     public content: string;
 
     @Column()
@@ -29,6 +26,6 @@ import { Tutorial } from "./Tutorial";
     @Column()
     public image3: string;
 
-    @ManyToOne((type) => Tutorial, (tutorial) => tutorial.steps)
+    @ManyToOne(() => Tutorial, (tutorial) => tutorial.steps)
     public tutorial: Tutorial;
-  }
+}

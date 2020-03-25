@@ -1,16 +1,18 @@
-const express = require("express");
+import express = require("express");
+
 const app = express();
 const server = require("http").createServer(app);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const io = require("socket.io")(server);
 
 const nspChat = io.of("/chat");
 const nspDefault = io.nsps["/"];
 
-let messageList = [];
-let userList = [];
+const messageList = [];
+const userList = [];
 
 io.on("connection", (socket) => {
-    // tslint:disable-next-line: no-console
+    // eslint-disable-next-line no-console
     console.log("User Connected");
     socket.emit("connected", "Welcome");
     let addedUser = false;
@@ -19,7 +21,7 @@ io.on("connection", (socket) => {
         if (addedUser) { return; }
         addedUser = true;
         socket.username = data.username;
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("Username: ", data.username);
         userList.push({
             username: data.username,
@@ -37,9 +39,9 @@ io.on("connection", (socket) => {
     });
 
     socket.on("call", (data) => {
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("call from", data.from);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("call to", data.to);
         io.sockets.in(data.to).emit("call:incoming", data);
     });
@@ -49,24 +51,24 @@ io.on("connection", (socket) => {
     });
 
     socket.on("answer", (data) => {
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("answer from", data.from);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("answer to", data.to);
         io.sockets.in(data.to).emit("call:answer", data);
     });
 
     socket.on("answered", (data) => {
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("answer from", data.from);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("answer to", data.to);
         io.sockets.in(data.to).emit("call:answered", data);
     });
 
     socket.on("new message", (data, cb) => {
         cb(true);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log(data);
         messageList.push(data);
         socket.broadcast.emit("new message", data);
@@ -83,7 +85,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("User Disconnected");
         if (addedUser) {
             for (let i = 0; i < userList.length; i++) {
@@ -101,20 +103,20 @@ io.on("connection", (socket) => {
 });
 
 nspDefault.on("connect", (socket) => {
-    // tslint:disable-next-line: no-console
+    // eslint-disable-next-line no-console
     console.log("Joined Namespace: /");
     socket.on("disconnect", () => {
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("Left Namespace: /");
     });
 });
 
 nspChat.on("connect", (socket) => {
-    // tslint:disable-next-line: no-console
+    // eslint-disable-next-line no-console
     console.log("Joined Namespace: /chat");
 
     socket.on("disconnect", () => {
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("Left Namespace: /chat");
     });
 });

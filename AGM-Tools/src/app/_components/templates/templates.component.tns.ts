@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import {
+    Component, OnInit, ViewChild, ViewContainerRef,
+} from "@angular/core";
 import { SetupItemViewArgs } from "nativescript-angular/directives";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import { PageChangeEventData } from "nativescript-image-swipe";
@@ -12,7 +14,7 @@ import { Page } from "tns-core-modules/ui/page/page";
 import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
-import { DownloadService } from "../../_services/download.service.tns";
+import * as DownloadService from "../../_services/download.service.tns";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
 
@@ -25,7 +27,7 @@ export class TemplatesComponent implements OnInit {
     @ViewChild("templatesListView", { read: RadListViewComponent, static: false })
     public templatesListView: RadListViewComponent;
     public templates: any[] = [];
-    public showingTemplate: boolean = false;
+    public showingTemplate = false;
     public pageNumber: number;
     public templatesToShow: any[] = [];
     public currentTemplateName: string;
@@ -39,8 +41,9 @@ export class TemplatesComponent implements OnInit {
         private vcRef: ViewContainerRef,
         private authService: AuthenticationService,
         private fts: FastTranslateService,
-        private downloadService: DownloadService,
-        private page: Page) {
+        private downloadService: DownloadService.DownloadService,
+        private page: Page,
+    ) {
     }
 
     public ngOnInit() {
@@ -95,7 +98,7 @@ export class TemplatesComponent implements OnInit {
 
     public async openNewModal() {
         this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
-        /*let options = {
+        /* let options = {
             animated: true,
             context: {},
             fullscreen: true,
@@ -124,7 +127,7 @@ export class TemplatesComponent implements OnInit {
                     });
             }
 
-        });*/
+        }); */
     }
 
     public onDrawerButtonTap(): void {
@@ -134,7 +137,7 @@ export class TemplatesComponent implements OnInit {
     }
 
     public onSwipeCellStarted(args: ListViewEventData) {
-        const swipeLimits = args.data.swipeLimits;
+        const { swipeLimits } = args.data;
         const swipeView = args.object;
         // @ts-ignore
         const rightItem = swipeView.getViewById<View>("delete-view");
@@ -142,7 +145,7 @@ export class TemplatesComponent implements OnInit {
     }
 
     public async onRightSwipeClick(args) {
-        const id = args.object.bindingContext.id;
+        const { id } = args.object.bindingContext;
         if (await dialogs.confirm(await this.fts.t("templates.confirmDelete"))) {
             this.remoteService
                 .getNoCache("delete", `templates/${id}`)

@@ -17,9 +17,9 @@
     "serve:web": "ng serve",
     "serve:android": "tns run android",
     "serve:ios": "tns run ios",
-    "lint:web": "ng lint",
-    "lint:mobile": "ng lint --tsConfig tsconfig.tns.json",
-    "createFilesWithApiKeys": "node createFilesWithApiKeys.js"
+    "createFilesWithApiKeys": "node createFilesWithApiKeys.js",
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --ext .ts --fix"
   },
   "private": true,
   "greenkeeper": {
@@ -133,7 +133,17 @@
     "@types/jasmine": "~3.5.9",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^13.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
     "codelyzer": "^5.2.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-github": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-json": "^2.1.1",
+    "eslint-plugin-prettier": "^3.1.2",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.4.1",
@@ -143,11 +153,11 @@
     "karma-jasmine-html-reporter": "^1.5.2",
     "nativescript-dev-webpack": "1.5.1",
     "node-sass": "4.13.1",
+    "prettier": "^2.0.2",
     "protractor": "~6.0.0",
     "systemjs-plugin-json": "^0.3.0",
     "tns-platform-declarations": "6.5.0",
     "ts-node": "^8.7.0",
-    "tslint": "~6.1.0",
     "typescript": "3.7.5"
   },
   "author": "Hannes Rüger"

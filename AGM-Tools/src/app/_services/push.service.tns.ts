@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectorRef, Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { LocalNotifications } from "nativescript-local-notifications";
 import { Message, messaging } from "nativescript-plugin-firebase/messaging";
@@ -15,9 +15,11 @@ export class PushService {
 
     public chatActionSubject = new Subject<any>();
     public calendarActionSubject = new Subject<any>();
-    private MESSAGE_CACHE_PREFIX: string = "MESSAGECACHE_";
+    private MESSAGE_CACHE_PREFIX = "MESSAGECACHE_";
 
-    constructor(private remoteService: RemoteService, private router: RouterExtensions, private zone: NgZone) { }
+    public constructor(private remoteService: RemoteService,
+        private router: RouterExtensions,
+        private zone: NgZone) { }
 
     public getChatActions() {
         return this.chatActionSubject.asObservable();
@@ -42,18 +44,21 @@ export class PushService {
                     if (!result) {
                         LocalNotifications.requestPermission().then((res) => {
                             if (res) {
-                                applicationSettings.setBoolean(PushService.APP_REGISTERED_FOR_NOTIFICATIONS, true);
+                                applicationSettings.setBoolean(
+                                    PushService.APP_REGISTERED_FOR_NOTIFICATIONS, true,
+                                );
                                 this.doRegisterForPushNotifications();
                             }
                         });
                     } else {
-                        applicationSettings.setBoolean(PushService.APP_REGISTERED_FOR_NOTIFICATIONS, true);
+                        applicationSettings.setBoolean(
+                            PushService.APP_REGISTERED_FOR_NOTIFICATIONS, true,
+                        );
                         this.doRegisterForPushNotifications();
                     }
                 });
             });
         }
-
     }
 
     public doRequestConsent(cb: any): void {
@@ -73,14 +78,14 @@ export class PushService {
         messaging.getCurrentPushToken()
             .then((token) => {
                 alert({
-                    message: (!token ? "Not received yet (note that on iOS this does not work on a simulator)" :
-                        token + ("\n\nSee the console.log if you want to copy-paste it.")),
+                    message: (!token ? "Not received yet (note that on iOS this does not work on a simulator)"
+                        : `${token}\n\nSee the console.log if you want to copy-paste it.`),
                     okButtonText: "OK, thx",
                     title: "Current Push Token",
                 });
             })
-            // tslint:disable-next-line: no-console
-            .catch((err) => console.log("Error in doGetCurrentPushToken: " + err));
+            // eslint-disable-next-line no-console
+            .catch((err) => console.log(`Error in doGetCurrentPushToken: ${err}`));
     }
 
     public doRegisterPushHandlers(): void {
@@ -88,8 +93,8 @@ export class PushService {
         // so there's no need to call 'registerForPushNotifications'
         messaging.addOnPushTokenReceivedCallback(
             (token) => {
-                // tslint:disable-next-line: no-console
-                console.log("Firebase plugin received a push token: " + token);
+                // eslint-disable-next-line no-console
+                console.log(`Firebase plugin received a push token: ${token}`);
                 this.remoteService.getNoCache("post", "push/token/update", { pushToken: token }).subscribe();
             },
         );
@@ -104,7 +109,8 @@ export class PushService {
                     okButtonText: "Got it, thanks!",
                     title: "Unregistered",
                 });
-            });
+            },
+        );
     }
 
     public doRegisterForPushNotifications(): void {
@@ -113,18 +119,18 @@ export class PushService {
 
     private messageRecieved(message: Message) {
         switch (message.data.action) {
-            case "newMessage":
-                applicationSettings.setString(this.MESSAGE_CACHE_PREFIX +
-                    this.handleNewChatMessage(message), JSON.stringify(message));
-                break;
-            case "calendarEvent":
-                applicationSettings.setString(this.MESSAGE_CACHE_PREFIX +
-                    this.handleCalendarEventMessage(message), JSON.stringify(message));
-                break;
-            default:
-                applicationSettings.setString(this.MESSAGE_CACHE_PREFIX +
-                    this.handleUnknownMessage(message), JSON.stringify(message));
-                break;
+        case "newMessage":
+            applicationSettings.setString(this.MESSAGE_CACHE_PREFIX
+                    + this.handleNewChatMessage(message), JSON.stringify(message));
+            break;
+        case "calendarEvent":
+            applicationSettings.setString(this.MESSAGE_CACHE_PREFIX
+                    + this.handleCalendarEventMessage(message), JSON.stringify(message));
+            break;
+        default:
+            applicationSettings.setString(this.MESSAGE_CACHE_PREFIX
+                    + this.handleUnknownMessage(message), JSON.stringify(message));
+            break;
         }
     }
 
@@ -137,11 +143,11 @@ export class PushService {
             channel: "unknownNotification",
             id,
             title: message.title,
-            // tslint:disable-next-line: no-empty
-        }]).then(() => { },
+
+        }]).then(() => { /**/ },
             (error) => {
-                // tslint:disable-next-line: no-console
-                console.log("scheduling error: " + error);
+                // eslint-disable-next-line no-console
+                console.log(`scheduling error: ${error}`);
             });
         return id;
     }
@@ -155,17 +161,17 @@ export class PushService {
             channel: "calendarEvent",
             id,
             title: message.title,
-            // tslint:disable-next-line: no-empty
-        }]).then(() => { },
+
+        }]).then(() => { /* */ },
             (error) => {
-                // tslint:disable-next-line: no-console
-                console.log("scheduling error: " + error);
+                // eslint-disable-next-line no-console
+                console.log(`scheduling error: ${error}`);
             });
         return id;
     }
 
     private handleNewChatMessage(message: Message): number {
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log(message.data.messageId);
         this.remoteService.getNoCache("post", "chatMarkAsReceived", { message: message.data.messageId }).subscribe();
         this.chatActionSubject.next({
@@ -194,68 +200,67 @@ export class PushService {
             channel: "newMessage",
             id,
             title: message.title,
-            // tslint:disable-next-line: no-empty
-        }]).then(() => { },
+
+        }]).then(() => { /* */ },
             (error) => {
-                // tslint:disable-next-line: no-console
-                console.log("scheduling error: " + error);
+                // eslint-disable-next-line no-console
+                console.log(`scheduling error: ${error}`);
             });
         return id;
-
     }
 
     private registerOnClickCallback() {
         const that = this;
         LocalNotifications.addOnMessageReceivedCallback((data: any) => {
-            const message = JSON.parse(applicationSettings.getString(that.MESSAGE_CACHE_PREFIX + data.id));
+            const message = JSON.parse(
+                applicationSettings.getString(that.MESSAGE_CACHE_PREFIX + data.id),
+            );
             switch (data.channel) {
-                case "newMessage":
-                    if (data.event == "button") {
-                        that.chatActionSubject.next({
-                            action: "markAsRead",
-                            data: {
-                                body: message,
-                            },
-                        });
-                        that.remoteService.getNoCache("post", "chatMarkAsRead", {
-                            message: message.data.messageId,
-                        }).subscribe();
-                    } else if (data.event == "input") {
-                        this.remoteService
-                            .getNoCache("post", "chatSendMessage", {
-                                message: data.response,
-                                rid: message.data.chatID,
-                            })
-                            .subscribe(() => {
-                                that.chatActionSubject.next({
-                                    action: "newMessage",
-                                    data: {
-                                        body: data.response,
-                                    },
-                                    fromMe: true,
-                                });
+            case "newMessage":
+                if (data.event == "button") {
+                    that.chatActionSubject.next({
+                        action: "markAsRead",
+                        data: {
+                            body: message,
+                        },
+                    });
+                    that.remoteService.getNoCache("post", "chatMarkAsRead", {
+                        message: message.data.messageId,
+                    }).subscribe();
+                } else if (data.event == "input") {
+                    this.remoteService
+                        .getNoCache("post", "chatSendMessage", {
+                            message: data.response,
+                            rid: message.data.chatID,
+                        })
+                        .subscribe(() => {
+                            that.chatActionSubject.next({
+                                action: "newMessage",
+                                data: {
+                                    body: data.response,
+                                },
+                                fromMe: true,
                             });
-
-                    } else {
-                        // Angetippt
-                        this.zone.run(() => {
-                            this.router.navigate(["chat-messages", message.data.chatID]);
                         });
-                    }
-                    break;
-                case "calendarEvent":
+                } else {
+                    // Angetippt
                     this.zone.run(() => {
-                        this.router.navigate(["calendar"]);
+                        this.router.navigate(["chat-messages", message.data.chatID]);
                     });
-                    break;
-                default:
-                    // tslint:disable-next-line: no-console
-                    console.log("Unbekannte nachricht angetippt!");
-                    this.zone.run(() => {
-                        this.router.navigate(["dashboard"]);
-                    });
+                }
+                break;
+            case "calendarEvent":
+                this.zone.run(() => {
+                    this.router.navigate(["calendar"]);
+                });
+                break;
+            default:
+                // eslint-disable-next-line no-console
+                console.log("Unbekannte nachricht angetippt!");
+                this.zone.run(() => {
+                    this.router.navigate(["dashboard"]);
+                });
             }
-
         });
     }
 
@@ -263,8 +268,8 @@ export class PushService {
         messaging.addOnMessageReceivedCallback((message) => {
             this.messageRecieved(message);
         }).then(() => { /* */ }, (err) => {
-            // tslint:disable-next-line: no-console
-            console.log("Failed to add addOnMessageReceivedCallback: " + err);
+            // eslint-disable-next-line no-console
+            console.log(`Failed to add addOnMessageReceivedCallback: ${err}`);
         });
     }
 
@@ -274,14 +279,14 @@ export class PushService {
                 this.messageRecieved(message);
             },
             onPushTokenReceivedCallback: (token: string): void => {
-                // tslint:disable-next-line: no-console
-                console.log(">>>> Firebase plugin received a push token: " + token);
+                // eslint-disable-next-line no-console
+                console.log(`>>>> Firebase plugin received a push token: ${token}`);
                 this.remoteService.getNoCache("post", "push/token/update", { pushToken: token }).subscribe();
             },
             showNotifications: true,
             showNotificationsWhenInForeground: false,
         })
-            // tslint:disable-next-line: no-console
-            .catch((err) => console.log(">>>> Failed to register for push notifications"));
+            // eslint-disable-next-line no-console
+            .catch(() => console.log(">>>> Failed to register for push notifications"));
     }
 }

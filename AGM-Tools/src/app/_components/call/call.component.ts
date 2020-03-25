@@ -23,8 +23,8 @@ export class CallComponent {
     public remoteIceCandidates = [];
     public inCall = false;
 
-    constructor(private route: ActivatedRoute) { }
-    public ngOnInit() {
+    public constructor(private route: ActivatedRoute) { }
+    public ngOnInit(): void {
         if (this.route.snapshot.params.chatType == "user") {
             this.call();
         } else if (this.route.snapshot.params.chatType == "project") {
@@ -34,7 +34,7 @@ export class CallComponent {
         }
     }
 
-    public call() {
+    public call(): void {
         this.me = this.getUUID();
         const iceServers: RTCIceServer[] = [];
         const turnServerOne: RTCIceServer = {
@@ -57,18 +57,18 @@ export class CallComponent {
         iceServers.push(turnServerTwo);
         iceServers.push(turnServerThree);
         this.connection = new RTCPeerConnection();
-        this.connection.onconnectionstatechange = (e) => {
-            // tslint:disable-next-line: no-console
+        this.connection.onconnectionstatechange = (): void => {
+            // eslint-disable-next-line no-console
             console.log("onconnectionstatechange", this.connection.iceConnectionState);
         };
-        this.connection.ontrack = (event) => {
+        this.connection.ontrack = (event): void => {
             const stream = event.streams[0];
-            // tslint:disable-next-line: no-console
-            console.log("ontrack" + stream);
-            this.remoteVideo.nativeElement.srcObject = event.streams[0];
+            // eslint-disable-next-line no-console
+            console.log(`ontrack${stream}`);
+            [this.remoteVideo.nativeElement.srcObject] = event.streams;
         };
-        this.connection.onicecandidate = (event) => {
-            const candidate = event.candidate;
+        this.connection.onicecandidate = (event): void => {
+            const { candidate } = event;
             if (!candidate) { return; }
             const object: any = {};
             object.from = this.me;
@@ -77,30 +77,28 @@ export class CallComponent {
             // object.sdpMid, candidate.sdpMid;
             // object.serverUrl, candidate.relatedAddress;
             this.socket.emit("iceCandidate", object);
-            // tslint:disable-next-line: no-console
-            console.log("setOnIceCandidateListener " + candidate);
+            // eslint-disable-next-line no-console
+            console.log(`setOnIceCandidateListener ${candidate}`);
         };
         this.init();
     }
 
-    public getUUID() {
-        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-            // tslint:disable-next-line: no-bitwise
+    public getUUID(): string {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c): string => {
             const r = (Math.random() * 16) | 0;
-            // tslint:disable-next-line: no-bitwise
             const v = c === "x" ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
     }
 
-    public async init() {
-        this.socket.on("call:incoming", (args) => {
+    public async init(): Promise<void> {
+        this.socket.on("call:incoming", (args): void => {
             const object = args;
-            const from = object.from;
+            const { from } = object;
             const session = object.sdp;
-            const to = object.to;
-            // tslint:disable-next-line: no-console
-            console.log("call:incoming" + " to: " + to + " from: " + from);
+            const { to } = object;
+            // eslint-disable-next-line no-console
+            console.log(`${"call:incoming to: "}${to} from: ${from}`);
             if (to.indexOf(this.me) > -1) {
                 if (this.localStream != null) {
                     for (const track of this.localStream.getVideoTracks()) {
@@ -115,30 +113,29 @@ export class CallComponent {
             }
         });
 
-        this.socket.on("call:answer", (args) => {
+        this.socket.on("call:answer", (args): void => {
             const object = args;
-            const from = object.from;
+            const { from } = object;
             const session = object.sdp;
-            const to = object.to;
-            // tslint:disable-next-line: no-console
+            const { to } = object;
+            // eslint-disable-next-line no-console
             console.log("call:answer");
-            // tslint:disable-next-line: no-console
-            console.log("me : " + this.me + " from: " + from + " to: " + to);
+            // eslint-disable-next-line no-console
+            console.log(`me : ${this.me} from: ${from} to: ${to}`);
             if (to.indexOf(this.me) > -1) {
-                // tslint:disable-next-line: no-console
+                // eslint-disable-next-line no-console
                 console.log(this.me);
                 const sdp = new RTCSessionDescription({ type: "offer", sdp: session });
                 this.createAnswerForOfferReceived(sdp);
             }
         });
 
-        this.socket.on("call:answered", (args) => {
+        this.socket.on("call:answered", (args): void => {
             const object = args;
-            const from = object.from;
             const session = object.sdp;
-            const to = object.to;
+            const { to } = object;
             if (to.indexOf(this.me) > -1) {
-                // tslint:disable-next-line: no-console
+                // eslint-disable-next-line no-console
                 console.log("call:answered");
                 const sdp = new RTCSessionDescription({ type: "answer", sdp: session });
                 this.handleAnswerReceived(sdp);
@@ -147,17 +144,15 @@ export class CallComponent {
             }
         });
 
-        this.socket.on("call:iceCandidate", (args) => {
-            // tslint:disable-next-line: no-console
+        this.socket.on("call:iceCandidate", (args): void => {
+            // eslint-disable-next-line no-console
             console.log("call:iceCandidate");
             const object = args;
 
-            const from = object.from;
             const session = object.sdp;
-            const to = object.to;
-            const sdpMid = object.sdpMid;
-            const sdpMLineIndex = object.sdpMLineIndex;
-            const serverUrl = object.serverUrl;
+            const { to } = object;
+            const { sdpMid } = object;
+            const { sdpMLineIndex } = object;
 
             if (to.indexOf(this.me) > -1) {
                 const candidate = new RTCIceCandidate({
@@ -169,7 +164,7 @@ export class CallComponent {
             }
         });
 
-        this.socket.on("connect", (args) => {
+        this.socket.on("connect", (): void => {
             const object: any = {};
             object.id = this.me;
             this.socket.emit("init", object);
@@ -184,9 +179,9 @@ export class CallComponent {
 
         this.localVideo.nativeElement.srcObject = this.localStream;
     }
-    public async makeCall() {
-        // tslint:disable-next-line: no-console
-        console.log("makeCall " + this.connection);
+    public async makeCall(): Promise<void> {
+        // eslint-disable-next-line no-console
+        console.log(`makeCall ${this.connection}`);
         if (this.connection != null) {
             this.isInitiator = true;
             if (this.localStream != null) {
@@ -205,32 +200,32 @@ export class CallComponent {
         }
     }
 
-    public async setInitiatorLocalSdp(sdp) {
+    public async setInitiatorLocalSdp(sdp): Promise<void> {
         if (this.connection == null) { return; }
         if (
-            this.connection.localDescription != null &&
-            (this.connection.localDescription.type === "answer" && sdp.type === "answer")
+            this.connection.localDescription != null
+            && (this.connection.localDescription.type === "answer" && sdp.type === "answer")
         ) {
             return;
         }
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("setInitiatorLocalSdp");
         await this.connection.setLocalDescription(sdp);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log(" setInitiatorLocalSdp : success");
         this.sendInitiatorSdp(sdp);
     }
 
-    public async sendInitiatorSdp(sdp: RTCSessionDescription) {
-        // tslint:disable-next-line: no-console
-        console.log("sendInitiatorSdp" + " type: " + sdp.type);
+    public async sendInitiatorSdp(sdp: RTCSessionDescription): Promise<void> {
+        // eslint-disable-next-line no-console
+        console.log(`${"sendInitiatorSdp type: "}${sdp.type}`);
         const object: any = {};
         object.from = this.me;
         object.sdp = sdp.sdp;
         this.socket.emit("call", object);
     }
 
-    public async createAnswerForOfferReceived(remoteSdp) {
+    public async createAnswerForOfferReceived(remoteSdp): Promise<void> {
         if (this.connection == null || remoteSdp == null) { return; }
         /* if (connection.getRemoteDescription() != null &&
             (connection.getRemoteDescription().getType() == FancyRTCSdpType.ANSWER
@@ -239,61 +234,61 @@ export class CallComponent {
           */
 
         await this.connection.setRemoteDescription(remoteSdp);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("createAnswerForOfferReceived: success");
         this.handleRemoteDescriptionSet();
         const description = await this.connection.createAnswer({
             offerToReceiveAudio: true,
             offerToReceiveVideo: true,
         });
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("createAnswer: success");
         this.setNonInitiatorLocalSdp(description);
     }
 
-    public async setNonInitiatorLocalSdp(sdp) {
+    public async setNonInitiatorLocalSdp(sdp): Promise<void> {
         if (this.connection == null) { return; }
         if (
-            this.connection.localDescription != null &&
-            (this.connection.localDescription.type === "answer" && sdp.type === "answer")
+            this.connection.localDescription != null
+            && (this.connection.localDescription.type === "answer" && sdp.type === "answer")
         ) {
             return;
         }
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log(" setNonInitiatorLocalSdp ");
         await this.connection.setLocalDescription(sdp);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log(" setNonInitiatorLocalSdp : success");
         this.sendNonInitiatorSdp(sdp);
     }
-    public async sendNonInitiatorSdp(sdp) {
-        // tslint:disable-next-line: no-console
-        console.log("sendNonInitiatorSdp" + " type: " + sdp.type);
+    public async sendNonInitiatorSdp(sdp): Promise<void> {
+        // eslint-disable-next-line no-console
+        console.log(`${"sendNonInitiatorSdp type: "}${sdp.type}`);
         const object: any = {};
         object.from = this.me;
         object.sdp = sdp.sdp; // ???
-  /* handleAnswerReceived(sdp); */
+        /* handleAnswerReceived(sdp); */
         this.socket.emit("answered", object);
     }
 
-    public handleRemoteDescriptionSet() {
+    public handleRemoteDescriptionSet(): void {
         for (const iceCandidate of this.remoteIceCandidates) {
             this.connection.addIceCandidate(iceCandidate);
         }
         this.remoteIceCandidates = [];
     }
 
-    public endCall() {
+    public endCall(): void {
         this.connection.close();
     }
 
-    public async handleAnswerReceived(sdp) {
+    public async handleAnswerReceived(sdp): Promise<void> {
         if (this.connection == null || sdp == null || this.inCall) { return; }
-        // tslint:disable-next-line: no-console
-        console.log("handleAnswerReceived " + sdp);
+        // eslint-disable-next-line no-console
+        console.log(`handleAnswerReceived ${sdp}`);
         const newSdp = new RTCSessionDescription({ type: "answer", sdp: sdp.sdp });
         await this.connection.setRemoteDescription(newSdp);
-        // tslint:disable-next-line: no-console
+        // eslint-disable-next-line no-console
         console.log("handleAnswerReceived: SUCCESS");
         this.inCall = true;
     }

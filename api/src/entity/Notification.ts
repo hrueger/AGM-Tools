@@ -6,32 +6,32 @@ import {
     ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
-  } from "typeorm";
+} from "typeorm";
 import { User } from "./User";
 
 @Entity()
-  export class Notification {
+export class Notification {
     @PrimaryGeneratedColumn()
     public id: number;
 
     @Column()
     public headline: string;
 
-    @Column({length: 10000})
+    @Column({ length: 10000 })
     public content: string;
 
     @Column()
     public theme: string;
 
-    @ManyToMany((type) => User, (user) => user.receivedNotifications)
+    @ManyToMany(() => User, (user) => user.receivedNotifications)
     @JoinTable()
     public receivers: User[];
 
-    @ManyToMany((type) => User, (user) => user.seenNotifications)
+    @ManyToMany(() => User, (user) => user.seenNotifications)
     @JoinTable()
     public seenBy: User[];
 
-    @ManyToOne((type) => User, (user) => user.sentNotifications)
+    @ManyToOne(() => User, (user) => user.sentNotifications)
     public creator: User;
 
     @Column()
@@ -39,4 +39,4 @@ import { User } from "./User";
     public createdAt: Date;
 
     public howLongAgo?: string;
-  }
+}

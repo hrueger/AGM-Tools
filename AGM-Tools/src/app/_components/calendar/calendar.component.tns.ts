@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit } from "@angular/core";
-import { ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, ViewChild, ViewContainerRef } from "@angular/core";
 import { ModalDialogService } from "nativescript-angular/directives/dialogs";
 import { CalendarEvent } from "nativescript-ui-calendar";
 import { RadCalendarComponent } from "nativescript-ui-calendar/angular/calendar-directives";
@@ -17,7 +16,7 @@ export class CustomEvent extends CalendarEvent {
     public description: string;
 
     constructor(id: number, title: string, description: string,
-                location: string, startDate: Date, endDate: Date, isAllDay?: boolean, eventColor?: Color) {
+        location: string, startDate: Date, endDate: Date, isAllDay?: boolean, eventColor?: Color) {
         super(title, startDate, endDate, isAllDay, eventColor);
         this.id = id;
         this.location = location;
@@ -25,7 +24,7 @@ export class CustomEvent extends CalendarEvent {
     }
 }
 
-// tslint:disable-next-line: max-classes-per-file
+
 export class Colors {
     public static names = {
         aqua: "#00ffff",
@@ -84,7 +83,7 @@ export class Colors {
     }
 }
 
-// tslint:disable-next-line: max-classes-per-file
+
 @Component({
     selector: "app-calendar",
     styleUrls: ["./calendar.component.scss"],
@@ -92,16 +91,16 @@ export class Colors {
 })
 export class CalendarComponent {
     public calendarEvents: CustomEvent[] = new Array<CustomEvent>();
-    public viewMode: string = "Day";
+    public viewMode = "Day";
     public currentViewIndex = -1;
     public viewModes = ["Year", "Month", "Day"];
 
     @ViewChild("calendar", { static: false }) public calendar: RadCalendarComponent;
     constructor(private remoteService: RemoteService,
-                private modal: ModalDialogService,
-                private vcRef: ViewContainerRef,
-                private alertService: AlertService,
-                private fts: FastTranslateService) { }
+        private modal: ModalDialogService,
+        private vcRef: ViewContainerRef,
+        private alertService: AlertService,
+        private fts: FastTranslateService) { }
 
     public ngAfterViewInit() {
         this.calendar.nativeElement.reload();
@@ -138,7 +137,7 @@ export class CalendarComponent {
         }
     }
 
-    public onNavigatedToDate(args) {
+    public onNavigatedToDate() {
         // console.log("onNavigatedToDate: " + args.date);
     }
 
@@ -151,7 +150,6 @@ export class CalendarComponent {
         };
         this.modal.showModal(NewCalendarEventModalComponent, options).then((newCalendarEvent) => {
             if (newCalendarEvent) {
-
                 this.remoteService
                     .getNoCache("post", "events", {
                         description: newCalendarEvent.description,
@@ -200,7 +198,7 @@ export class CalendarComponent {
         this.viewMode = this.viewModes[this.currentViewIndex];
     }
     public onDrawerButtonTap(): void {
-        const sideDrawer =  app.getRootView() as RadSideDrawer;
+        const sideDrawer = app.getRootView() as RadSideDrawer;
         sideDrawer.showDrawer();
     }
 }

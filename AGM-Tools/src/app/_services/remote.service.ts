@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
-import { catchError, first, tap } from "rxjs/operators";
+import { catchError, tap } from "rxjs/operators";
 import { environment } from "../../environments/environment";
 import { AlertService } from "./alert.service";
 import { CacheService } from "./cache.service";
@@ -10,7 +10,7 @@ import { CacheService } from "./cache.service";
     providedIn: "root",
 })
 export class RemoteService {
-    constructor(
+    public constructor(
         private http: HttpClient,
         private alertService: AlertService,
         private cacheService: CacheService,
@@ -22,17 +22,15 @@ export class RemoteService {
         let echtDaten = false;
         const req = this.getRequest(type, path, args);
         req.pipe(
-                tap((_) =>
-                    this.log(
-                        "fetched " +
-                        path +
-                        " with data " +
-                        JSON.stringify(args),
-                    ),
-                ),
-                catchError(this.handleError<any>(path, false)),
-            )
-            .subscribe((data) => {
+            tap((): void => this.log(
+                `fetched ${
+                    path
+                } with data ${
+                    JSON.stringify(args)}`,
+            )),
+            catchError(this.handleError<any>(path, false)),
+        )
+            .subscribe((data): void => {
                 // console.log("internetdaten bekommen");
                 if (cacheData == null || !this.isEquivalent(cacheData, data)) {
                     // console.log("Cache Daten: " + cacheData);
@@ -41,7 +39,8 @@ export class RemoteService {
                         subject.next(data);
                         this.cacheService.put(data, path, args);
                     } else {
-                        // ToDo this.alertService.snackbar("Offline-Modus (Daten können veraltet sein)");
+                        // ToDo this.alertService.snackbar
+                        // ("Offline-Modus (Daten können veraltet sein)");
                     }
 
                     // console.log("cache updated and new data served: " + data);
@@ -55,7 +54,7 @@ export class RemoteService {
         this.cacheService
             .get(path, args)
 
-            .subscribe((d) => {
+            .subscribe((d): void => {
                 // console.log("cacheDaten bekommen");
                 if (echtDaten == false) {
                     subject.next(d);
@@ -68,27 +67,25 @@ export class RemoteService {
 
     public getNoCache(type, path: string, args?: any): Observable<any> {
         this.log(
-            "fetching " +
-            path +
-            " with data " +
-            JSON.stringify(args),
+            `fetching ${
+                path
+            } with data ${
+                JSON.stringify(args)}`,
         );
         return this.getRequest(type, path, args)
             .pipe(
-                tap((_) =>
-                    this.log(
-                        "fetched " +
-                        path +
-                        " with data " +
-                        JSON.stringify(args),
-                    ),
-                ),
+                tap((): void => this.log(
+                    `fetched ${
+                        path
+                    } with data ${
+                        JSON.stringify(args)}`,
+                )),
                 catchError(this.handleError<any>(path, false)),
             );
     }
     public uploadFile(action: string, name: string, file: any, args: object = {}): Observable<any> {
-        this.log("uploading file " + file.name);
-        const formData: FormData = new FormData();
+        this.log(`uploading file ${file.name}`);
+        const formData: FormData = new window.FormData();
         formData.append(name, file, file.name);
         for (const key in args) {
             if (args.hasOwnProperty(key)) {
@@ -98,47 +95,41 @@ export class RemoteService {
         return this.http
             .post<any>(`${environment.apiUrl}${action}`, formData)
             .pipe(
-                tap((_) =>
-                    this.log("uploading file " + file.name),
-                ),
+                tap((): void => this.log(`uploading file ${file.name}`)),
                 catchError(this.handleError<any>("fileUpload", false)),
             );
     }
 
-    private getRequest(type: string, path: string, args: any) {
+    private getRequest(type: string, path: string, args: any): Observable<any> {
         let req;
         if (type == "get") {
-            req = this.http
-                .get<any>(`${environment.apiUrl}${path}`, {
-                    ...args,
-                });
+            req = this.http.get<any>(`${environment.apiUrl}${path}`, {
+                ...args,
+            });
         } else if (type == "post") {
-            req = this.http
-                .post<any>(`${environment.apiUrl}${path}`, {
-                    ...args,
-                });
+            req = this.http.post<any>(`${environment.apiUrl}${path}`, {
+                ...args,
+            });
         } else if (type == "put") {
-            req = this.http
-                .put<any>(`${environment.apiUrl}${path}`, {
-                    ...args,
-                });
+            req = this.http.put<any>(`${environment.apiUrl}${path}`, {
+                ...args,
+            });
         } else if (type == "delete") {
-            req = this.http
-                .delete<any>(`${environment.apiUrl}${path}`, {
-                    ...args,
-                });
+            req = this.http.delete<any>(`${environment.apiUrl}${path}`, {
+                ...args,
+            });
         }
         return req;
     }
 
-    private handleError<T>(operation = "operation", result?: T) {
+    private handleError<T>(operation = "operation", result?: T): any {
         return (error: any): Observable<T> => {
-            // tslint:disable-next-line: no-console
+            // eslint-disable-next-line no-console
             console.error("Error occured in remote.service.ts:", error);
 
             if (!error.startsWith("java.net.UnknownHostException")) {
                 this.log(`${operation} failed: ${error.message}`);
-                // tslint:disable-next-line: no-console
+                // eslint-disable-next-line no-console
                 console.log(result);
 
                 this.alertService.error(error);
@@ -148,11 +139,12 @@ export class RemoteService {
         };
     }
 
-    private log(message: string) {
-        // tslint:disable-next-line: no-console
+    private log(message: string): void {
+        // eslint-disable-next-line no-console
         console.log(`RemoteService Log: ${message}`);
     }
-    private isEquivalent(a, b) {
+
+    private isEquivalent(a, b): boolean {
         // console.log("a");
         // console.log(a);
         // console.log("b");
@@ -167,7 +159,7 @@ export class RemoteService {
             return false;
         }
 
-        // tslint:disable-next-line: prefer-for-of
+
         for (let i = 0; i < aProps.length; i++) {
             const propName = aProps[i];
 

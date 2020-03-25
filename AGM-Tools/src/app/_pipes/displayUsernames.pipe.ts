@@ -6,7 +6,7 @@ import { User } from "../_models/user.model";
 })
 
 export class DisplayUsernamesPipe implements PipeTransform {
-    public transform(value: User[], delimiter: string = ", "): string {
+    public transform(value: User[], delimiter = ", "): string {
         return value.map((user) => user.username).join(delimiter);
     }
 }

@@ -5,10 +5,9 @@ import * as path from "path";
 import { config } from "../config/config";
 import { toInt } from "./utils";
 
-export function sendMail(to: string, data: {summary: string,
-    title: string, subtitle: string, secondTitle: string, content: string, subject: string,
-    // tslint:disable-next-line: align
-    cardTitle: string, cardSubtitle: string, btnText: string, btnUrl: string}, template = "base") {
+export function sendMail(to: string, data: {summary: string;
+    title: string; subtitle: string; secondTitle: string; content: string; subject: string;
+    cardTitle: string; cardSubtitle: string; btnText: string; btnUrl: string;}, template = "base") {
     const locals: any = data;
     locals.sentTo = i18n.__("mail.sentTo").replace("%s", to);
     locals.unsubscribe = i18n.__("mail.unsubscribe");
@@ -23,6 +22,7 @@ export function sendMail(to: string, data: {summary: string,
             host: config.email_host,
             port: toInt(config.email_port),
         });
+        // eslint-disable-next-line new-cap
         const email = new emailTemplates({
             message: { from: config.emailSender },
             preview: false,
@@ -50,19 +50,17 @@ export function sendMail(to: string, data: {summary: string,
     });
 }
 
-export function sendMultipleMails(to: string[], data: {summary: string,
-    title: string, subtitle: string, secondTitle: string, content: string, subject: string,
-    // tslint:disable-next-line: align
-    cardTitle: string, cardSubtitle: string, btnText: string, btnUrl: string}, template = "base") {
+export function sendMultipleMails(to: string[], data: {summary: string;
+    title: string; subtitle: string; secondTitle: string; content: string; subject: string;
+    cardTitle: string; cardSubtitle: string; btnText: string; btnUrl: string;}, template = "base") {
     for (const recipient of to) {
         sendMail(recipient, data, template);
     }
 }
 
-export function sendMailIfAgreed(to: string, data: {summary: string,
-    title: string, subtitle: string, secondTitle: string, content: string, subject: string,
-    // tslint:disable-next-line: align
-    cardTitle: string, cardSubtitle: string, btnText: string, btnUrl: string}, template = "base") {
+export function sendMailIfAgreed(to: string, data: {summary: string;
+    title: string; subtitle: string; secondTitle: string; content: string; subject: string;
+    cardTitle: string; cardSubtitle: string; btnText: string; btnUrl: string;}, template = "base") {
     // ToDo check if user agreed!
     sendMail(to, data, template);
 }

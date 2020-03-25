@@ -2,7 +2,7 @@ import { EventEmitter, Injectable, Output } from "@angular/core";
 
 @Injectable()
 export class NavbarService {
-    public headline: string = "AGM-Tools";
+    public headline = "AGM-Tools";
 
     @Output() public change: EventEmitter<string> = new EventEmitter();
 

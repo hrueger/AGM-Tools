@@ -31,81 +31,88 @@ import routes from "./routes";
 import { toInt } from "./utils/utils";
 
 i18n.configure({
-  // tslint:disable-next-line: no-bitwise
-  defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
-  directory: path.join(__dirname, "../assets/i18n"),
-  objectNotation: true,
+    defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
+    directory: path.join(__dirname, "../assets/i18n"),
+    objectNotation: true,
 });
 
 // Connects to the Database -> then starts the express
 createConnection({
-  charset: "utf8mb4",
-  cli: {
-    entitiesDir: "src/entity",
-    migrationsDir: "src/migration",
-    subscribersDir: "src/subscriber",
-  },
-  database: config.database_name,
-  entities: [
-    Cache,
-    Event,
-    File,
-    Message,
-    Notification,
-    Project,
-    Setting,
-    Tag,
-    Task,
-    Template,
-    Tutorial,
-    TutorialStep,
-    User,
-    Usergroup,
-  ],
-  host: config.database_host,
-  logging: false,
-  migrations: [
-    createUsergroups1574018071536,
-    createAdminUser1574018391679,
-    CreateTags1574797035707,
-    addFileEditTags1239083953412,
-  ],
-  migrationsRun: true,
-  password: config.database_password,
-  port: toInt(config.database_port),
-  synchronize: true,
-  type: "mysql",
-  username: config.database_user,
+    charset: "utf8mb4",
+    cli: {
+        entitiesDir: "src/entity",
+        migrationsDir: "src/migration",
+        subscribersDir: "src/subscriber",
+    },
+    database: config.database_name,
+    entities: [
+        Cache,
+        Event,
+        File,
+        Message,
+        Notification,
+        Project,
+        Setting,
+        Tag,
+        Task,
+        Template,
+        Tutorial,
+        TutorialStep,
+        User,
+        Usergroup,
+    ],
+    host: config.database_host,
+    logging: false,
+    migrations: [
+        createUsergroups1574018071536,
+        createAdminUser1574018391679,
+        CreateTags1574797035707,
+        addFileEditTags1239083953412,
+    ],
+    migrationsRun: true,
+    password: config.database_password,
+    port: toInt(config.database_port),
+    synchronize: true,
+    type: "mysql",
+    username: config.database_user,
 })
-  .then(async (connection) => {
-    await connection.query("SET NAMES utf8mb4;");
-    await connection.synchronize();
-    // tslint:disable-next-line: no-console
-    console.log("Migrations: ", await connection.runMigrations());
-    // Check if all folders exist
-    if (!fs.existsSync(config.storagePath)) { fs.mkdirSync(config.storagePath); }
-    if (!fs.existsSync(config.templateFilesStoragePath)) { fs.mkdirSync(config.templateFilesStoragePath); }
-    if (!fs.existsSync(config.tempFilesStoragePath)) { fs.mkdirSync(config.tempFilesStoragePath); }
-    if (!fs.existsSync(config.tutorialFilesStoragePath)) { fs.mkdirSync(config.tutorialFilesStoragePath); }
-    // Create a new express application instance
-    const app = express();
+    .then(async (connection) => {
+        await connection.query("SET NAMES utf8mb4;");
+        await connection.synchronize();
+        // eslint-disable-next-line no-console
+        console.log("Migrations: ", await connection.runMigrations());
+        // Check if all folders exist
+        if (!fs.existsSync(config.storagePath)) {
+            fs.mkdirSync(config.storagePath);
+        }
+        if (!fs.existsSync(config.templateFilesStoragePath)) {
+            fs.mkdirSync(config.templateFilesStoragePath);
+        }
+        if (!fs.existsSync(config.tempFilesStoragePath)) {
+            fs.mkdirSync(config.tempFilesStoragePath);
+        }
+        if (!fs.existsSync(config.tutorialFilesStoragePath)) {
+            fs.mkdirSync(config.tutorialFilesStoragePath);
+        }
+        // Create a new express application instance
+        const app = express();
 
-    // Call midlewares
-    app.use(fileUpload());
-    app.use(cors());
-    app.use(helmet());
-    app.use(bodyParser.json());
+        // Call midlewares
+        app.use(fileUpload());
+        app.use(cors());
+        app.use(helmet());
+        app.use(bodyParser.json());
 
-    // Set all routes from routes folder
-    app.use("/api", routes);
+        // Set all routes from routes folder
+        app.use("/api", routes);
 
-    // Set routes for static built frontend
-    app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
+        // Set routes for static built frontend
+        app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
 
-    app.listen(config.port, () => {
-      // tslint:disable-next-line: no-console
-      console.log(`Server started on port ${config.port}!`);
-    });
-  })
-  // tslint:disable-next-line: no-console
-  .catch((error) => console.log(error));
+        app.listen(config.port, () => {
+            // eslint-disable-next-line no-console
+            console.log(`Server started on port ${config.port}!`);
+        });
+    })
+// eslint-disable-next-line no-console
+    .catch((error) => console.log(error));

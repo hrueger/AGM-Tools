@@ -136,7 +136,7 @@ export const routes: Routes = [
         path: "share/:link",
     },
 
-    /* Authentication paths*/
+    /* Authentication paths */
     { path: "login", component: LoginComponent },
     { path: "resetPassword/:resetPasswordToken", component: LoginComponent },
     // otherwise redirect to home

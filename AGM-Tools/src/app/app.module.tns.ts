@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import { registerLocaleData } from "@angular/common";
 import { HTTP_INTERCEPTORS, HttpClient } from "@angular/common/http";
 import localeDe from "@angular/common/locales/de";
@@ -8,7 +9,7 @@ import {
     NO_ERRORS_SCHEMA,
     PlatformRef,
 } from "@angular/core";
-import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
@@ -21,6 +22,19 @@ import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angul
 import * as AppUrlSchemes from "nativescript-urlhandler";
 import { AvatarModule } from "ngx-avatar";
 import * as platform from "tns-core-modules/platform";
+import { registerElement } from "nativescript-angular/element-registry";
+import { Video } from "nativescript-videoplayer";
+import { PDFView } from "nativescript-pdf-view";
+import { Carousel, CarouselItem } from "nativescript-carousel";
+import { FormBuilder } from "@angular/forms";
+import { NativeScriptRouterModule, RouterExtensions } from "nativescript-angular/router";
+import { EmojiPickerModule } from "nativescript-emoji-picker/angular";
+import { LetterAvatarModule } from "nativescript-letter-avatar/angular";
+import { ModalDatetimepicker } from "nativescript-modal-datetimepicker";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { AppShortcuts } from "nativescript-app-shortcuts";
+import { WebRTC } from "nativescript-webrtc-plugin";
+import { WebRTCModule } from "nativescript-webrtc-plugin/angular";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { ChatMessagesComponent } from "./_components/chat-messages/chat-messages.component";
 import { MessageBoxComponent } from "./_components/chat-messages/message-box/message-box.component";
@@ -41,21 +55,6 @@ import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { ShortWhenPipe } from "./_pipes/short-when.pipe";
 import { NavbarService } from "./_services/navbar.service";
 import { AppComponent } from "./app.component";
-registerLocaleData(localeDe);
-import { registerElement } from "nativescript-angular/element-registry";
-import { Video } from "nativescript-videoplayer";
-registerElement("VideoPlayer", () => Video);
-import { PDFView } from "nativescript-pdf-view";
-registerElement("PDFView", () => PDFView);
-registerElement("PullToRefresh", () => require("@nstudio/nativescript-pulltorefresh").PullToRefresh);
-import { Carousel, CarouselItem } from "nativescript-carousel";
-registerElement("Carousel", () => Carousel);
-registerElement("CarouselItem", () => CarouselItem);
-import { FormBuilder } from "@angular/forms";
-import { NativeScriptRouterModule, RouterExtensions } from "nativescript-angular/router";
-import { EmojiPickerModule } from "nativescript-emoji-picker/angular";
-import { LetterAvatarModule } from "nativescript-letter-avatar/angular";
-import { ModalDatetimepicker } from "nativescript-modal-datetimepicker";
 import { ContactPickerComponent } from "./_components/_modals/contact-picker.modal.tns";
 import { EditUserModalComponent } from "./_components/_modals/edit-user.modal.tns";
 import { NewCalendarEventModalComponent } from "./_components/_modals/new-calendar-event.modal.tns";
@@ -72,18 +71,25 @@ import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
 import { routes } from "./app.routes";
-registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
-registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import { AppShortcuts } from "nativescript-app-shortcuts";
-import { WebRTC } from "nativescript-webrtc-plugin";
-import { WebRTCModule } from "nativescript-webrtc-plugin/angular";
 import { environment } from "../environments/environment";
 import { CallComponent } from "./_components/call/call.component";
 import { ShareComponent } from "./_components/share/share.component";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 
+registerLocaleData(localeDe);
+registerElement("VideoPlayer", () => Video);
+registerElement("PDFView", () => PDFView);
+registerElement("PullToRefresh", () => require("@nstudio/nativescript-pulltorefresh").PullToRefresh);
+registerElement("Carousel", () => Carousel);
+registerElement("CarouselItem", () => CarouselItem);
+registerElement("ImageSwipe", () => require("nativescript-image-swipe/image-swipe").ImageSwipe);
+registerElement("AnimatedCircle", () => require("nativescript-animated-circle").AnimatedCircle);
+
 WebRTC.init();
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
+}
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -172,9 +178,9 @@ WebRTC.init();
     schemas: [NO_ERRORS_SCHEMA],
 })
 export class AppModule {
-    constructor(private router: RouterExtensions, private zone: NgZone) {
+    public constructor(private router: RouterExtensions, private zone: NgZone) {
         new AppShortcuts().setQuickActionCallback((shortcutItem) => {
-            // tslint:disable-next-line: no-console
+            // eslint-disable-next-line no-console
             console.log(`The app was launched by shortcut with the type '${shortcutItem.type}'`);
             if (shortcutItem.type === "calendar") {
                 this.deeplink("/calendar");
@@ -185,9 +191,9 @@ export class AppModule {
             }
         });
         AppUrlSchemes.handleOpenURL((appUrl: AppUrlSchemes.AppURL) => {
-            // tslint:disable-next-line: no-console
+            // eslint-disable-next-line no-console
             console.log("###########################\nGot the following appURL", appUrl,
-            "\n###########################"); // ToDo
+                "\n###########################"); // ToDo
             const appUrlString = appUrl.toString().replace(environment.appUrl, "");
             const parts = appUrlString.split("/");
             router.navigate(parts);
@@ -201,8 +207,4 @@ export class AppModule {
             });
         });
     }
-}
-
-export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
 }

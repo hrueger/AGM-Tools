@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+    Component, EventEmitter, Input, Output,
+} from "@angular/core";
 import { AlertService } from "../../../_services/alert.service";
 import { FastTranslateService } from "../../../_services/fast-translate.service";
 
@@ -9,8 +11,8 @@ import { FastTranslateService } from "../../../_services/fast-translate.service"
 })
 export class MessageBoxComponent {
     public messageContent: string;
-    @Input() public embedded: boolean = false;
-    public showAttachmentContainer: boolean = false;
+    @Input() public embedded = false;
+    public showAttachmentContainer = false;
     @Output() public messageSent = new EventEmitter<string>();
     @Output() public attachmentMessageSent = new EventEmitter<any>();
     public showEmojiPicker = false;
@@ -62,7 +64,7 @@ export class MessageBoxComponent {
                 reject(err);
             });
         }).then((val) => {
-            this.attachmentMessageSent.emit({type: "location", data: val});
+            this.attachmentMessageSent.emit({ type: "location", data: val });
         }).catch(() => undefined);
     }
     public async sendContact() {

@@ -1,19 +1,21 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
+import {
+    Component, OnInit, QueryList, ViewChild, ViewChildren,
+} from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { NodeSelectEventArgs, TreeViewComponent } from "@syncfusion/ej2-angular-navigations";
 import { EmitType, L10n } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
+import { DatePipe } from "@angular/common";
 import { environment } from "../../../environments/environment";
-import { compare, ISortEvent, SortableHeader } from "../../_helpers/sortable.directive";
+import { compare, SortEvent, SortableHeader } from "../../_helpers/sortable.directive";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 import { FilePickerModalComponent } from "../filePickerModal/filePickerModal";
-import { DatePipe } from "@angular/common";
 
 @Component({
     selector: "app-files",
@@ -23,8 +25,8 @@ import { DatePipe } from "@angular/common";
 export class FilesComponent implements OnInit {
     public renameItemName: string;
     public renameItemForm: FormGroup;
-    public newFolderModalInvalidMessage: boolean = false;
-    public renameItemFormInvalidMessage: boolean = false;
+    public newFolderModalInvalidMessage = false;
+    public renameItemFormInvalidMessage = false;
     public imageSource: string;
     public pid: number;
     public settings = {
@@ -36,14 +38,14 @@ export class FilesComponent implements OnInit {
     public items: any[];
     public newFolderName: string;
     public newFolderForm: FormGroup;
-    public shareLink: string = "";
+    public shareLink = "";
     public tags: any[] = [];
     public currentFile: any;
     public documentEditorConfig: any;
     public fileTree: any[];
     public treeConfig: any;
     public allFiles: any[] = [];
-    public isFullScreen: boolean = false;
+    public isFullScreen = false;
     @ViewChild("treeView") public treeView: TreeViewComponent;
     @ViewChildren(SortableHeader) public headers: QueryList<SortableHeader>;
 
@@ -51,7 +53,7 @@ export class FilesComponent implements OnInit {
     private documentExtensions = ["doc", "docm", "docx", "dot", "dotm", "dotx", "epub", "fodt", "htm", "html", "mht", "odt", "ott", "pdf", "rtf", "txt", "djvu", "xps"];
     private spreadsheetExtensions = ["csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx"];
     private presentationExtensions = ["fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx"];
-    constructor(
+    public constructor(
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
         private modalService: NgbModal,
@@ -64,8 +66,7 @@ export class FilesComponent implements OnInit {
         private datePipe: DatePipe,
     ) { }
 
-    public onSort({ column, direction }: ISortEvent) {
-
+    public onSort({ column, direction }: SortEvent) {
         // resetting other headers
         this.headers.forEach((header) => {
             if (header.sortable !== column) {
@@ -121,9 +122,9 @@ export class FilesComponent implements OnInit {
         const officeExtensions = [
             "doc", "docm", "docx", "dot", "dotm", "dotx", "epub", "fodt", "htm", "html", "mht", "odt", "ott", "pdf", "rtf", "txt", "djvu", "xps",
             "fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx",
-            "csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx"
+            "csv", "fods", "ods", "ots", "xls", "xlsm", "xlsx", "xlt", "xltm", "xltx",
         ];
-         return officeExtensions.includes(item.name.split(".").pop());
+        return officeExtensions.includes(item.name.split(".").pop());
     }
 
     public async downloadAs(item, format) {
@@ -136,7 +137,7 @@ export class FilesComponent implements OnInit {
         this.alertService.info(await this.fts.t("files.conversionStarted"));
         let title = item.name.split(".");
         title.pop();
-        title = `${title.join(".")}.${format}`
+        title = `${title.join(".")}.${format}`;
         this.remoteService.get("post", "files/convert", {
             filetype,
             outputtype: format,
@@ -179,9 +180,9 @@ export class FilesComponent implements OnInit {
             this.navigate({ id: -1, name: this.route.snapshot.params.projectName });
             this.remoteService.get("get",
                 `files/tree/${this.route.snapshot.params.projectId}`).subscribe((data: any[]) => {
-                    this.allFiles = data;
-                    this.makeFileTreeConfig(data);
-                });
+                this.allFiles = data;
+                this.makeFileTreeConfig(data);
+            });
         }
         L10n.load({
             de: {
@@ -254,19 +255,18 @@ export class FilesComponent implements OnInit {
     }
     public getIcon(item: any) {
         const basepath = "assets/icons/";
-        const iconPath = basepath + "extralarge/";
+        const iconPath = `${basepath}extralarge/`;
         if (item.isFolder) {
-            return basepath + "folder.png";
-        } else {
-            return (
-                iconPath +
-                item.name
+            return `${basepath}folder.png`;
+        }
+        return (
+            `${iconPath
+                + item.name
                     .split(".")
                     .pop()
-                    .toLowerCase() +
-                ".png"
-            );
-        }
+                    .toLowerCase()
+            }.png`
+        );
     }
     public upTo(id) {
         let item = null;
@@ -295,7 +295,7 @@ export class FilesComponent implements OnInit {
         this.modalService
             .open(content, { ariaLabelledBy: "modal-basic-title" })
             .result.then(
-                (result) => {
+                () => {
                     this.remoteService
                         .getNoCache("post", "files", {
                             fid: this.currentPath[this.currentPath.length - 1].id,
@@ -340,7 +340,8 @@ export class FilesComponent implements OnInit {
         const knownExtensions = {
             archive: ["zip"],
             audio: ["mp3", "wav", "m4a"],
-            document: this.documentExtensions.concat(this.spreadsheetExtensions).concat(this.presentationExtensions),
+            document: this.documentExtensions.concat(this.spreadsheetExtensions)
+                .concat(this.presentationExtensions),
             image: ["jpg", "jpeg", "gif", "png", "svg"],
             pdf: ["pdf"],
             video: ["mp4", "mov", "avi"],
@@ -398,7 +399,7 @@ export class FilesComponent implements OnInit {
         this.renameItemForm.get("renameItemName").setValue(item.name);
         this.modalService
             .open(renameModal)
-            .result.then((result) => {
+            .result.then(() => {
                 this.remoteService
                     .getNoCache("post", `files/${item.id}`, {
                         name: this.renameItemForm.get("renameItemName").value,
@@ -406,19 +407,21 @@ export class FilesComponent implements OnInit {
                     .subscribe(async (data) => {
                         if (data.status == true) {
                             this.alertService.success(
-                                await this.fts.t(item.isFolder ? "files.folderRenamedSuccessfully" : "files.fileRenamedSuccessfully"));
+                                await this.fts.t(item.isFolder ? "files.folderRenamedSuccessfully" : "files.fileRenamedSuccessfully"),
+                            );
                             this.reloadHere();
                         }
                     });
             });
-
     }
     public async delete(item) {
+        // eslint-disable-next-line
         if (confirm(await this.fts.t(item.isFolder ? "files.confirmFolderDelete" : "files.confirmFileDelete"))) {
             this.remoteService.getNoCache("delete", `files/${item.id}`).subscribe(async (data) => {
                 if (data.status == true) {
                     this.alertService.success(
-                        await this.fts.t(item.isFolder ? "files.folderDeletedSuccessfully" : "files.fileDeletedSuccessfully"));
+                        await this.fts.t(item.isFolder ? "files.folderDeletedSuccessfully" : "files.fileDeletedSuccessfully"),
+                    );
                     this.reloadHere();
                 }
             });
@@ -448,7 +451,7 @@ export class FilesComponent implements OnInit {
             }
         }).catch(() => undefined);
     }
-    public async copy(item) {
+    public async copy() {
         this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
     }
 
@@ -521,56 +524,56 @@ export class FilesComponent implements OnInit {
     private async setupDocumentEditorConfig(ext, type) {
         this.documentEditorConfig = {
             editorConfig: {
-              document: {
-                fileType: ext,
-                info: {
-                  folder: `${this.currentPath.map((i) => i.name).join(" / ")} / ${this.currentFile.name}`,
-                  owner: this.currentFile.creator.username,
-                  uploaded: `${this.datePipe.transform(this.currentFile.createdAt, "shortDate")}, ${this.datePipe.transform(this.currentFile.createdAt, "shortTime")}`,
-                },
-                key: this.currentFile.editKey,
-                permissions: {
-                    comment: true,
-                    download: true,
-                    edit: true,
-                    fillForms: true,
-                    print: true,
-                    review: true,
-                },
-                title: this.currentFile.name,
-                url: this.getCurrentFileSrc(),
-              },
-              documentType: type,
-              editorConfig: {
-                customization: {
-                    autosave: true,
-                    chat: true,
-                    commentAuthorOnly: false,
-                    comments: true,
-                    compactHeader: false,
-                    compactToolbar: false,
-                    feedback: {
-                        url: "https://github.com/hrueger/AGM-Tools/issues/new",
-                        visible: true,
+                document: {
+                    fileType: ext,
+                    info: {
+                        folder: `${this.currentPath.map((i) => i.name).join(" / ")} / ${this.currentFile.name}`,
+                        owner: this.currentFile.creator.username,
+                        uploaded: `${this.datePipe.transform(this.currentFile.createdAt, "shortDate")}, ${this.datePipe.transform(this.currentFile.createdAt, "shortTime")}`,
                     },
-                    forcesave: false,
-                    help: true,
-                    hideRightMenu: false,
-                    showReviewChanges: false,
-                    toolbarNoTabs: false,
-                    zoom: 100,
+                    key: this.currentFile.editKey,
+                    permissions: {
+                        comment: true,
+                        download: true,
+                        edit: true,
+                        fillForms: true,
+                        print: true,
+                        review: true,
+                    },
+                    title: this.currentFile.name,
+                    url: this.getCurrentFileSrc(),
                 },
-                callbackUrl: `${environment.apiUrl}files/track`,
-                /*embedded: {
+                documentType: type,
+                editorConfig: {
+                    customization: {
+                        autosave: true,
+                        chat: true,
+                        commentAuthorOnly: false,
+                        comments: true,
+                        compactHeader: false,
+                        compactToolbar: false,
+                        feedback: {
+                            url: "https://github.com/hrueger/AGM-Tools/issues/new",
+                            visible: true,
+                        },
+                        forcesave: false,
+                        help: true,
+                        hideRightMenu: false,
+                        showReviewChanges: false,
+                        toolbarNoTabs: false,
+                        zoom: 100,
+                    },
+                    callbackUrl: `${environment.apiUrl}files/track`,
+                    /* embedded: {
                     embedUrl: "https://example.com/embedded?doc=exampledocument1.docx",
                     fullscreenUrl: "https://example.com/embedded?doc=exampledocument1.docx#fullscreen",
                     saveUrl: "https://example.com/download?doc=exampledocument1.docx",
                     shareUrl: "https://example.com/view?doc=exampledocument1.docx",
                     toolbarDocked: "top",
-                },*/
-                lang: this.fts.getLang(),
-                mode: "edit",
-                /*recent: [
+                }, */
+                    lang: this.fts.getLang(),
+                    mode: "edit",
+                    /* recent: [
                     {
                         folder: "Example Files",
                         title: "exampledocument1.docx",
@@ -581,30 +584,31 @@ export class FilesComponent implements OnInit {
                         title: "exampledocument2.docx",
                         url: "https://example.com/exampledocument2.docx",
                     },
-                ],*/
-                region: `${this.fts.getLang()}-${this.fts.getLang().toUpperCase()}`,
-                user: {
-                    id: (Math.random()*100000).toString(), // this.authenticationService.currentUserValue.id,
-                    name: this.authenticationService.currentUserValue.username,
+                ], */
+                    region: `${this.fts.getLang()}-${this.fts.getLang().toUpperCase()}`,
+                    user: {
+                        id: (Math.random() * 100000).toString(),
+                        // this.authenticationService.currentUserValue.id,
+                        name: this.authenticationService.currentUserValue.username,
+                    },
                 },
-            },
-              events: {
-                // tslint:disable-next-line: no-console
-                onBack: console.log,
-                // tslint:disable-next-line: no-console
-                onDocumentStateChange: console.log,
-                // tslint:disable-next-line: no-console
-                onError: console.log,
-                // tslint:disable-next-line: no-console
-                onReady: console.log,
-                // tslint:disable-next-line: no-console
-                onRequestEditRights: console.log,
-                // tslint:disable-next-line: no-console
-                onSave: console.log,
-              },
-              height: "100%",
-              type: "desktop",
-              width: "100%",
+                events: {
+                // eslint-disable-next-line no-console
+                    onBack: console.log,
+                    // eslint-disable-next-line no-console
+                    onDocumentStateChange: console.log,
+                    // eslint-disable-next-line no-console
+                    onError: console.log,
+                    // eslint-disable-next-line no-console
+                    onReady: console.log,
+                    // eslint-disable-next-line no-console
+                    onRequestEditRights: console.log,
+                    // eslint-disable-next-line no-console
+                    onSave: console.log,
+                },
+                height: "100%",
+                type: "desktop",
+                width: "100%",
             },
             script: `${environment.documentServerUrl}/web-apps/apps/api/documents/api.js`,
         };
@@ -628,7 +632,7 @@ export class FilesComponent implements OnInit {
 
     private findNode(id, array) {
         for (const node of array) {
-            if (parseInt(node.id, undefined) === parseInt(id, undefined)) {
+            if (parseInt(node.id) === parseInt(id)) {
                 return node;
             }
             if (node.files) {
@@ -638,6 +642,7 @@ export class FilesComponent implements OnInit {
                 }
             }
         }
+        return undefined;
     }
 
     private findParent(id, array, parent?) {
@@ -652,6 +657,7 @@ export class FilesComponent implements OnInit {
                 }
             }
         }
+        return undefined;
     }
 
     private findParents(id, array) {

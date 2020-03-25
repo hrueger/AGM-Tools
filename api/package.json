@@ -27,9 +27,18 @@
     "@types/nodemailer": "^6.4.0",
     "@types/rimraf": "^2.0.3",
     "@types/unzipper": "^0.10.2",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-github": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-json": "^2.1.1",
+    "eslint-plugin-prettier": "^3.1.2",
     "npx": "^10.2.2",
     "ts-node": "8.7.0",
-    "tslint": "^6.1.0",
     "typescript": "3.8.3"
   },
   "dependencies": {
@@ -67,16 +76,17 @@
     "snyk": "^1.301.0"
   },
   "scripts": {
-    "tsc": "tsc",
+    "build": "tsc",
+    "createFilesWithApiKeys": "node src/scripts/generateSecretFilesWithKeys.js",
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --ext .ts --fix",
+    "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
+    "prepare": "npm run snyk-protect",
+    "prod": "tsc && node ./build/index.js",
+    "snyk-protect": "snyk protect",
     "start": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/index.ts",
     "start:rtc": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/rtcServer.ts",
-    "prod": "tsc && node ./build/index.js",
-    "build": "tsc",
-    "lint": "npx tslint --project .",
-    "createFilesWithApiKeys": "node src/scripts/generateSecretFilesWithKeys.js",
-    "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "tsc": "tsc"
   },
   "snyk": true
 }

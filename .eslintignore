@@ -1,0 +1,7 @@
+AGM-Tools/App_Resources/*
+AGM-Tools/hooks/*
+AGM-Tools/node_modules/*
+api/node_modules/*
+api/assets/*
+frontend_build/*
+fs/*

@@ -1,16 +1,13 @@
 import {
     Column,
-    CreateDateColumn,
     Entity,
-    ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
-  } from "typeorm";
-import { File } from "./File";
+} from "typeorm";
 import { User } from "./User";
 
 @Entity()
-  export class Setting {
+export class Setting {
     @PrimaryGeneratedColumn()
     public id: number;
 
@@ -20,6 +17,6 @@ import { User } from "./User";
     @Column()
     public value: string;
 
-    @ManyToOne((type) => User, (user) => user.settings)
+    @ManyToOne(() => User, (user) => user.settings)
     public user: User;
-  }
+}

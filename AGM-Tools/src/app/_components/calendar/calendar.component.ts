@@ -126,13 +126,13 @@ L10n.load({
 });
 
 loadCldr(
-    // @ts-ignore
+    // eslint-disable-next-line
     require("../../../../node_modules/cldr-data/supplemental/numberingSystems.json"),
-    // @ts-ignore
+    // eslint-disable-next-line
     require("../../../../node_modules/cldr-data/main/de/ca-gregorian.json"),
-    // @ts-ignore
+    // eslint-disable-next-line
     require("../../../../node_modules/cldr-data/main/de/numbers.json"),
-    // @ts-ignore
+    // eslint-disable-next-line
     require("../../../../node_modules/cldr-data/main/de/timeZoneNames.json"),
 );
 
@@ -153,7 +153,7 @@ loadCldr(
 })
 export class CalendarComponent {
     @ViewChild("calendar") public calendar;
-    public weekFirstDay: number = 1;
+    public weekFirstDay = 1;
     public showCalendar = false;
     public selectedDate: Date = new Date();
     public eventSettings: EventSettingsModel = {
@@ -174,7 +174,7 @@ export class CalendarComponent {
     };
     public idsToReplace: any = [];
     public eventToNavigateTo = null;
-    constructor(
+    public constructor(
         private remoteService: RemoteService,
         private navbarService: NavbarService,
         private route: ActivatedRoute,
@@ -182,9 +182,9 @@ export class CalendarComponent {
         private fts: FastTranslateService,
     ) { }
 
-    public async ngOnInit() {
+    public async ngOnInit(): Promise<void> {
         this.navbarService.setHeadline(await this.fts.t("calendar.calendar"));
-        this.remoteService.get("get", "events/").subscribe((dates) => {
+        this.remoteService.get("get", "events/").subscribe((dates): void => {
             if (dates) {
                 this.eventSettings.dataSource = [];
                 for (const date of dates) {
@@ -207,7 +207,7 @@ export class CalendarComponent {
                 if (this.showCalendar) {
                     this.showCalendar = false;
                     const that = this;
-                    window.setTimeout(() => {
+                    window.setTimeout((): void => {
                         that.showCalendar = true;
                     }, 50);
                 } else {
@@ -215,17 +215,44 @@ export class CalendarComponent {
                 }
             }
         });
-        this.route.params.subscribe((params) => {
+        this.route.params.subscribe((params): void => {
             this.eventToNavigateTo = params.index;
         });
     }
 
-    public async onChange(ev) {
+    public async onChange(ev): Promise<void> {
         if (ev) {
             switch (ev.requestType) {
-                case "eventCreated":
+            case "eventCreated":
+                this.remoteService
+                    .getNoCache("post", "events/", {
+                        description: ev.data[0].Description ? ev.data[0].Description : await this.fts.t("errors.noDescriptionProvided"),
+                        endDate: ev.data[0].EndTime.toISOString(),
+                        headline: ev.data[0].Subject ? ev.data[0].Subject : await this.fts.t("errors.noHeadlineProvided"),
+                        important: true,
+                        location: ev.data[0].Location ? ev.data[0].Location : await this.fts.t("errors.noLocationProvided"),
+                        startDate: ev.data[0].StartTime.toISOString(),
+                    })
+                    .subscribe(async (data): Promise<void> => {
+                        if (data && data.status == true) {
+                            this.alertService.success(await this.fts.t("calendar.eventSavedSuccessfully"));
+                            this.idsToReplace.push(
+                                {
+                                    bad: (this.eventSettings.dataSource as any[])
+                                        .find((e): boolean => e.Id == ev.data[0].Id).Id,
+                                    good: data.id,
+                                },
+                            );
+                            // eslint-disable-next-line no-console
+                            console.log(this.idsToReplace);
+                        }
+                    });
+                break;
+            case "eventChanged":
+                const id = this.getRealId(ev.data[0].Id);
+                if (id != null) {
                     this.remoteService
-                        .getNoCache("post", "events/", {
+                        .getNoCache("post", `events/${id}`, {
                             description: ev.data[0].Description ? ev.data[0].Description : await this.fts.t("errors.noDescriptionProvided"),
                             endDate: ev.data[0].EndTime.toISOString(),
                             headline: ev.data[0].Subject ? ev.data[0].Subject : await this.fts.t("errors.noHeadlineProvided"),
@@ -233,61 +260,37 @@ export class CalendarComponent {
                             location: ev.data[0].Location ? ev.data[0].Location : await this.fts.t("errors.noLocationProvided"),
                             startDate: ev.data[0].StartTime.toISOString(),
                         })
-                        .subscribe(async (data) => {
+                        .subscribe(async (data): Promise<void> => {
                             if (data && data.status == true) {
-                                this.alertService.success(await this.fts.t("calendar.eventSavedSuccessfully"));
-                                this.idsToReplace.push(
-                                    {
-                                        // @ts-ignore
-                                        bad: this.eventSettings.dataSource.find((e) => e.Id == ev.data[0].Id).Id,
-                                        good: data.id,
-                                    },
-                                );
-                                // tslint:disable-next-line: no-console
-                                console.log(this.idsToReplace);
+                                this.alertService.success(await this.fts.t("calendar.eventUpdatedSuccessfully"));
                             }
                         });
-                case "eventChanged":
-                    const id = this.getRealId(ev.data[0].Id);
-                    if (id != null) {
-                        this.remoteService
-                            .getNoCache("post", `events/${id}`, {
-                                description: ev.data[0].Description ? ev.data[0].Description : await this.fts.t("errors.noDescriptionProvided"),
-                                endDate: ev.data[0].EndTime.toISOString(),
-                                headline: ev.data[0].Subject ? ev.data[0].Subject : await this.fts.t("errors.noHeadlineProvided"),
-                                important: true,
-                                location: ev.data[0].Location ? ev.data[0].Location : await this.fts.t("errors.noLocationProvided"),
-                                startDate: ev.data[0].StartTime.toISOString(),
-                            })
-                            .subscribe(async (data) => {
-                                if (data && data.status == true) {
-                                    this.alertService.success(await this.fts.t("calendar.eventUpdatedSuccessfully"));
-                                }
-                            });
-                    }
-                case "eventRemoved":
-                    if (!(ev && ev.data && ev.data[0] && ev.data[0].Id)) {
-                        return;
-                    }
-                    const evId = this.getRealId(ev.data[0].Id);
-                    if (evId != null) {
-                        this.remoteService
-                            .getNoCache("delete", `events/${evId}`)
-                            .subscribe(async (data) => {
-                                if (data && data.status == true) {
-                                    this.alertService.success(await this.fts.t("calendar.eventDeletedSuccessfully"));
-                                }
-                            });
-                    }
-                default:
-                    // tslint:disable-next-line: no-console
-                    console.log(ev);
+                }
+                break;
+            case "eventRemoved":
+                if (!(ev && ev.data && ev.data[0] && ev.data[0].Id)) {
+                    return;
+                }
+                const evId = this.getRealId(ev.data[0].Id);
+                if (evId != null) {
+                    this.remoteService
+                        .getNoCache("delete", `events/${evId}`)
+                        .subscribe(async (data): Promise<void> => {
+                            if (data && data.status == true) {
+                                this.alertService.success(await this.fts.t("calendar.eventDeletedSuccessfully"));
+                            }
+                        });
+                }
+                break;
+            default:
+                // eslint-disable-next-line no-console
+                console.log(ev);
             }
         }
     }
 
-    private getRealId(id: string) {
-        const index = this.idsToReplace.findIndex((e) => e.bad == id);
+    private getRealId(id: string): string {
+        const index = this.idsToReplace.findIndex((e): boolean => e.bad == id);
         if (index != -1) {
             id = this.idsToReplace[index].good;
         } else {

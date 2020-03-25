@@ -1,15 +1,14 @@
 import * as bcrypt from "bcryptjs";
 import {
-Column,
-CreateDateColumn,
-Entity,
-JoinTable,
-ManyToMany,
-ManyToOne,
-OneToMany,
-PrimaryGeneratedColumn,
-Unique,
-UpdateDateColumn,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    Unique,
+    UpdateDateColumn,
 } from "typeorm";
 import { Event } from "./Event";
 import { File } from "./File";
@@ -34,16 +33,16 @@ export class User {
   @Column()
   public email: string;
 
-  @Column({select: false})
+  @Column({ select: false })
   public password: string;
 
-  @Column({select: false, nullable: true})
+  @Column({ select: false, nullable: true })
   public passwordResetToken: string;
 
-  @ManyToOne((type) => Usergroup, (usergroup) => usergroup.users)
+  @ManyToOne(() => Usergroup, (usergroup) => usergroup.users)
   public usergroup: Usergroup;
 
-  @ManyToMany((type) => Project, (project) => project.users)
+  @ManyToMany(() => Project, (project) => project.users)
   public projects: Project[];
 
   @Column()
@@ -54,51 +53,50 @@ export class User {
   @UpdateDateColumn()
   public updatedAt: Date;
 
-  @ManyToMany((type) => Notification, (notification) => notification.receivers)
+  @ManyToMany(() => Notification, (notification) => notification.receivers)
   public receivedNotifications: Notification[];
 
-  @ManyToMany((type) => Notification, (notification) => notification.seenBy)
+  @ManyToMany(() => Notification, (notification) => notification.seenBy)
   public seenNotifications: Notification[];
 
-  @OneToMany((type) => Notification, (notification) => notification.creator)
+  @OneToMany(() => Notification, (notification) => notification.creator)
   public sentNotifications: Notification[];
 
-  @OneToMany((type) => Message, (message) => message.sender)
+  @OneToMany(() => Message, (message) => message.sender)
   public sentMessages: Message[];
 
-  @OneToMany((type) => Message, (message) => message.toUser)
+  @OneToMany(() => Message, (message) => message.toUser)
   public receivedMessages: Message[];
 
-  @OneToMany((type) => Template, (template) => template.creator)
+  @OneToMany(() => Template, (template) => template.creator)
   public templates: Template[];
 
-  @OneToMany((type) => Tutorial, (tutorial) => tutorial.creator)
+  @OneToMany(() => Tutorial, (tutorial) => tutorial.creator)
   public tutorials: Tutorial[];
 
-  @OneToMany((type) => Task, (task) => task.creator)
+  @OneToMany(() => Task, (task) => task.creator)
   public createdTasks: Task[];
 
-  @ManyToMany((type) => Task, (task) => task.users)
+  @ManyToMany(() => Task, (task) => task.users)
   public tasks: Task[];
 
-  @OneToMany((type) => Event, (event) => event.creator)
+  @OneToMany(() => Event, (event) => event.creator)
   public events: Event[];
 
-  @OneToMany((type) => File, (file) => file.creator)
+  @OneToMany(() => File, (file) => file.creator)
   public files: File[];
 
-  @OneToMany((type) => Setting, (setting) => setting.user)
+  @OneToMany(() => Setting, (setting) => setting.user)
   public settings: Setting[];
 
   public hashPassword() {
-    this.password = bcrypt.hashSync(this.password, 8);
+      this.password = bcrypt.hashSync(this.password, 8);
   }
 
   public checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
       if (unencryptedPassword) {
           return bcrypt.compareSync(unencryptedPassword, this.password);
-      } else {
-          return false;
       }
+      return false;
   }
 }

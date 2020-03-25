@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
@@ -26,17 +26,20 @@ export class ChatComponent {
             this.chats = chats;
         });
         if (this.route.snapshot.params.type && this.route.snapshot.params.id) {
-            let isUser;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            let isUser: boolean;
             if (this.route.snapshot.params.type == "project") {
                 isUser = false;
             } else if (this.route.snapshot.params.type == "user") {
                 isUser = true;
             }
-            const chat = this.chats.filter((c) =>
-                (c.isUser == false && c.id == parseInt(this.route.snapshot.params.id, undefined)),
+            const chat = this.chats.filter(
+                (c) => (c.isUser == false
+                    && c.id == parseInt(this.route.snapshot.params.id, undefined)
+                ),
             );
             if (chat && chat[0]) {
-                this.currentChat = chat[0];
+                [this.currentChat] = chat;
             }
         }
     }

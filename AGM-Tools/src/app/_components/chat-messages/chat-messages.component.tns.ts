@@ -27,6 +27,25 @@ import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
 import { ContactPickerComponent } from "../_modals/contact-picker.modal.tns";
 
+
+function progressHandler(): void {
+    //
+}
+function errorHandler(e: { responseCode: string }): void {
+    // eslint-disable-next-line no-alert
+    alert(`Die Datei konnte nicht erfolgreich hochgeladen werden, Fehlercode ${e.responseCode}`);
+}
+function respondedHandler(): void {
+    // console.log("received " + e.responseCode + " code. Server sent: " + e.data);
+}
+function completeHandler(): void {
+    //
+}
+function cancelledHandler(): void {
+    //
+}
+
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: "chat-messages",
@@ -34,7 +53,7 @@ import { ContactPickerComponent } from "../_modals/contact-picker.modal.tns";
     templateUrl: "chat-messages.component.html",
 })
 export class ChatMessagesComponent
-    implements OnInit {
+implements OnInit {
     @Input() public inputReceiverId: number;
     public chatId: number;
     public chatType: string;
@@ -50,12 +69,12 @@ export class ChatMessagesComponent
         unread: null,
         when: null,
     };
-    public dialogOpen: boolean = false;
+    public dialogOpen = false;
     public unread: number;
     public messages: ObservableArray<any> = new ObservableArray<any>(0);
 
     @ViewChild("inputMessageField", { static: false }) public inputMessageField: ElementRef;
-    constructor(
+    public constructor(
         private remoteService: RemoteService,
         private router: RouterExtensions,
         private cdr: ChangeDetectorRef,
@@ -67,42 +86,42 @@ export class ChatMessagesComponent
         private page: Page,
     ) { }
 
-    public toggleAttachmentDialog() {
+    public toggleAttachmentDialog(): void {
         this.dialogOpen = !this.dialogOpen;
     }
 
-    public sendDocument() {
+    public sendDocument(): void {
         this.toggleAttachmentDialog();
+        // eslint-disable-next-line no-alert
         alert("Noch nicht implementiert!");
     }
-    public sendPicture() {
+    public sendPicture(): void {
         this.toggleAttachmentDialog();
         const that = this;
         camera.requestPermissions().then(
-            function success() {
-                camera.takePicture({ saveToGallery: false }).
-                    then((imageAsset) => {
+            (): void => {
+                camera.takePicture({ saveToGallery: false })
+                    .then((imageAsset): void => {
                         const source = new ImageSource();
                         source.fromAsset(imageAsset)
-                            .then((imageSource) => {
+                            .then((imageSource): void => {
                                 const photoEditor = new PhotoEditor();
                                 photoEditor.editPhoto({
                                     imageSource,
-                                }).then((newImage: ImageSource) => {
+                                }).then((newImage: ImageSource): void => {
                                     const folderDest = knownFolders.documents();
                                     const date = new Date();
-                                    const filename = "agmtools_" + date.getDate() + "-"
-                                        + (date.getMonth()) + "-"
-                                        + date.getFullYear() + "_"
-                                        + date.getHours() + "-"
-                                        + date.getMinutes() + "-"
-                                        + date.getSeconds();
-                                    const pathDest = path.join(folderDest.path, filename + ".png");
+                                    const filename = `agmtools_${date.getDate()}-${
+                                        date.getMonth()}-${
+                                        date.getFullYear()}_${
+                                        date.getHours()}-${
+                                        date.getMinutes()}-${
+                                        date.getSeconds()}`;
+                                    const pathDest = path.join(folderDest.path, `${filename}.png`);
                                     const saved: boolean = newImage.saveToFile(pathDest, "png");
                                     if (saved) {
-
                                         // add message to chat
-                                        /*let message: Message = {
+                                        /* let message: Message = {
                                             chat: null,
                                             created: Date.now(),
                                             fromMe: true,
@@ -117,17 +136,18 @@ export class ChatMessagesComponent
                                                 message: this.inputMessage,
                                                 rid: this.receiverId,
                                             })
-                                            .subscribe();*/
+                                            .subscribe(); */
 
-                                        const url = environment.apiUrl + "?token=" +
-                                            that.authService.currentUserValue.token.toString();
+                                        const url = `${environment.apiUrl}?token=${
+                                            that.authService.currentUserValue.token.toString()}`;
                                         const name = pathDest.substr(pathDest.lastIndexOf("/") + 1);
 
                                         // upload configuration
+                                        // eslint-disable-next-line
                                         const bghttp = require("nativescript-background-http");
                                         const session = bghttp.session("image-upload");
                                         const request = {
-                                            description: "Uploading " + name,
+                                            description: `Uploading ${name}`,
                                             headers: {
                                                 "Content-Type": "application/octet-stream",
                                             },
@@ -147,40 +167,41 @@ export class ChatMessagesComponent
                                         task.on("responded", respondedHandler);
                                         task.on("complete", completeHandler);
                                         task.on("cancelled", cancelledHandler);
-
                                     }
-                                }).catch((e) => {
-                                    that.alertService.error("Folgender Fehler ist aufgetreten: " + e);
+                                }).catch((e): void => {
+                                    that.alertService.error(`Folgender Fehler ist aufgetreten: ${e}`);
                                 });
                             });
-                    }).catch((err) => {
-                        that.alertService.error("Folgender Fehler ist aufgetreten: " + err.message);
+                    }).catch((err): void => {
+                        that.alertService.error(`Folgender Fehler ist aufgetreten: ${err.message}`);
                     });
             },
-            function failure() {
+            (): void => {
                 that.alertService.error("Leider kann AGM-Tools ohne diese\
                 Berechtigungen kein Bild versenden. Bitte versuche es erneut!");
             },
         );
     }
-    public sendGallery() {
+    public sendGallery(): void {
         this.toggleAttachmentDialog();
+        // eslint-disable-next-line no-alert
         alert("Noch nicht implementiert!");
     }
-    public sendAudio() {
+    public sendAudio(): void {
         this.toggleAttachmentDialog();
+        // eslint-disable-next-line no-alert
         alert("Noch nicht implementiert!");
     }
-    public sendLocation() {
+    public sendLocation(): void {
         this.toggleAttachmentDialog();
-        geolocation.enableLocationRequest().then(() => {
-            geolocation.getCurrentLocation({desiredAccuracy:  Accuracy.high }).then((l) => {
-                // tslint:disable-next-line: no-console
+        geolocation.enableLocationRequest().then((): void => {
+            geolocation.getCurrentLocation({ desiredAccuracy: Accuracy.high }).then((l): void => {
+                // eslint-disable-next-line no-console
                 console.log(l);
             });
         });
     }
-    public sendContact() {
+    public sendContact(): void {
         this.toggleAttachmentDialog();
         const options = {
             animated: true,
@@ -188,82 +209,81 @@ export class ChatMessagesComponent
             fullscreen: true,
             viewContainerRef: this.vcRef,
         };
-        this.modal.showModal(ContactPickerComponent, options).then((contact) => {
+        this.modal.showModal(ContactPickerComponent, options).then((contact): void => {
             if (contact) {
-
                 dialogs.confirm({
                     cancelButtonText: "Abbrechen",
                     cancelable: true,
                     message: "Soll dieser Kontakt wirklich gesendet werden?",
                     okButtonText: "Senden",
                     title: contact.display_name,
-                }).then((result: boolean) => {
+                }).then((result: boolean): void => {
                     const contactToSend = {
                         name: contact.display_name,
                         number: contact.phone[0].number,
                     };
                     if (result) {
-                        this.displayAndSendMessage({contact: contactToSend});
+                        this.displayAndSendMessage({ contact: contactToSend });
                     }
                 });
             }
         });
     }
 
-    public sendMessage() {
+    public sendMessage(): void {
         if (this.inputMessageField.nativeElement.text && this.inputMessageField.nativeElement.text != "") {
-            this.displayAndSendMessage({content: this.inputMessageField.nativeElement.text});
+            this.displayAndSendMessage({ content: this.inputMessageField.nativeElement.text });
         }
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.page.actionBarHidden = true;
         this.chatId = this.route.snapshot.params.id;
         this.chatType = this.route.snapshot.params.type;
-        setTimeout(() => {
-            this.remoteService.get("get", "chats").subscribe((chats) => {
-                this.chat = chats.filter((chat: any) => chat.id == this.chatId)[0];
+        setTimeout((): void => {
+            this.remoteService.get("get", "chats").subscribe((chats): void => {
+                [this.chat] = chats.filter((chat: any): boolean => chat.id == this.chatId);
                 this.cdr.markForCheck();
                 this.getMessages();
             });
         });
     }
 
-    public async videoCall() {
+    public async videoCall(): Promise<void> {
         if (await confirm(`Möchtest du einen Videoanruf mit ${this.chat.name} starten?`)) {
             this.router.navigate(["call", "user", this.chat.id, "video"]);
         }
     }
 
-    public async audioCall()  {
+    public async audioCall(): Promise<void> {
         if (await confirm(`Möchtest du einen Sprachanruf mit ${this.chat.name} starten?`)) {
             this.router.navigate(["call", "user", this.chat.id, "audio"]);
         }
     }
 
-    public options() {
+    public options(): void {
         //
     }
 
-    public getMessages() {
-        setTimeout(() => {
+    public getMessages(): void {
+        setTimeout((): void => {
             this.remoteService.get("get", `chats/${this.chatType}/${this.chatId}`)
-            .subscribe((data) => {
-                if (data != null) {
-                    this.messages.length = 0;
-                    this.messages.push(...data);
-                    this.cdr.markForCheck();
-                }
-            });
+                .subscribe((data): void => {
+                    if (data != null) {
+                        this.messages.length = 0;
+                        this.messages.push(...data);
+                        this.cdr.markForCheck();
+                    }
+                });
         }, 0);
     }
 
-    public getInitials(name: string) {
+    public getInitials(name: string): string {
         const initials = name.match(/\b\w/g) || [];
         return ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
     }
 
-    public goBack() {
+    public goBack(): void {
         this.router.navigate(["chat"], {
             animated: true,
             transition: {
@@ -272,15 +292,15 @@ export class ChatMessagesComponent
         });
     }
 
-    public toggleEmojiPicker() {
+    public toggleEmojiPicker(): void {
         this.inputMessageField.nativeElement.togglePopup();
     }
 
     private displayAndSendMessage(options: {
-            contact?: { name: any; number: any; },
-            location?: {lat: number, long: number},
-            content?: string,
-        }) {
+        contact?: { name: any; number: any };
+        location?: {lat: number; long: number};
+        content?: string;
+    }): void {
         let message = {
             chat: null,
             contactSrc: options.contact,
@@ -292,7 +312,7 @@ export class ChatMessagesComponent
         };
         this.messages.push(message);
         const url = `chats/${this.chat.isUser ? "user" : "project"}/${this.chat.id}${options.content ? "" : "/attachment"}`;
-        let o: any = {message: options.content};
+        let o: any = { message: options.content };
         if (options.contact) {
             o.contactName = options.contact.name;
             o.contactNumber = options.contact.number;
@@ -304,7 +324,7 @@ export class ChatMessagesComponent
         }
         this.remoteService
             .getNoCache("post", url, o)
-            .subscribe(() => {
+            .subscribe((): void => {
                 message = this.messages.pop();
                 message.sent = "sent";
                 this.messages.push(message);
@@ -312,21 +332,4 @@ export class ChatMessagesComponent
                 if (options.content) { this.inputMessageField.nativeElement.text = ""; }
             });
     }
-
-}
-
-function progressHandler(e: any) {
-    //
-}
-function errorHandler(e: { responseCode: string; }) {
-    alert("Die Datei konnte nicht erfolgreich hochgeladen werden, Fehlercode " + e.responseCode);
-}
-function respondedHandler(e: any) {
-    // console.log("received " + e.responseCode + " code. Server sent: " + e.data);
-}
-function completeHandler(e: any) {
-    //
-}
-function cancelledHandler(e: any) {
-    //
 }

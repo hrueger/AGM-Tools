@@ -81,8 +81,8 @@ export class ContactPickerComponent {
     }
 
     public getRandomColor() {
-        return this.flatColors[Math.floor(Math.random() *
-            this.flatColors.length)];
+        return this.flatColors[Math.floor(Math.random()
+            * this.flatColors.length)];
     }
 
     public getInitialsFromName(name: string) {
