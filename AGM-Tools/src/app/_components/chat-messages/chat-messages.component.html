@@ -1,23 +1,30 @@
-<div *ngIf="!showInfoMessage">
-    <div class="bgimg messages" [class.p-0]="embedded"  #messagesConatiner>
+<div *ngIf="!showInfoMessage" class="d-flex flex-column">
+    <div class="bgimg messages" [class.p-0]="embedded" #messagesConatiner>
         <div class="col-md-8 messages-header" *ngIf="!embedded">
-        <div class="float-right mt-2">
-            <button class="btn text-primary" (click)="videoCall()" *ngIf="inputChat.isUser"><i class="fas fa-video"></i></button>
-            <button class="btn text-primary" (click)="audioCall()" *ngIf="inputChat.isUser"><i class="fas fa-microphone"></i></button>
-            <button class="btn text-primary" (click)="options()"><i class="fas fa-ellipsis-v"></i></button>
-        </div>
+            <div class="float-right mt-2">
+                <button class="btn text-primary" (click)="videoCall()" *ngIf="inputChat.isUser"><i
+                        class="fas fa-video"></i></button>
+                <button class="btn text-primary" (click)="audioCall()" *ngIf="inputChat.isUser"><i
+                        class="fas fa-microphone"></i></button>
+                <button class="btn text-primary" (click)="options()"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
             <ngx-avatar class="messages-header thumb" [name]="inputChat.name"></ngx-avatar>
             <span class="messages-header title">{{ inputChat.name }}</span><br />
-            <span class="messages-header subtitle">{{ inputChat.isUser ? ('general.lastOnline' | translate:{time: ( inputChat.lastOnline == undefined ? ('general.unknown' | translate) : inputChat.lastOnline | date: "yyyy-MM-dd hh:ss" | shortWhen ) } ) : inputChat.users }}</span>
+            <span
+                class="messages-header subtitle">{{ inputChat.isUser ? ('general.lastOnline' | translate:{time: ( inputChat.lastOnline == undefined ? ('general.unknown' | translate) : inputChat.lastOnline | date: "yyyy-MM-dd hh:ss" | shortWhen ) } ) : inputChat.users }}</span>
         </div>
-        <div [class.px-1]="embedded">
-            <ns-messages-area [messageSent]="messageGotToSend" [attachmentMessageSent]="attachmentMessageGotToSend" [messages]="messages" [chat]="inputChat" class="messages-area"></ns-messages-area>
+        <div [class.px-1]="embedded" class="container-fluid flex-fill">
+            <ns-messages-area [messageSent]="messageGotToSend" [attachmentMessageSent]="attachmentMessageGotToSend"
+                [messages]="messages" [chat]="inputChat" class="messages-area"></ns-messages-area>
         </div>
         <div [class.message-box-holder-embedded]="embedded">
-            <ns-message-box [embedded]="embedded" [class]="embedded ? '' : 'col-md-8 offset-md-4 message-box'" (messageSent)="messageSentFromChild($event)" (attachmentMessageSent)="attachmentMessageSentFromChild($event)"></ns-message-box>
+            <ns-message-box [embedded]="embedded" [class]="embedded ? '' : 'col-md-8 offset-md-4 message-box'"
+                (messageSent)="messageSentFromChild($event)"
+                (attachmentMessageSent)="attachmentMessageSentFromChild($event)"></ns-message-box>
         </div>
     </div>
 </div>
+
 <div *ngIf="showInfoMessage && !embedded" class="placeholderMessage">
     <div class="new" [innerHTML]="'chat.didYouKnow' | translate | safe:'html'"></div>
 </div>

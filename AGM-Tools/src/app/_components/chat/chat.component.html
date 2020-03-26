@@ -2,8 +2,8 @@
     <nav class="col-md-2 offset-md-2 contactsidebar sidebar">
         <perfect-scrollbar class="scrollable">
             <ul class="list-group" id="contacts">
-                <li [class.active]="currentChat == chat" class="contact list-group-item border-0" *ngFor="let chat of chats"
-                    (click)="goToChat(chat)">
+                <li [class.active]="currentChat == chat" class="contact list-group-item border-0"
+                    *ngFor="let chat of chats" (click)="goToChat(chat)">
                     <div class="d-flex">
                         <ngx-avatar class="align-self-left avatar mx-2 mt-1" size="30" [name]="chat.name"></ngx-avatar>
                         <div class="w-100">
@@ -17,21 +17,20 @@
                                     <span class="badge badge-newMes" *ngIf="chat.unread > 0">{{ chat.unread }}</span>
                                 </div>
                             </div>
-                                <small class="w-100"><i
-                                    *ngIf="chat.latestMessageStatus"
+                            <small class="w-100"><i *ngIf="chat.latestMessageStatus"
                                     [class]="'fas fa-' + (chat.latestMessageStatus == 'sent' ?
                                         'check' : 'check-double' +
-                                        (chat.latestMessageStatus == 'seen' ? ' text-primary' : ' text-secondary'))"
-                                    ></i> {{chat.latestMessage}}</small>
+                                        (chat.latestMessageStatus == 'seen' ? ' text-primary' : ' text-secondary'))"></i> {{chat.latestMessage}}</small>
                         </div>
                     </div>
                 </li>
             </ul>
         </perfect-scrollbar>
     </nav>
-
 </div>
-<div class="col-md-8 offset-md-4 sidebar main-messages">
-    <chat-messages [inputChat]="currentChat" class=""></chat-messages>
+<div class="col-md-8 offset-md-4 sidebar main">
+    <perfect-scrollbar>
+        <chat-messages [inputChat]="currentChat" class=""></chat-messages>
+    </perfect-scrollbar>
 </div>
 <div class="bgimg"></div>
