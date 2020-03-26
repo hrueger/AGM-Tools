@@ -38,7 +38,7 @@
             <span>&times;</span>
         </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" ngbAutofocus>
         <h3>{{ imgTitle }}</h3>
         <img class="img img-fluid" [src]="imgUrl" />
     </div>
@@ -63,6 +63,7 @@
             <div class="form-group">
                 <label for="name">{{'general.name' | translate}}: </label>
                 <input
+                    ngbAutofocus
                     type="text"
                     class="form-control"
                     id="name"

@@ -194,6 +194,7 @@
             <div class="form-group">
                 <label for="name">{{"general.name" | translate}}: </label>
                 <input
+                    ngbAutofocus
                     type="text"
                     class="form-control"
                     id="name"
@@ -262,6 +263,7 @@
             <div class="form-group">
                 <label for="title">{{"general.title" | translate}}: </label>
                 <input
+                    ngbAutofocus
                     type="text"
                     class="form-control"
                     id="title"
@@ -349,6 +351,7 @@
             <div class="form-group">
                 <label for="name">{{"general.name" | translate}}: </label>
                 <input
+                    ngbAutofocus
                     type="text"
                     class="form-control"
                     id="name"
@@ -410,7 +413,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" ngbAutofocus>
         <div class="list-group">
             <button class="list-group-item list-group-item-action p-0" *ngFor="let task of tasks">
                 <div class="m-3">
@@ -445,7 +448,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body" markdown ngPreserveWhitespace>
+    <div class="modal-body" markdown ngPreserveWhitespace ngbAutofocus>
        {{currentTask.description}}
     </div>
     <div class="modal-footer p-0">

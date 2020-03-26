@@ -56,7 +56,7 @@
         <form [formGroup]="newNotificationForm">
             <div class="form-group">
                 <label for="headline">{{"general.topic" | translate}}: </label>
-                <input type="text" class="form-control" id="headline" formControlName="headline" [placeholder]="'general.topic' | translate" />
+                <input type="text" ngbAutofocus class="form-control" id="headline" formControlName="headline" [placeholder]="'general.topic' | translate" />
             </div>
             <br />
             <div class="form-group">

@@ -201,7 +201,7 @@
             <div class="form-group">
                 <label for="name">{{'general.name' | translate}}</label>
                 <div class="input-group">
-                    <input class="form-control" type="text" [placeholder]="'general.name' | translate" formControlName="newFolderName" />
+                    <input class="form-control" ngbAutofocus type="text" [placeholder]="'general.name' | translate" formControlName="newFolderName" />
                 </div>
             </div>
         </form>
@@ -232,7 +232,7 @@
             <div class="form-group">
                 <label for="name">Name: </label>
                 <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Name des Elements" formControlName="renameItemName" />
+                    <input class="form-control" ngbAutofocus type="text" placeholder="Name des Elements" formControlName="renameItemName" />
                 </div>
             </div>
         </form>
@@ -260,6 +260,6 @@
     </div>
     <div class="modal-footer">
         <button class="btn btn-outline-success" (click)="copyShareLink(shareLinkField)">{{'general.copyToClipboard' | translate}}</button>
-        <button class="btn btn-outline-primary" (click)="openShareLinkInNewTab()">{{'general.openInNewTab' | translate}}</button>
+        <button class="btn btn-outline-primary" ngbAutofocus (click)="openShareLinkInNewTab()">{{'general.openInNewTab' | translate}}</button>
     </div>
 </ng-template>
