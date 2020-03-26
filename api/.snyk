@@ -5,29 +5,29 @@ ignore: {}
 patch:
   'npm:hoek:20180212':
     - npx > npm > request > hawk > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > request > hawk > boom > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > request > hawk > sntp > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > node-gyp > request > hawk > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > npm-registry-client > request > hawk > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > request > hawk > cryptiles > boom > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > node-gyp > request > hawk > boom > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > npm-registry-client > request > hawk > boom > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > node-gyp > request > hawk > sntp > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > npm-registry-client > request > hawk > sntp > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > node-gyp > request > hawk > cryptiles > boom > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
     - npx > npm > npm-registry-client > request > hawk > cryptiles > boom > hoek:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
   SNYK-JS-TREEKILL-536781:
     - ts-node-dev > tree-kill:
-        patched: '2020-03-20T17:50:41.959Z'
+        patched: '2020-03-20T17:58:47.249Z'
