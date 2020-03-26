@@ -15,6 +15,9 @@ jobs:
     - name: Install dependencies
       working-directory: AGM-Tools
       run: npm i
+    - name: Create config files
+      working-directory: api
+      run: npm run createFilesWithApiKeys
     - name: Lint
       working-directory: AGM-Tools
       run: npm run lint
