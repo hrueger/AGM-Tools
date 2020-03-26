@@ -2,17 +2,20 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-title d-flex justify-content-between">
-                <h5 class="card-title px-3 pt-3 lmb">{{ "dashboard.remainingDiskSpace" | translate }}</h5>
+                <h5 class="card-title px-3 pt-3 mb-0">{{ "dashboard.remainingDiskSpace" | translate }}</h5>
                 <button class="btn btn-outline-primary float-right px-2 py-1 m-1" (click)="updateChart()">
                     <i class="fas fa-sync-alt"></i>
                 </button>
             </div>
             <div class="card-body">
-                <div style="display: block">
-                    <canvas baseChart [data]="spaceChartData" [labels]="spaceChartLabels" [chartType]="spaceChartType"
-                        [colors]="spaceChartColors" [options]="spaceChartOptions">
-                    </canvas>
-                </div>
+
+                <perfect-scrollbar>
+                    <div style="display: block">
+                        <canvas baseChart [data]="spaceChartData" [labels]="spaceChartLabels"
+                            [chartType]="spaceChartType" [colors]="spaceChartColors" [options]="spaceChartOptions">
+                        </canvas>
+                    </div>
+                </perfect-scrollbar>
             </div>
             <div class="card-footer">
                 <small
@@ -24,9 +27,9 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-title">
-                <h5 class="card-title px-3 pt-3 lmb">{{ "notifications.notifications" | translate }}</h5>
+                <h5 class="card-title px-3 pt-3 mb-0">{{ "notifications.notifications" | translate }}</h5>
             </div>
-            <div class="card-body px-0 pb-0">
+            <div class="card-body p-0">
                 <div class="list-group messages">
                     <div *ngFor="let notification of notifications"
                         class="border-right-0 border-left-0 list-group-item list-group-item-action list-group-item-{{notification.theme}}">
@@ -56,22 +59,24 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-title">
-                <h5 class="card-title px-3 pt-3 lmb">{{ "events.nextEvents" | translate }}</h5>
+                <h5 class="card-title px-3 pt-3 mb-0">{{ "events.nextEvents" | translate }}</h5>
             </div>
             <div class="card-body">
-                <div class="datelist">
-                    <div *ngFor="let event of dates" class="event" routerLink="/calendar/{{event.id}}">
-                        <span class="headline">{{event.headline}}</span><br>
-                        <i class="m-1 fas fa-calendar-day"></i><span
-                            class="text-muted">{{ "general.startingAtDate" | translate:{"weekday": (event.start | date:"EEEE"), "day": (event.start | date:"shortDate"), "time": (event.start | date:"shortTime")} }}</span><br>
-                        <i class="m-1 fas fa-map-marker-alt"></i><span
-                            class="text-muted">{{ event.location }}</span><br>
-                        <i class="m-1 fas fa-stopwatch text-primary"></i><span
-                            class="text-primary">{{ 'events.countdown' | translate:{'countdown':event.countdownTime} }}</span>
-                        <br />
-                    </div>
-                </div>
                 <span class="text-muted" *ngIf="!dates || dates.length == 0">{{ "events.none" | translate }}</span>
+                <perfect-scrollbar>
+                    <div class="datelist">
+                        <div *ngFor="let event of dates" class="event" routerLink="/calendar/{{event.id}}">
+                            <span class="headline">{{event.headline}}</span><br>
+                            <i class="m-1 fas fa-calendar-day"></i><span
+                                class="text-muted">{{ "general.startingAtDate" | translate:{"weekday": (event.start | date:"EEEE"), "day": (event.start | date:"shortDate"), "time": (event.start | date:"shortTime")} }}</span><br>
+                            <i class="m-1 fas fa-map-marker-alt"></i><span
+                                class="text-muted">{{ event.location }}</span><br>
+                            <i class="m-1 fas fa-stopwatch text-primary"></i><span
+                                class="text-primary">{{ 'events.countdown' | translate:{'countdown':event.countdownTime} }}</span>
+                            <br />
+                        </div>
+                    </div>
+                </perfect-scrollbar>
             </div>
             <div class="card-footer">
                 <small
@@ -83,22 +88,25 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-title">
-                <h5 class="card-title px-3 pt-3">{{"tasks.tasks" | translate}}</h5>
+                <h5 class="card-title px-3 pt-3 mb-0">{{"tasks.tasks" | translate}}</h5>
             </div>
-            <div class="card-body px-0 pb-0">
-                <div class="list-group-flush" *ngIf="tasks.length > 0">
-                    <button (click)="displayTask(taskModal, task)" class="list-group-item list-group-item-action"
-                        *ngFor="let task of tasks">
-                        <small>{{task.project.name}}</small>
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="card-title mb-0">{{task.title}}</h5>
-                            <small class="text-right">{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
-                        </div>
-                        <small class="card-text">{{task.description}}</small>
-                        <small class="d-block mt-3">{{task.creator.username}} {{ "general.atDate" | translate}}
-                            {{task.createdAt | date:'shortDate'}}</small>
-                    </button>
-                </div>
+            <div class="card-body p-0">
+                <perfect-scrollbar>
+                    <div class="list-group-flush" *ngIf="tasks.length > 0">
+                        <button (click)="displayTask(taskModal, task)" class="list-group-item list-group-item-action"
+                            *ngFor="let task of tasks">
+                            <small>{{task.project.name}}</small>
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="card-title mb-0">{{task.title}}</h5>
+                                <small
+                                    class="text-right">{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
+                            </div>
+                            <small class="card-text">{{task.description}}</small>
+                            <small class="d-block mt-3">{{task.creator.username}} {{ "general.atDate" | translate}}
+                                {{task.createdAt | date:'shortDate'}}</small>
+                        </button>
+                    </div>
+                </perfect-scrollbar>
             </div>
             <div class="card-footer">
                 <small
@@ -110,27 +118,30 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-title">
-                <h5 class="card-title px-3 pt-3 lmb">{{ "dashboard.whatsnew" | translate }}</h5>
+                <h5 class="card-title px-3 pt-3 mb-0">{{ "dashboard.whatsnew" | translate }}</h5>
             </div>
             <div class="card-body">
-                <div class="p-0">
-                    <ejs-accordion expandMode="Single" *ngFor="let version of whatsnew">
-                        <div>
-                            <div>
-                                <div>{{ version.version }}</div>
-                            </div>
+
+                <perfect-scrollbar>
+                    <div class="p-0">
+                        <ejs-accordion expandMode="Single" *ngFor="let version of whatsnew">
                             <div>
                                 <div>
-                                    <ul>
-                                        <li *ngFor="let change of version.changes">
-                                            {{ change }}
-                                        </li>
-                                    </ul>
+                                    <div>{{ version.version }}</div>
+                                </div>
+                                <div>
+                                    <div>
+                                        <ul>
+                                            <li *ngFor="let change of version.changes">
+                                                {{ change }}
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </ejs-accordion>
-                </div>
+                        </ejs-accordion>
+                    </div>
+                </perfect-scrollbar>
             </div>
             <div class="card-footer">
                 <small
@@ -141,23 +152,25 @@
     <div class="col-md-4 col-sm-6 d-flex">
         <div class="card flex-fill mb-3">
             <div class="card-title">
-                <h5 class="card-title px-3 pt-3 lmb">{{ "dashboard.version" | translate }}</h5>
+                <h5 class="card-title px-3 pt-3 mb-0">{{ "dashboard.version" | translate }}</h5>
             </div>
             <div class="card-body">
-                <div class="alert alert-primary">
-                    <span>{{version.currentVersion}}</span><br>
-                    <small>Containerizer v{{version.containerizerVersion}}</small>
-                </div>
-                <div class="alert alert-warning" *ngIf="version.updatesAvalible">
-                    {{version.updateCount}} {{"dashboard.updatesAvalible" | translate}}<br>
-                    <button class="btn btn-link pl-0 d-block"
-                        (click)="viewUpdateDetails = !viewUpdateDetails">{{(viewUpdateDetails ? "general.hideDetails" : "general.showDetails") | translate}}</button>
-                    <div *ngIf="viewUpdateDetails" class="my-2">
-                        <span *ngFor="let t of version.updates" class="d-block">{{t}}</span>
+                <perfect-scrollbar>
+                    <div class="alert alert-primary">
+                        <span>{{version.currentVersion}}</span><br>
+                        <small>Containerizer v{{version.containerizerVersion}}</small>
                     </div>
-                    <button class="btn btn-outline-primary my-2"
-                        (click)="update()">{{"general.update" | translate}}{{updating ? "..." : ""}}</button>
-                </div>
+                    <div class="alert alert-warning" *ngIf="version.updatesAvalible">
+                        {{version.updateCount}} {{"dashboard.updatesAvalible" | translate}}<br>
+                        <button class="btn btn-link pl-0 d-block"
+                            (click)="viewUpdateDetails = !viewUpdateDetails">{{(viewUpdateDetails ? "general.hideDetails" : "general.showDetails") | translate}}</button>
+                        <div *ngIf="viewUpdateDetails" class="my-2">
+                            <span *ngFor="let t of version.updates" class="d-block">{{t}}</span>
+                        </div>
+                        <button class="btn btn-outline-primary my-2"
+                            (click)="update()">{{"general.update" | translate}}{{updating ? "..." : ""}}</button>
+                    </div>
+                </perfect-scrollbar>
             </div>
             <div class="card-footer">
                 <small

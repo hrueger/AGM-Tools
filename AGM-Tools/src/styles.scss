@@ -197,3 +197,7 @@ th.sortable {
 .nav-item, .nav-item:focus, .close, .close:focus {
     outline: none;
 }
+
+.ps__rail-y, .ps__rail-x {
+    z-index: 5000;
+}
