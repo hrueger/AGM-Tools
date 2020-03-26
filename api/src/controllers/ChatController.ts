@@ -6,37 +6,85 @@ import { config } from "../config/config";
 import { Message } from "../entity/Message";
 import { Project } from "../entity/Project";
 import { User } from "../entity/User";
+import { getFirstname } from "../utils/utils";
 
 class ChatController {
     public static listAll = async (req: Request, res: Response) => {
         const projectRepository = getRepository(Project);
         const userRepository = getRepository(User);
+        const messageRepository = getRepository(Message);
         let users = await userRepository.find({ select: ["username", "id"] });
         users = users.filter((user) => user.id != res.locals.jwtPayload.userId);
         let projects = await projectRepository.find({ select: ["name", "id"], relations: ["users"] });
         projects = projects.filter((project) => project.users.map(
             (user) => user.id,
         ).includes(res.locals.jwtPayload.userId));
-        const chats = [];
-        users.forEach((user) => {
+        let chats = [];
+        for (const user of users) {
+            const latestMessage = await messageRepository.createQueryBuilder("message")
+                .innerJoinAndSelect("message.toUser", "toUser")
+                .innerJoinAndSelect("message.sender", "sender")
+                .where(new Brackets((qb) => {
+                    qb.where("toUser.id = :toUserId1", { toUserId1: res.locals.jwtPayload.userId })
+                        .andWhere("sender.id = :senderId1", { senderId1: user.id });
+                }))
+                .orWhere(new Brackets((qb) => {
+                    qb.where("sender.id = :senderId2", { senderId2: res.locals.jwtPayload.userId })
+                        .andWhere("toUser.id = :toUserId2", { toUserId2: user.id });
+                }))
+                .orderBy("message.date", "DESC")
+                .getOne();
             chats.push({
-                name: user.username, id: user.id, isUser: true, lastSeen: i18n.__("general.unknown"),
+                name: user.username,
+                id: user.id,
+                isUser: true,
+                lastSeen: i18n.__("general.unknown"),
+                latestMessage: latestMessage ? `${latestMessage.sender.id != res.locals.jwtPayload.userId ? `${getFirstname(latestMessage.sender.username)}: ` : ""}${ChatController.decodeMessage(latestMessage).content}` : "Noch keine Nachrichten gesendet!",
+                // if message from current user
+                latestMessageStatus: latestMessage && latestMessage.sender.id == res.locals.jwtPayload.userId ? "sent" : undefined,
+                when: latestMessage ? latestMessage.date : undefined,
             });
-        });
-        projects.forEach((project) => {
+        }
+        for (const project of projects) {
+            const latestMessage = await messageRepository.find({
+                take: 1,
+                order: { date: "DESC" },
+                where: { toProject: project },
+                relations: ["sender"],
+            });
             chats.push({
                 id: project.id,
                 isUser: false,
                 name: project.name,
                 users: project.users.map((user) => user.username).join(", "),
+                latestMessage: latestMessage && latestMessage[0] ? `${latestMessage[0].sender.id != res.locals.jwtPayload.userId ? `${latestMessage[0].sender.username}: ` : ""}${ChatController.decodeMessage(latestMessage[0]).content}` : "Noch keine Nachrichten gesendet!",
+                // if message from current user
+                latestMessageStatus: latestMessage && latestMessage[0] && latestMessage[0].sender.id == res.locals.jwtPayload.userId ? "sent" : undefined,
+                when: latestMessage && latestMessage[0] ? latestMessage[0].date : undefined,
             });
+        }
+        const chatsWithoutDate = chats.filter((c) => !c.when);
+        chats = chats.filter((c) => c.when);
+
+        chats = chats.sort((a, b) => {
+            if (a.when > b.when) {
+                return -1;
+            }
+            if (a.when < b.when) {
+                return 1;
+            }
+            if (a.when == b.when) {
+                return 0;
+            }
+            return undefined;
         });
+        chats.push(...chatsWithoutDate);
         res.send(chats);
     }
 
     public static getUserChat = async (req: Request, res: Response) => {
         const messageRepository = getRepository(Message);
-        const messages = await messageRepository.createQueryBuilder("message")
+        let messages = await messageRepository.createQueryBuilder("message")
             .innerJoinAndSelect("message.toUser", "toUser")
             .innerJoinAndSelect("message.sender", "sender")
             .where(new Brackets((qb) => {
@@ -49,21 +97,21 @@ class ChatController {
             }))
             .orderBy("message.date", "ASC")
             .getMany();
-        ChatController.addFromMeAttr(messages, res);
-        ChatController.decodeMessage(messages);
+        messages = ChatController.addFromMeAttr(messages, res);
+        messages = ChatController.decodeMessages(messages);
         res.send(messages);
     }
 
     public static getProjectChat = async (req: Request, res: Response) => {
         const messageRepository = getRepository(Message);
-        const messages = await messageRepository.createQueryBuilder("message")
+        let messages = await messageRepository.createQueryBuilder("message")
             .innerJoinAndSelect("message.toProject", "toProject")
             .innerJoinAndSelect("message.sender", "sender")
             .where("toProject.id = :toProjectId", { toProjectId: req.params.id })
             .orderBy("message.date", "ASC")
             .getMany();
-        ChatController.addFromMeAttr(messages, res);
-        ChatController.decodeMessage(messages);
+        messages = ChatController.addFromMeAttr(messages, res);
+        messages = ChatController.decodeMessages(messages);
         res.send(messages);
     }
 
@@ -125,12 +173,18 @@ class ChatController {
         for (const message of messages) {
             message.fromMe = (message.sender.id == res.locals.jwtPayload.userId);
         }
+        return messages;
     }
 
-    private static decodeMessage(messages: Message[]) {
+    private static decodeMessages(messages: Message[]) {
         for (const message of messages) {
-            message.content = Buffer.from(message.content, "base64").toString("utf8");
+            this.decodeMessage(message);
         }
+        return messages;
+    }
+    private static decodeMessage(message: Message) {
+        message.content = Buffer.from(message.content, "base64").toString("utf8");
+        return message;
     }
 }
 

@@ -18,7 +18,7 @@ export class ShortWhenPipe implements PipeTransform {
             if (isYesterday(parsedDate)) {
                 return "Gestern";
             }
-            return datePipe.transform(parsedDate, "dd.MM.yyyy");
+            return datePipe.transform(parsedDate, "dd.MM.");
         } catch {
             return "";
         }

@@ -64,3 +64,7 @@ export function toInt(v: string | number): number {
     }
     return v;
 }
+
+export function getFirstname(name: string): string {
+    return name.split(" ")[0];
+}

@@ -1,8 +1,6 @@
 import {
     CommonModule, DatePipe, Location, registerLocaleData,
 } from "@angular/common";
-
-
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
 import localeDe from "@angular/common/locales/de";
 import { LOCALE_ID, NgModule } from "@angular/core";
@@ -11,13 +9,11 @@ import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFireMessagingModule } from "@angular/fire/messaging";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { NgbModule, NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
-
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
@@ -35,6 +31,7 @@ import { ToastrModule } from "ngx-toastr";
 import { UiSwitchModule } from "ngx-ui-switch";
 import { EditorModule } from "@tinymce/tinymce-angular";
 import { MarkdownModule } from "ngx-markdown";
+import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
 import { environment } from "../environments/environment";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { CallComponent } from "./_components/call/call.component";
@@ -80,11 +77,16 @@ import { routes } from "./app.routes";
 import { TinyConfigService } from "./_services/tiny-config.service";
 import { MarkdownService } from "./_services/markdown.service";
 
+
 registerLocaleData(localeDe);
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     return new TranslateHttpLoader(http, `${environment.appUrl.replace("/#/", "")}/assets/i18n/`, ".json");
 }
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+    suppressScrollX: true,
+};
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -143,6 +145,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         }),
         BrowserAnimationsModule,
         DashboardLayoutModule,
+        PerfectScrollbarModule,
         BrowserModule,
         EditorModule,
         MarkdownModule.forRoot(),
@@ -189,6 +192,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: RenewJwtTokenInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        {
+            provide: PERFECT_SCROLLBAR_CONFIG,
+            useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
+        },
     ],
 })
 export class AppModule { }

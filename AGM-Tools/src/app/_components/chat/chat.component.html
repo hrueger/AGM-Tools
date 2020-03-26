@@ -1,25 +1,35 @@
 <div class="browser">
     <nav class="col-md-2 offset-md-2 contactsidebar sidebar">
-        <div class="sidebar-sticky notoppadding">
-            <ul class="nav" id="contacts">
-                <li [class.active]="currentChat == chat" class="contact nav-item" *ngFor="let chat of chats" (click)="goToChat(chat)">
-                    <a><ngx-avatar class="avatar float-left" [name]="chat.name"></ngx-avatar>
-                        <div class="contactinfo">
-                            <p *ngIf="chat.when" class="date float-right" [class.time-unread]="chat.unread > 0">
-                                {{ chat.when | date: "yyyy-MM-dd" | shortWhen }}
-                            </p>
-
-                            {{ chat.name }}
-                            <p class="latestmessage">{{ chat.text }}</p>
-                            <span class="badge badge-newMes" *ngIf="chat.unread > 0">{{ chat.unread }}</span
-                            >
+        <perfect-scrollbar class="scrollable">
+            <ul class="list-group" id="contacts">
+                <li [class.active]="currentChat == chat" class="contact list-group-item border-0" *ngFor="let chat of chats"
+                    (click)="goToChat(chat)">
+                    <div class="d-flex">
+                        <ngx-avatar class="align-self-left avatar mx-2 mt-1" size="30" [name]="chat.name"></ngx-avatar>
+                        <div class="w-100">
+                            <div class="d-flex w-100 justify-content-between">
+                                <span class="chatname">{{ chat.name }}</span>
+                                <div>
+                                    <small *ngIf="chat.when" class="date float-right"
+                                        [class.time-unread]="chat.unread > 0">
+                                        {{ chat.when | date: "yyyy-MM-dd" | shortWhen }}
+                                    </small>
+                                    <span class="badge badge-newMes" *ngIf="chat.unread > 0">{{ chat.unread }}</span>
+                                </div>
+                            </div>
+                                <small class="w-100"><i
+                                    *ngIf="chat.latestMessageStatus"
+                                    [class]="'fas fa-' + (chat.latestMessageStatus == 'sent' ?
+                                        'check' : 'check-double' +
+                                        (chat.latestMessageStatus == 'seen' ? ' text-primary' : ' text-secondary'))"
+                                    ></i> {{chat.latestMessage}}</small>
                         </div>
-                    </a>
+                    </div>
                 </li>
             </ul>
-        </div>
+        </perfect-scrollbar>
     </nav>
-    
+
 </div>
 <div class="col-md-8 offset-md-4 sidebar main-messages">
     <chat-messages [inputChat]="currentChat" class=""></chat-messages>

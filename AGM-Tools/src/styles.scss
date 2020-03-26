@@ -194,6 +194,6 @@ th.sortable {
     z-index: 20000 !important;
 }
 
-.nav-item, .close, .close:focus {
+.nav-item, .nav-item:focus, .close, .close:focus {
     outline: none;
 }
