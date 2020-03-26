@@ -78,3 +78,12 @@
     max-height: 50vh;
     overflow-y: auto;
 }
+
+.card-body {
+    max-height: calc((100vh - 20rem) / 2);
+    overflow: auto;
+}
+
+.lmb {
+    margin-bottom: -.5rem;
+}
