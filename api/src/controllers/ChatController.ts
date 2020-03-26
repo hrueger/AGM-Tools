@@ -13,7 +13,7 @@ class ChatController {
         const projectRepository = getRepository(Project);
         const userRepository = getRepository(User);
         const messageRepository = getRepository(Message);
-        let users = await userRepository.find({ select: ["username", "id"] });
+        let users = await userRepository.find({ select: ["username", "id", "lastOnline"] });
         users = users.filter((user) => user.id != res.locals.jwtPayload.userId);
         let projects = await projectRepository.find({ select: ["name", "id"], relations: ["users"] });
         projects = projects.filter((project) => project.users.map(
@@ -38,7 +38,7 @@ class ChatController {
                 name: user.username,
                 id: user.id,
                 isUser: true,
-                lastSeen: i18n.__("general.unknown"),
+                lastOnline: user.lastOnline ? user.lastOnline : undefined,
                 latestMessage: latestMessage ? `${latestMessage.sender.id != res.locals.jwtPayload.userId ? `${getFirstname(latestMessage.sender.username)}: ` : ""}${ChatController.decodeMessage(latestMessage).content}` : "Noch keine Nachrichten gesendet!",
                 // if message from current user
                 latestMessageStatus: latestMessage && latestMessage.sender.id == res.locals.jwtPayload.userId ? "sent" : undefined,

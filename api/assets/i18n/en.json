@@ -89,7 +89,7 @@
             "description": "Your preferred language for the webversion and the app.",
             "name": "Language"
         },
-        "lastSeen": {
+        "lastOnline": {
             "description": "Show information about your last seen timestamp to all other users.",
             "name": "Last seen"
         },

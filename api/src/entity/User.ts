@@ -36,6 +36,9 @@ export class User {
   @Column({ select: false })
   public password: string;
 
+  @Column({ nullable: true })
+  public lastOnline: Date;
+
   @Column({ select: false, nullable: true })
   public passwordResetToken: string;
 

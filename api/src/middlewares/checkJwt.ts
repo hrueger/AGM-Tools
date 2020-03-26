@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import * as i18n from "i18n";
 import * as jwt from "jsonwebtoken";
+import { getRepository } from "typeorm";
 import { config } from "../config/config";
 import SettingsController from "../controllers/SettingsController";
+import { User } from "../entity/User";
 
 export const checkJwt = async (req: Request, res: Response, next: NextFunction) => {
     // Get the jwt token from the head
@@ -22,6 +24,12 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
         jwtPayload = (jwt.verify(token, config.jwtSecret) as any);
         res.locals.jwtPayload = jwtPayload;
         res.locals.jwtPayload.userId = parseInt(res.locals.jwtPayload.userId, undefined);
+        const userRepository = getRepository(User);
+        const user = await userRepository.findOne(res.locals.jwtPayload.userId);
+        if (user) {
+            user.lastOnline = new Date();
+            await userRepository.save(user);
+        }
         res.locals.language = await SettingsController.getUserLanguage(res);
         i18n.setLocale(res.locals.language);
     } catch (error) {

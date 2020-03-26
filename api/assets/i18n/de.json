@@ -88,7 +88,7 @@
 			"description": "Die Sprache für die Weboberfläche und die App.",
 			"name": "Sprache"
 		},
-		"lastSeen": {
+		"lastOnline": {
 			"description": "Den anderen Benutzern Informationen über den zuletzt-online Zeitpunkt zur Verfügung stellen.",
 			"name": "Zuletzt online"
 		},

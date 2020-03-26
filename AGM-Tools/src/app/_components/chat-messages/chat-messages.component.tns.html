@@ -7,7 +7,7 @@
             <FormattedString>
                 <Span [text]="chat.name" fontWeight="bold" fontSize="17"></Span>
                 <Span text="&#xa;"></Span>
-                <Span [text]="chat.isUser ? ('general.lastOnline' | translate:{time:chat.lastSeen}) : chat.users"></Span>
+                <Span [text]="chat.isUser ? ('general.lastOnline' | translate:{time:chat.lastOnline}) : chat.users"></Span>
             </FormattedString>
         </Label>
         <StackLayout row="0" col="3" orientation="horizontal">

@@ -159,13 +159,13 @@ class SettingsController {
                         value: data.online ? stringToBool(data.online) : true,
                     },
                     {
-                        description: i18n.__("settings.lastSeen.description"),
+                        description: i18n.__("settings.lastOnline.description"),
                         icon: 0xf017,
                         iconName: "clock",
-                        id: "lastSeen",
-                        name: i18n.__("settings.lastSeen.name"),
+                        id: "lastOnline",
+                        name: i18n.__("settings.lastOnline.name"),
                         type: "switch",
-                        value: data.lastSeen ? stringToBool(data.lastSeen) : true,
+                        value: data.lastOnline ? stringToBool(data.lastOnline) : true,
                     },
                     {
                         description: i18n.__("settings.showEmail.description"),

@@ -8,7 +8,7 @@
         </div>
             <ngx-avatar class="messages-header thumb" [name]="inputChat.name"></ngx-avatar>
             <span class="messages-header title">{{ inputChat.name }}</span><br />
-            <span class="messages-header subtitle">{{ inputChat.isUser ? ('general.lastOnline' | translate:{time:inputChat.lastSeen}) : inputChat.users }}</span>
+            <span class="messages-header subtitle">{{ inputChat.isUser ? ('general.lastOnline' | translate:{time: ( inputChat.lastOnline == undefined ? ('general.unknown' | translate) : inputChat.lastOnline | date: "yyyy-MM-dd hh:ss" | shortWhen ) } ) : inputChat.users }}</span>
         </div>
         <div [class.px-1]="embedded">
             <ns-messages-area [messageSent]="messageGotToSend" [attachmentMessageSent]="attachmentMessageGotToSend" [messages]="messages" [chat]="inputChat" class="messages-area"></ns-messages-area>
@@ -18,6 +18,6 @@
         </div>
     </div>
 </div>
-<div *ngIf="showInfoMessage && !embedded" class="plcaeholderMessage">
+<div *ngIf="showInfoMessage && !embedded" class="placeholderMessage">
     <div class="new" [innerHTML]="'chat.didYouKnow' | translate | safe:'html'"></div>
 </div>
