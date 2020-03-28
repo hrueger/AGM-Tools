@@ -9,18 +9,18 @@
                         <div class="w-100">
                             <div class="d-flex w-100 justify-content-between">
                                 <span class="chatname">{{ chat.name }}</span>
-                                <div>
-                                    <small *ngIf="chat.when" class="date float-right"
-                                        [class.time-unread]="chat.unread > 0">
-                                        {{ chat.when | date: "yyyy-MM-dd" | shortWhen }}
-                                    </small>
-                                    <span class="badge badge-newMes" *ngIf="chat.unread > 0">{{ chat.unread }}</span>
-                                </div>
+                                <small *ngIf="chat.when" class="date float-right"
+                                    [class.time-unread]="chat.unread > 0" [class.text-success]="chat.unread > 0">
+                                    {{ chat.when | date: "yyyy-MM-dd" | shortWhen }}
+                                </small>
                             </div>
-                            <small class="w-100"><i *ngIf="chat.latestMessageStatus"
+                            <div class="d-flex justify-content-between">
+                                <small class="w-100"><i *ngIf="chat.latestMessageStatus"
                                     [class]="'fas fa-' + (chat.latestMessageStatus == 'sent' ?
                                         'check' : 'check-double' +
                                         (chat.latestMessageStatus == 'seen' ? ' text-primary' : ' text-secondary'))"></i> {{chat.latestMessage}}</small>
+                                <span class="badge badge-success" *ngIf="chat.unread > 0">{{ chat.unread }}</span>
+                            </div>
                         </div>
                     </div>
                 </li>

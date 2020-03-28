@@ -20,6 +20,7 @@ import { Task } from "./Task";
 import { Template } from "./Template";
 import { Tutorial } from "./Tutorial";
 import { Usergroup } from "./Usergroup";
+import { ChatStatus } from "./ChatStatus";
 
 @Entity()
 @Unique(["username"])
@@ -91,6 +92,12 @@ export class User {
 
   @OneToMany(() => Setting, (setting) => setting.user)
   public settings: Setting[];
+
+  @OneToMany(() => ChatStatus, (chatStatus) => chatStatus.owner)
+  public ownChatStatuses: ChatStatus[];
+
+  @OneToMany(() => ChatStatus, (chatStatus) => chatStatus.owner)
+  public chatStatuses: ChatStatus[];
 
   public hashPassword() {
       this.password = bcrypt.hashSync(this.password, 8);

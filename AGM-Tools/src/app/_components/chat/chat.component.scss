@@ -26,6 +26,7 @@ $lightgreen: #25d366;
 .time {
     &-unread {
         color: $lightgreen;
+        font-weight: bold;
     }
     color: rgb(143, 143, 143);
     font-size: 12;
@@ -102,9 +103,8 @@ $lightgreen: #25d366;
     margin-left: 4px;
 }
 
-.contact>.badge {
-    margin-top: 20px;
-    right: 50px !important;
+.badge {
+    border-radius: 100%;
 }
 
 .browser .contact>.badge-newMes {

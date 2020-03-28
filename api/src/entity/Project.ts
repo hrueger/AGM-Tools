@@ -11,6 +11,7 @@ import { Message } from "./Message";
 import { Task } from "./Task";
 import { Tutorial } from "./Tutorial";
 import { User } from "./User";
+import { ChatStatus } from "./ChatStatus";
 
 @Entity()
 export class Project {
@@ -43,4 +44,7 @@ export class Project {
 
     @OneToMany(() => Message, (message) => message.toProject)
     public messages: Message[];
+
+    @OneToMany(() => ChatStatus, (chatStatus) => chatStatus.owner)
+    public chatStatuses: ChatStatus[];
 }
