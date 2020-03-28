@@ -201,3 +201,6 @@ th.sortable {
 .ps__rail-y, .ps__rail-x {
     z-index: 5000;
 }
+.ps .ps__rail-x, .ps .ps__rail-y {
+    background-color: transparent !important;
+}
