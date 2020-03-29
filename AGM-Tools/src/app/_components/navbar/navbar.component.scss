@@ -1,37 +1,130 @@
 .headline {
-  color: white;
-  text-align: left;
-  display: block;
-  margin-left: 1rem;
+    color: white;
+    text-align: left;
+    display: block;
+    margin-left: 1rem;
 }
 
 .navbar-right {
-  text-align: right;
-  display: inline;
+    text-align: right;
+    display: inline;
 }
 
 .nav-item,
 .nav-link {
-  display: inline;
+    display: inline;
 }
 
 .navbar-brand {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  font-size: 1.5rem;
-  margin-right: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 1.5rem;
+    margin-right: 0px;
 }
 
 .action-bar-title {
-  color: white;
+    color: white;
 }
 .navbar {
-  z-index: 1300;
+    z-index: 1300;
 }
 .mobileNavLinks {
-  font-size: 1rem;
+    font-size: 1rem;
 }
 
 .headerImg {
-  max-height: 2rem;
+    max-height: 2rem;
+}
+
+/* Styles for Desktop Version */
+nav.desktop {
+    &, & * {
+        height: 30px;
+    }
+    & * {
+        -webkit-app-region: drag !important;
+        cursor: default;
+    }
+    padding: 0;
+    -webkit-app-region: drag !important;
+    height: 30px;
+    background-color: #3c3c3c;
+    .mobileNavLinks {
+        padding: 0;
+    }
+    .navbar-brand {
+        font-size: 1rem;
+        outline: none !important;
+        &:focus {
+            outline: none !important;
+        }
+        padding: 0;
+        img {
+            max-height: 1rem;
+        }
+    }
+    .nav-link,
+    .nav-link * {
+        -webkit-app-region: no-drag !important;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .nav-link {
+        height: 30px;
+        padding: 0;
+        padding-top: 4px;
+        padding-left: 5px;
+        padding-right: 5px;
+        display: block;
+        &.icon {
+            padding-top: 3px;
+            margin-left: 20px;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        &.wi {
+            padding-left: 0px;
+            padding-right: 0px;
+            padding-top: 0;
+            display: block;
+            &:not(.close) {
+                padding-top: 3px;
+            }
+            &.down {
+                padding-top: 6px;
+                margin-left: 1rem;
+            }
+            
+        }
+        &:hover {
+            background-color: #505050;
+        }
+        &.close:hover {
+            background-color: red;
+            opacity: 1;
+            img {
+                opacity: 1;
+            }
+        }
+    }
+    .nav-item.disabled:hover {
+        background-color: #343a40;
+    }
+    .nav-item.disabled {
+        cursor: auto;
+    }
+    .window-icon {
+        height: 12px;
+        margin: 9px;
+        width: 25px;
+        opacity: 0.5;
+    }
+    .nav-link.close {
+        opacity: 1;
+    }
+    .brand-logo {
+        height: 100%;
+        width: auto;
+        margin: 1px;
+    }
 }

@@ -6,6 +6,7 @@ import { first } from "rxjs/operators";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
+import { ElectronService } from "../../_services/electron.service";
 
 @Component({
     styleUrls: ["./login.component.scss"],
@@ -38,6 +39,7 @@ export class LoginComponent implements OnInit {
         private alertService: AlertService,
         private remoteService: RemoteService,
         private route: ActivatedRoute,
+        private electronService: ElectronService,
     ) {}
 
     public ngOnInit() {
@@ -63,6 +65,8 @@ export class LoginComponent implements OnInit {
         if (this.route.snapshot.params.resetPasswordToken) {
             this.inputNewPassword = true;
         }
+
+        this.electronService.setTitle("Login");
     }
 
     // convenience getter for easy access to form fields

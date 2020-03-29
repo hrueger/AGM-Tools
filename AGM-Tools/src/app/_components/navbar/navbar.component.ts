@@ -7,6 +7,7 @@ import {
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { NavbarService } from "../../_services/navbar.service";
+import { ElectronService } from "../../_services/electron.service";
 
 @Component({
     selector: "navbar",
@@ -15,6 +16,9 @@ import { NavbarService } from "../../_services/navbar.service";
 })
 export class NavbarComponent {
     public headline = "";
+    public isElectron: boolean;
+    public isMaximized = true;
+
     @Output() public toggleNav = new EventEmitter<any>();
 
     constructor(
@@ -22,10 +26,14 @@ export class NavbarComponent {
         private navbarService: NavbarService,
         private authenticationService: AuthenticationService,
         private cdr: ChangeDetectorRef,
+        private electronService: ElectronService,
     ) { }
     public logout() {
         this.authenticationService.logout();
         this.router.navigate(["/login"]);
+    }
+    public ngOnInit() {
+        this.isElectron = this.electronService.isElectron;
     }
     public ngAfterViewChecked() {
         try {
@@ -45,5 +53,27 @@ export class NavbarComponent {
         event.preventDefault();
         event.stopPropagation();
         this.toggleNav.emit(Math.random());
+    }
+
+    public minWindow() {
+        this.electronService.runIfElectron((_, currentWindow) => {
+            currentWindow.minimize();
+        });
+    }
+
+    public maxWindow() {
+        this.isMaximized = !this.isMaximized;
+        this.electronService.runIfElectron((_, currentWindow) => {
+            if (currentWindow.isMaximized()) {
+                currentWindow.unmaximize();
+            } else {
+                currentWindow.maximize();
+            }
+        });
+    }
+    public closeWindow() {
+        this.electronService.runIfElectron((_, currentWindow) => {
+            currentWindow.hide();
+        });
     }
 }
