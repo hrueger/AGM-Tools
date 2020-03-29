@@ -4,6 +4,7 @@
 /AGM-Tools/dist
 /AGM-Tools/tmp
 /AGM-Tools/out-tsc
+/AGM-Tools/main.js
 
 .vs
 bin

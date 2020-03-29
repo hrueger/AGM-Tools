@@ -9,6 +9,7 @@
       "version": "6.3.0"
     }
   },
+  "main": "main.js",
   "version": "3.09.22",
   "scripts": {
     "build:web": "ng build --prod --base-href /",
@@ -17,9 +18,15 @@
     "serve:web": "ng serve",
     "serve:android": "tns run android",
     "serve:ios": "tns run ios",
+    "serve:electron": "npm-run-all -p serve:web electron:serve",
     "createFilesWithApiKeys": "node createFilesWithApiKeys.js",
     "lint": "eslint . --ext .ts",
-    "lint-fix": "eslint . --ext .ts --fix"
+    "lint-fix": "eslint . --ext .ts --fix",
+    "electron:tsc": "tsc main.ts",
+    "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:tsc && electron ./ --serve",
+    "electron:linux": "npm run build:prod && npx electron-builder build --linux",
+    "electron:windows": "npm run build:prod && npx electron-builder build --windows",
+    "electron:mac": "npm run build:prod && npx electron-builder build --mac"
   },
   "private": true,
   "greenkeeper": {
@@ -62,9 +69,13 @@
     "cldr-data": "^36.0.0",
     "core-js": "^3.6.4",
     "date-fns": "^2.11.0",
+    "electron": "^8.2.0",
+    "electron-reload": "^1.5.0",
+    "electron-splashscreen": "^1.0.0",
     "firebase": "^7.12.0",
     "flag-icon-css": "^3.4.6",
     "fontawesome": "^5.6.3",
+    "is-electron": "^2.2.0",
     "nativescript-accordion": "^6.0.0-beta.2",
     "nativescript-angular": "8.21.0",
     "nativescript-animated-circle": "^1.2.0",
@@ -131,9 +142,7 @@
     "@angular/cli": "^9.0.7",
     "@angular/compiler-cli": "9.0.5",
     "@nativescript/schematics": "^1.0.0",
-    "@types/jasmine": "~3.5.9",
-    "@types/jasminewd2": "^2.0.8",
-    "@types/node": "^13.9.2",
+    "@types/node": "^12.12.6",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
     "codelyzer": "^5.2.1",
@@ -145,21 +154,19 @@
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-json": "^2.1.1",
     "eslint-plugin-prettier": "^3.1.2",
-    "jasmine-core": "~3.5.0",
-    "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.4.1",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage-istanbul-reporter": "^2.1.1",
-    "karma-jasmine": "~3.1.1",
-    "karma-jasmine-html-reporter": "^1.5.2",
     "nativescript-dev-webpack": "1.5.1",
     "node-sass": "4.13.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.0.2",
     "protractor": "~6.0.0",
     "systemjs-plugin-json": "^0.3.0",
     "tns-platform-declarations": "6.5.0",
     "ts-node": "^8.7.0",
-    "typescript": "3.7.5"
+    "typescript": "3.7.5",
+    "wait-on": "^4.0.1"
   },
   "author": "Hannes Rüger"
 }
