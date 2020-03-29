@@ -30,7 +30,8 @@ export class AuthenticationService {
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public resetPassword() {
+    // eslint-disable-next-line
+    public resetPassword(username) {
         return new Observable<boolean>();
     }
 
