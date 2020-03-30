@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     public returnUrl: string;
 
     public isElectron = false;
-    public isMaximized: any;
+    public isMaximized = true;
 
     constructor(
         private title: Title,
