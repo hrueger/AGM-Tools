@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component } from "@angular/core";
+import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { User } from "./_models/user.model";
 import { AuthenticationService } from "./_services/authentication.service";
 import { RemoteService } from "./_services/remote.service";
+import { ElectronService } from "./_services/electron.service";
 
 @Component({
     selector: "app-root",
@@ -17,13 +18,15 @@ export class AppComponent {
     public navToHide = false;
     public isShare: boolean;
     public showEverything = true;
+    public isElectron = false;
+
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
         // private pushService: PushService,
         private translateService: TranslateService,
         private remoteService: RemoteService,
-        private cdr: ChangeDetectorRef,
+        private electronService: ElectronService,
     ) {
         translateService.setDefaultLang("en");
         this.authenticationService.currentUser.subscribe((x) => {
@@ -60,6 +63,7 @@ export class AppComponent {
                 this.showEverything = true;
             }, 0);
         });
+        this.isElectron = this.electronService.isElectron;
     }
     public hideNav() {
         this.navToHide = !this.navToHide;

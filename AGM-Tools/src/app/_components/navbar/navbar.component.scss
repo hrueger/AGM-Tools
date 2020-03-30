@@ -122,9 +122,18 @@ nav.desktop {
     .nav-link.close {
         opacity: 1;
     }
-    .brand-logo {
-        height: 100%;
-        width: auto;
-        margin: 1px;
+    .navbar-brand {
+        .headerImg {
+            height: 100%;
+            width: auto;
+            margin: 1px;
+            margin-top: 0px;
+            margin-left: 5px;
+        }
+        padding-top: 3px;
+    }
+    .headline h3 {
+        font-size: 1.25rem;
+        padding-top: 2px;
     }
 }

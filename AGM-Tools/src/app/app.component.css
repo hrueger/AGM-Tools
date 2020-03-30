@@ -61,3 +61,18 @@
 .header-button.active {
     background-color: #428bca;
 }
+
+.cntnr {
+    margin-top: 50px;
+}
+.cntnr, main {
+    max-height: calc(100vh - 50px);
+}
+
+.desktop .cntnr {
+    margin-top: 30px;
+}
+
+.desktop .cntnr .desktop main {
+    max-height: calc(100vh - 30px);
+}

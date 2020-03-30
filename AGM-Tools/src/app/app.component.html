@@ -1,12 +1,13 @@
 <navbar (toggleNav)="showNav = $event" *ngIf="currentUser && !isShare && showEverything"></navbar>
-<perfect-scrollbar>
-    <div [class.container-fluid]="currentUser && !isShare" *ngIf="showEverything">
-        <div [class.row]="currentUser && !isShare">
-            <app-sidebar [changed]="showNav" *ngIf="currentUser && !isShare"></app-sidebar>
+
+<div [class.container-fluid]="currentUser && !isShare" *ngIf="showEverything" [class.desktop]="isElectron">
+    <div class="cntnr" [class.row]="currentUser && !isShare">
+        <app-sidebar [changed]="showNav" *ngIf="currentUser && !isShare"></app-sidebar>
+        <perfect-scrollbar>
             <main [attr.role]="currentUser && !isShare ? 'main' : ''"
                 [class]="currentUser && !isShare ? 'col-md-9 ml-sm-auto col-lg-10' : ''">
                 <router-outlet></router-outlet>
             </main>
-        </div>
+        </perfect-scrollbar>
     </div>
-</perfect-scrollbar>
+</div>
