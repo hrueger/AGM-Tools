@@ -31,6 +31,9 @@ export class LoginComponent implements OnInit {
 
     public returnUrl: string;
 
+    public isElectron = false;
+    public isMaximized: any;
+
     constructor(
         private title: Title,
         private formBuilder: FormBuilder,
@@ -67,6 +70,7 @@ export class LoginComponent implements OnInit {
         }
 
         this.electronService.setTitle("Login");
+        this.isElectron = this.electronService.isElectron;
     }
 
     // convenience getter for easy access to form fields
@@ -140,6 +144,28 @@ export class LoginComponent implements OnInit {
             if (data.status == true) {
                 this.inputNewPasswordSucceeded = true;
             }
+        });
+    }
+
+    public minWindow() {
+        this.electronService.runIfElectron((_, currentWindow) => {
+            currentWindow.minimize();
+        });
+    }
+
+    public maxWindow() {
+        this.isMaximized = !this.isMaximized;
+        this.electronService.runIfElectron((_, currentWindow) => {
+            if (currentWindow.isMaximized()) {
+                currentWindow.unmaximize();
+            } else {
+                currentWindow.maximize();
+            }
+        });
+    }
+    public closeWindow() {
+        this.electronService.runIfElectron((_, currentWindow) => {
+            currentWindow.hide();
         });
     }
 }
