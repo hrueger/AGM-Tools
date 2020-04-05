@@ -43,25 +43,31 @@
         <h6>{{'general.image' | translate}} 1:</h6>
         <span *ngIf="step.uploadingImage1"><i class="fa fa-spin fa-spinner"></i>
             {{'general.uploading' | translate}}</span>
-        <img *ngIf="step.image1" [src]="getFileSrc(step.image1)" [alt]="'general.image' | translate">
-        <button *ngIf="step.image1 && !step.uploadingImage1" class="btn btn-link"
-            (click)="deleteImage(index, 1)">{{'tutorials.removeImage' | translate}}</button>
+        <div class="stepImg">
+            <img *ngIf="step.image1" [src]="getFileSrc(step.image1)" [alt]="'general.image' | translate">
+            <button *ngIf="step.image1 && !step.uploadingImage1" class="close removeImageBtn"
+                (click)="deleteImage(index, 1)"><i class="fas fa-times"></i></button>
+        </div>
         <add-image *ngIf="!step.image1" (image)="uploadImage($event, index, 1)"></add-image>
 
         <h6>{{'general.image' | translate}} 2:</h6>
         <span *ngIf="step.uploadingImage2"><i class="fa fa-spin fa-spinner"></i>
             {{'general.uploading' | translate}}</span>
-        <img *ngIf="step.image2" [src]="getFileSrc(step.image2)" [alt]="'general.image' | translate">
-        <button *ngIf="step.image2 && !step.uploadingImage2" class="btn btn-link"
-            (click)="deleteImage(index, 2)">{{'tutorials.removeImage' | translate}}</button>
+        <div class="stepImg">
+            <img *ngIf="step.image2" [src]="getFileSrc(step.image2)" [alt]="'general.image' | translate">
+            <button *ngIf="step.image2 && !step.uploadingImage2" class="close removeImageBtn"
+                (click)="deleteImage(index, 2)"><i class="fas fa-times"></i></button>
+        </div>
         <add-image *ngIf="!step.image2" (image)="uploadImage($event, index, 2)"></add-image>
 
         <h6>{{'general.image' | translate}} 3:</h6>
         <span *ngIf="step.uploadingImage3"><i class="fas fa-spin fa-spinner"></i>
             {{'general.uploading' | translate}}</span>
-        <img *ngIf="step.image3" [src]="getFileSrc(step.image3)" [alt]="'general.image' | translate">
-        <button *ngIf="step.image3 && !step.uploadingImage3" class="btn btn-link"
-            (click)="deleteImage(index, 3)">{{'tutorials.removeImage' | translate}}</button>
+        <div class="stepImg">
+            <img *ngIf="step.image3" [src]="getFileSrc(step.image1)" [alt]="'general.image' | translate">
+            <button *ngIf="step.image3 && !step.uploadingImage3" class="close removeImageBtn"
+                (click)="deleteImage(index, 3)"><i class="fas fa-times"></i></button>
+        </div>
         <add-image *ngIf="!step.image3" (image)="uploadImage($event, index, 3)"></add-image>
     </div>
 </div>

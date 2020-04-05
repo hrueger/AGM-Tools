@@ -14,3 +14,22 @@
 .mycard img {
     max-height: 100px;
 }
+
+.removeImageBtn {
+    position: relative;
+    right: 25px;
+    top: 0;
+    display: none;
+}
+
+.stepImg:hover .removeImageBtn {
+    display: block;
+}
+.stepImg:hover img{
+    opacity: 0.5;
+}
+
+.stepImg {
+    width: fit-content;
+    height: fit-content;
+}
