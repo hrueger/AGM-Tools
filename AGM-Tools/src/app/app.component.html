@@ -1,6 +1,6 @@
 <navbar (toggleNav)="showNav = $event" *ngIf="currentUser && !isShare && showEverything"></navbar>
 
-<div [class.container-fluid]="currentUser && !isShare" *ngIf="showEverything" [class.desktop]="isElectron">
+<div [class.container-fluid]="currentUser && !isShare" *ngIf="showEverything" [class.desktop]="isElectron" [class.fullpage]="!currentUser">
     <div class="cntnr" [class.row]="currentUser && !isShare">
         <app-sidebar [changed]="showNav" *ngIf="currentUser && !isShare"></app-sidebar>
         <perfect-scrollbar>

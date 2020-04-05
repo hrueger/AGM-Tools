@@ -68,11 +68,15 @@
 .cntnr, main {
     max-height: calc(100vh - 50px);
 }
-
 .desktop .cntnr {
     margin-top: 30px;
 }
 
-.desktop .cntnr .desktop main {
+.desktop .cntnr, .desktop main {
     max-height: calc(100vh - 30px);
+}
+
+.fullpage .cntnr, .fullpage main {
+    max-height: 100vh;
+    margin-top: 0;
 }
