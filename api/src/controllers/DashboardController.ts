@@ -154,11 +154,11 @@ class DashboardController {
             lastUpdated = diskSpaceUsed.updatedAt;
         }
         res.send({
-            free: (toInt(config.avalibleDiskSpaceInGB) * 1024)
+            free: (toInt(config.availableDiskSpaceInGB) * 1024)
                 - Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
             lastUpdated,
             system: 0,
-            total: toInt(config.avalibleDiskSpaceInGB) * 1024,
+            total: toInt(config.availableDiskSpaceInGB) * 1024,
             used: Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
         });
     }

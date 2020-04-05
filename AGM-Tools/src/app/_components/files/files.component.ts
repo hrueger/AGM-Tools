@@ -245,7 +245,7 @@ export class FilesComponent implements OnInit {
             if (this.currentModalWindow) {
                 this.currentModalWindow.close();
             }
-            this.currentModalWindow = this.modalService.open(viewFile, { size: "xl", scrollable: true, windowClass: "fileModal" });
+            this.currentModalWindow = this.modalService.open(viewFile, { size: "xl", scrollable: true, windowClass: "fullscreenModal" });
             this.currentModalWindow.result.then(() => {
                 this.currentModalWindow = undefined;
             }).catch(() => {
@@ -452,7 +452,7 @@ export class FilesComponent implements OnInit {
         }).catch(() => undefined);
     }
     public async copy() {
-        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
+        this.alertService.info(await this.fts.t("general.availableInFutureVersion"));
     }
 
     public async copyShareLink(inputField) {
@@ -480,7 +480,7 @@ export class FilesComponent implements OnInit {
     }
 
     public toggleFullscreen() {
-        const modals = document.getElementsByClassName("fileModal");
+        const modals = document.getElementsByClassName("fullscreenModal");
         if (modals && modals[0]) {
             const modal = modals[0].firstElementChild;
             if (this.isFullScreen) {

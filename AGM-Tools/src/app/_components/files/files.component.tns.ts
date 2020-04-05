@@ -288,7 +288,7 @@ export class FilesComponent implements OnInit {
                     }
                 });
             } else if (result == await this.fts.t("files.newFile")) {
-                this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
+                this.alertService.info(await this.fts.t("general.availableInFutureVersion"));
             }
         });
     }
@@ -403,10 +403,10 @@ export class FilesComponent implements OnInit {
         }
     }
     public async move() {
-        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
+        this.alertService.info(await this.fts.t("general.availableInFutureVersion"));
     }
     public async copy() {
-        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
+        this.alertService.info(await this.fts.t("general.availableInFutureVersion"));
     }
 
     public onCellSwiping(args: ListViewEventData) {

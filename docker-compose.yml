@@ -18,7 +18,7 @@ agmtools:
         firebase_messagingSenderId: valueFor_firebase_messagingSenderId
         firebase_projectId: valueFor_firebase_projectId
         firebase_storageBucket: valueFor_firebase_storageBucket1
-        avalibleDiskSpaceInGB: 100
+        availableDiskSpaceInGB: 100
         cacheExpireDays: 1
         database_host: db
         database_name: databaseName

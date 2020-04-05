@@ -97,7 +97,7 @@ export class TemplatesComponent implements OnInit {
     }
 
     public async openNewModal() {
-        this.alertService.info(await this.fts.t("general.avalibleInFutureVersion"));
+        this.alertService.info(await this.fts.t("general.availableInFutureVersion"));
         /* let options = {
             animated: true,
             context: {},

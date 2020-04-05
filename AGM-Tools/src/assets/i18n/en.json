@@ -21,7 +21,7 @@
     "diskSpaceUsedByData": "Data",
     "diskSpaceUsedBySystem": "System",
     "remainingDiskSpace": "Available Diskspace",
-    "updatesAvalible": "Aktualisierungen verfügbar",
+    "updatesAvailable": "Aktualisierungen verfügbar",
     "version": "Version",
     "whatsnew": "What's new"
   },
@@ -106,9 +106,11 @@
     "tagsSavedSuccessfully": "All tags have been saved successfully."
   },
   "general": {
+    "addImage": "Add image",
+    "addScreenshot": "Add screenshot",
     "atDate": "on",
     "audio": "Audio",
-    "avalibleInFutureVersion": "This feature will be avalible in a future version!",
+    "availableInFutureVersion": "This feature will be available in a future version!",
     "back": "Back",
     "camera": "Camera",
     "cancel": "Cancel",
@@ -128,7 +130,9 @@
     "description": "Description",
     "document": "Document",
     "edit": "Edit",
+    "editImage": "Edit image",
     "email": "Email",
+    "entireScreen": "Entire Screen",
     "error": "Error",
     "gallery": "Gallery",
     "general": "General",
@@ -156,6 +160,7 @@
     "reset": "Reset",
     "save": "Save",
     "select": "Select",
+    "selectImage": "Select image",
     "send": "Send",
     "showDetails": "Show details",
     "size": "Size",
@@ -228,7 +233,7 @@
     "templates": "Templates"
   },
   "tips": {
-    "tipsAvalible": "New tips avalible",
+    "tipsAvailable": "New tips available",
     "viewTips": "View tips"
   },
   "tour": {

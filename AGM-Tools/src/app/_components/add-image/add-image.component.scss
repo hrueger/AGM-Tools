@@ -1,0 +1,29 @@
+.card {
+    cursor: pointer;
+    border: 3px solid rgb(255, 255, 255);
+    &:hover {
+        border: 3px solid rgb(190, 190, 190);
+        border-radius: 5px;
+    }
+}
+
+.card-img-top.appIcon {
+    position: relative;
+    bottom: 3rem;
+    left: 0;
+    height: 3rem;
+    width: 3rem;
+    padding: 5px;
+    background-color: rgba(56, 56, 56, 0.5);
+}
+.card-img-top {
+    height: 9rem;
+    object-fit: cover;
+}
+.card-body {
+    margin-top: -2rem;
+}
+
+image-editor {
+    height: 100%;
+}

@@ -82,7 +82,8 @@
                             "node_modules/ngx-extended-pdf-viewer/assets/pdf.js",
                             "node_modules/ngx-extended-pdf-viewer/assets/viewer.js",
                             "node_modules/tinymce/tinymce.min.js",
-                            "node_modules/marked/lib/marked.js"
+                            "node_modules/marked/lib/marked.js",
+                            "node_modules/tui-color-picker/dist/tui-color-picker.js"
                         ]
                     },
                     "configurations": {

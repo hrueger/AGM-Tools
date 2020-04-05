@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import * as path from "path";
 import { getRepository } from "typeorm";
+import * as fs from "fs";
 import { config } from "../config/config";
 import { Tutorial } from "../entity/Tutorial";
 import { TutorialStep } from "../entity/TutorialStep";
@@ -192,16 +193,26 @@ class TutorialController {
     }
 
     public static uploadFile = async (req: Request, res: Response) => {
-        // @ts-ignore
-        const newFilename = `${genID()}${path.extname(req.files.file.name)}`;
-        // @ts-ignore
-        req.files.file.mv(path.join(config.tutorialFilesStoragePath, newFilename), (err) => {
-            if (err) {
-                res.status(500).send({ message: `${i18n.__("errors.errorWhileSavingFile")} ${err.toString()}` });
-            } else {
+        if (!req.body.file) {
+            res.status(400).send(i18n.__("errors.notAllFieldsProvided"));
+            return;
+        }
+
+        const mimetypes = ["image/png", "image/jpg", "image/jpeg"];
+
+        for (const mime of mimetypes) {
+            const beginning = `data:${mime};base64,`;
+            if (req.body.file.startsWith(beginning)) {
+                const imageBuffer = Buffer.from(req.body.file.replace(beginning, ""), "base64");
+                const ext = mime.split("/")[1];
+                const newFilename = `${genID()}.${ext}`;
+                fs.writeFileSync(path.join(config.tutorialFilesStoragePath, newFilename),
+                    imageBuffer);
                 res.send({ status: true, image: newFilename });
+                return;
             }
-        });
+        }
+        res.status(500).send({ message: i18n.__("errors.errorWhileSavingFile") });
     }
 
     public static viewFile = async (req: Request, res: Response) => {

@@ -160,8 +160,8 @@
                         <span>{{version.currentVersion}}</span><br>
                         <small>Containerizer v{{version.containerizerVersion}}</small>
                     </div>
-                    <div class="alert alert-warning" *ngIf="version.updatesAvalible">
-                        {{version.updateCount}} {{"dashboard.updatesAvalible" | translate}}<br>
+                    <div class="alert alert-warning" *ngIf="version.updatesAvailable">
+                        {{version.updateCount}} {{"dashboard.updatesAvailable" | translate}}<br>
                         <button class="btn btn-link pl-0 d-block"
                             (click)="viewUpdateDetails = !viewUpdateDetails">{{(viewUpdateDetails ? "general.hideDetails" : "general.showDetails") | translate}}</button>
                         <div *ngIf="viewUpdateDetails" class="my-2">

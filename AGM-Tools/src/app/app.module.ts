@@ -32,6 +32,7 @@ import { UiSwitchModule } from "ngx-ui-switch";
 import { EditorModule } from "@tinymce/tinymce-angular";
 import { MarkdownModule } from "ngx-markdown";
 import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
+import { NgxAdvancedImageEditorModule } from "ngx-advanced-image-editor";
 import { environment } from "../environments/environment";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { CallComponent } from "./_components/call/call.component";
@@ -76,6 +77,7 @@ import { AppComponent } from "./app.component";
 import { routes } from "./app.routes";
 import { TinyConfigService } from "./_services/tiny-config.service";
 import { MarkdownService } from "./_services/markdown.service";
+import { AddImageComponent, ImageEditorComponent } from "./_components/add-image/add-image.component";
 
 
 registerLocaleData(localeDe);
@@ -118,6 +120,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         MessagesAreaComponent,
         MessageBoxComponent,
         DoneComponent,
+        ImageEditorComponent,
+        AddImageComponent,
         FileUploadComponent,
         TourComponent,
         UpdaterComponent,
@@ -134,6 +138,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     imports: [
         AngularFireDatabaseModule,
         AngularFireAuthModule,
+        NgxAdvancedImageEditorModule,
         AngularFireMessagingModule,
         NgxOnlyOfficeModule,
         TreeViewModule,

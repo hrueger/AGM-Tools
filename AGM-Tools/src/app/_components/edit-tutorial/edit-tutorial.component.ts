@@ -22,7 +22,6 @@ export class EditTutorialComponent implements OnInit {
     public title: string;
     public description: string;
     public invalidMessage: boolean;
-    public TINYCONFIG = {};
 
     constructor(private remoteService: RemoteService,
         private navbarService: NavbarService,
@@ -31,8 +30,8 @@ export class EditTutorialComponent implements OnInit {
         private authenticationService: AuthenticationService,
         private fts: FastTranslateService,
         private route: ActivatedRoute,
-        private tinyConfigService: TinyConfigService,
-        private markdownService: MarkdownService) { }
+        private markdownService: MarkdownService,
+        public tinyConfigService: TinyConfigService) { }
 
     public async ngOnInit() {
         this.tutorialForm = this.fb.group({
@@ -45,7 +44,6 @@ export class EditTutorialComponent implements OnInit {
                 this.gotNewTutorialData(tutorial);
             });
         });
-        this.TINYCONFIG = this.tinyConfigService.get();
     }
 
     public updateGeneral() {
@@ -108,7 +106,7 @@ export class EditTutorialComponent implements OnInit {
         this.alertService.success(await this.fts.t("tutorials.stepsSavedSuccessfully"));
     }
 
-    public uploadImage(files, stepIdx, n) {
+    public uploadImage(fileUrl, stepIdx, n) {
         if (n == 1) {
             this.tutorial.steps[stepIdx].uploadingImage1 = true;
         } else if (n == 2) {
@@ -116,9 +114,9 @@ export class EditTutorialComponent implements OnInit {
         } else {
             this.tutorial.steps[stepIdx].uploadingImage3 = true;
         }
-        this.remoteService.uploadFile(`tutorials/${this.tutorial.id}/steps/${stepIdx}/files`,
-            "file", files.item(0)).subscribe((data) => {
-            if (data.status == true) {
+        this.remoteService.getNoCache("post", `tutorials/${this.tutorial.id}/steps/${stepIdx}/files`,
+            { file: fileUrl }).subscribe((data) => {
+            if (data && data.status == true) {
                 if (n == 1) {
                     this.tutorial.steps[stepIdx].uploadingImage1 = false;
                     this.tutorial.steps[stepIdx].image1 = data.image;
@@ -168,5 +166,29 @@ export class EditTutorialComponent implements OnInit {
             this.tutorialForm.get("title").setValue(tutorial.title);
             this.navbarService.setHeadline(`${await this.fts.t("tutorials.editTutorial")}: ${tutorial.title}`);
         }
+    }
+
+    private base64toBlob(b64Data) {
+        const contentType = "";
+        const sliceSize = 512;
+
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        const blob = new Blob(byteArrays, { type: contentType });
+        return blob;
     }
 }

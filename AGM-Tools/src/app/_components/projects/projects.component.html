@@ -23,7 +23,7 @@
                     <p class="card-text" markdown ngPreserveWhitespace>{{project.description}}</p>
                 </div>
             </div>
-            <div class="alert alert-info mb-0" *ngIf="project.tips.length > 0">{{'tips.tipsAvalible' | translate}} <button class="btn btn-link" (click)="goToProject(project)">{{'tips.viewTips' | translate}} </button></div>
+            <div class="alert alert-info mb-0" *ngIf="project.tips.length > 0">{{'tips.tipsAvailable' | translate}} <button class="btn btn-link" (click)="goToProject(project)">{{'tips.viewTips' | translate}} </button></div>
             <div class="list-group list-group-flush">
                 <a [routerLink]="['/', 'chat', 'project', project.id]" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
