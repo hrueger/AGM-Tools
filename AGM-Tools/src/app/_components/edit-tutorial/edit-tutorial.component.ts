@@ -145,13 +145,16 @@ export class EditTutorialComponent implements OnInit {
         }
     }
 
-    public deleteImage(i, n) {
-        if (n == 1) {
-            this.tutorial.steps[i].image1 = null;
-        } else if (n == 2) {
-            this.tutorial.steps[i].image2 = null;
-        } else {
-            this.tutorial.steps[i].image3 = null;
+    public async deleteImage(i, n) {
+        // eslint-disable-next-line
+        if (confirm(await this.fts.t("tutorials.confirmImageDelete"))) {
+            if (n == 1) {
+                this.tutorial.steps[i].image1 = null;
+            } else if (n == 2) {
+                this.tutorial.steps[i].image2 = null;
+            } else {
+                this.tutorial.steps[i].image3 = null;
+            }
         }
     }
 

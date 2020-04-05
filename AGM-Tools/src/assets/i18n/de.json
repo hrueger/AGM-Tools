@@ -257,6 +257,7 @@
   "tutorials": {
     "addStep": "Schritt hinzufügen",
     "changesSavedSuccessfully": "Änderungen erfolgreich gespeichert!",
+    "confirmImageDelete": "Soll dieses Bild wirklich entfernt werden?",
     "confirmStepDelete": "Soll dieser Schritt wirklich gelöscht werden?",
     "displayAll": "Alle Tutorials anzeigen",
     "editTutorial": "Tutorial bearbeiten",
