@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, NgZone } from "@angular/core";
+import { ChangeDetectorRef, Component } from "@angular/core";
+import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
+import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
@@ -21,7 +23,7 @@ export class SettingsComponent {
         private authenticationService: AuthenticationService,
         private cdr: ChangeDetectorRef,
         private alertService: AlertService,
-        private zone: NgZone,
+        private router: Router,
     ) {}
 
     public async ngOnInit() {
@@ -66,5 +68,11 @@ export class SettingsComponent {
                 }
             }
         });
+    }
+
+    public onNavigate(event: NgbNavChangeEvent) {
+        if (event.nextId == "pushNotifications") {
+            this.router.navigate(["settings", "notifications"]);
+        }
     }
 }

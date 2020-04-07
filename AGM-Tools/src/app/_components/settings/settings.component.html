@@ -1,7 +1,7 @@
-<ngb-tabset>
-  <ngb-tab class="fas fa" *ngFor="let group of settings">
-    <ng-template ngbTabTitle><i [class]="'fas fa-' + group.iconName"></i> {{group.name}}</ng-template>
-    <ng-template ngbTabContent>
+<ul ngbNav #nav="ngbNav" [activeId]="settings && settings[0] ? settings[0].id : undefined" class="nav-tabs" (navChange)="onNavigate($event)">
+  <li [ngbNavItem]="group.id" *ngFor="let group of settings">
+    <a ngbNavLink><i [class]="'fas fa-' + group.iconName"></i> {{group.name}}</a>
+    <ng-template ngbNavContent>
       <div class="card-deck mt-3">
         <div class="card" *ngFor="let setting of group.children">
           <div class="card-header">
@@ -31,5 +31,8 @@
         </div>
       </div>
     </ng-template>
-  </ngb-tab>
-</ngb-tabset>
+  </li>
+</ul>
+
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

@@ -19,6 +19,7 @@ import { TutorialsComponent } from "./_components/tutorials/tutorials.component"
 import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { AuthGuard } from "./_guards/auth.guard";
+import { NotificationSettingsComponent } from "./_components/notification-settings/notification-settings.component";
 
 export const routes: Routes = [
     {
@@ -124,6 +125,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         component: SettingsComponent,
         path: "settings",
+    },
+    {
+        canActivate: [AuthGuard],
+        component: NotificationSettingsComponent,
+        path: "settings/notifications",
     },
     {
         canActivate: [AuthGuard],

@@ -17,6 +17,7 @@ import { NgbModule, NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
+import { DeviceDetectorModule, DeviceDetectorService } from "ngx-device-detector";
 import { DashboardLayoutModule } from "@syncfusion/ej2-angular-layouts";
 import { AccordionModule, TabModule, TreeViewModule } from "@syncfusion/ej2-angular-navigations";
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
@@ -78,6 +79,7 @@ import { routes } from "./app.routes";
 import { TinyConfigService } from "./_services/tiny-config.service";
 import { MarkdownService } from "./_services/markdown.service";
 import { AddImageComponent, ImageEditorComponent } from "./_components/add-image/add-image.component";
+import { NotificationSettingsComponent } from "./_components/notification-settings/notification-settings.component";
 
 
 registerLocaleData(localeDe);
@@ -126,6 +128,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         TourComponent,
         UpdaterComponent,
         TutorialsComponent,
+        NotificationSettingsComponent,
         TutorialComponent,
         EditTutorialComponent,
         DiffPipe,
@@ -136,6 +139,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         FilePickerModalComponent,
     ],
     imports: [
+        AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,
         AngularFireAuthModule,
         NgxAdvancedImageEditorModule,
@@ -143,7 +147,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         NgxOnlyOfficeModule,
         TreeViewModule,
         UiSwitchModule.forRoot({}),
-        AngularFireModule.initializeApp(environment),
+        DeviceDetectorModule.forRoot(),
         RouterModule.forRoot(routes, { useHash: true, enableTracing: false }),
         ContextMenuModule.forRoot({
             useBootstrap4: true,
@@ -187,6 +191,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         Location,
         NavbarService,
         PushService,
+        DeviceDetectorService,
         DatePipe,
         TinyConfigService,
         MarkdownService,

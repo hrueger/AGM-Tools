@@ -1,29 +1,42 @@
 import { Injectable } from "@angular/core";
 import { AngularFireMessaging } from "@angular/fire/messaging";
-import { BehaviorSubject } from "rxjs";
+import { DeviceDetectorService } from "ngx-device-detector";
+import { RemoteService } from "./remote.service";
+import { ElectronService } from "./electron.service";
 
 @Injectable()
 export class PushService {
-    public currentMessage = new BehaviorSubject(null);
-
     constructor(
         private angularFireMessaging: AngularFireMessaging,
+        private remoteService: RemoteService,
+        private electronService: ElectronService,
+        private deviceDetectorService: DeviceDetectorService,
     ) {
         this.angularFireMessaging.messaging.subscribe(
             (messaging) => {
                 messaging.onMessage = messaging.onMessage.bind(messaging);
                 messaging.onTokenRefresh = messaging.onTokenRefresh.bind(messaging);
+                messaging.setBackgroundMessageHandler = () => new Promise(() => undefined);
             },
         );
     }
 
     public init() {
-    // only that ts of vscode doesnt complain, because it won't parse the .tns file...
+        // only that ts of vscode doesn't complain, because it won't parse the .tns file...
     }
 
     // eslint-disable-next-line
-    public updateToken(t, u) {
-        // Update Token
+    public updateToken(_, token: string) {
+        if ((window as any).loggedIn) {
+            this.remoteService.getNoCache("post", "push/devices", {
+                token,
+                software: this.electronService.isElectron ? "Electron" : this.deviceDetectorService.browser,
+                os: this.deviceDetectorService.os,
+                device: this.deviceDetectorService.isDesktop() ? "Desktop" : this.deviceDetectorService.isMobile() ? "Mobile" : this.deviceDetectorService.isTablet() ? "Tablet" : "Unknown",
+            }).subscribe(() => {
+                //
+            });
+        }
     }
 
     public requestPermission(userId) {
@@ -39,13 +52,11 @@ export class PushService {
             },
         );
     }
-
     public receiveMessage() {
         this.angularFireMessaging.messages.subscribe(
             (payload) => {
                 // eslint-disable-next-line no-console
                 console.log("new message received. ", payload);
-                this.currentMessage.next(payload);
             },
         );
     }

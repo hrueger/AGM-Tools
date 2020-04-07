@@ -21,6 +21,7 @@ import { Template } from "./Template";
 import { Tutorial } from "./Tutorial";
 import { Usergroup } from "./Usergroup";
 import { ChatStatus } from "./ChatStatus";
+import { Device } from "./Device";
 
 @Entity()
 @Unique(["username"])
@@ -98,6 +99,9 @@ export class User {
 
   @OneToMany(() => ChatStatus, (chatStatus) => chatStatus.owner)
   public chatStatuses: ChatStatus[];
+
+  @OneToMany(() => Device, (device) => device.user)
+  public devices: Device[];
 
   public hashPassword() {
       this.password = bcrypt.hashSync(this.password, 8);

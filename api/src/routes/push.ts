@@ -4,6 +4,7 @@ import { checkJwt } from "../middlewares/checkJwt";
 
 const router = Router();
 
-router.post("/token/update", [checkJwt], PushController.updateToken);
+router.get("/devices", [checkJwt], PushController.getDevices);
+router.post("/devices", [checkJwt], PushController.updateToken);
 
 export default router;

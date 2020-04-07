@@ -6,6 +6,7 @@ import * as fs from "fs";
 import * as helmet from "helmet";
 import * as i18n from "i18n";
 import * as path from "path";
+import * as https from "https";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { config } from "./config/config";
@@ -30,6 +31,7 @@ import { CreateTags1574797035707 } from "./migration/1574797035707-CreateTags";
 import routes from "./routes";
 import { toInt } from "./utils/utils";
 import { ChatStatus } from "./entity/ChatStatus";
+import { Device } from "./entity/Device";
 
 i18n.configure({
     defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
@@ -54,6 +56,7 @@ createConnection({
         Message,
         Notification,
         Project,
+        Device,
         Setting,
         Tag,
         Task,
@@ -112,7 +115,10 @@ createConnection({
         // Set routes for static built frontend
         app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
 
-        app.listen(config.port, () => {
+        (process.env.NODE_ENV == "development" ? https.createServer({
+            key: fs.readFileSync(path.join(__dirname, "./key.pem")),
+            cert: fs.readFileSync(path.join(__dirname, "./cert.pem")),
+        }, app) : app).listen(config.port, () => {
             // eslint-disable-next-line no-console
             console.log(`Server started on port ${config.port}!`);
         });

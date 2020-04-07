@@ -1,0 +1,19 @@
+<a class="btn btn-outline-primary mb-2" [routerLink]="['/', 'settings']">{{"general.back" | translate}}</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Device</th>
+            <th>OS</th>
+            <th>Software</th>
+            <th>Token</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let device of devices">
+            <td><i [class]="(device.device == 'Mobile' ? 'fas fa-mobile-alt' : device.device == 'Desktop' ? 'fas fa-desktop' : device.device == 'Tablet' ? 'fas fa-tablet-alt' : 'fas fa-question') + ' fa-2x'"></i></td>
+            <td><i [class]="(device.os != 'Unknown' ? device.os == 'Mac' ? 'fab fa-apple' : ('fab fa-' + device.os.toLowerCase()) : 'fas fa-question') + ' fa-2x'"></i></td>
+            <td><i [class]="(device.software != 'Unknown' ? ('fab fa-' + device.software.toLowerCase()) : 'fas fa-question') + ' fa-2x'"></i></td>
+            <td>{{device.token}}</td>
+        </tr>
+    </tbody>
+</table>

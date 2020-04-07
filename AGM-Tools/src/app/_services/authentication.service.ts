@@ -2,8 +2,10 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { AngularFireMessaging } from "@angular/fire/messaging";
 import { environment } from "../../environments/environment";
 import { User } from "../_models/user.model";
+import { PushService } from "./push.service";
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -16,7 +18,9 @@ export class AuthenticationService {
     public currentUser: Observable<User>;
     private currentUserSubject: BehaviorSubject<User>;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+        private pushService: PushService,
+        private angularFire: AngularFireMessaging) {
         this.currentUserSubject = new BehaviorSubject<User>(
             JSON.parse(sessionStorage.getItem("currentUser")),
         );
@@ -43,7 +47,7 @@ export class AuthenticationService {
                 httpOptions,
             )
             .pipe(
-                map((user) => {
+                map(async (user) => {
                     // login successful if there's a jwt token in the response
                     if (user && user.token) {
                         // store user details and jwt token in local storage to
@@ -54,6 +58,9 @@ export class AuthenticationService {
                         );
                         this.saveJwtToken(user);
                         this.currentUserSubject.next(user);
+                        (window as any).loggedIn = true;
+                        this.pushService.updateToken(undefined,
+                            await this.angularFire.getToken.toPromise());
                     }
 
                     return user;

@@ -58,6 +58,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6",
     "find-up": "^4.1.0",
+    "firebase-admin": "^8.10.0",
     "get-folder-size": "^2.0.1",
     "helmet": "^3.21.3",
     "i18n": "^0.8.6",
@@ -69,11 +70,11 @@
     "nodemailer": "^6.4.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
+    "snyk": "^1.301.0",
     "socket.io": "^2.3.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typeorm": "0.2.24",
-    "unzipper": "^0.10.10",
-    "snyk": "^1.301.0"
+    "unzipper": "^0.10.10"
   },
   "scripts": {
     "build": "tsc",
