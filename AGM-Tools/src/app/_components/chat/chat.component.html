@@ -5,7 +5,7 @@
                 <li [class.active]="currentChat == chat" class="contact list-group-item border-0"
                     *ngFor="let chat of chats" (click)="goToChat(chat)">
                     <div class="d-flex">
-                        <ngx-avatar class="align-self-left avatar mx-2 mt-1" size="30" [name]="chat.name"></ngx-avatar>
+                        <img [src]="getAvatarSource(chat)" class="align-self-left avatar mr-2">
                         <div class="w-100">
                             <div class="d-flex w-100 justify-content-between">
                                 <span class="chatname">{{ chat.name }}</span>

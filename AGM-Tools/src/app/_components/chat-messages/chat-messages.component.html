@@ -8,7 +8,7 @@
                         class="fas fa-microphone"></i></button>
                 <button class="btn text-primary" (click)="options()"><i class="fas fa-ellipsis-v"></i></button>
             </div>
-            <ngx-avatar class="messages-header thumb" [name]="inputChat.name"></ngx-avatar>
+            <img [src]="getAvatarSource(inputChat)" class="messages-header avatar float-left mr-2">
             <span class="messages-header title">{{ inputChat.name }}</span><br />
             <span
                 class="messages-header subtitle">{{ inputChat.isUser ? ('general.lastOnline' | translate:{time: ( inputChat.lastOnline == undefined ? ('general.unknown' | translate) : inputChat.lastOnline | date: "yyyy-MM-dd hh:ss" | shortWhen ) } ) : inputChat.users }}</span>

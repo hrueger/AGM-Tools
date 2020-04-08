@@ -236,3 +236,11 @@ th.sortable {
     border: 1px solid #999 !important;
     background-color: rgb(240, 240, 240) !important;
 }
+
+.avatar {
+    border-radius: 100%;
+    border: 1px solid rgb(209, 209, 209);
+    height: 3rem;
+    width: 3rem;
+    object-fit: cover;
+}

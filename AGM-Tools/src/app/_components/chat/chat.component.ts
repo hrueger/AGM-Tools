@@ -2,13 +2,15 @@ import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { ChatComponentCommon } from "./chat.component.common";
 
 @Component({
     selector: "app-chat",
     styleUrls: ["./chat.component.scss"],
     templateUrl: "./chat.component.html",
 })
-export class ChatComponent {
+export class ChatComponent extends ChatComponentCommon {
     public chats = [];
     public currentChat: object;
     constructor(
@@ -16,7 +18,9 @@ export class ChatComponent {
         private navbarService: NavbarService,
         private route: ActivatedRoute,
         private router: Router,
+        private authService: AuthenticationService,
     ) {
+        super(authService);
         this.chats = [];
     }
 

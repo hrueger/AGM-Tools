@@ -19,6 +19,10 @@ class UserController {
         res.send(users);
     }
 
+    public static avatar = async (req: Request, res: Response) => {
+        res.redirect(`https://avatars.dicebear.com/v2/identicon/${req.params.id}.svg`);
+    }
+
     public static newUser = async (req: Request, res: Response) => {
         // Get parameters from the body
         const {

@@ -23,7 +23,6 @@ import { AccordionModule, TabModule, TreeViewModule } from "@syncfusion/ej2-angu
 import { DialogModule } from "@syncfusion/ej2-angular-popups";
 import { ScheduleModule } from "@syncfusion/ej2-angular-schedule";
 import { ChartsModule } from "ng2-charts";
-import { AvatarModule } from "ngx-avatar";
 import { ContextMenuModule } from "ngx-contextmenu";
 import { NgxExtendedPdfViewerModule } from "ngx-extended-pdf-viewer";
 import { LightboxModule } from "ngx-lightbox";
@@ -165,7 +164,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         ReactiveFormsModule,
         HttpClientModule,
         ChartsModule,
-        AvatarModule,
         CommonModule,
         FormsModule,
         NgbModalModule,

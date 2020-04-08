@@ -20,7 +20,6 @@ import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
 import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
 import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
 import * as AppUrlSchemes from "nativescript-urlhandler";
-import { AvatarModule } from "ngx-avatar";
 import * as platform from "tns-core-modules/platform";
 import { registerElement } from "nativescript-angular/element-registry";
 import { Video } from "nativescript-videoplayer";

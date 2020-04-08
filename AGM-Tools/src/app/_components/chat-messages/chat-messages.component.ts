@@ -10,6 +10,8 @@ import {
 import { Router } from "@angular/router";
 import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
+import { ChatComponentCommon } from "../chat/chat.component.common";
+import { AuthenticationService } from "../../_services/authentication.service";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,8 +19,8 @@ import { RemoteService } from "../../_services/remote.service";
     styleUrls: ["chat-messages.component.scss"],
     templateUrl: "chat-messages.component.html",
 })
-export class ChatMessagesComponent
-implements OnChanges, AfterViewChecked {
+export class ChatMessagesComponent extends ChatComponentCommon implements OnChanges,
+    AfterViewChecked {
     @Input() public inputChat: any;
     @Input() public embedded = false;
     public unread: number;
@@ -33,7 +35,10 @@ implements OnChanges, AfterViewChecked {
         private location: Location,
         private cdr: ChangeDetectorRef,
         private router: Router,
-    ) { }
+        private authService: AuthenticationService,
+    ) {
+        super(authService);
+    }
 
     public messageSentFromChild(event: Event) {
         this.messageGotToSend = event;

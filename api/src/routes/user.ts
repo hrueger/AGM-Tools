@@ -8,6 +8,8 @@ const router = Router();
 // Get all users
 router.get("/", [checkJwt], UserController.listAll);
 
+router.get("/:id([0-9]+)", [checkJwt], UserController.avatar);
+
 // Create a new user
 router.post("/", [checkJwt, checkPermission(["CREATE_USER"])], UserController.newUser);
 
