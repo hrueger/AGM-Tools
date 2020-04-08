@@ -9,7 +9,6 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { environment } from "../../../environments/environment";
-import { AuthenticationService } from "../../_services/authentication.service";
 import { Project } from "../../_models/project.model";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
@@ -54,7 +53,6 @@ export class ProjectsComponent implements OnInit {
         private fb: FormBuilder,
         private alertService: AlertService,
         private fts: FastTranslateService,
-        private authenticationService: AuthenticationService,
         private navbarService: NavbarService,
         private router: Router,
         private route: ActivatedRoute,
@@ -169,7 +167,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     public getProjectImageSrc(project) {
-        return `${environment.apiUrl}projects/${project.id}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${environment.apiUrl}projects/${project.id}`;
     }
 
     public joinWithComma(items, prop) {

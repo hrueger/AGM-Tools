@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
-import { AuthenticationService } from "../../_services/authentication.service";
 import { ChatComponentCommon } from "./chat.component.common";
 
 @Component({
@@ -18,9 +17,8 @@ export class ChatComponent extends ChatComponentCommon {
         private navbarService: NavbarService,
         private route: ActivatedRoute,
         private router: Router,
-        private authService: AuthenticationService,
     ) {
-        super(authService);
+        super();
         this.chats = [];
     }
 
