@@ -7,5 +7,6 @@ const router = Router();
 router.get("/", [checkJwt], SettingsController.listSettings);
 router.get("/language", [checkJwt], SettingsController.language);
 router.post("/:setting", [checkJwt], SettingsController.saveSetting);
+router.post("/devices/:deviceId/:setting", [checkJwt], SettingsController.saveDeviceSetting);
 
 export default router;

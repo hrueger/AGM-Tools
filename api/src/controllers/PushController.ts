@@ -43,6 +43,9 @@ class PushController {
         try {
             const user = await userRepository.findOneOrFail(res.locals.jwtPayload.userId);
             const devices = await deviceRepository.find({ where: { user } });
+            for (const device of devices) {
+                delete device.token;
+            }
             res.send(devices);
         } catch (e) {
             res.status(500).send({ message: i18n.__("errors.error") });

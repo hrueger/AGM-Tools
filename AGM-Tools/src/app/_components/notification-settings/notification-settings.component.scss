@@ -1,0 +1,31 @@
+.verysmallwidth {
+    width: 1rem;
+}
+.wrapper {
+    position: relative;
+}
+.scroller {
+    margin-left: 10rem;
+    overflow-x: scroll;
+    overflow-y: visible;
+    width: calc(100% - 10rem);
+}
+table .sticky-col {
+    left: 0;
+    position: absolute;
+    top: auto;
+    width: 10rem;
+    margin-top: -0.5px;
+    border-right: 2px solid rgb(85, 85, 85);
+}
+table td.sticky-col {
+    padding-bottom: 16px;
+}
+table thead th {
+    height: 100%;
+    hyphens: auto;
+    vertical-align: top;
+}
+table tbody td {
+    min-width: 7rem;
+}

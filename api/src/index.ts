@@ -32,6 +32,7 @@ import routes from "./routes";
 import { toInt } from "./utils/utils";
 import { ChatStatus } from "./entity/ChatStatus";
 import { Device } from "./entity/Device";
+import { createMailDevices2984503475348 } from "./migration/2984503475348-createMailDevices";
 
 i18n.configure({
     defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
@@ -73,6 +74,7 @@ createConnection({
         createAdminUser1574018391679,
         CreateTags1574797035707,
         addFileEditTags1239083953412,
+        createMailDevices2984503475348,
     ],
     migrationsRun: true,
     password: config.database_password,

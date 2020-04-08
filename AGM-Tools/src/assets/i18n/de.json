@@ -150,6 +150,7 @@
     "name": "Name",
     "new": "Neu",
     "next": "Weiter",
+    "notificationSettings": "Benachrichtigungseinstellungen",
     "open": "Öffnen",
     "openInNewTab": "In neuem Tab öffnen",
     "password": "Passwort",
@@ -185,6 +186,17 @@
     "repeatNewPassword": "Neues Password wiederholen",
     "takeatour": "Features ansehen",
     "toLogin": "Zum Login"
+  },
+  "notificationSettings": {
+    "chatMessages": "Chat Nachrichten",
+    "fileCommentReplys": "Kommentarantworten",
+    "fileComments": "Dateikommentare",
+    "newEvents": "Neue Events",
+    "newProjects": "Neue Projekte",
+    "newTemplates": "Neue Vorlagen",
+    "newTutorials": "Neue Tutorials",
+    "notifications": "Benachrichtigungen",
+    "upcomingEvents": "Kommende Events"
   },
   "notifications": {
     "chooseReceivers": "Empfänger auswählen",

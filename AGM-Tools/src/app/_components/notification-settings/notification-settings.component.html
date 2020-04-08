@@ -1,19 +1,40 @@
 <a class="btn btn-outline-primary mb-2" [routerLink]="['/', 'settings']">{{"general.back" | translate}}</a>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Device</th>
-            <th>OS</th>
-            <th>Software</th>
-            <th>Token</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let device of devices">
-            <td><i [class]="(device.device == 'Mobile' ? 'fas fa-mobile-alt' : device.device == 'Desktop' ? 'fas fa-desktop' : device.device == 'Tablet' ? 'fas fa-tablet-alt' : 'fas fa-question') + ' fa-2x'"></i></td>
-            <td><i [class]="(device.os != 'Unknown' ? device.os == 'Mac' ? 'fab fa-apple' : ('fab fa-' + device.os.toLowerCase()) : 'fas fa-question') + ' fa-2x'"></i></td>
-            <td><i [class]="(device.software != 'Unknown' ? ('fab fa-' + device.software.toLowerCase()) : 'fas fa-question') + ' fa-2x'"></i></td>
-            <td>{{device.token}}</td>
-        </tr>
-    </tbody>
-</table>
+
+<div class="wrapper">
+    <div class="scroller">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <!--<th class="verysmallwidth"></th>-->
+                    <th class="sticky-col">Device</th>
+                    <th *ngFor="let prop of props">{{"notificationSettings."+prop | translate}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let device of devices">
+                    <ng-container *ngIf="device.isMail">
+                        <!--<td></td>-->
+                        <td class="sticky-col d-flex justify-content-center"><i
+                                class="far fa-envelope fa-2x align-middle mr-2"></i></td>
+                    </ng-container>
+                    <ng-container *ngIf="!device.isMail">
+                        <!--<td><button class="btn p-1 m-0 verysmallwidth"><i class="fas fa-times"></i></button></td>-->
+                        <td class="sticky-col d-flex justify-content-around">
+                            <i
+                                [class]="(device.device == 'Mobile' ? 'fas fa-mobile-alt' : device.device == 'Desktop' ? 'fas fa-desktop' : device.device == 'Tablet' ? 'fas fa-tablet-alt' : 'fas fa-question') + ' fa-2x'"></i>
+                            <i
+                                [class]="(device.os != 'Unknown' ? device.os == 'Mac' ? 'fab fa-apple' : ('fab fa-' + device.os.toLowerCase()) : 'fas fa-question') + ' fa-2x'"></i>
+                            <i
+                                [class]="(device.software != 'Unknown' ? ('fab fa-' + device.software.toLowerCase()) : 'fas fa-question') + ' fa-2x'"></i>
+                        </td>
+                    </ng-container>
+
+                    <td *ngFor="let prop of props">
+                        <ui-switch [(ngModel)]="device[prop]" (change)="save(device.id, prop, !device[prop])">
+                        </ui-switch>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -4,6 +4,7 @@ import { getRepository } from "typeorm";
 import { config } from "../config/config";
 import { Setting } from "../entity/Setting";
 import { User } from "../entity/User";
+import { Device } from "../entity/Device";
 
 function stringToBool(s: string): boolean {
     if (s == "true") {
@@ -63,6 +64,33 @@ class SettingsController {
             res.send({ status: true });
         }
     }
+
+    public static saveDeviceSetting = async (req: Request, res: Response) => {
+        const { value } = req.body;
+        if (value == undefined) {
+            res.status(400).send({ message: i18n.__("errors.notAllFieldsProvided") });
+            return;
+        }
+        try {
+            const currentUser = await getRepository(User).findOne(res.locals.jwtPayload.userId);
+            const deviceRepository = getRepository(Device);
+            const devices = await deviceRepository.find(
+                { where: { user: currentUser, id: req.params.deviceId } },
+            );
+            if (devices && devices[0]) {
+                const device = devices[0];
+                device[req.params.setting] = value;
+                await deviceRepository.save(device);
+            } else {
+                res.status(500).send({ message: i18n.__("errors.deviceNotFound") });
+            }
+        } catch (e) {
+            res.status(500).send({ message: e.toString() });
+            return;
+        }
+        res.send({ status: true });
+    }
+
 
     public static language = async (req: Request, res: Response) => {
         res.send({ lang: await SettingsController.getUserLanguage(res) });

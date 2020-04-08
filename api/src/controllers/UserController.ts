@@ -4,6 +4,7 @@ import * as i18n from "i18n";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import { Usergroup } from "../entity/Usergroup";
+import { Device } from "../entity/Device";
 
 class UserController {
     public static listAll = async (req: Request, res: Response) => {
@@ -56,6 +57,21 @@ class UserController {
         const userRepository = getRepository(User);
         try {
             await userRepository.save(user);
+            const mailDevice = new Device();
+            mailDevice.isMail = true;
+            mailDevice.token = user.email;
+            mailDevice.chatMessages = true;
+            mailDevice.fileCommentReplys = true;
+            mailDevice.fileComments = true;
+            mailDevice.newEvents = true;
+            mailDevice.newProjects = true;
+            mailDevice.newTemplates = true;
+            mailDevice.newTutorials = true;
+            mailDevice.notifications = true;
+            mailDevice.upcomingEvents = true;
+            mailDevice.user = user;
+            mailDevice.mailDelayMinutes = 90;
+            await getRepository(Device).save(mailDevice);
         } catch (e) {
             res.status(409).send({ message: i18n.__("errors.existingUsername") });
             return;

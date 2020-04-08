@@ -1,5 +1,6 @@
 {
     "errors": {
+        "deviceNotFound": "Device not found!",
         "emailNotFound": "Email not found!",
         "error": "Error!",
         "errorWhileAddingUser": "Error while adding user!",
