@@ -147,7 +147,6 @@ export function HttpLoaderFactory(http: HttpClient) {
         NativeScriptUIDataFormModule,
         NativeScriptUIGaugeModule,
         LetterAvatarModule,
-        AvatarModule,
         WebRTCModule,
         EmojiPickerModule,
         TranslateModule.forRoot({
