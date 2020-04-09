@@ -2,9 +2,12 @@ import { validate } from "class-validator";
 import { Request, Response } from "express";
 import * as i18n from "i18n";
 import { getRepository } from "typeorm";
+import Avatars from "@dicebear/avatars";
+import sprites from "@dicebear/avatars-identicon-sprites";
 import { User } from "../entity/User";
 import { Usergroup } from "../entity/Usergroup";
 import { Device } from "../entity/Device";
+
 
 class UserController {
     public static listAll = async (req: Request, res: Response) => {
@@ -20,7 +23,10 @@ class UserController {
     }
 
     public static avatar = async (req: Request, res: Response) => {
-        res.redirect(`https://avatars.dicebear.com/v2/identicon/${req.params.id}.svg`);
+        const avatars = new Avatars(sprites, {});
+        const svg = avatars.create(req.params.id);
+        res.type("svg");
+        res.send(svg);
     }
 
     public static newUser = async (req: Request, res: Response) => {
