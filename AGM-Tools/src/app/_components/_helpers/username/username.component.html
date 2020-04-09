@@ -1,0 +1,16 @@
+<ng-template #popContent>
+    <img alt="Profil image" class="avatar float-right" [src]="getAvatarSource(user)">
+    <span class="d-block font-weight-bold">{{user.username}}</span>
+    <span class="d-block">{{user.lastOnline | date | howLongAgo}}</span>
+    <span class="d-block mt-2">{{user.email}}</span>
+
+    <div class="d-flex justify-content-around w-100 mt-3">
+        <a class="btn" [routerLink]="'/chat/user/'+user.id"><i class="far fa-comment-alt"></i></a>
+        <a class="btn" [href]="'mailto:'+user.email"><i class="far fa-envelope"></i></a>
+        <a class="btn" [routerLink]="'/chat/user/'+user.id" ><i class="fas fa-video"></i></a>
+        <a class="btn" [routerLink]="'/chat/user/'+user.id"><i class="fas fa-phone-alt"></i></a>
+    </div>
+</ng-template>
+<ng-template #popTitle></ng-template>
+<span [ngbPopover]="popContent" [popoverTitle]="popTitle" triggers="mouseenter:click" container="body" openDelay="300"
+    class="username">{{user.username}}</span>

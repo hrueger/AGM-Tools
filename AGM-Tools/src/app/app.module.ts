@@ -79,6 +79,7 @@ import { TinyConfigService } from "./_services/tiny-config.service";
 import { MarkdownService } from "./_services/markdown.service";
 import { AddImageComponent, ImageEditorComponent } from "./_components/add-image/add-image.component";
 import { NotificationSettingsComponent } from "./_components/notification-settings/notification-settings.component";
+import { UsernameComponent } from "./_components/_helpers/username/username.component";
 
 
 registerLocaleData(localeDe);
@@ -130,6 +131,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         NotificationSettingsComponent,
         TutorialComponent,
         EditTutorialComponent,
+        UsernameComponent,
         DiffPipe,
         ShareComponent,
     ],
