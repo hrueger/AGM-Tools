@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <p class="mb-1" markdown ngPreserveWhitespaces>{{notification.content}}</p>
-                        <small>{{notification.creator.username}} {{ "general.atDate" | translate}}
+                        <small><username [user]="notification.creator"></username> {{ "general.atDate" | translate}}
                             {{notification.createdAt | date}}</small>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                                     class="text-right">{{'tasks.dueShort' | translate:{'formatted': task.due | howLongAgo } }}</small>
                             </div>
                             <small class="card-text">{{task.description}}</small>
-                            <small class="d-block mt-3">{{task.creator.username}} {{ "general.atDate" | translate}}
+                            <small class="d-block mt-3"><username [user]="task.creator"></username> {{ "general.atDate" | translate}}
                                 {{task.createdAt | date:'shortDate'}}</small>
                         </button>
                     </div>
