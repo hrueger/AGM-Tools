@@ -6,6 +6,7 @@ import { AngularFireMessaging } from "@angular/fire/messaging";
 import { environment } from "../../environments/environment";
 import { User } from "../_models/user.model";
 import { PushService } from "./push.service";
+import { SocketService } from "./socket.service";
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -20,11 +21,16 @@ export class AuthenticationService {
 
     constructor(private http: HttpClient,
         private pushService: PushService,
+        private socketService: SocketService,
         private angularFire: AngularFireMessaging) {
         this.currentUserSubject = new BehaviorSubject<User>(
             JSON.parse(sessionStorage.getItem("currentUser")),
         );
         this.currentUser = this.currentUserSubject.asObservable();
+        if (this.currentUserValue) {
+            // means already logged in
+            this.finishLogin(this.currentUserValue.token);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -58,14 +64,18 @@ export class AuthenticationService {
                         );
                         this.saveJwtToken(user);
                         this.currentUserSubject.next(user);
-                        (window as any).loggedIn = true;
-                        this.pushService.updateToken(undefined,
-                            await this.angularFire.getToken.toPromise());
+                        await this.finishLogin(user.token);
                     }
 
                     return user;
                 }),
             );
+    }
+
+    private async finishLogin(token: string) {
+        (window as any).loggedIn = true;
+        this.socketService.init(token);
+        this.pushService.updateToken(undefined, await this.angularFire.getToken.toPromise());
     }
 
     public saveJwtToken(user: User) {

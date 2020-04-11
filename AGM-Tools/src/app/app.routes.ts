@@ -58,6 +58,11 @@ export const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
+        component: CallComponent,
+        path: "call/receive",
+    },
+    {
+        canActivate: [AuthGuard],
         component: TutorialsComponent,
         path: "tutorials",
     },

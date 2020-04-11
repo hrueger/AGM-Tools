@@ -7,6 +7,8 @@ import * as helmet from "helmet";
 import * as i18n from "i18n";
 import * as path from "path";
 import * as https from "https";
+import * as http from "http";
+import * as socketIO from "socket.io";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { config } from "./config/config";
@@ -33,6 +35,7 @@ import { toInt } from "./utils/utils";
 import { ChatStatus } from "./entity/ChatStatus";
 import { Device } from "./entity/Device";
 import { createMailDevices2984503475348 } from "./migration/2984503475348-createMailDevices";
+import UserController from "./controllers/UserController";
 
 i18n.configure({
     defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
@@ -117,13 +120,29 @@ createConnection({
         // Set routes for static built frontend
         app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
 
-        (process.env.NODE_ENV == "development" ? https.createServer({
-            key: fs.readFileSync(path.join(__dirname, "./key.pem")),
-            cert: fs.readFileSync(path.join(__dirname, "./cert.pem")),
-        }, app) : app).listen(config.port, () => {
+        const useHTTPS = process.env.NODE_ENV == "development";
+        let server;
+        if (useHTTPS) {
+            server = https.createServer({
+                key: fs.readFileSync(path.join(__dirname, "./key.pem")),
+                cert: fs.readFileSync(path.join(__dirname, "./cert.pem")),
+            }, app);
+        } else {
+            server = new http.Server(app);
+        }
+        app.locals.sockets = [];
+        app.locals.rtcSockets = [];
+        const io = socketIO(server);
+        const namespace = io.of("/api/live");
+        namespace.on("connection", (socket) => {
+            socket.on("login", (data) => {
+                UserController.socketLogin(app, socket, data);
+            });
+        });
+        server.listen(config.port, () => {
             // eslint-disable-next-line no-console
             console.log(`Server started on port ${config.port}!`);
         });
     })
-// eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
     .catch((error) => console.log(error));

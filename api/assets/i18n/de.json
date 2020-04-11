@@ -1,136 +1,137 @@
 {
-    "errors": {
-        "deviceNotFound": "Gerät nicht gefunden!",
-        "emailNotFound": "Email-Adresse nicht gefunden!",
-        "error": "Fehler!",
-        "errorWhileAddingUser": "Fehler beim Hinzufügen des Benutzers!",
-        "errorWhileCreatingFolder": "Fehler beim Erstellen des Ordners!",
-        "errorWhileDeleting": "Fehler beim Löschen!",
-        "errorWhileDeletingEvent": "Fehler beim Löschen des Events!",
-        "errorWhileDeletingProject": "Fehler beim Löschen des Projekts!",
-        "errorWhileDeletingTemplate": "Fehler beim Löschen der Vorlage!",
-        "errorWhileDeletingTutorialStep": "Fehler beim Löschen des Schritts!",
-        "errorWhileDeletingUser": "Fehler beim Löschen des Benutzers!",
-        "errorWhileLoadingMessages": "Fehler beim Abrufen der Nachrichten!",
-        "errorWhileSavingEvent": "Fehler beim Speichern des Events!",
-        "errorWhileSavingFile": "Fehler beim Speichern der Datei!",
-        "errorWhileSavingProject": "Fehler beim Speichern des Projekts!",
-        "errorWhileSavingTemplate": "Fehler beim Speichern der Vorlage!",
-        "errorWhileSavingToken": "Fehler beim Speichern des Tokens!",
-        "errorWhileSavingTutorial": "Fehler beim Speichern des Tutorials!",
-        "errorWhileSavingTutorialStep": "Fehler beim Speichern des Schritts!",
-        "errorWhileSendingEmail": "Fehler beim Senden der Email",
-        "errorWhileSendingMessage": "Fehler beim Senden der Nachricht!",
-        "errorWhileUpdatingEvent": "Fehler beim Aktualisieren des Events!",
-        "errorWhileUpdatingTutorial": "Fehler beim Aktualisieren des Tutorials!",
-        "errorWhileUpdatingTutorialStep": "Fehler beim Aktualisieren des Schritts!",
-        "eventNotFound": "Event nicht gefunden!",
-        "existingUsername": "Benutzername bereits vorhanden!",
-        "noFilesLinked": "Noch keine Dateien verlinkt!",
-        "noFilesUploaded": "Noch keine Dateien hochgeladen!",
-        "noMessagesSent": "Noch keine Nachricht gesendet!",
-        "notAllFieldsProvided": "Nicht alle Daten angegeben!",
-        "notAllowed": "Diese Aktion ist nicht erlaubt!",
-        "notificationNotFound": "Benachrichung nicht gefunden!",
-        "oldPasswordWrong": "Altes Passwort stimmt nicht!",
-        "passwordsDontMatch": "Die beiden Passwörter stimmen nicht überein!",
-        "projectNotFound": "Project nicht gefunden!",
-        "sessionExpired": "Sitzung abgelaufen. Bitte erneut einloggen!",
-        "shareNotFound": "Freigabe nicht gefunden!",
-        "tutorialNotFound": "Tutorial nicht gefunden!",
-        "tutorialStepNotFound": "Schritt nicht gefunden!",
-        "unauthorized": "Unauthorisiert!",
-        "unknown": "Unbekannter Fehler!",
-        "userNotFound": "Benutzer wurde nicht gefunden!",
-        "userNotFoundWrongLink": "Benutzer nicht gefunden, fehlerhafter Link!",
-        "usergroupDoesNotExist": "Die Benutzergruppe existiert nicht!",
-        "usernameOrPasswordEmpty": "Benutzername oder Passwort leer!",
-        "wrongPassword": "Falsches Passwort!",
-        "wrongUsername": "Falscher Benutzername!"
-    },
-    "general": {
-        "unknown": "Unbekannt"
-    },
-    "mail": {
-        "info": "Wenn Sie diese Mail versehentlich erhalten haben, bitten wir Sie sie zu löschen und nicht weiterzuleiten, da diese Mail vertrauliche Informationen enthalten kann.",
-        "sentTo": "Diese Mail wurde an %s gesendet.",
-        "unsubscribe": "Abmelden"
-    },
-    "notifications": {
-        "by": "von %s",
-        "goToDashboard": "Rufe das Dashboard auf um die Benachrichtigung als gelesen zu markieren.",
-        "newNotification": "Neue Benachrichtigung",
-        "newNotificationBy": "Neue Benachrichtigung '%s' von %s",
-        "viewNotification": "Benachrichtigung ansehen"
-    },
-    "resetPassword": {
-        "at": "angefordert am %s",
-        "message": "Ein Link zum Zurücksetzen des Passworts für %s wurde angefordert. Wenn das nicht Ihre Absicht war, ignorieren Sie diese Mail einfach. Ihr Passwort wird nicht geändert.",
-        "resetPassword": "Passwort zurücksetzen"
-    },
-    "settings": {
-        "about": {
-            "description": "Impressum, Lizenzen, ...",
-            "name": "Über"
-        },
-        "appNotifications": {
-            "description": "Benachrichtigungen in der App",
-            "name": "In der App"
-        },
-        "dataPrivacy": {
-            "description": "Zuletzt online, ...",
-            "name": "Datenschutz"
-        },
-        "imprint": {
-            "description": "Impressum",
-            "name": "Impressum"
-        },
-        "language": {
-            "description": "Die Sprache für die Weboberfläche und die App.",
-            "name": "Sprache"
-        },
-        "lastOnline": {
-            "description": "Den anderen Benutzern Informationen über den zuletzt-online Zeitpunkt zur Verfügung stellen.",
-            "name": "Zuletzt online"
-        },
-        "licenses": {
-            "description": "Lizenzen",
-            "name": "OpenSource Lizenzen"
-        },
-        "online": {
-            "description": "Den anderen Benutzern Informationen über den Online Status zur Verfügung stellen.",
-            "name": "Gerade online"
-        },
-        "personalization": {
-            "description": "Sprache, Zeitzone, ...",
-            "name": "Personalisierung"
-        },
-        "pushNotifications": {
-            "description": "Tägliche Updates, Geräte verwalten, ...",
-            "name": "Pushnachrichten"
-        },
-        "showEmail": {
-            "description": "Email-Adresse für alle Benutzer sichtbar.",
-            "name": "Email-Adresse anzeigen"
-        },
-        "summaryPerMail": {
-            "description": "Täglich eine Zusammenfassung per Mail erhalten.",
-            "name": "Per E-Mail"
-        },
-        "webNotifications": {
-            "description": "Benachrichtigungen im Webinterface",
-            "name": "In der Webversion"
-        }
-    },
-    "tasks": {
-        "by": "von %s",
-        "dueOn": "Abgabe am %s",
-        "newTask": "Neue Aufgabe: %s",
-        "newTaskBy": "Neue Aufgabe '%s' von %s",
-        "project": "Projekt: %s",
-        "viewTask": "Aufgabe ansehen"
-    },
-    "tips": {
-        "addProjectLogo": "Füge ein Projektlogo hinzu. Die Datei muss 'logo', 'Logo' oder 'LOGO' heißen, eine JPG, JPEG, PNG, SVG, WebP oder BMP Datei sein und sich im Hauptverzeichnis des Projekts befinden!"
-    }
+	"errors": {
+		"deviceNotFound": "Gerät nicht gefunden!",
+		"emailNotFound": "Email-Adresse nicht gefunden!",
+		"error": "Fehler!",
+		"errorWhileAddingUser": "Fehler beim Hinzufügen des Benutzers!",
+		"errorWhileCreatingFolder": "Fehler beim Erstellen des Ordners!",
+		"errorWhileDeleting": "Fehler beim Löschen!",
+		"errorWhileDeletingEvent": "Fehler beim Löschen des Events!",
+		"errorWhileDeletingProject": "Fehler beim Löschen des Projekts!",
+		"errorWhileDeletingTemplate": "Fehler beim Löschen der Vorlage!",
+		"errorWhileDeletingTutorialStep": "Fehler beim Löschen des Schritts!",
+		"errorWhileDeletingUser": "Fehler beim Löschen des Benutzers!",
+		"errorWhileLoadingMessages": "Fehler beim Abrufen der Nachrichten!",
+		"errorWhileSavingEvent": "Fehler beim Speichern des Events!",
+		"errorWhileSavingFile": "Fehler beim Speichern der Datei!",
+		"errorWhileSavingProject": "Fehler beim Speichern des Projekts!",
+		"errorWhileSavingTemplate": "Fehler beim Speichern der Vorlage!",
+		"errorWhileSavingToken": "Fehler beim Speichern des Tokens!",
+		"errorWhileSavingTutorial": "Fehler beim Speichern des Tutorials!",
+		"errorWhileSavingTutorialStep": "Fehler beim Speichern des Schritts!",
+		"errorWhileSendingEmail": "Fehler beim Senden der Email",
+		"errorWhileSendingMessage": "Fehler beim Senden der Nachricht!",
+		"errorWhileUpdatingEvent": "Fehler beim Aktualisieren des Events!",
+		"errorWhileUpdatingTutorial": "Fehler beim Aktualisieren des Tutorials!",
+		"errorWhileUpdatingTutorialStep": "Fehler beim Aktualisieren des Schritts!",
+		"eventNotFound": "Event nicht gefunden!",
+		"existingUsername": "Benutzername bereits vorhanden!",
+		"noFilesLinked": "Noch keine Dateien verlinkt!",
+		"noFilesUploaded": "Noch keine Dateien hochgeladen!",
+		"noMessagesSent": "Noch keine Nachricht gesendet!",
+		"notAllFieldsProvided": "Nicht alle Daten angegeben!",
+		"notAllowed": "Diese Aktion ist nicht erlaubt!",
+		"notificationNotFound": "Benachrichung nicht gefunden!",
+		"oldPasswordWrong": "Altes Passwort stimmt nicht!",
+		"passwordsDontMatch": "Die beiden Passwörter stimmen nicht überein!",
+		"projectNotFound": "Project nicht gefunden!",
+		"sessionExpired": "Sitzung abgelaufen. Bitte erneut einloggen!",
+		"shareNotFound": "Freigabe nicht gefunden!",
+		"tutorialNotFound": "Tutorial nicht gefunden!",
+		"tutorialStepNotFound": "Schritt nicht gefunden!",
+		"unauthorized": "Unauthorisiert!",
+		"unknown": "Unbekannter Fehler!",
+		"userNotFound": "Benutzer wurde nicht gefunden!",
+		"userNotFoundWrongLink": "Benutzer nicht gefunden, fehlerhafter Link!",
+		"usergroupDoesNotExist": "Die Benutzergruppe existiert nicht!",
+		"usernameOrPasswordEmpty": "Benutzername oder Passwort leer!",
+		"wrongPassword": "Falsches Passwort!",
+		"wrongUsername": "Falscher Benutzername!",
+		"callerIsNotOnline": "errors.callerIsNotOnline"
+	},
+	"general": {
+		"unknown": "Unbekannt"
+	},
+	"mail": {
+		"info": "Wenn Sie diese Mail versehentlich erhalten haben, bitten wir Sie sie zu löschen und nicht weiterzuleiten, da diese Mail vertrauliche Informationen enthalten kann.",
+		"sentTo": "Diese Mail wurde an %s gesendet.",
+		"unsubscribe": "Abmelden"
+	},
+	"notifications": {
+		"by": "von %s",
+		"goToDashboard": "Rufe das Dashboard auf um die Benachrichtigung als gelesen zu markieren.",
+		"newNotification": "Neue Benachrichtigung",
+		"newNotificationBy": "Neue Benachrichtigung '%s' von %s",
+		"viewNotification": "Benachrichtigung ansehen"
+	},
+	"resetPassword": {
+		"at": "angefordert am %s",
+		"message": "Ein Link zum Zurücksetzen des Passworts für %s wurde angefordert. Wenn das nicht Ihre Absicht war, ignorieren Sie diese Mail einfach. Ihr Passwort wird nicht geändert.",
+		"resetPassword": "Passwort zurücksetzen"
+	},
+	"settings": {
+		"about": {
+			"description": "Impressum, Lizenzen, ...",
+			"name": "Über"
+		},
+		"appNotifications": {
+			"description": "Benachrichtigungen in der App",
+			"name": "In der App"
+		},
+		"dataPrivacy": {
+			"description": "Zuletzt online, ...",
+			"name": "Datenschutz"
+		},
+		"imprint": {
+			"description": "Impressum",
+			"name": "Impressum"
+		},
+		"language": {
+			"description": "Die Sprache für die Weboberfläche und die App.",
+			"name": "Sprache"
+		},
+		"lastOnline": {
+			"description": "Den anderen Benutzern Informationen über den zuletzt-online Zeitpunkt zur Verfügung stellen.",
+			"name": "Zuletzt online"
+		},
+		"licenses": {
+			"description": "Lizenzen",
+			"name": "OpenSource Lizenzen"
+		},
+		"online": {
+			"description": "Den anderen Benutzern Informationen über den Online Status zur Verfügung stellen.",
+			"name": "Gerade online"
+		},
+		"personalization": {
+			"description": "Sprache, Zeitzone, ...",
+			"name": "Personalisierung"
+		},
+		"pushNotifications": {
+			"description": "Tägliche Updates, Geräte verwalten, ...",
+			"name": "Pushnachrichten"
+		},
+		"showEmail": {
+			"description": "Email-Adresse für alle Benutzer sichtbar.",
+			"name": "Email-Adresse anzeigen"
+		},
+		"summaryPerMail": {
+			"description": "Täglich eine Zusammenfassung per Mail erhalten.",
+			"name": "Per E-Mail"
+		},
+		"webNotifications": {
+			"description": "Benachrichtigungen im Webinterface",
+			"name": "In der Webversion"
+		}
+	},
+	"tasks": {
+		"by": "von %s",
+		"dueOn": "Abgabe am %s",
+		"newTask": "Neue Aufgabe: %s",
+		"newTaskBy": "Neue Aufgabe '%s' von %s",
+		"project": "Projekt: %s",
+		"viewTask": "Aufgabe ansehen"
+	},
+	"tips": {
+		"addProjectLogo": "Füge ein Projektlogo hinzu. Die Datei muss 'logo', 'Logo' oder 'LOGO' heißen, eine JPG, JPEG, PNG, SVG, WebP oder BMP Datei sein und sich im Hauptverzeichnis des Projekts befinden!"
+	}
 }

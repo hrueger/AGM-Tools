@@ -80,6 +80,7 @@ import { MarkdownService } from "./_services/markdown.service";
 import { AddImageComponent, ImageEditorComponent } from "./_components/add-image/add-image.component";
 import { NotificationSettingsComponent } from "./_components/notification-settings/notification-settings.component";
 import { UsernameComponent } from "./_components/_helpers/username/username.component";
+import { SocketService } from "./_services/socket.service";
 
 
 registerLocaleData(localeDe);
@@ -194,6 +195,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         DeviceDetectorService,
         DatePipe,
         TinyConfigService,
+        SocketService,
         MarkdownService,
         {
             provide: LOCALE_ID,

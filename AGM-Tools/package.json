@@ -12,6 +12,7 @@
   "main": "main.js",
   "version": "3.09.22",
   "scripts": {
+    "start": "ng serve --ssl --host 0.0.0.0",
     "build:web": "ng build --prod --base-href /",
     "build:android": "tns build android",
     "build:ios": "tns build ios",
@@ -129,6 +130,7 @@
     "reflect-metadata": "~0.1.13",
     "rxjs": "^6.5.4",
     "rxjs-compat": "^6.5.4",
+    "socket.io": "^2.3.0",
     "socket.io-client": "2.3.0",
     "timeago.js": "^4.0.2",
     "tinymce": "^5.2.0",

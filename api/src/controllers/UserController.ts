@@ -1,15 +1,67 @@
 import { validate } from "class-validator";
-import { Request, Response } from "express";
+import { Request, Response, Express } from "express";
 import * as i18n from "i18n";
 import { getRepository } from "typeorm";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-identicon-sprites";
+import * as socketIO from "socket.io";
+import * as jwt from "jsonwebtoken";
 import { User } from "../entity/User";
 import { Usergroup } from "../entity/Usergroup";
 import { Device } from "../entity/Device";
+import { config } from "../config/config";
 
 
 class UserController {
+    static async socketLogin(app: Express, socket: socketIO.Socket, d: any) {
+        if (d.token) {
+            const token = d.token.replace("Bearer ", "");
+            let jwtPayload;
+            try {
+                jwtPayload = (jwt.verify(token, config.jwtSecret) as any);
+                jwtPayload.userId = parseInt(jwtPayload.userId, undefined);
+                app.locals.sockets[jwtPayload.userId] = socket;
+            } catch (error) {
+                // we can't use error here because it seems to be a reserved event...
+                socket.emit("failure", i18n.__("errors.sessionExpired"));
+                return;
+            }
+            const existingSocket = app.locals.rtcSockets.find(
+                (es) => es.socket.id === socket.id,
+            );
+
+            if (!existingSocket) {
+                app.locals.rtcSockets.push({
+                    userId: jwtPayload.userId,
+                    socket,
+                });
+            }
+            socket.on("disconnect", () => {
+                app.locals.rtcSockets = app.locals.rtcSockets.filter(
+                    (es) => es.socket.id !== socket.id,
+                );
+            });
+            socket.on("call-user", (data) => {
+                // try to find the user in sockets
+                const to = app.locals.rtcSockets.find((es) => es.userId == data.to);
+                if (to) {
+                    socket.to(to.socket.id).emit("call-made", {
+                        offer: data.offer,
+                        socket: socket.id,
+                        user: { username: jwtPayload.username, id: jwtPayload.userId },
+                    });
+                } else {
+                    socket.emit("call.error", i18n.__("errors.callerIsNotOnline"));
+                }
+            });
+            socket.on("make-answer", (data) => {
+                socket.to(data.to).emit("answer-made", {
+                    socket: socket.id,
+                    answer: data.answer,
+                });
+            });
+        }
+    }
     public static listAll = async (req: Request, res: Response) => {
         // Get users from database
         const userRepository = getRepository(User);

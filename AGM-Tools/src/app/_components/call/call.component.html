@@ -1,8 +1,5 @@
-<video style='height: 100px' #localVideo mute autoplay></video>
-<div class="actions">
-    <button class="btn btn-success" (click)="endCall()">Hang Up</button>
-    <button class="btn btn-success" (click)="makeCall()">Call</button>
-    <!--<button>Answer</button>
-    <button #switch>Switch</button>-->
+<p><ngb-progressbar [type]="status.type" [value]="status.currentStep / status.totalSteps * 100" >{{status.text}}</ngb-progressbar></p>
+<div class="video-container">
+    <video autoplay class="remote-video" #remoteVideo></video>
+    <video autoplay muted class="local-video" #localVideo></video>
 </div>
-<video style='height: 100px' #remoteVideo autoplay></video>

@@ -26,6 +26,7 @@
     "@types/node": "^13.9.2",
     "@types/nodemailer": "^6.4.0",
     "@types/rimraf": "^2.0.3",
+    "@types/socket.io": "^2.1.4",
     "@types/unzipper": "^0.10.2",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
@@ -89,7 +90,7 @@
     "prepare": "npm run snyk-protect",
     "prod": "tsc && node ./build/index.js",
     "snyk-protect": "snyk protect",
-    "start": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "start": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
     "start:rtc": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/rtcServer.ts",
     "tsc": "tsc"
   },
