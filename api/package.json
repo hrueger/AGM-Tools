@@ -27,7 +27,7 @@
     "@types/nodemailer": "^6.4.0",
     "@types/rimraf": "^2.0.3",
     "@types/socket.io": "^2.1.4",
-    "@types/unzipper": "^0.10.2",
+    "@types/unzipper": "^0.10.3",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
     "eslint": "^5.16.0",
