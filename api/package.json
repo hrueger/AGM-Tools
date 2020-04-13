@@ -23,7 +23,7 @@
     "@types/email-templates": "^6.0.2",
     "@types/i18n": "^0.8.6",
     "@types/markdown-it": "0.0.9",
-    "@types/node": "^13.9.2",
+    "@types/node": "^13.9.3",
     "@types/nodemailer": "^6.4.0",
     "@types/rimraf": "^2.0.4",
     "@types/socket.io": "^2.1.4",
