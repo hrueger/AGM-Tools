@@ -1,6 +1,7 @@
 import { Router } from "express";
 import auth from "./auth";
 import chat from "./chat";
+import call from "./call";
 import dashboard from "./dashboard";
 import events from "./events";
 import files from "./files";
@@ -19,6 +20,7 @@ import vfs from "./vfs";
 const routes = Router();
 
 routes.use("/auth", auth);
+routes.use("/call", call);
 routes.use("/chats", chat);
 routes.use("/dashboard", dashboard);
 routes.use("/events", events);

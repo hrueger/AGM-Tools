@@ -1,5 +1,34 @@
-<p><ngb-progressbar [type]="status.type" [value]="status.currentStep / status.totalSteps * 100" >{{status.text}}</ngb-progressbar></p>
-<div class="video-container">
-    <video autoplay class="remote-video" #remoteVideo></video>
-    <video autoplay muted class="local-video" #localVideo></video>
+<p>
+    <ngb-progressbar [type]="status.type" [value]="status.currentStep / status.totalSteps * 100">{{status.text}}
+    </ngb-progressbar>
+</p>
+
+<div id="main-container" class="container">
+    <div *ngIf="!session" id="join">
+        <div id="join-dialog" class="jumbotron vertical-center">
+            <h1>Anrufeinstellungen</h1>
+            <p class="text-center">
+                <button class="btn btn-outline-primary" (click)="joinSession()">Anrufen</button>
+            </p>
+        </div>
+    </div>
+
+    <div *ngIf="session" id="session">
+        <div id="session-header">
+            <h1 id="session-title">{{mySessionId}}</h1>
+            <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" (click)="leaveSession()"
+                value="Leave session">
+        </div>
+        <div *ngIf="mainStreamManager" id="main-video" class="col-md-6">
+            <user-video [streamManager]="mainStreamManager"></user-video>
+        </div>
+        <div id="video-container" class="col-md-6">
+            <div *ngIf="publisher" class="stream-container col-md-6 col-xs-6">
+                <user-video [streamManager]="publisher" (click)="updateMainStreamManager(publisher)"></user-video>
+            </div>
+            <div *ngFor="let sub of subscribers" class="stream-container col-md-6 col-xs-6">
+                <user-video [streamManager]="sub" (click)="updateMainStreamManager(sub)"></user-video>
+            </div>
+        </div>
+    </div>
 </div>

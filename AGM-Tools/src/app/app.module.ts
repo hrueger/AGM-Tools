@@ -81,6 +81,8 @@ import { AddImageComponent, ImageEditorComponent } from "./_components/add-image
 import { NotificationSettingsComponent } from "./_components/notification-settings/notification-settings.component";
 import { UsernameComponent } from "./_components/_helpers/username/username.component";
 import { SocketService } from "./_services/socket.service";
+import { UserVideoComponent } from "./_components/_helpers/user-video/user-video.component";
+import { OpenViduVideoComponent } from "./_components/_helpers/ov-video/ov-video.component";
 
 
 registerLocaleData(localeDe);
@@ -117,6 +119,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         FilePickerModalComponent,
         ShortWhenPipe,
         TruncatePipe,
+        UserVideoComponent,
+        OpenViduVideoComponent,
         DateAgoPipe,
         CallComponent,
         ToIconPipe,
