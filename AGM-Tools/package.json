@@ -49,7 +49,7 @@
     "@fortawesome/fontawesome-free": "5.13.0",
     "@ctrl/ngx-emoji-mart": "3.0.4",
     "@nativescript/theme": "2.3.3",
-    "@ng-bootstrap/ng-bootstrap": "6.0.1",
+    "@ng-bootstrap/ng-bootstrap": "6.0.2",
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
     "@nstudio/nativescript-pulltorefresh": "1.1.1",
