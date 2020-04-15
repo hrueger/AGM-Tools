@@ -1,0 +1,15 @@
+div.videoContainer {
+    height: 20rem;
+}
+div.volumeSliderContainer {
+    height: 20rem;
+    position: absolute;
+    top: 0;
+    left: -0.1rem;
+
+    div.volumeSlider {
+        width: 1rem !important;
+        position: absolute;
+        bottom: 0;
+    }
+}

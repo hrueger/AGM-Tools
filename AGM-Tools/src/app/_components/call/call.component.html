@@ -5,10 +5,78 @@
 
 <div id="main-container" class="container">
     <div *ngIf="!session" id="join">
-        <div id="join-dialog" class="jumbotron vertical-center">
+        <div id="join-dialog">
             <h1>Anrufeinstellungen</h1>
+            <div class="">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="videoContainer">
+                            <ov-video *ngIf="localUsers[0] && localUsers[0].getStreamManager()"
+                                [streamManager]="localUsers[0].getStreamManager()" id="ovVideo"
+                                [className]="localUsers[1] ? 'smallVideo' : ''"></ov-video>
+                            <ov-video *ngIf="localUsers[1] && localUsers[1].getStreamManager()"
+                                [streamManager]="localUsers[1].getStreamManager()" id="ovVideoScreen"></ov-video>
+                        </div>
+                        <div class="volumeSliderContainer">
+                            <div [class]="'volumeSlider d-block bg-'+ updateVolumeColor()"
+                                [style.height]="(volumeValue / 5) + 'rem'"></div>
+                        </div>
+                    </div>
+                    <!--  right section -->
+                    <div class="col-6">
+                        <!-- Devices section / Microphone-->
+                        <div class="row my-2">
+                            <div class="col-2">
+                                <ui-switch [checked]="isAudioActive" (change)="toggleMic($event)">
+                                    <i [class]="'fas fa-microphone' + (isAudioActive ? '' : '-slash')"></i>
+                                </ui-switch>
+                            </div>
+                            <div class="col-10">
+                                <select placeholder="Microphone Options" class="form-control w-100"
+                                    [ngModel]="isAudioActive && micValue ? micValue.label : 'None'"
+                                    (change)="micChanged($event.target.value)">
+                                    <option *ngFor="let microphone of microphones" [value]="microphone.label">
+                                        {{microphone.label}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Devices section / Camera-->
+                        <div class="row my-2">
+                            <div class="col-2">
+                                <ui-switch [checked]="isVideoActive" (change)="toggleCam($event)">
+                                    <i [class]="'fas fa-video' + (isVideoActive ? '' : '-slash')"></i>
+                                </ui-switch>
+                            </div>
+                            <div class="col-10">
+                                <select placeholder="Camera Options" class="form-control w-100"
+                                    [ngModel]="isVideoActive && camValue ? camValue.label : 'None'"
+                                    (change)="camChanged($event.target.value)">
+                                    <option *ngFor="let camera of cameras" [value]="camera.label">
+                                        {{ camera.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Devices section / ScreenShare-->
+                        <div class="row my-2">
+                            <div class="col-2">
+                                <ui-switch [checked]="isScreenShareActive" (change)="toggleScreenShare($event)">
+                                    <i [class]="'fas fa-video' + (isScreenShareActive ? '' : '-slash')"></i>
+                                </ui-switch>
+                            </div>
+                            <div class="col-10">
+                                <input class="form-control w-100" disabled placeholder="Screen Pages"
+                                    [ngModel]="screenActive">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <p class="text-center">
-                <button class="btn btn-outline-primary" (click)="joinSession()">Anrufen</button>
+                <button class="btn btn-outline-primary" (click)="call()">Anrufen</button>
             </p>
         </div>
     </div>

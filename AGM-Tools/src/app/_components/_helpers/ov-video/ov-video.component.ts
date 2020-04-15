@@ -6,6 +6,12 @@ import { StreamManager } from "openvidu-browser";
 @Component({
     selector: "ov-video",
     template: "<video #videoElement></video>",
+    styles: [
+        `video {
+            max-height: 100%;
+            max-width: 100%;
+        }`,
+    ],
 })
 export class OpenViduVideoComponent implements AfterViewInit {
     @ViewChild("videoElement") elementRef: ElementRef;
