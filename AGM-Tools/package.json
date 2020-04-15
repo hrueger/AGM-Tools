@@ -96,7 +96,7 @@
     "nativescript-geolocation": "^5.1.0",
     "nativescript-image-swipe": "^5.0.1",
     "nativescript-letter-avatar": "^0.3.0",
-    "nativescript-local-notifications": "^4.2.0",
+    "nativescript-local-notifications": "^4.2.1",
     "nativescript-localstorage": "^2.0.1",
     "nativescript-mediafilepicker": "^3.0.0",
     "nativescript-modal-datetimepicker": "^1.2.2",
