@@ -47,7 +47,7 @@
     "@angular/platform-browser-dynamic": "9.0.7",
     "@angular/router": "9.0.7",
     "@ctrl/ngx-emoji-mart": "3.0.3",
-    "@fortawesome/fontawesome-free": "5.12.1",
+    "@fortawesome/fontawesome-free": "5.13.0",
     "@nativescript/theme": "2.3.3",
     "@ng-bootstrap/ng-bootstrap": "6.0.1",
     "@ngx-translate/core": "^12.1.2",
