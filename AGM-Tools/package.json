@@ -134,7 +134,7 @@
     "socket.io": "^2.3.0",
     "socket.io-client": "2.3.0",
     "timeago.js": "^4.0.2",
-    "tinymce": "^5.2.0",
+    "tinymce": "^5.2.1",
     "tinymce-i18n": "^19.9.17",
     "tns-core-modules": "6.5.0",
     "tslib": "^1.11.1",
