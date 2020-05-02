@@ -92,7 +92,7 @@
     "prepare": "npm run snyk-protect",
     "prod": "tsc && node ./build/index.js",
     "snyk-protect": "snyk protect",
-    "start": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "start": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/index.ts",
     "start:rtc": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/rtcServer.ts",
     "tsc": "tsc"
   },

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import fetch from "node-fetch";
 import {
-    Brackets, getRepository, Repository, MoreThan, Not,
+    Brackets, getRepository, Repository, MoreThan,
 } from "typeorm";
 import { config } from "../config/config";
 import { Message } from "../entity/Message";

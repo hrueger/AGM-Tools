@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
@@ -83,7 +83,7 @@ export class RemoteService {
                 catchError(this.handleError<any>(path, false)),
             );
     }
-    public uploadFile(action: string, name: string, file: any, args: object = {}): Observable<any> {
+    public uploadFile(url: string, name: string, file: any, args: object = {}): Observable<any> {
         this.log(`uploading file ${file.name}`);
         const formData: FormData = new window.FormData();
         formData.append(name, file, file.name);
@@ -93,7 +93,13 @@ export class RemoteService {
             }
         }
         return this.http
-            .post<any>(`${environment.apiUrl}${action}`, formData)
+            .post<any>(`${environment.apiUrl}${url}`, formData, {
+                /* reportProgress: true,
+                observe: "events", */
+                headers: new HttpHeaders({
+                    "Content-Type": "multipart/form-data",
+                }),
+            })
             .pipe(
                 tap((): void => this.log(`uploading file ${file.name}`)),
                 catchError(this.handleError<any>("fileUpload", false)),

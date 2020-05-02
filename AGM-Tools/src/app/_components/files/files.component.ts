@@ -36,7 +36,7 @@ export class FilesComponent implements OnInit {
     public currentPath: any[] = [];
     public lastItem: any;
     public items: any[];
-    public newFolderName: string;
+    public sharingDropFolder = false;
     public newFolderForm: FormGroup;
     public shareLink = "";
     public tags: any[] = [];
@@ -163,6 +163,10 @@ export class FilesComponent implements OnInit {
         return presentationExtensions.includes(item.name.split(".").pop());
     }
 
+    public isDropFolder(item) {
+        return !!(item.dropFolder?.title && item.dropFolder?.description);
+    }
+
     public fullscreenEventHandler() {
         if (!document.fullscreen) {
             this.isFullScreen = false;
@@ -210,7 +214,23 @@ export class FilesComponent implements OnInit {
             this.tags = data;
         });
         this.newFolderForm = this.fb.group({
-            newFolderName: [this.newFolderName, [Validators.required]],
+            newFolderName: ["", [Validators.required]],
+            isDropFolder: [""],
+            dropFolderTitle: [""],
+            dropFolderDescription: [""],
+        });
+        const title = this.newFolderForm.get("dropFolderTitle");
+        const description = this.newFolderForm.get("dropFolderDescription");
+        this.newFolderForm.get("isDropFolder").valueChanges.subscribe((isDropFolder) => {
+            if (isDropFolder) {
+                title.setValidators([Validators.required]);
+                description.setValidators([Validators.required]);
+            } else {
+                title.setValidators(null);
+                description.setValidators(null);
+            }
+            this.newFolderForm.get("dropFolderTitle").updateValueAndValidity();
+            this.newFolderForm.get("dropFolderDescription").updateValueAndValidity();
         });
         this.renameItemForm = this.fb.group({
             renameItemName: [this.renameItemName, [Validators.required]],
@@ -257,6 +277,9 @@ export class FilesComponent implements OnInit {
         const basepath = "assets/icons/";
         const iconPath = `${basepath}extralarge/`;
         if (item.isFolder) {
+            if (this.isDropFolder(item)) {
+                return `${basepath}dropFolder.png`;
+            }
             return `${basepath}folder.png`;
         }
         return (
@@ -299,8 +322,11 @@ export class FilesComponent implements OnInit {
                     this.remoteService
                         .getNoCache("post", "files", {
                             fid: this.currentPath[this.currentPath.length - 1].id,
-                            name: this.newFolderForm.get("newFolderName").value,
                             pid: this.pid,
+                            name: this.newFolderForm.get("newFolderName").value,
+                            isDropFolder: this.newFolderForm.get("isDropFolder").value,
+                            dropFolderTitle: this.newFolderForm.get("dropFolderTitle").value,
+                            dropFolderDescription: this.newFolderForm.get("dropFolderDescription").value,
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
@@ -383,17 +409,22 @@ export class FilesComponent implements OnInit {
     public download(item) {
         window.open(this.getFileSrc(item, true));
     }
-    public share(item, shareModal) {
+    public share(item, shareModal, shareDropFolder = false) {
         this.shareLink = "";
+        this.sharingDropFolder = shareDropFolder;
         this.modalService
             .open(shareModal);
-        this.remoteService
-            .getNoCache("post", `files/${item.id}/share`)
-            .subscribe((data) => {
-                if (data.status == true) {
-                    this.shareLink = `${environment.appUrl}share/${data.link}`;
-                }
-            });
+        if (shareDropFolder) {
+            this.shareLink = `${environment.appUrl}upload/${item.id}/${item.dropFolder.title.replace(/ /g, "-")}`;
+        } else {
+            this.remoteService
+                .getNoCache("post", `files/${item.id}/share${shareDropFolder ? "DropFolder" : ""}`)
+                .subscribe((data) => {
+                    if (data.status == true) {
+                        this.shareLink = `${environment.appUrl}share/${data.link}`;
+                    }
+                });
+        }
     }
     public rename(item, renameModal) {
         this.renameItemForm.get("renameItemName").setValue(item.name);

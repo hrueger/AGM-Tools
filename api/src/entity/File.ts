@@ -26,6 +26,12 @@ export class File {
     @Column()
     public isFolder: boolean;
 
+    @Column({ type: "simple-json", default: undefined })
+    public dropFolder: {
+        title: string;
+        description: string;
+    };
+
     @TreeParent()
     public parent: File;
 

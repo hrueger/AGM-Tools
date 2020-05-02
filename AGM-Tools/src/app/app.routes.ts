@@ -20,6 +20,7 @@ import { UpdaterComponent } from "./_components/updater/updater.component";
 import { UsersComponent } from "./_components/users/users.component";
 import { AuthGuard } from "./_guards/auth.guard";
 import { NotificationSettingsComponent } from "./_components/notification-settings/notification-settings.component";
+import { DropFolderComponent } from "./_components/drop-folder/drop-folder.component";
 
 export const routes: Routes = [
     {
@@ -145,6 +146,10 @@ export const routes: Routes = [
     {
         component: ShareComponent,
         path: "share/:link",
+    },
+    {
+        component: DropFolderComponent,
+        path: "upload/:id/:title",
     },
 
     /* Authentication paths */

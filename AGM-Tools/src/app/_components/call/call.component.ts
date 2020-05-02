@@ -1,10 +1,7 @@
-import {
-    Component, HostListener, Input, Output, EventEmitter,
-} from "@angular/core";
+import { Component, HostListener } from "@angular/core";
 import {
     OpenVidu, Publisher, Session, StreamEvent, StreamManager, Subscriber,
 } from "openvidu-browser";
-import { Validators, FormControl } from "@angular/forms";
 import { RemoteService } from "../../_services/remote.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { UserModel } from "./user-model";
@@ -62,6 +59,7 @@ export class CallComponent {
         this.localUsers.push(new UserModel());
         this.initPublisher().then((publisher) => {
             this.setDevicesValue(publisher);
+        // eslint-disable-next-line no-console
         }).catch((error) => console.log(error));
     }
 
@@ -270,7 +268,6 @@ export class CallComponent {
 
     private setDevicesValue(publisher: Publisher) {
         this.OV.getDevices().then((devices: any) => {
-            console.log("Devices: ", devices);
             const defaultDeviceId = publisher.stream.getMediaStream()
                 .getVideoTracks()[0].getSettings().deviceId;
             devices.forEach((device: any) => {
@@ -290,6 +287,7 @@ export class CallComponent {
 
             this.camValue = this.camValue ? this.camValue : this.cameras[0];
             this.micValue = this.microphones[1] ? this.microphones[1] : this.microphones[0];
+        // eslint-disable-next-line no-console
         }).catch((error) => console.error(error));
     }
 
