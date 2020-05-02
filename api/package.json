@@ -77,7 +77,6 @@
         "openvidu-node-client": "^2.12.0",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
-        "snyk": "^1.305.0",
         "socket.io": "^2.3.0",
         "ts-node-dev": "^1.0.0-pre.44",
         "typeorm": "0.2.24",
@@ -89,11 +88,8 @@
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",
         "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
-        "prepare": "npm run snyk-protect",
         "prod": "tsc && node ./build/index.js",
-        "snyk-protect": "snyk protect",
         "start": "set debug=* && ts-node-dev --respawn --transpileOnly ./src/index.ts",
         "tsc": "tsc"
-    },
-    "snyk": true
+    }
 }
