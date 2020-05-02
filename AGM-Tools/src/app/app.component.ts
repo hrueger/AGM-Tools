@@ -9,16 +9,17 @@ import { PushService } from "./_services/push.service";
 
 @Component({
     selector: "app-root",
-    styleUrls: ["./app.component.css"],
+    styleUrls: ["./app.component.scss"],
     templateUrl: "./app.component.html",
 })
 export class AppComponent {
     public currentUser: User;
     public showNav = false;
     public navToHide = false;
-    public isShare: boolean;
+    public isFullscreenPage: boolean;
     public showEverything = true;
     public isElectron = false;
+    public routesWithFullscreenPages: string[] = ["share", "upload", "login"]
 
     constructor(
         private router: Router,
@@ -45,10 +46,12 @@ export class AppComponent {
 
         this.router.events.subscribe((event: any) => {
             if (event.url) {
-                if (event.url.startsWith("/share/")) {
-                    this.isShare = true;
-                } else {
-                    this.isShare = false;
+                this.isFullscreenPage = false;
+                for (const route of this.routesWithFullscreenPages) {
+                    console.log(event.url, route);
+                    if (event.url.startsWith(route) || event.url.startsWith(`/${route}`)) {
+                        this.isFullscreenPage = true;
+                    }
                 }
             }
         });

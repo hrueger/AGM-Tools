@@ -83,6 +83,7 @@ import { UsernameComponent } from "./_components/_helpers/username/username.comp
 import { SocketService } from "./_services/socket.service";
 import { UserVideoComponent } from "./_components/_helpers/user-video/user-video.component";
 import { OpenViduVideoComponent } from "./_components/_helpers/ov-video/ov-video.component";
+import { DropFolderComponent } from "./_components/drop-folder/drop-folder.component";
 
 
 registerLocaleData(localeDe);
@@ -135,6 +136,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         TutorialsComponent,
         NotificationSettingsComponent,
         TutorialComponent,
+        DropFolderComponent,
         EditTutorialComponent,
         UsernameComponent,
         DiffPipe,

@@ -5,9 +5,8 @@
                 : goBackToProjects()
         ">
         {{'general.back' | translate}}
-    </button> &nbsp;
-
-    <button id="newFolderBtn" type="button" (click)="openNewFolderModal(newFolder)" class="btn btn-outline-primary">
+    </button>
+    <button id="newFolderBtn" type="button" (click)="openNewFolderModal(newFolder)" class="btn btn-outline-primary mx-2">
         {{'files.newFolder' | translate}}
     </button>
     <div class="btn-group float-right">
@@ -58,6 +57,9 @@
             <ng-template contextMenuItem divider="true"></ng-template>
             <ng-template class="ctxMenuItem" contextMenuItem (execute)="download($event.item)">
                 <i class="fas fa-cloud-download-alt"></i> {{'files.download' | translate}}
+            </ng-template>
+            <ng-template contextMenuItem [visible]="isDropFolder" (execute)="share($event.item, shareModal, true)">
+                <i class="fas fa-file-export"></i> {{'files.shareDropFolderLink' | translate}}
             </ng-template>
             <ng-template contextMenuItem [subMenu]="downloadAsSubmenu" [visible]="canDownloadAs">
                 <i class="fas fa-file-export"></i> {{'files.downloadAs' | translate}}
@@ -184,7 +186,7 @@
         </div>
         <small>{{ currentFile.creator.username }} am {{ currentFile.createdAt | date:"medium"}}<br>{{ currentFile.size }}</small>
     </div>
-  </ng-template>
+</ng-template>
 
 <ng-template #newFolder let-modal>
     <div class="modal-header">
@@ -201,7 +203,25 @@
             <div class="form-group">
                 <label for="name">{{'general.name' | translate}}</label>
                 <div class="input-group">
-                    <input class="form-control" ngbAutofocus type="text" [placeholder]="'general.name' | translate" formControlName="newFolderName" />
+                    <input class="form-control" id="name" ngbAutofocus type="text" [placeholder]="'general.name' | translate" formControlName="newFolderName" />
+                </div>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="isDropFolder" formControlName="isDropFolder">
+                <label class="custom-control-label" for="isDropFolder">{{'files.isDropFolder' | translate}}</label>
+            </div>
+            <div class="d-none" [class.d-block]="newFolderForm.get('isDropFolder').value">
+                <div class="form-group">
+                    <label for="dropFolderTitle">{{'general.name' | translate}}</label>
+                    <div class="input-group">
+                        <input class="form-control" id="dropFolderTitle" type="text" [placeholder]="'general.title' | translate" formControlName="dropFolderTitle" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description">{{'general.description' | translate}}</label>
+                    <div class="input-group">
+                        <input class="form-control" id="description" type="text" [placeholder]="'general.description' | translate" formControlName="dropFolderDescription" />
+                    </div>
                 </div>
             </div>
         </form>
@@ -250,7 +270,7 @@
 
 <ng-template #shareModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">{{'files.share' | translate}}</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{ sharingDropFolder ? 'files.shareDropFolder' : 'files.share' | translate}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>

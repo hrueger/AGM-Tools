@@ -47,7 +47,8 @@
         "usergroupDoesNotExist": "The usergroup doesn't exist!",
         "usernameOrPasswordEmpty": "Username oder password empty!",
         "wrongPassword": "Wrong password!",
-        "wrongUsername": "Wrong username!"
+        "wrongUsername": "Wrong username!",
+        "dropFolderNotFound": "Drop-Folder not found!"
     },
     "general": {
         "unknown": "Unknown"

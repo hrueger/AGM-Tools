@@ -1,0 +1,36 @@
+<div class="holder">
+    <main class="container text-center">
+        <img class="logo img-fluid" src="../../../assets/logo/logo3.png">
+        <div class="jumbotron bg-light mb-0">
+            <div *ngIf="title && description">
+                <h1>{{title}}</h1>
+                <p class="lead">{{ description }}</p>
+
+                <div class="mt-5" *ngIf="!success">
+                    <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!uploading">
+                        <p>{{'files.uploadYourFileHere' | translate}}:</p>
+                        <div class="form-group">
+                            <input type="file" (change)="uploadFile($event)">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-outline-primary">{{'general.upload' | translate}}</button>
+                        </div>
+                    </form>
+                    <div class="alert alert-primary" *ngIf="uploading">
+                        {{ 'general.uploading' | translate }}
+                    </div>
+                </div>
+                <div class="mt-5 alert alert-success" *ngIf="success">
+                    {{ 'files.fileUploadedSuccessfully' | translate }} {{ 'general.thankYou' | translate }}
+                </div>
+
+            </div>
+            <div *ngIf="!title || !description">
+                <h2>{{'general.loading' | translate}}</h2>
+            </div>
+        </div>
+        <div class="bg-light p-4 mt-0">
+            <a class="text-dark" target="_blank" href="https://github.com/hrueger/AGM-Tools">&copy; H. Rüger, {{ year }} - <img class="githublogo img-fluid" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"></a>
+        </div>
+    </main>
+</div>

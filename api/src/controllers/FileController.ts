@@ -186,14 +186,22 @@ class FileController {
     public static showShare = async (req: Request, res: Response) => {
         const fileRepository = getRepository(File);
         try {
-            const element = await fileRepository.find({ where: { shareLink: req.params.link } });
-            if (element.length == 1) {
-                res.send(element[0]);
-            } else {
-                res.status(404).send({ message: i18n.__("errors.shareNotFound") });
+            const element = await fileRepository.findOne({ where: { shareLink: req.params.link } });
+            res.send(element);
+        } catch (e) {
+            res.status(500).send({ message: `${i18n.__("errors.shareNotFound")}` });
+        }
+    }
+
+    public static showDropFolder = async (req: Request, res: Response) => {
+        const fileRepository = getRepository(File);
+        try {
+            const element = await fileRepository.findOne({ where: { id: req.params.id } });
+            if (element.dropFolder && element.dropFolder.description) {
+                res.send(element);
             }
         } catch (e) {
-            res.status(500).send({ message: `${i18n.__("errors.shareNotFound")} ${e.toString()}` });
+            res.status(500).send({ message: `${i18n.__("errors.dropFolderNotFound")}` });
         }
     }
 
@@ -223,10 +231,21 @@ class FileController {
         }
     }
 
+    public static uploadToDropFolder = async (req: RequestWithFiles, res: Response) => {
+        const fileRepository = getRepository(File);
+        const element = await fileRepository.findOne(req.params.id, { relations: ["project"] });
+        req.files.file.mv(path.join(await getStoragePath(element), req.body.fileName));
+        await FileController.createFileInDB(req.body.fileName,
+            element.project.id, null, element, null);
+        res.send({ status: true });
+    }
+
     public static newFolder = async (req: Request, res: Response) => {
         const fileRepository = getRepository(File);
-        const { name, pid, fid } = req.body;
-        if (!(name && pid)) {
+        const {
+            name, pid, fid, isDropFolder, dropFolderTitle, dropFolderDescription,
+        } = req.body;
+        if (!(name && pid) || (isDropFolder && !(dropFolderDescription && dropFolderTitle))) {
             res.status(400).send({ message: i18n.__("errors.notAllFieldsProvided") });
             return;
         }
@@ -235,6 +254,12 @@ class FileController {
         const folder = new File();
         folder.isFolder = true;
         folder.name = name;
+        if (isDropFolder) {
+            folder.dropFolder = {
+                title: dropFolderTitle,
+                description: dropFolderDescription,
+            };
+        }
         folder.creator = await userRepo.findOne(res.locals.jwtPayload.userId);
         folder.project = await projectRepo.findOne(pid);
         if (fid != -1) {
@@ -385,7 +410,7 @@ class FileController {
                             return;
                         }
                         await FileController.createFileInDB(req.files.chunkFile.name,
-                            res, pid, fid, parentEl, userId);
+                            pid, fid, parentEl, userId);
 
                         rimraf.sync(tempSaveDir);
                     }
@@ -398,7 +423,7 @@ class FileController {
                     .getDestAndParent(fid, pid, req.files.UploadFiles.name);
                 req.files.UploadFiles.mv(dest);
                 await FileController.createFileInDB(req.files.UploadFiles.name,
-                    res, pid, fid, parentEl, req.body.userId);
+                    pid, fid, parentEl, req.body.userId);
             }
             res.send("");
             return;
@@ -460,8 +485,9 @@ class FileController {
         return { dest, parentEl };
     }
 
-    private static async createFileInDB(filename: string,
-        res: Response, pid: any, fid: any, parentEl: File, userId) {
+    private static async createFileInDB(
+        filename: string, pid: any, fid: any, parentEl: File, userId,
+    ) {
         const file = new File();
         file.name = filename;
         file.creator = await getRepository(User).findOneOrFail(userId);

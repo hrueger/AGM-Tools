@@ -1,11 +1,10 @@
-<navbar (toggleNav)="showNav = $event" *ngIf="currentUser && !isShare && showEverything"></navbar>
+<navbar (toggleNav)="showNav = $event" *ngIf="currentUser && !isFullscreenPage && showEverything"></navbar>
 
-<div [class.container-fluid]="currentUser && !isShare" *ngIf="showEverything" [class.desktop]="isElectron" [class.fullpage]="!currentUser">
-    <div class="cntnr" [class.row]="currentUser && !isShare">
-        <app-sidebar [changed]="showNav" *ngIf="currentUser && !isShare"></app-sidebar>
+<div [class.container-fluid]="currentUser && !isFullscreenPage" *ngIf="showEverything" [class.desktop]="isElectron" [class.fullpage]="isFullscreenPage">
+    <div [class.cntnr]="!isFullscreenPage" [class.row]="currentUser && !isFullscreenPage" [class.fullpage-cntnr]="isFullscreenPage">
+        <app-sidebar [changed]="showNav" *ngIf="currentUser && !isFullscreenPage"></app-sidebar>
         <perfect-scrollbar>
-            <main [attr.role]="currentUser && !isShare ? 'main' : ''"
-                [class]="currentUser && !isShare ? 'col-md-9 ml-sm-auto col-lg-10' : ''">
+            <main [attr.role]="currentUser && !isFullscreenPage ? 'main' : ''" [class]="currentUser && !isFullscreenPage ? 'col-md-9 ml-sm-auto col-lg-10' : ''" [class.fullpage-main]="isFullscreenPage">
                 <router-outlet></router-outlet>
             </main>
         </perfect-scrollbar>

@@ -32,13 +32,15 @@
     font-weight: bold;
 }
 
-.sidedrawer .sidedrawer-header .sidedrawer-header-brand, .sidedrawer-header-footnote {
+.sidedrawer .sidedrawer-header .sidedrawer-header-brand,
+.sidedrawer-header-footnote {
     color: #fff;
 }
 
 .sidedrawer .nt-drawer__body .nt-drawer__list-item {
     font-size: 15;
 }
+
 .nt-drawer__body {
     background-color: #343a40;
 }
@@ -54,7 +56,7 @@
     background-color: #428bca;
 }
 
-.header-button  {
+.header-button {
     margin: 0;
 }
 
@@ -65,18 +67,23 @@
 .cntnr {
     margin-top: 50px;
 }
-.cntnr, main {
+
+.cntnr,
+main {
     max-height: calc(100vh - 50px);
 }
+
 .desktop .cntnr {
     margin-top: 30px;
 }
 
-.desktop .cntnr, .desktop main {
+.desktop .cntnr,
+.desktop .main {
     max-height: calc(100vh - 30px);
 }
 
-.fullpage .cntnr, .fullpage main {
-    max-height: 100vh;
-    margin-top: 0;
+.fullpage-cntnr,
+.fullpage-main {
+    max-height: 100vh !important;
+    margin-top: 0 !important;
 }
