@@ -14,13 +14,13 @@ export class Device {
     @Column({ length: 250 })
     public token: string;
 
-    @Column()
+    @Column({default: ""})
     public os: string;
 
-    @Column()
+    @Column({default: ""})
     public software: string;
 
-    @Column()
+    @Column({default: ""})
     public device: string;
 
     @Column({ default: false })
