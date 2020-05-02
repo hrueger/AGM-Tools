@@ -36,7 +36,7 @@ export class FilesComponent implements OnInit {
     public currentPath: any[] = [];
     public lastItem: any;
     public items: any[];
-    public sharingDropFolder: boolean = false;
+    public sharingDropFolder = false;
     public newFolderForm: FormGroup;
     public shareLink = "";
     public tags: any[] = [];
@@ -164,7 +164,7 @@ export class FilesComponent implements OnInit {
     }
 
     public isDropFolder(item) {
-        return item.dropFolder?.title && item.dropFolder?.description ? true : false;
+        return !!(item.dropFolder?.title && item.dropFolder?.description);
     }
 
     public fullscreenEventHandler() {
@@ -216,22 +216,22 @@ export class FilesComponent implements OnInit {
         this.newFolderForm = this.fb.group({
             newFolderName: ["", [Validators.required]],
             isDropFolder: [""],
-            dropFolderTitle: ["", ],
+            dropFolderTitle: [""],
             dropFolderDescription: [""],
         });
         const title = this.newFolderForm.get("dropFolderTitle");
         const description = this.newFolderForm.get("dropFolderDescription");
-        this.newFolderForm.get('isDropFolder').valueChanges.subscribe((isDropFolder) => {
-        if (isDropFolder) {
-          title.setValidators([Validators.required]);
-          description.setValidators([Validators.required]);
-        } else {
-          title.setValidators(null);
-          description.setValidators(null);
-        }
-        this.newFolderForm.get("dropFolderTitle").updateValueAndValidity();
-        this.newFolderForm.get("dropFolderDescription").updateValueAndValidity();
-      });
+        this.newFolderForm.get("isDropFolder").valueChanges.subscribe((isDropFolder) => {
+            if (isDropFolder) {
+                title.setValidators([Validators.required]);
+                description.setValidators([Validators.required]);
+            } else {
+                title.setValidators(null);
+                description.setValidators(null);
+            }
+            this.newFolderForm.get("dropFolderTitle").updateValueAndValidity();
+            this.newFolderForm.get("dropFolderDescription").updateValueAndValidity();
+        });
         this.renameItemForm = this.fb.group({
             renameItemName: [this.renameItemName, [Validators.required]],
         });
@@ -409,7 +409,7 @@ export class FilesComponent implements OnInit {
     public download(item) {
         window.open(this.getFileSrc(item, true));
     }
-    public share(item, shareModal, shareDropFolder=false) {
+    public share(item, shareModal, shareDropFolder = false) {
         this.shareLink = "";
         this.sharingDropFolder = shareDropFolder;
         this.modalService
@@ -418,12 +418,12 @@ export class FilesComponent implements OnInit {
             this.shareLink = `${environment.appUrl}upload/${item.id}/${item.dropFolder.title.replace(/ /g, "-")}`;
         } else {
             this.remoteService
-            .getNoCache("post", `files/${item.id}/share${shareDropFolder ? "DropFolder" : ""}`)
-            .subscribe((data) => {
-                if (data.status == true) {
-                    this.shareLink = `${environment.appUrl}share/${data.link}`;
-                }
-            });
+                .getNoCache("post", `files/${item.id}/share${shareDropFolder ? "DropFolder" : ""}`)
+                .subscribe((data) => {
+                    if (data.status == true) {
+                        this.shareLink = `${environment.appUrl}share/${data.link}`;
+                    }
+                });
         }
     }
     public rename(item, renameModal) {

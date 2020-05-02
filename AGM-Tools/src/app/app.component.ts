@@ -48,7 +48,6 @@ export class AppComponent {
             if (event.url) {
                 this.isFullscreenPage = false;
                 for (const route of this.routesWithFullscreenPages) {
-                    console.log(event.url, route);
                     if (event.url.startsWith(route) || event.url.startsWith(`/${route}`)) {
                         this.isFullscreenPage = true;
                     }
