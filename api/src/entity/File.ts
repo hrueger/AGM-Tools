@@ -26,7 +26,7 @@ export class File {
     @Column()
     public isFolder: boolean;
 
-    @Column({ type: "simple-json", default: {} })
+    @Column({ type: "simple-json", nullable: true })
     public dropFolder: {
         title: string;
         description: string;
