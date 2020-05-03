@@ -30,6 +30,7 @@ export class File {
     public dropFolder: {
         title: string;
         description: string;
+        additionalFields: string[];
     };
 
     @TreeParent()

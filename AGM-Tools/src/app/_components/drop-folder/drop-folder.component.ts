@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import {
+    FormGroup, FormBuilder, Validators, FormControl,
+} from "@angular/forms";
 import { RemoteService } from "../../_services/remote.service";
 import { AlertService } from "../../_services/alert.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
@@ -13,6 +15,7 @@ import { FastTranslateService } from "../../_services/fast-translate.service";
 export class DropFolderComponent {
     public title = "";
     public description = "";
+    public additionalFields: string[] = [];
     public form: FormGroup;
     public progress = 0;
     public year: number = new Date().getFullYear();
@@ -34,6 +37,10 @@ export class DropFolderComponent {
             if (data) {
                 this.title = data.dropFolder.title;
                 this.description = data.dropFolder.description;
+                this.additionalFields = data.dropFolder.additionalFields;
+                for (const f of this.additionalFields) {
+                    this.form.registerControl(f, new FormControl("", [Validators.required]));
+                }
             }
         });
     }
@@ -48,16 +55,17 @@ export class DropFolderComponent {
 
     public async submit() {
         if (this.form.invalid) {
-            this.alertService.error(await this.fts.t("errors.noFileSelected"));
+            this.alertService.error(await this.fts.t(this.form.controls.file.invalid ? "errors.noFileSelected" : "errors.requiredFieldsMissing"));
             return;
         }
+        const fileName = `${this.additionalFields.length > 0 ? `${this.additionalFields.map((f) => this.form.controls[f].value).join("_")}_` : ""}${Math.round(Math.random() * 1000000)}.${this.form.value.file.name.split(".").pop()}`;
         this.progress = 1;
         this.remoteService.uploadFile(
             `files/dropFolder/${this.route.snapshot.params.id}`,
             "file",
             this.form.value.file,
             {
-                fileName: `${Math.round(Math.random() * 1000000)}.${this.form.value.file.name.split(".").pop()}`,
+                fileName,
             },
         ).subscribe((data) => {
             if (data && data.status) {

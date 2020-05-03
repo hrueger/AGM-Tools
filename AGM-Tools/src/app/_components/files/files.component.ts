@@ -1,7 +1,9 @@
 import {
     Component, OnInit, QueryList, ViewChild, ViewChildren,
 } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+    FormBuilder, FormGroup, Validators, FormControl,
+} from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { NodeSelectEventArgs, TreeViewComponent } from "@syncfusion/ej2-angular-navigations";
@@ -37,6 +39,7 @@ export class FilesComponent implements OnInit {
     public lastItem: any;
     public items: any[];
     public sharingDropFolder = false;
+    public additionalDropFolderFields: string[] = [];
     public newFolderForm: FormGroup;
     public shareLink = "";
     public tags: any[] = [];
@@ -327,6 +330,7 @@ export class FilesComponent implements OnInit {
                             isDropFolder: this.newFolderForm.get("isDropFolder").value,
                             dropFolderTitle: this.newFolderForm.get("dropFolderTitle").value,
                             dropFolderDescription: this.newFolderForm.get("dropFolderDescription").value,
+                            additionalFields: Object.keys(this.newFolderForm.controls).filter((f) => f.startsWith("field")).map((f) => this.newFolderForm.controls[f].value),
                         })
                         .subscribe(async (data) => {
                             if (data && data.status == true) {
@@ -550,6 +554,12 @@ export class FilesComponent implements OnInit {
                 this.isFullScreen = true;
             }
         }
+    }
+
+    public addDropFolderField() {
+        const name = `field${this.additionalDropFolderFields.length}`;
+        this.newFolderForm.registerControl(name, new FormControl("", [Validators.required]));
+        this.additionalDropFolderFields.push(name);
     }
 
     private async setupDocumentEditorConfig(ext, type) {

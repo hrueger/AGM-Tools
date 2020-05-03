@@ -223,6 +223,14 @@
                         <input class="form-control" id="description" type="text" [placeholder]="'general.description' | translate" formControlName="dropFolderDescription" />
                     </div>
                 </div>
+                <b class="d-block mt-3">{{'general.fields' | translate}}</b>
+                <div class="form-group" *ngFor="let field of additionalDropFolderFields">
+                    <label [for]="field">{{'general.name' | translate}}</label>
+                    <div class="input-group">
+                        <input class="form-control" [id]="field" type="text" [placeholder]="'general.name' | translate" [formControlName]="field" />
+                    </div>
+                </div>
+                <button class="btn btn-link ml-0" (click)="addDropFolderField()">{{'general.addField' | translate}}</button>
             </div>
         </form>
     </div>

@@ -243,7 +243,7 @@ class FileController {
     public static newFolder = async (req: Request, res: Response) => {
         const fileRepository = getRepository(File);
         const {
-            name, pid, fid, isDropFolder, dropFolderTitle, dropFolderDescription,
+            name, pid, fid, isDropFolder, dropFolderTitle, dropFolderDescription, additionalFields,
         } = req.body;
         if (!(name && pid) || (isDropFolder && !(dropFolderDescription && dropFolderTitle))) {
             res.status(400).send({ message: i18n.__("errors.notAllFieldsProvided") });
@@ -258,6 +258,8 @@ class FileController {
             folder.dropFolder = {
                 title: dropFolderTitle,
                 description: dropFolderDescription,
+                additionalFields: additionalFields && additionalFields.length > 0
+                    ? additionalFields : [],
             };
         }
         folder.creator = await userRepo.findOne(res.locals.jwtPayload.userId);
