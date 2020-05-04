@@ -236,7 +236,7 @@ class FileController {
         const element = await fileRepository.findOne(req.params.id, { relations: ["project"] });
         req.files.file.mv(path.join(await getStoragePath(element), req.body.fileName));
         await FileController.createFileInDB(req.body.fileName,
-            element.project.id, null, element, null);
+            element.project.id, element.id, element, null);
         res.send({ status: true });
     }
 
