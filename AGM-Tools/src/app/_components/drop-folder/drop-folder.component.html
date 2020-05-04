@@ -25,7 +25,7 @@
                         </div>
                     </form>
                     <div class="alert alert-primary" *ngIf="uploading">
-                        {{ 'general.uploading' | translate }}
+                        <i class="fas fa-spinner fa-spin"></i> {{ 'general.uploading' | translate }}
                     </div>
                 </div>
                 <div class="mt-5 alert alert-success" *ngIf="success">

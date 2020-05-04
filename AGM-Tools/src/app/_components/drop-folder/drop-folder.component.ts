@@ -17,7 +17,7 @@ export class DropFolderComponent {
     public description = "";
     public additionalFields: string[] = [];
     public form: FormGroup;
-    public progress = 0;
+    public uploading = false;
     public year: number = new Date().getFullYear();
     public success = false;
 
@@ -59,7 +59,7 @@ export class DropFolderComponent {
             return;
         }
         const fileName = `${this.additionalFields.length > 0 ? `${this.additionalFields.map((f) => this.form.controls[f].value).join("_")}_` : ""}${Math.round(Math.random() * 1000000)}.${this.form.value.file.name.split(".").pop()}`;
-        this.progress = 1;
+        this.uploading = true;
         this.remoteService.uploadFile(
             `files/dropFolder/${this.route.snapshot.params.id}`,
             "file",
@@ -70,6 +70,7 @@ export class DropFolderComponent {
         ).subscribe((data) => {
             if (data && data.status) {
                 this.success = true;
+                this.uploading = false;
             }
         });
     }
