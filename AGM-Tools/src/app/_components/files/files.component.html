@@ -220,7 +220,7 @@
                 <div class="form-group">
                     <label for="description">{{'general.description' | translate}}</label>
                     <div class="input-group">
-                        <input class="form-control" id="description" type="text" [placeholder]="'general.description' | translate" formControlName="dropFolderDescription" />
+                        <editor [init]="tinyConfigService.get()" formControlName="dropFolderDescription" id="dropFolderDescription"></editor>
                     </div>
                 </div>
                 <b class="d-block mt-3">{{'general.fields' | translate}}</b>

@@ -18,6 +18,8 @@ import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 import { FilePickerModalComponent } from "../filePickerModal/filePickerModal";
+import { TinyConfigService } from "../../_services/tiny-config.service";
+import { MarkdownService } from "../../_services/markdown.service";
 
 @Component({
     selector: "app-files",
@@ -67,6 +69,8 @@ export class FilesComponent implements OnInit {
         private router: Router,
         private fts: FastTranslateService,
         private datePipe: DatePipe,
+        private tinyConfigService: TinyConfigService,
+        private markdownService: MarkdownService,
     ) { }
 
     public onSort({ column, direction }: SortEvent) {
@@ -319,7 +323,7 @@ export class FilesComponent implements OnInit {
     }
     public openNewFolderModal(content) {
         this.modalService
-            .open(content, { ariaLabelledBy: "modal-basic-title" })
+            .open(content, { size: "xl" })
             .result.then(
                 () => {
                     this.remoteService
@@ -329,7 +333,7 @@ export class FilesComponent implements OnInit {
                             name: this.newFolderForm.get("newFolderName").value,
                             isDropFolder: this.newFolderForm.get("isDropFolder").value,
                             dropFolderTitle: this.newFolderForm.get("dropFolderTitle").value,
-                            dropFolderDescription: this.newFolderForm.get("dropFolderDescription").value,
+                            dropFolderDescription: this.markdownService.from(this.newFolderForm.get("dropFolderDescription").value),
                             additionalFields: Object.keys(this.newFolderForm.controls).filter((f) => f.startsWith("field")).map((f) => this.newFolderForm.controls[f].value),
                         })
                         .subscribe(async (data) => {

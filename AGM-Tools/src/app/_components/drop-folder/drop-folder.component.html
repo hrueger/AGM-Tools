@@ -1,44 +1,42 @@
-<div class="holder">
-    <main class="container text-center">
-        <img class="logo img-fluid" src="../../../assets/logo/logo3.png">
-        <div class="jumbotron bg-light mb-0">
-            <div *ngIf="title && description">
-                <h1>{{title}}</h1>
-                <p class="lead">{{ description }}</p>
+<main class="container text-center">
+    <img class="logo img-fluid" src="assets/logo/AGM-Tools.png">
+    <div class="jumbotron bg-light mb-0">
+        <div *ngIf="title && description">
+            <h1>{{title}}</h1>
+            <p class="text-left" markdown>{{ description }}</p>
 
-                <div class="mt-5" *ngIf="!success">
-                    <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!uploading">
-                        <p>{{'files.uploadYourFileHere' | translate}}:</p>
-                        <div class="form-group">
-                            <input type="file" (change)="uploadFile($event)">
-                        </div>
-                        <div class="col-12 col-md-6 mx-auto">
-                            <div class="form-group" *ngFor="let field of additionalFields">
-                                <label [for]="field">{{field}}</label>
-                                <div class="input-group">
-                                    <input class="form-control" [id]="field" type="text" [placeholder]="field" [formControlName]="field" />
-                                </div>
+            <div class="mt-5" *ngIf="!success">
+                <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!uploading">
+                    <p>{{'files.uploadYourFileHere' | translate}}:</p>
+                    <div class="form-group">
+                        <input type="file" (change)="uploadFile($event)">
+                    </div>
+                    <div class="col-12 col-md-6 mx-auto">
+                        <div class="form-group" *ngFor="let field of additionalFields">
+                            <label [for]="field">{{field}}</label>
+                            <div class="input-group">
+                                <input class="form-control" [id]="field" type="text" [placeholder]="field" [formControlName]="field" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <button class="btn btn-outline-primary">{{'general.upload' | translate}}</button>
-                        </div>
-                    </form>
-                    <div class="alert alert-primary" *ngIf="uploading">
-                        <i class="fas fa-spinner fa-spin"></i> {{ 'general.uploading' | translate }}
                     </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary">{{'general.upload' | translate}}</button>
+                    </div>
+                </form>
+                <div class="alert alert-primary" *ngIf="uploading">
+                    <i class="fas fa-spinner fa-spin"></i> {{ 'general.uploading' | translate }}
                 </div>
-                <div class="mt-5 alert alert-success" *ngIf="success">
-                    {{ 'files.fileUploadedSuccessfully' | translate }} {{ 'general.thankYou' | translate }}
-                </div>
+            </div>
+            <div class="mt-5 alert alert-success" *ngIf="success">
+                {{ 'files.fileUploadedSuccessfully' | translate }} {{ 'general.thankYou' | translate }}
+            </div>
 
-            </div>
-            <div *ngIf="!title || !description">
-                <h2>{{'general.loading' | translate}}</h2>
-            </div>
         </div>
-        <div class="bg-light p-4 mt-0">
-            <a class="text-dark" target="_blank" href="https://github.com/hrueger/AGM-Tools">&copy; H. Rüger, {{ year }} - <img class="githublogo img-fluid" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"></a>
+        <div *ngIf="!title || !description">
+            <h2>{{'general.loading' | translate}}</h2>
         </div>
-    </main>
-</div>
+    </div>
+    <div class="bg-light p-4 mt-0">
+        <a class="text-dark" target="_blank" href="https://github.com/hrueger/AGM-Tools">&copy; H. Rüger, {{ year }} - <img class="githublogo img-fluid" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"></a>
+    </div>
+</main>
