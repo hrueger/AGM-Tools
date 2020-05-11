@@ -301,11 +301,12 @@ class FileController {
         const fileRepository = getTreeRepository(File);
         try {
             const element = await fileRepository.findOneOrFail(id);
+            const elementStoragePath = await getStoragePath(element);
             await FileController.removeFileElementsFromDB(element);
             if (element.isFolder) {
-                deleteFolderRecursive(await getStoragePath(element));
+                deleteFolderRecursive(elementStoragePath);
             } else {
-                fs.unlinkSync(await getStoragePath(element));
+                fs.unlinkSync(elementStoragePath);
             }
         } catch (e) {
             res.status(500).send({ message: `${i18n.__("errors.errorWhileDeleting")} ${e.toString()}` });
