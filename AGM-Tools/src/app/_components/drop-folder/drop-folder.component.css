@@ -1,11 +1,3 @@
-.holder {
-    background-image: url(../../../assets/loginbg.jpg);
-    height: 100vh;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
 .logo {
     height: 80px;
 }

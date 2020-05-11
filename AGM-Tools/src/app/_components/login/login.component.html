@@ -1,134 +1,117 @@
-<div class="login-holder">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4 offset-sm-4 login-container">
-                <div class="headline py-5">
-                    <img class="img-fluid d-inline headerImg" src="assets/logo/AGM-Tools.png">
-                    <h2 class="d-inline ml-2">AGM-Tools</h2>
-                </div>
-                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!resetPassword && !inputNewPassword">
-                    <div class="form-group">
-                        <input [placeholder]="'general.username' | translate" type="text" formControlName="username"
-                            class="form-control" [ngClass]="{
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 offset-sm-4 login-container">
+            <div class="headline py-5">
+                <img class="img-fluid d-inline headerImg" src="assets/logo/AGM-Tools.png">
+                <h2 class="d-inline ml-2">AGM-Tools</h2>
+            </div>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!resetPassword && !inputNewPassword">
+                <div class="form-group">
+                    <input [placeholder]="'general.username' | translate" type="text" formControlName="username" class="form-control" [ngClass]="{
                                 'is-invalid': submitted && f.username.errors
                             }" />
-                        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                            <div *ngIf="f.username.errors.required">
-                                {{'errors.fillOutUsername' | translate}}
-                            </div>
+                    <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                        <div *ngIf="f.username.errors.required">
+                            {{'errors.fillOutUsername' | translate}}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <input type="password" [placeholder]="'general.password' | translate" formControlName="password"
-                            class="form-control" [ngClass]="{
+                </div>
+                <div class="form-group">
+                    <input type="password" [placeholder]="'general.password' | translate" formControlName="password" class="form-control" [ngClass]="{
                                 'is-invalid': submitted && f.password.errors
                             }" />
-                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                            <div *ngIf="f.password.errors.required">
-                                {{'errors.fillOutUsername' | translate}}
-                            </div>
+                    <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                        <div *ngIf="f.password.errors.required">
+                            {{'errors.fillOutUsername' | translate}}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <button [disabled]="loading" type="button" (click)="resetPassword = true; $event.preventDefault"
-                            class="btn btn-link">
+                </div>
+                <div class="form-group">
+                    <button [disabled]="loading" type="button" (click)="resetPassword = true; $event.preventDefault" class="btn btn-link">
                             {{'login.lostPassword' | translate}}
                         </button>
-                        <img *ngIf="loading" class="pl-3"
-                            src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        <button [disabled]="loading" class="float-right btn btn-outline-primary">
+                    <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                    />
+                    <button [disabled]="loading" class="float-right btn btn-outline-primary">
                             {{'login.login' | translate}}
                         </button>
-                    </div>
-                </form>
-                <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmitResetPassword()"
-                    *ngIf="resetPassword && !passwordResetSucceeded">
-                    <div class="form-group">
-                        <label>{{'login.inputEmail' | translate}}:</label>
-                        <input [placeholder]="'general.email' | translate" type="text" formControlName="email"
-                            class="form-control" [ngClass]="{
+                </div>
+            </form>
+            <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmitResetPassword()" *ngIf="resetPassword && !passwordResetSucceeded">
+                <div class="form-group">
+                    <label>{{'login.inputEmail' | translate}}:</label>
+                    <input [placeholder]="'general.email' | translate" type="text" formControlName="email" class="form-control" [ngClass]="{
                                 'is-invalid': rpSubmitted && rpf.email.errors
                             }" />
-                        <div *ngIf="rpSubmitted && rpf.email.errors" class="invalid-feedback">
-                            <div *ngIf="rpf.email.errors.required">
-                                {{'errors.requiredFieldMissing' | translate}}
-                            </div>
+                    <div *ngIf="rpSubmitted && rpf.email.errors" class="invalid-feedback">
+                        <div *ngIf="rpf.email.errors.required">
+                            {{'errors.requiredFieldMissing' | translate}}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <button [disabled]="loading" type="button"
-                            (click)="resetPassword = false; $event.preventDefault" class="btn btn-link">
+                </div>
+                <div class="form-group">
+                    <button [disabled]="loading" type="button" (click)="resetPassword = false; $event.preventDefault" class="btn btn-link">
                             {{'general.back' | translate}}
                         </button>
-                        <img *ngIf="loading" class="pl-3"
-                            src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        <button [disabled]="loading" class="btn btn-outline-primary float-right">
+                    <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                    />
+                    <button [disabled]="loading" class="btn btn-outline-primary float-right">
                             {{'general.reset' | translate}}
                         </button>
-                    </div>
-                </form>
-                <div *ngIf="resetPassword && passwordResetSucceeded">
-                    <div class="alert alert-success">
-                        Die Email wurde erfolgreich versandt. Bitte schauen Sie nun in Ihrem Posteingang nach und
-                        klicken Sie dann auf den gesendeten Link.
-                    </div>
-                    <button [disabled]="loading" type="button"
-                        (click)="resetPassword = false; passwordResetSucceeded = false; $event.preventDefault"
-                        class="btn btn-link">
+                </div>
+            </form>
+            <div *ngIf="resetPassword && passwordResetSucceeded">
+                <div class="alert alert-success">
+                    Die Email wurde erfolgreich versandt. Bitte schauen Sie nun in Ihrem Posteingang nach und klicken Sie dann auf den gesendeten Link.
+                </div>
+                <button [disabled]="loading" type="button" (click)="resetPassword = false; passwordResetSucceeded = false; $event.preventDefault" class="btn btn-link">
                         {{'general.back' | translate}}
                     </button>
-                </div>
+            </div>
 
 
-                <form [formGroup]="inputNewPasswordForm" (ngSubmit)="onSubmitNewPassword()"
-                    *ngIf="inputNewPassword && !inputNewPasswordSucceeded">
-                    <div class="form-group">
-                        <label>{{'login.inputNewPassword' | translate}}:</label>
-                        <input [placeholder]="'general.password' | translate" type="password"
-                            formControlName="password1" class="form-control" [ngClass]="{
+            <form [formGroup]="inputNewPasswordForm" (ngSubmit)="onSubmitNewPassword()" *ngIf="inputNewPassword && !inputNewPasswordSucceeded">
+                <div class="form-group">
+                    <label>{{'login.inputNewPassword' | translate}}:</label>
+                    <input [placeholder]="'general.password' | translate" type="password" formControlName="password1" class="form-control" [ngClass]="{
                                 'is-invalid': inpSubmitted && inp.password1.errors
                             }" />
-                        <div *ngIf="inpSubmitted && inp.password1.errors" class="invalid-feedback">
-                            <div *ngIf="rpf.password2.errors.required">
-                                {{'errors.requiredFieldMissing' | translate}}
-                            </div>
+                    <div *ngIf="inpSubmitted && inp.password1.errors" class="invalid-feedback">
+                        <div *ngIf="rpf.password2.errors.required">
+                            {{'errors.requiredFieldMissing' | translate}}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>{{'login.repeatNewPassword' | translate}}:</label>
-                        <input [placeholder]="'general.password' | translate" type="password"
-                            formControlName="password2" class="form-control" [ngClass]="{
+                </div>
+                <div class="form-group">
+                    <label>{{'login.repeatNewPassword' | translate}}:</label>
+                    <input [placeholder]="'general.password' | translate" type="password" formControlName="password2" class="form-control" [ngClass]="{
                                 'is-invalid': inpSubmitted && inp.password2.errors
                             }" />
-                        <div *ngIf="inpSubmitted && inp.password2.errors" class="invalid-feedback">
-                            <div *ngIf="rpf.password2.errors.required">
-                                {{'errors.requiredFieldMissing' | translate}}
-                            </div>
+                    <div *ngIf="inpSubmitted && inp.password2.errors" class="invalid-feedback">
+                        <div *ngIf="rpf.password2.errors.required">
+                            {{'errors.requiredFieldMissing' | translate}}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <button [disabled]="loading" type="button"
-                            (click)="inputNewPassword = false; $event.preventDefault" class="btn btn-link">
+                </div>
+                <div class="form-group">
+                    <button [disabled]="loading" type="button" (click)="inputNewPassword = false; $event.preventDefault" class="btn btn-link">
                             {{'general.back' | translate}}
                         </button>
-                        <img *ngIf="loading" class="pl-3"
-                            src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        <button [disabled]="loading" class="btn btn-outline-primary float-right">
+                    <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                    />
+                    <button [disabled]="loading" class="btn btn-outline-primary float-right">
                             {{'general.save' | translate}}
                         </button>
-                    </div>
-                </form>
+                </div>
+            </form>
 
-                <div *ngIf="inputNewPassword && inputNewPasswordSucceeded">
-                    <div class="alert alert-success">
-                        {{'login.passwordResetSuccessful' | translate}}
-                    </div>
-                    <button [disabled]="loading" type="button"
-                        (click)="inputNewPassword = false; inputNewPasswordSucceeded = false; $event.preventDefault"
-                        class="btn btn-link">
+            <div *ngIf="inputNewPassword && inputNewPasswordSucceeded">
+                <div class="alert alert-success">
+                    {{'login.passwordResetSuccessful' | translate}}
+                </div>
+                <button [disabled]="loading" type="button" (click)="inputNewPassword = false; inputNewPasswordSucceeded = false; $event.preventDefault" class="btn btn-link">
                         {{'login.toLogin' | translate}}
                     </button>
-                </div>
             </div>
         </div>
     </div>
@@ -138,24 +121,20 @@
     <ul class="navbar nav w-100 d-flex justify-content-end">
         <li class="nav-icon">
             <a class="nav-link wi down" (click)="minWindow()">
-                <img class="window-icon"
-                    src="data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 4.399V5.5H0V4.399h11z' fill='%23fff'/%3E%3C/svg%3E">
+                <img class="window-icon" src="data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 4.399V5.5H0V4.399h11z' fill='%23fff'/%3E%3C/svg%3E">
             </a>
         </li>
 
         <li class="nav-icon">
             <a class="nav-link wi" (click)="maxWindow()">
-                <img *ngIf="isMaximized" class="window-icon"
-                    src="data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 8.798H8.798V11H0V2.202h2.202V0H11v8.798zm-3.298-5.5h-6.6v6.6h6.6v-6.6zM9.9 1.1H3.298v1.101h5.5v5.5h1.1v-6.6z' fill='%23fff'/%3E%3C/svg%3E">
-                <img *ngIf="!isMaximized" class="window-icon"
-                    src="data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 0v11H0V0h11zM9.899 1.101H1.1V9.9h8.8V1.1z' fill='%23fff'/%3E%3C/svg%3E">
+                <img *ngIf="isMaximized" class="window-icon" src="data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 8.798H8.798V11H0V2.202h2.202V0H11v8.798zm-3.298-5.5h-6.6v6.6h6.6v-6.6zM9.9 1.1H3.298v1.101h5.5v5.5h1.1v-6.6z' fill='%23fff'/%3E%3C/svg%3E">
+                <img *ngIf="!isMaximized" class="window-icon" src="data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 0v11H0V0h11zM9.899 1.101H1.1V9.9h8.8V1.1z' fill='%23fff'/%3E%3C/svg%3E">
             </a>
         </li>
 
         <li class="nav-icon">
             <a class="nav-link wi close" (click)="closeWindow()">
-                <img class="window-icon"
-                    src="data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.279 5.5L11 10.221l-.779.779L5.5 6.279.779 11 0 10.221 4.721 5.5 0 .779.779 0 5.5 4.721 10.221 0 11 .779 6.279 5.5z' fill='%23fff'/%3E%3C/svg%3E">
+                <img class="window-icon" src="data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.279 5.5L11 10.221l-.779.779L5.5 6.279.779 11 0 10.221 4.721 5.5 0 .779.779 0 5.5 4.721 10.221 0 11 .779 6.279 5.5z' fill='%23fff'/%3E%3C/svg%3E">
             </a>
         </li>
     </ul>

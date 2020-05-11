@@ -87,3 +87,11 @@ main {
     max-height: 100vh !important;
     margin-top: 0 !important;
 }
+
+.fullpage {
+    background-image: url(~assets/loginbg.jpg);
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
