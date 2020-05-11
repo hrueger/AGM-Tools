@@ -9,12 +9,11 @@ import { AlertService } from "./alert.service";
 export class SocketService {
     public socket: SocketIOClient.Socket;
     public socketAvailable: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    callOfferData: any;
+    callIncoming: any;
     constructor(private alertService: AlertService, private router: Router) {}
 
     public init(token) {
-        this.socket = socketIO(`${environment.apiUrl}live`);
-        this.socket.emit("test", "servus!");
+        this.socket = socketIO(`${environment.apiUrl}live`, { path: "./socket.io" });
         this.socket.on("connect", () => {
             this.socketAvailable.next(true);
             this.socket.emit("login", { token });
@@ -22,12 +21,12 @@ export class SocketService {
         this.socket.on("failure", (msg) => {
             this.alertService.error(msg);
         });
-        this.socket.on("call-made", (data) => {
-            if (!this.callOfferData) {
+        this.socket.on("incoming-call", (data) => {
+            if (!this.callIncoming) {
                 // eslint-disable-next-line
                 if(confirm("Call made from " + data.user.username + ". Click yes to accept it, no to decline.")) {
-                    this.callOfferData = data;
-                    this.router.navigate(["call", "receive"]);
+                    this.callIncoming = data;
+                    this.router.navigate(["call", "incoming", data.chatType, data.id, data.callType]);
                 }
             }
         });

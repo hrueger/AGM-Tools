@@ -4,7 +4,6 @@ import { checkJwt } from "../middlewares/checkJwt";
 
 const router = Router();
 
-router.post("/session", [checkJwt], CallController.session);
-router.post("/token", [checkJwt], CallController.token);
+router.post("/call/:chatType/:id/:callType", [checkJwt], CallController.call);
 
 export default router;

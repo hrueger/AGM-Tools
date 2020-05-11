@@ -145,7 +145,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         FilePickerModalComponent,
     ],
     imports: [
-        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireModule.initializeApp(undefined),
         AngularFireDatabaseModule,
         AngularFireAuthModule,
         NgxAdvancedImageEditorModule,

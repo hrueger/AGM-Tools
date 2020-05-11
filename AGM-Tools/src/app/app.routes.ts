@@ -59,7 +59,7 @@ export const routes: Routes = [
     {
         canActivate: [AuthGuard],
         component: CallComponent,
-        path: "call/receive",
+        path: "call/incoming/:chatType/:id/:callType",
     },
     {
         canActivate: [AuthGuard],

@@ -22,95 +22,102 @@ import { Tutorial } from "./Tutorial";
 import { Usergroup } from "./Usergroup";
 import { ChatStatus } from "./ChatStatus";
 import { Device } from "./Device";
+import { Call } from "./Call";
 
 @Entity()
 @Unique(["username"])
 export class User {
-  @PrimaryGeneratedColumn()
-  public id: number;
+    @PrimaryGeneratedColumn()
+    public id: number;
 
-  @Column()
-  public username: string;
+    @Column()
+    public username: string;
 
-  @Column()
-  public email: string;
+    @Column()
+    public email: string;
 
-  @Column({ select: false })
-  public password: string;
+    @Column({ select: false })
+    public password: string;
 
-  @Column({ nullable: true })
-  public lastOnline: Date;
+    @Column({ nullable: true })
+    public lastOnline: Date;
 
-  @Column({ select: false, nullable: true })
-  public passwordResetToken: string;
+    @Column({ select: false, nullable: true })
+    public passwordResetToken: string;
 
-  @ManyToOne(() => Usergroup, (usergroup) => usergroup.users)
-  public usergroup: Usergroup;
+    @ManyToOne(() => Usergroup, (usergroup) => usergroup.users)
+    public usergroup: Usergroup;
 
-  @ManyToMany(() => Project, (project) => project.users)
-  public projects: Project[];
+    @ManyToMany(() => Project, (project) => project.users)
+    public projects: Project[];
 
-  @Column()
-  @CreateDateColumn()
-  public createdAt: Date;
+    @Column()
+    @CreateDateColumn()
+    public createdAt: Date;
 
-  @Column()
-  @UpdateDateColumn()
-  public updatedAt: Date;
+    @Column()
+    @UpdateDateColumn()
+    public updatedAt: Date;
 
-  @ManyToMany(() => Notification, (notification) => notification.receivers)
-  public receivedNotifications: Notification[];
+    @ManyToMany(() => Notification, (notification) => notification.receivers)
+    public receivedNotifications: Notification[];
 
-  @ManyToMany(() => Notification, (notification) => notification.seenBy)
-  public seenNotifications: Notification[];
+    @ManyToMany(() => Notification, (notification) => notification.seenBy)
+    public seenNotifications: Notification[];
 
-  @OneToMany(() => Notification, (notification) => notification.creator)
-  public sentNotifications: Notification[];
+    @OneToMany(() => Notification, (notification) => notification.creator)
+    public sentNotifications: Notification[];
 
-  @OneToMany(() => Message, (message) => message.sender)
-  public sentMessages: Message[];
+    @OneToMany(() => Message, (message) => message.sender)
+    public sentMessages: Message[];
 
-  @OneToMany(() => Message, (message) => message.toUser)
-  public receivedMessages: Message[];
+    @OneToMany(() => Message, (message) => message.toUser)
+    public receivedMessages: Message[];
 
-  @OneToMany(() => Template, (template) => template.creator)
-  public templates: Template[];
+    @OneToMany(() => Template, (template) => template.creator)
+    public templates: Template[];
 
-  @OneToMany(() => Tutorial, (tutorial) => tutorial.creator)
-  public tutorials: Tutorial[];
+    @OneToMany(() => Tutorial, (tutorial) => tutorial.creator)
+    public tutorials: Tutorial[];
 
-  @OneToMany(() => Task, (task) => task.creator)
-  public createdTasks: Task[];
+    @OneToMany(() => Task, (task) => task.creator)
+    public createdTasks: Task[];
 
-  @ManyToMany(() => Task, (task) => task.users)
-  public tasks: Task[];
+    @ManyToMany(() => Task, (task) => task.users)
+    public tasks: Task[];
 
-  @OneToMany(() => Event, (event) => event.creator)
-  public events: Event[];
+    @OneToMany(() => Event, (event) => event.creator)
+    public events: Event[];
 
-  @OneToMany(() => File, (file) => file.creator)
-  public files: File[];
+    @OneToMany(() => File, (file) => file.creator)
+    public files: File[];
 
-  @OneToMany(() => Setting, (setting) => setting.user)
-  public settings: Setting[];
+    @OneToMany(() => Setting, (setting) => setting.user)
+    public settings: Setting[];
 
-  @OneToMany(() => ChatStatus, (chatStatus) => chatStatus.owner)
-  public ownChatStatuses: ChatStatus[];
+    @OneToMany(() => ChatStatus, (chatStatus) => chatStatus.owner)
+    public ownChatStatuses: ChatStatus[];
 
-  @OneToMany(() => ChatStatus, (chatStatus) => chatStatus.owner)
-  public chatStatuses: ChatStatus[];
+    @OneToMany(() => ChatStatus, (chatStatus) => chatStatus.owner)
+    public chatStatuses: ChatStatus[];
 
-  @OneToMany(() => Device, (device) => device.user)
-  public devices: Device[];
+    @OneToMany(() => Device, (device) => device.user)
+    public devices: Device[];
 
-  public hashPassword() {
-      this.password = bcrypt.hashSync(this.password, 8);
-  }
+    @OneToMany(() => Call, (call) => call.caller)
+    public callsCaller: Call[];
 
-  public checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
-      if (unencryptedPassword) {
-          return bcrypt.compareSync(unencryptedPassword, this.password);
-      }
-      return false;
-  }
+    @OneToMany(() => Call, (call) => call.callee)
+    public callsCallee: Call[];
+
+    public hashPassword() {
+        this.password = bcrypt.hashSync(this.password, 8);
+    }
+
+    public checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
+        if (unencryptedPassword) {
+            return bcrypt.compareSync(unencryptedPassword, this.password);
+        }
+        return false;
+    }
 }

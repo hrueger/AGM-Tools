@@ -36,6 +36,7 @@ import { ChatStatus } from "./entity/ChatStatus";
 import { Device } from "./entity/Device";
 import { createMailDevices2984503475348 } from "./migration/2984503475348-createMailDevices";
 import UserController from "./controllers/UserController";
+import { Call } from "./entity/Call";
 
 i18n.configure({
     defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
@@ -54,6 +55,7 @@ createConnection({
     database: config.database_name,
     entities: [
         Cache,
+        Call,
         ChatStatus,
         Event,
         File,

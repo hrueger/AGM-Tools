@@ -41,25 +41,6 @@ class UserController {
                     (es) => es.socket.id !== socket.id,
                 );
             });
-            socket.on("call-user", (data) => {
-                // try to find the user in sockets
-                const to = app.locals.rtcSockets.find((es) => es.userId == data.to);
-                if (to) {
-                    socket.to(to.socket.id).emit("call-made", {
-                        offer: data.offer,
-                        socket: socket.id,
-                        user: { username: jwtPayload.username, id: jwtPayload.userId },
-                    });
-                } else {
-                    socket.emit("call.error", i18n.__("errors.callerIsNotOnline"));
-                }
-            });
-            socket.on("make-answer", (data) => {
-                socket.to(data.to).emit("answer-made", {
-                    socket: socket.id,
-                    answer: data.answer,
-                });
-            });
         }
     }
     public static listAll = async (req: Request, res: Response) => {
