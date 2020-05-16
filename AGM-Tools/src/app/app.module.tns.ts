@@ -69,8 +69,8 @@ import { DateAgoPipe } from "./_pipes/howLongAgo.pipe";
 import { ToIconPipe } from "./_pipes/ToIcon.pipe";
 import { TruncatePipe } from "./_pipes/truncate.pipe";
 import { PushService } from "./_services/push.service";
+import { EnvironmentService } from "./_services/environment.service";
 import { routes } from "./app.routes";
-import { environment } from "../environments/environment";
 import { CallComponent } from "./_components/call/call.component";
 import { ShareComponent } from "./_components/share/share.component";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
@@ -176,7 +176,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     schemas: [NO_ERRORS_SCHEMA],
 })
 export class AppModule {
-    public constructor(private router: RouterExtensions, private zone: NgZone) {
+    public constructor(private router: RouterExtensions, private zone: NgZone, private environmentService: EnvironmentService) {
         new AppShortcuts().setQuickActionCallback((shortcutItem) => {
             // eslint-disable-next-line no-console
             console.log(`The app was launched by shortcut with the type '${shortcutItem.type}'`);
@@ -192,7 +192,7 @@ export class AppModule {
             // eslint-disable-next-line no-console
             console.log("###########################\nGot the following appURL", appUrl,
                 "\n###########################"); // ToDo
-            const appUrlString = appUrl.toString().replace(environment.appUrl, "");
+            const appUrlString = appUrl.toString().replace(this.environmentService.environment.appUrl, "");
             const parts = appUrlString.split("/");
             router.navigate(parts);
         });
