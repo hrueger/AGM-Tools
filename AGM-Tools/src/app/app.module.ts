@@ -90,7 +90,7 @@ import { DropFolderComponent } from "./_components/drop-folder/drop-folder.compo
 registerLocaleData(localeDe);
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-    const url = `${isElectron() ? "file:///../" : environment.appUrl.replace("/#/", "")}/assets/i18n/`;
+    const url = `${isElectron() ? "" : environment.appUrl.replace("/#/", "")}/assets/i18n/`;
     return new TranslateHttpLoader(http, url, ".json");
 }
 
