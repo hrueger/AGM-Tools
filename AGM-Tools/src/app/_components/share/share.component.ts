@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { environment } from "../../../environments/environment";
 import { RemoteService } from "../../_services/remote.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-share",
@@ -11,13 +11,17 @@ import { RemoteService } from "../../_services/remote.service";
 export class ShareComponent {
     public file;
     public year: number = new Date().getFullYear();
-    constructor(private remoteService: RemoteService, private route: ActivatedRoute) {}
+    constructor(
+        private remoteService: RemoteService,
+        private route: ActivatedRoute,
+        private environmentService: EnvironmentService,
+    ) { }
     public ngOnInit() {
         this.remoteService.get("get", `files/share/${this.route.snapshot.params.link}`).subscribe((data) => {
             this.file = data;
         });
     }
     public getSrc() {
-        return `${environment.apiUrl}files/share/${this.route.snapshot.params.link}/download`;
+        return `${this.environmentService.environment.apiUrl}files/share/${this.route.snapshot.params.link}/download`;
     }
 }

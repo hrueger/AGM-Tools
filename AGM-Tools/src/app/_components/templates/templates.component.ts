@@ -5,7 +5,6 @@ import {
     Validators,
 } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
@@ -13,6 +12,7 @@ import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 import { TinyConfigService } from "../../_services/tiny-config.service";
 import { MarkdownService } from "../../_services/markdown.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-templates",
@@ -37,6 +37,7 @@ export class TemplatesComponent implements OnInit {
         private alertService: AlertService,
         private tinyConfigService: TinyConfigService,
         private markdownService: MarkdownService,
+        private environmentService: EnvironmentService,
     ) { }
     public async ngOnInit() {
         this.navbarService.setHeadline(await this.fts.t("templates.templates"));
@@ -50,7 +51,7 @@ export class TemplatesComponent implements OnInit {
         this.TINYCONFIG = this.tinyConfigService.get();
     }
     public show(template, content) {
-        this.imgUrl = `${environment.apiUrl}templates/${template.filename}?authorization=${this.authenticationService.currentUserValue.token}`;
+        this.imgUrl = `${this.environmentService.environment.apiUrl}templates/${template.filename}?authorization=${this.authenticationService.currentUserValue.token}`;
         this.modalService
             .open(content, {})
             .result.then();

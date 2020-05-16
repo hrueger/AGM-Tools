@@ -22,13 +22,12 @@ import * as dialog from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page/page";
 import { ScrollView } from "tns-core-modules/ui/scroll-view/scroll-view";
 import { layout, openUrl } from "tns-core-modules/utils/utils";
-
-import { environment } from "../../../environments/environment";
 import { Project } from "../../_models/project.model";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-files",
@@ -70,6 +69,7 @@ export class FilesComponent implements OnInit {
         private router: Router,
         private fts: FastTranslateService,
         private page: Page,
+        private environmentService: EnvironmentService,
     ) {
         this.multiSelect = new MultiSelect();
     }
@@ -162,7 +162,7 @@ export class FilesComponent implements OnInit {
     }
 
     public getFileSrc(file, download = false): string {
-        return `${environment.apiUrl}files/${file.id}${(download ? "/download" : "")}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${this.environmentService.environment.apiUrl}files/${file.id}${(download ? "/download" : "")}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     public getCurrentFileSrc(): string {
@@ -244,7 +244,7 @@ export class FilesComponent implements OnInit {
 
     public getSrc(): string {
         const file = this.currentPath[this.currentPath.length - 1];
-        const path = `${environment.apiUrl
+        const path = `${this.environmentService.environment.apiUrl
         }?get=${
             file.id
         }&type=file`
@@ -332,7 +332,7 @@ export class FilesComponent implements OnInit {
         cfalertDialog.show(options);
     }
     public download(item): void {
-        const url = `${environment.apiUrl}files/${item.id}/download?authorization=${this.authenticationService.currentUserValue.token}`;
+        const url = `${this.environmentService.environment.apiUrl}files/${item.id}/download?authorization=${this.authenticationService.currentUserValue.token}`;
         this.itemsListView.listView.notifySwipeToExecuteFinished();
         openUrl(url);
     }
@@ -342,7 +342,7 @@ export class FilesComponent implements OnInit {
             .getNoCache("post", `files/${item.id}/share`)
             .subscribe(async (data): Promise<void> => {
                 if (data.status == true) {
-                    const shareLink = `${environment.appUrl}share/${data.link}`;
+                    const shareLink = `${this.environmentService.environment.appUrl}share/${data.link}`;
                     const cfalertDialog = new CFAlertDialog();
                     const options: DialogOptions = {
                         buttons: [{
@@ -512,7 +512,7 @@ export class FilesComponent implements OnInit {
                 },
                 documentType: type,
                 editorConfig: {
-                // callbackUrl: `${environment.apiUrl}files/documents/save`,
+                // callbackUrl: `${this.environmentService.environment.apiUrl}files/documents/save`,
                 /* createUrl: "https://example.com/url-to-create-document/", */
                     customization: {
                         autosave: true,

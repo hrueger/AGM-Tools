@@ -18,6 +18,7 @@ import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
 import { NewProjectModalComponent } from "../_modals/new-project.modal.tns";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-projects",
@@ -37,6 +38,7 @@ export class ProjectsComponent implements OnInit {
         private remoteService: RemoteService,
         private alertService: AlertService,
         private zone: NgZone,
+        private environmentService: EnvironmentService,
         private authenticationService: AuthenticationService) {
         this.multiSelect = new MultiSelect();
     }
@@ -48,7 +50,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     public getProjectImageSrc(project) {
-        return `${environment.apiUrl}projects/${project.id}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${this.environmentService.environment.apiUrl}projects/${project.id}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
     public openNewModal() {
         const options = {

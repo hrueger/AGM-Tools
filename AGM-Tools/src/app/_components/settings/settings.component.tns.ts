@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
 import * as app from "tns-core-modules/application";
 import { Page } from "tns-core-modules/ui/page";
-import { environment } from "../../../environments/environment";
 import { RemoteService } from "../../_services/remote.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-settings",
@@ -18,7 +18,11 @@ export class SettingsComponent implements OnInit {
     public displayingFull = false;
     public settings: any[] = [];
 
-    constructor(private page: Page, private remoteService: RemoteService) {}
+    constructor(
+        private page: Page,
+        private remoteService: RemoteService,
+        private environmentService: EnvironmentService,
+    ) { }
 
     public ngOnInit() {
         this.page.actionBarHidden = true;
@@ -36,7 +40,7 @@ export class SettingsComponent implements OnInit {
         if (!this.sub) {
             this.displayItems = this.settings[index].children.map((s) => {
                 if (typeof s.value == "string" && s.type == "webview") {
-                    s.value = s.value.replace("{{apiUrl}}", environment.apiUrl);
+                    s.value = s.value.replace("{{apiUrl}}", this.environmentService.environment.apiUrl);
                 }
                 return s;
             });

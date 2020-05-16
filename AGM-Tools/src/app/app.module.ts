@@ -33,6 +33,7 @@ import { EditorModule } from "@tinymce/tinymce-angular";
 import { MarkdownModule } from "ngx-markdown";
 import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
 import { NgxAdvancedImageEditorModule } from "ngx-advanced-image-editor";
+import isElectron from "is-electron";
 import { environment } from "../environments/environment";
 import { CalendarComponent } from "./_components/calendar/calendar.component";
 import { CallComponent } from "./_components/call/call.component";
@@ -89,7 +90,8 @@ import { DropFolderComponent } from "./_components/drop-folder/drop-folder.compo
 registerLocaleData(localeDe);
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-    return new TranslateHttpLoader(http, `${environment.appUrl.replace("/#/", "")}/assets/i18n/`, ".json");
+    const url = `${isElectron() ? "file:///../" : environment.appUrl.replace("/#/", "")}/assets/i18n/`;
+    return new TranslateHttpLoader(http, url, ".json");
 }
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -147,15 +149,16 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         FilePickerModalComponent,
     ],
     imports: [
-        AngularFireModule.initializeApp({
-            apiKey: environment.firebase_apiKey,
-            authDomain: environment.firebase_authDomain,
-            databaseURL: environment.firebase_databaseURL,
-            projectId: environment.firebase_projectId,
-            storageBucket: environment.firebase_storageBucket,
-            messagingSenderId: environment.firebase_messagingSenderId,
-            appId: environment.firebase_appId,
-        }),
+        isElectron()
+            ? AngularFireModule.initializeApp({
+                apiKey: environment.firebase_apiKey,
+                authDomain: environment.firebase_authDomain,
+                databaseURL: environment.firebase_databaseURL,
+                projectId: environment.firebase_projectId,
+                storageBucket: environment.firebase_storageBucket,
+                messagingSenderId: environment.firebase_messagingSenderId,
+                appId: environment.firebase_appId,
+            }) : undefined,
         AngularFireDatabaseModule,
         AngularFireAuthModule,
         NgxAdvancedImageEditorModule,
@@ -213,7 +216,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         MarkdownService,
         {
             provide: LOCALE_ID,
-            useValue: `${environment.defaultLanguage}-${environment.defaultLanguage.toUpperCase}`,
+            // eslint-disable-next-line global-require
+            useValue: isElectron() ? require("electron").remote.app.getLocale() : `${environment.defaultLanguage}-${environment.defaultLanguage.toUpperCase}`,
         },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: RenewJwtTokenInterceptor, multi: true },

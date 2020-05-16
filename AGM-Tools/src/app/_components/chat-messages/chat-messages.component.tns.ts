@@ -21,11 +21,11 @@ import * as dialogs from "tns-core-modules/ui/dialogs";
 import { confirm } from "tns-core-modules/ui/dialogs";
 import { Accuracy } from "tns-core-modules/ui/enums";
 import { Page } from "tns-core-modules/ui/page/page";
-import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
 import { ContactPickerComponent } from "../_modals/contact-picker.modal.tns";
+import { EnvironmentService } from "../../_services/environment.service";
 
 
 function progressHandler(): void {
@@ -84,6 +84,7 @@ implements OnInit {
         private modal: ModalDialogService,
         private vcRef: ViewContainerRef,
         private page: Page,
+        private environmentService: EnvironmentService,
     ) { }
 
     public toggleAttachmentDialog(): void {
@@ -138,7 +139,7 @@ implements OnInit {
                                             })
                                             .subscribe(); */
 
-                                        const url = `${environment.apiUrl}?token=${
+                                        const url = `${this.environmentService.environment.apiUrl}?token=${
                                             that.authService.currentUserValue.token.toString()}`;
                                         const name = pathDest.substr(pathDest.lastIndexOf("/") + 1);
 

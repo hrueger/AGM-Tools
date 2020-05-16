@@ -2,11 +2,11 @@ import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Lightbox } from "ngx-lightbox";
-import { environment } from "../../../environments/environment";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-tutorial",
@@ -24,6 +24,7 @@ export class TutorialComponent implements OnInit {
         private lightbox: Lightbox,
         private authenticationService: AuthenticationService,
         private fts: FastTranslateService,
+        private environmentService: EnvironmentService,
         private remoteService: RemoteService) { }
 
     public async ngOnInit() {
@@ -72,7 +73,7 @@ export class TutorialComponent implements OnInit {
     }
 
     public getFileSrc(file) {
-        return `${environment.apiUrl}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${this.environmentService.environment.apiUrl}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     private async gotNewTutorialData(tutorial: any) {

@@ -11,12 +11,12 @@ import * as app from "tns-core-modules/application";
 import { View } from "tns-core-modules/ui/core/view/view";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page/page";
-import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import * as DownloadService from "../../_services/download.service.tns";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-templates",
@@ -43,6 +43,7 @@ export class TemplatesComponent implements OnInit {
         private fts: FastTranslateService,
         private downloadService: DownloadService.DownloadService,
         private page: Page,
+        private environmentService: EnvironmentService,
     ) {
     }
 
@@ -53,7 +54,7 @@ export class TemplatesComponent implements OnInit {
             if (this.templates) {
                 this.templates.forEach((template) => {
                     this.templatesToShow.push({
-                        imageUrl: `${environment.apiUrl}templates/${template.filename}?authorization=${this.authService.currentUserValue.token}`,
+                        imageUrl: `${this.environmentService.environment.apiUrl}templates/${template.filename}?authorization=${this.authService.currentUserValue.token}`,
                     });
                 });
             }

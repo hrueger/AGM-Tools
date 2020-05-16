@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 import { ChatComponentCommon } from "./chat.component.common";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-chat",
@@ -17,8 +18,9 @@ export class ChatComponent extends ChatComponentCommon {
         private navbarService: NavbarService,
         private route: ActivatedRoute,
         private router: Router,
+        private environmentService: EnvironmentService,
     ) {
-        super();
+        super(environmentService);
         this.chats = [];
     }
 

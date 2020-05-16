@@ -1,14 +1,17 @@
 import { Injectable } from "@angular/core";
 import { FastTranslateService } from "./fast-translate.service";
-import { environment } from "../../environments/environment";
+import { EnvironmentService } from "./environment.service";
 
 @Injectable()
 export class TinyConfigService {
-    constructor(private fts: FastTranslateService) {}
+    constructor(
+        private fts: FastTranslateService,
+        private environmentService: EnvironmentService,
+    ) { }
     public get() {
         return {
             // eslint-disable-next-line @typescript-eslint/camelcase
-            base_url: `${environment.appUrl.replace("/#/", "/")}assets/tinymce`,
+            base_url: `${this.environmentService.environment.appUrl.replace("/#/", "/")}assets/tinymce`,
             suffix: ".min",
             statusbar: false,
             menubar: false,

@@ -41,7 +41,7 @@ export class UpdaterComponent implements OnInit {
                 const imageDownloaderId = downloader.createDownload({
                     fileName: `AGM-Tools_update_${Math.round(Math.random() * 100000000)}.apk`,
                     path: dest,
-                    url: `${environment.apiUrl}?downloadMobileLatest`,
+                    url: "ToDo",
                 });
                 this.downloading = true;
                 downloader

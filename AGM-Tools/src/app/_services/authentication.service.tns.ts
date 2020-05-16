@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import * as applicationSettings from "tns-core-modules/application-settings";
-import { environment } from "../../environments/environment";
+import { EnvironmentService } from "./environment.service";
 import { User } from "../_models/user.model";
 
 const httpOptions = {
@@ -17,7 +17,7 @@ export class AuthenticationService {
     public currentUser: Observable<User>;
     private currentUserSubject: BehaviorSubject<User>;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private environmentService: EnvironmentService) {
         let u = applicationSettings.getString("currentUser");
         if (u) {
             u = JSON.parse(u);
@@ -42,7 +42,7 @@ export class AuthenticationService {
     public login(username: string, password: string) {
         return this.http
             .post<any>(
-                `${environment.apiUrl}auth/login`,
+                `${this.environmentService.environment.apiUrl}auth/login`,
                 {
                     password,
                     username,

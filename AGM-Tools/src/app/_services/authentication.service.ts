@@ -3,10 +3,10 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { AngularFireMessaging } from "@angular/fire/messaging";
-import { environment } from "../../environments/environment";
 import { User } from "../_models/user.model";
 import { PushService } from "./push.service";
 import { SocketService } from "./socket.service";
+import { EnvironmentService } from "./environment.service";
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -22,6 +22,7 @@ export class AuthenticationService {
     constructor(private http: HttpClient,
         private pushService: PushService,
         private socketService: SocketService,
+        private environmentService: EnvironmentService,
         private angularFire: AngularFireMessaging) {
         this.currentUserSubject = new BehaviorSubject<User>(
             JSON.parse(sessionStorage.getItem("currentUser")),
@@ -45,7 +46,7 @@ export class AuthenticationService {
     public login(username: string, password: string) {
         return this.http
             .post<any>(
-                `${environment.apiUrl}auth/login`,
+                `${this.environmentService.environment.apiUrl}auth/login`,
                 {
                     password,
                     username,

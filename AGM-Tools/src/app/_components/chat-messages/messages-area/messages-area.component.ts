@@ -12,6 +12,7 @@ import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { FastTranslateService } from "../../../_services/fast-translate.service";
 import { RemoteService } from "../../../_services/remote.service";
+import { EnvironmentService } from "../../../_services/environment.service";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +34,7 @@ export class MessagesAreaComponent implements OnInit {
         private lightbox: Lightbox,
         private alertService: AlertService,
         private fts: FastTranslateService,
+        private environmentService: EnvironmentService,
     ) { }
 
     public ngOnInit() {
@@ -74,12 +76,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getImageSrc(imageName, thumbnail = true) {
-        return `${environment.apiUrl
-        }?getAttachment=${
-            imageName
-        }&token=${
-            this.authenticationService.currentUserValue.token
-        }${thumbnail ? "&thumbnail" : ""}`;
+        return `${this.environmentService.environment.apiUrl}?getAttachment=${imageName}&token=${this.authenticationService.currentUserValue.token}${thumbnail ? "&thumbnail" : ""}`;
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -154,7 +151,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getLocationImageSrc(message) {
-        return `${environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${this.environmentService.environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     public openLocationInNewTab(message) {

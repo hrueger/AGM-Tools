@@ -2,18 +2,22 @@ import { Injectable } from "@angular/core";
 import * as socketIO from "socket.io-client";
 import { BehaviorSubject } from "rxjs";
 import { Router } from "@angular/router";
-import { environment } from "../../environments/environment";
 import { AlertService } from "./alert.service";
+import { EnvironmentService } from "./environment.service";
 
 @Injectable()
 export class SocketService {
     public socket: SocketIOClient.Socket;
     public socketAvailable: BehaviorSubject<boolean> = new BehaviorSubject(false);
     callOfferData: any;
-    constructor(private alertService: AlertService, private router: Router) {}
+    constructor(
+        private alertService: AlertService,
+        private router: Router,
+        private environmentService: EnvironmentService,
+    ) { }
 
     public init(token) {
-        this.socket = socketIO(`${environment.apiUrl}live`);
+        this.socket = socketIO(`${this.environmentService.environment.apiUrl}live`);
         this.socket.emit("test", "servus!");
         this.socket.on("connect", () => {
             this.socketAvailable.next(true);

@@ -8,11 +8,11 @@ import { RadListViewComponent } from "nativescript-ui-listview/angular/listview-
 import * as app from "tns-core-modules/application";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page/page";
-import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { RemoteService } from "../../_services/remote.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-tutorials",
@@ -43,6 +43,7 @@ export class TutorialsComponent implements OnInit {
         private authService: AuthenticationService,
         private fts: FastTranslateService,
         private page: Page,
+        private environmentService: EnvironmentService,
     ) {
     }
 
@@ -62,7 +63,7 @@ export class TutorialsComponent implements OnInit {
     }
 
     public getFileSrc(file) {
-        return `${environment.apiUrl}tutorials/files/${file}?authorization=${this.authService.currentUserValue.token}`;
+        return `${this.environmentService.environment.apiUrl}tutorials/files/${file}?authorization=${this.authService.currentUserValue.token}`;
     }
 
     public openStepImage(step, i, imageUrl) {
@@ -88,17 +89,17 @@ export class TutorialsComponent implements OnInit {
                     const s = [];
                     if (step.image1) {
                         s.push({
-                            imageUrl: `${environment.apiUrl}tutorials/files/${step.image1}?authorization=${this.authService.currentUserValue.token}`,
+                            imageUrl: `${this.environmentService.environment.apiUrl}tutorials/files/${step.image1}?authorization=${this.authService.currentUserValue.token}`,
                         });
                     }
                     if (step.image2) {
                         s.push({
-                            imageUrl: `${environment.apiUrl}tutorials/files/${step.image2}?authorization=${this.authService.currentUserValue.token}`,
+                            imageUrl: `${this.environmentService.environment.apiUrl}tutorials/files/${step.image2}?authorization=${this.authService.currentUserValue.token}`,
                         });
                     }
                     if (step.image3) {
                         s.push({
-                            imageUrl: `${environment.apiUrl}tutorials/files/${step.image3}?authorization=${this.authService.currentUserValue.token}`,
+                            imageUrl: `${this.environmentService.environment.apiUrl}tutorials/files/${step.image3}?authorization=${this.authService.currentUserValue.token}`,
                         });
                     }
                     this.stepsImages.push(s);

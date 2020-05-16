@@ -12,11 +12,11 @@ import { ObservableArray } from "tns-core-modules/data/observable-array";
 import { ListView } from "tns-core-modules/ui/list-view/list-view";
 import { Page } from "tns-core-modules/ui/page/page";
 import * as utils from "tns-core-modules/utils/utils";
-import { environment } from "../../../../environments/environment";
 import { Message } from "../../../_models/message.model";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { PushService } from "../../../_services/push.service.tns";
 import { RemoteService } from "../../../_services/remote.service";
+import { EnvironmentService } from "../../../_services/environment.service";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +40,7 @@ export class MessagesAreaComponent implements OnInit {
         private authService: AuthenticationService,
         private remoteService: RemoteService,
         private authenticationService: AuthenticationService,
+        private environmentService: EnvironmentService,
         private page: Page) {
 
     }
@@ -49,7 +50,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getImageSrc(imageName, thumbnail = true): string {
-        return `${environment.apiUrl}?getAttachment=${imageName}&token=${this.authService.currentUserValue.token}${thumbnail ? "&thumbnail" : ""}`;
+        return `${this.environmentService.environment.apiUrl}?getAttachment=${imageName}&token=${this.authService.currentUserValue.token}${thumbnail ? "&thumbnail" : ""}`;
     }
 
     public onPageChanged(e: PageChangeEventData): void {
@@ -66,7 +67,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getLocationImageSrc(message): string {
-        return `${environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${this.environmentService.environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     public newMessageFromPushService(data: any): void {

@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { environment } from "../../../../environments/environment";
+import { EnvironmentService } from "../../../_services/environment.service";
 
 @Component({
     selector: "username",
@@ -9,7 +10,9 @@ import { environment } from "../../../../environments/environment";
 export class UsernameComponent {
     @Input() public user: any;
 
+    constructor(private environmentService: EnvironmentService) {}
+
     public getAvatarSource(user) {
-        return `${environment.apiUrl}users/${user.id}`;
+        return `${this.environmentService.environment.apiUrl}users/${user.id}`;
     }
 }

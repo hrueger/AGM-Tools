@@ -11,6 +11,7 @@ import { Router } from "@angular/router";
 import { Message } from "../../_models/message.model";
 import { RemoteService } from "../../_services/remote.service";
 import { ChatComponentCommon } from "../chat/chat.component.common";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,8 +35,9 @@ export class ChatMessagesComponent extends ChatComponentCommon implements OnChan
         private location: Location,
         private cdr: ChangeDetectorRef,
         private router: Router,
+        private environmentService: EnvironmentService,
     ) {
-        super();
+        super(environmentService);
     }
 
     public messageSentFromChild(event: Event) {

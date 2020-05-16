@@ -2,9 +2,9 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
-import { environment } from "../../environments/environment";
 import { AlertService } from "./alert.service";
 import { CacheService } from "./cache.service";
+import { EnvironmentService } from "./environment.service";
 
 @Injectable({
     providedIn: "root",
@@ -14,6 +14,7 @@ export class RemoteService {
         private http: HttpClient,
         private alertService: AlertService,
         private cacheService: CacheService,
+        private environmentService: EnvironmentService,
     ) { }
 
     public get(type: "get" | "post" | "put" | "delete", path: string, args?: any): Observable<any> {
@@ -93,7 +94,7 @@ export class RemoteService {
             }
         }
         return this.http
-            .post<any>(`${environment.apiUrl}${url}`, formData, {
+            .post<any>(`${this.environmentService.environment.apiUrl}${url}`, formData, {
                 /* reportProgress: true,
                 observe: "events", */
                 headers: new HttpHeaders({
@@ -109,19 +110,19 @@ export class RemoteService {
     private getRequest(type: string, path: string, args: any): Observable<any> {
         let req;
         if (type == "get") {
-            req = this.http.get<any>(`${environment.apiUrl}${path}`, {
+            req = this.http.get<any>(`${this.environmentService.environment.apiUrl}${path}`, {
                 ...args,
             });
         } else if (type == "post") {
-            req = this.http.post<any>(`${environment.apiUrl}${path}`, {
+            req = this.http.post<any>(`${this.environmentService.environment.apiUrl}${path}`, {
                 ...args,
             });
         } else if (type == "put") {
-            req = this.http.put<any>(`${environment.apiUrl}${path}`, {
+            req = this.http.put<any>(`${this.environmentService.environment.apiUrl}${path}`, {
                 ...args,
             });
         } else if (type == "delete") {
-            req = this.http.delete<any>(`${environment.apiUrl}${path}`, {
+            req = this.http.delete<any>(`${this.environmentService.environment.apiUrl}${path}`, {
                 ...args,
             });
         }
