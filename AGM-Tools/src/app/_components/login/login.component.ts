@@ -1,12 +1,14 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, FormControl } from "@angular/forms";
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { first } from "rxjs/operators";
+import isElectron from "is-electron";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
 import { ElectronService } from "../../_services/electron.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     styleUrls: ["./login.component.scss"],
@@ -31,7 +33,7 @@ export class LoginComponent implements OnInit {
 
     public returnUrl: string;
 
-    public isElectron = false;
+    public isElectron = isElectron();
     public isMaximized = true;
 
     constructor(
@@ -43,6 +45,7 @@ export class LoginComponent implements OnInit {
         private remoteService: RemoteService,
         private route: ActivatedRoute,
         private electronService: ElectronService,
+        private environmentService: EnvironmentService,
     ) {}
 
     public ngOnInit() {
@@ -55,6 +58,9 @@ export class LoginComponent implements OnInit {
             password: ["", Validators.required],
             username: ["", Validators.required],
         });
+        if (this.isElectron) {
+            this.loginForm.addControl("serverUrl", new FormControl("", [Validators.required]));
+        }
         this.resetPasswordForm = this.formBuilder.group({
             email: ["", [Validators.required, Validators.email]],
         });
@@ -93,20 +99,31 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
+        if (this.isElectron) {
+            this.environmentService.loadEnvironment(this.f.serverUrl.value).then(() => {
+                this.authenticate();
+            }).catch((e) => {
+                this.loading = false;
+                this.alertService.error("Server couldn't be reached!");
+            });
+        } else {
+            this.authenticate();
+        }
+
+    }
+
+    private authenticate() {
         this.authenticationService
             .login(this.f.username.value, this.f.password.value)
             .pipe(first())
-            .subscribe(
-                () => {
-                    this.router.navigate([this.returnUrl]);
-                    // this.router.navigate(['dashboard'], { skipLocationChange: false });
-                    // location.reload();
-                },
-                (error) => {
-                    this.alertService.error(error);
-                    this.loading = false;
-                },
-            );
+            .subscribe(() => {
+                this.router.navigate([this.returnUrl]);
+                // this.router.navigate(['dashboard'], { skipLocationChange: false });
+                // location.reload();
+            }, (error) => {
+                this.alertService.error(error);
+                this.loading = false;
+            });
     }
 
     public onSubmitResetPassword() {

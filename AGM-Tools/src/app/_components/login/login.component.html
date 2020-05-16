@@ -6,6 +6,16 @@
                 <h2 class="d-inline ml-2">AGM-Tools</h2>
             </div>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!resetPassword && !inputNewPassword">
+                <div class="form-group mb-5" *ngIf="isElectron">
+                    <input [placeholder]="'general.serverUrl' | translate" type="text" formControlName="serverUrl" class="form-control" [ngClass]="{
+                                'is-invalid': submitted && f.serverUrl.errors
+                            }" />
+                    <div *ngIf="submitted && f.serverUrl.errors" class="invalid-feedback">
+                        <div *ngIf="f.serverUrl.required">
+                            {{'errors.fillOutServerUrl' | translate}}
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <input [placeholder]="'general.username' | translate" type="text" formControlName="username" class="form-control" [ngClass]="{
                                 'is-invalid': submitted && f.username.errors

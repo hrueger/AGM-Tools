@@ -36,6 +36,7 @@ import { ChatStatus } from "./entity/ChatStatus";
 import { Device } from "./entity/Device";
 import { createMailDevices2984503475348 } from "./migration/2984503475348-createMailDevices";
 import UserController from "./controllers/UserController";
+import EnvironmentController from "./controllers/EnvironmentController";
 
 i18n.configure({
     defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
@@ -116,13 +117,14 @@ createConnection({
 
         // Set all routes from routes folder
         app.use("/api", routes);
+        app.use("/config.json", EnvironmentController.getEnvironment);
 
         // Set routes for static built frontend
         app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
 
         const useHTTPS = process.env.NODE_ENV == "development";
         let server;
-        if (useHTTPS) {
+        if (false) {
             server = https.createServer({
                 key: fs.readFileSync(path.join(__dirname, "./key.pem")),
                 cert: fs.readFileSync(path.join(__dirname, "./cert.pem")),

@@ -10,18 +10,23 @@ export class EnvironmentService {
     private envLoaded = false;
     constructor(private http: HttpClient) {}
     public environment: any = environment;
-    public async loadEnvironment(url?): Promise<boolean> {
+    public async loadEnvironment(url?: string): Promise<boolean> {
         this.environment = environment;
         if (isElectron() && url) {
-            if (!url.endswith("/")) {
+            if (url.indexOf("#")) {
+                [url] = url.split("#");
+            }
+            if (!url.endsWith("/")) {
                 url += "/";
             }
             url += "config.json";
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 this.http.get(url).subscribe((d) => {
                     console.log(d);
                     this.environment = d;
                     resolve(true);
+                }, (e) => {
+                    reject(e);
                 });
             });
         }
