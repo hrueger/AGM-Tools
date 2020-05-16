@@ -14,7 +14,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { NgbModule, NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateLoader, TranslateModule, TranslateService } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { UploaderModule } from "@syncfusion/ej2-angular-inputs";
 import { DeviceDetectorModule, DeviceDetectorService } from "ngx-device-detector";
@@ -216,8 +216,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         MarkdownService,
         {
             provide: LOCALE_ID,
-            // eslint-disable-next-line global-require
-            useValue: isElectron() ? require("electron").remote.app.getLocale() : `${environment.defaultLanguage}-${environment.defaultLanguage.toUpperCase}`,
+            useFactory: (translate: TranslateService) => translate.currentLang,
+            deps: [TranslateService],
         },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: RenewJwtTokenInterceptor, multi: true },
