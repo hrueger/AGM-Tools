@@ -434,6 +434,23 @@ export class FilesComponent implements OnInit {
                 });
         }
     }
+
+    public async convertIntoNormalFolder(item) {
+        if (confirm(await this.fts.t("files.confirmConvertIntoNormalFolder"))) {
+            this.remoteService.get("post", `files/dropFolder/${item.id}/convertIntoNormal`).subscribe(async (data) => {
+                if (data && data.status) {
+                    this.alertService.success(await this.fts.t("files.dropFolderConvertedSuccessfully"));
+                    this.items = this.items.map((i) => {
+                        if (i.id == item.id) {
+                            item.dropFolder = {};
+                        }
+                        return item;
+                    });
+                }
+            })
+        }
+    }
+
     public rename(item, renameModal) {
         this.renameItemForm.get("renameItemName").setValue(item.name);
         this.modalService

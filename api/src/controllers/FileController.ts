@@ -240,6 +240,15 @@ class FileController {
         res.send({ status: true });
     }
 
+    public static convertDropFolderToNormalFolder = async (req: RequestWithFiles, res: Response) => {
+        const fileRepository = getRepository(File);
+        const element = await fileRepository.findOne(req.params.id);
+        // @ts-ignore
+        element.dropFolder = {};
+        await fileRepository.save(element);
+        res.send({ status: true });
+    }
+
     public static newFolder = async (req: Request, res: Response) => {
         const fileRepository = getRepository(File);
         const {

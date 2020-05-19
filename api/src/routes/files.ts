@@ -19,6 +19,7 @@ router.post("/:id([0-9]+)/extract", [checkJwt], FileController.extract);
 router.get("/share/:link", FileController.showShare);
 router.get("/dropFolder/:id", FileController.showDropFolder);
 router.post("/dropFolder/:id", FileController.uploadToDropFolder);
+router.post("/dropFolder/:id/convertIntoNormal", FileController.convertDropFolderToNormalFolder);
 router.get("/share/:link/download", FileController.downloadShare);
 router.post("/upload", FileController.uploadFile);
 router.post("/:id([0-9]+)", [checkJwt], FileController.renameElement);
