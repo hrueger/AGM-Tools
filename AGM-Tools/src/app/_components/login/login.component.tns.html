@@ -38,7 +38,8 @@
         <Label class="main-label" text="AGM-TOOLS"></Label>
 
         <GridLayout #formControls class="form-controls" rows="auto, auto" translateY="50">
-            <TextField hint="Benutzername" returnKeyType="next" (returnPress)="focusPassword()" [(ngModel)]="username" [isEnabled]="!isAuthenticating" autocorrect="false" autocapitalizationType="none" [class.light]="!isLoggingIn" row="0"></TextField>
+            <TextField hint="Server URL" returnKeyType="next" (returnPress)="focusUsername()" [(ngModel)]="serverUrl" [isEnabled]="!isAuthenticating" autocorrect="false" autocapitalizationType="none" [class.light]="!isLoggingIn" row="0"></TextField>
+            <TextField #usernameField hint="Benutzername" returnKeyType="next" (returnPress)="focusPassword()" [(ngModel)]="username" [isEnabled]="!isAuthenticating" autocorrect="false" autocapitalizationType="none" [class.light]="!isLoggingIn" row="0"></TextField>
             <TextField #passwordField hint="Passwort" secure="true" returnKeyType="done" (returnPress)="submit()" [(ngModel)]="password" [isEnabled]="!isAuthenticating" [class.light]="!isLoggingIn" row="1"></TextField>
 
             <ActivityIndicator [busy]="isAuthenticating" rowSpan="2"></ActivityIndicator>

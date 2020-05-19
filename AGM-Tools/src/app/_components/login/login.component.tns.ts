@@ -8,6 +8,7 @@ import { prompt } from "tns-core-modules/ui/dialogs";
 import { Page } from "tns-core-modules/ui/page";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
+import { EnvironmentService } from "../../_services/environment.service";
 
 @Component({
     selector: "app-login",
@@ -17,6 +18,7 @@ import { AuthenticationService } from "../../_services/authentication.service";
 export class LoginComponent {
     public username = "";
     public password = "";
+    public serverUrl = "";
     public isAuthenticating = false;
     public versionLabelText = "";
 
@@ -26,22 +28,24 @@ export class LoginComponent {
     @ViewChild("formControls", { static: false }) public formControls: ElementRef;
     @ViewChild("loginButton", { static: false }) public loginButton: ElementRef;
     @ViewChild("forgotPasswordLabel", { static: false }) public forgotPasswordLabel: ElementRef;
+    @ViewChild("usernameField", { static: false }) public usernameEl: ElementRef;
     @ViewChild("passwordField", { static: false }) public passwordEl: ElementRef;
 
     constructor(private authService: AuthenticationService,
         private page: Page,
         private router: Router,
+        private environmentService: EnvironmentService,
         private alertService: AlertService) {
     }
 
     public ngOnInit() {
         this.page.actionBarHidden = true;
-        const version = appversion.getVersionNameSync();
-        const parts = version.split(".");
-        const date = `${parts[2]}.${parts[1]}.${(2016 + parseInt(parts[0])).toString()}`;
-        this.versionLabelText = `Version ${version} vom ${date}`;
+        this.versionLabelText = appversion.getVersionNameSync();
     }
 
+    public focusUsername() {
+        this.usernameEl.nativeElement.focus();
+    }
     public focusPassword() {
         this.passwordEl.nativeElement.focus();
     }
@@ -66,19 +70,24 @@ export class LoginComponent {
             return;
         }
 
-        this.authService.login(this.username, this.password).subscribe(
-            () => {
-                this.isAuthenticating = false;
-                this.router.navigate(["/dashboard"]);
-            },
-            (error) => {
-                this.isAuthenticating = false;
-                this.alertService.error(
-                    error
-              || "Dein Account wurde leider nicht gefunden. Bitte überprüfe deinen Benutzernamen nochmals!",
-                );
-            },
-        );
+        this.environmentService.loadEnvironment(this.serverUrl).then(() => {
+            this.authService.login(this.username, this.password).subscribe(
+                () => {
+                    this.isAuthenticating = false;
+                    this.router.navigate(["/dashboard"]);
+                },
+                (error) => {
+                    this.isAuthenticating = false;
+                    this.alertService.error(
+                        error
+                  || "Dein Account wurde leider nicht gefunden. Bitte überprüfe deinen Benutzernamen nochmals!",
+                    );
+                },
+            );
+        }).catch(() => {
+            this.isAuthenticating = false;
+            this.alertService.error("Server couldn't be reached!");
+        });
     }
 
     public forgotPassword() {
