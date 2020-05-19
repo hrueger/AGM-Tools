@@ -442,9 +442,9 @@ export class FilesComponent implements OnInit {
                     this.alertService.success(await this.fts.t("files.dropFolderConvertedSuccessfully"));
                     this.items = this.items.map((i) => {
                         if (i.id == item.id) {
-                            item.dropFolder = {};
+                            i.dropFolder = {};
                         }
-                        return item;
+                        return i;
                     });
                 }
             })
