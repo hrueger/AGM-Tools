@@ -8,6 +8,7 @@
 
 /docker/frontend
 /docker/backend
+/docker/container-env.json
 
 .vs
 bin
