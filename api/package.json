@@ -77,7 +77,7 @@
         "openvidu-node-client": "^2.14.0",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
-        "socket.io": "^2.3.0",
+        "socket.io": "^2.4.0",
         "ts-node-dev": "^1.0.0-pre.44",
         "typeorm": "0.2.24",
         "unzipper": "^0.10.11"
