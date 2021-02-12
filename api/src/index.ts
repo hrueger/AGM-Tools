@@ -120,7 +120,7 @@ createConnection({
         // Set routes for static built frontend
         app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
 
-        const useHTTPS = process.env.NODE_ENV == "development";
+        const useHTTPS = false; //process.env.NODE_ENV == "development";
         let server;
         if (useHTTPS) {
             server = https.createServer({
@@ -141,7 +141,7 @@ createConnection({
         });
         server.listen(config.port, () => {
             // eslint-disable-next-line no-console
-            console.log(`Server started on port ${config.port}!`);
+            console.log(`Server started on localhost:${config.port}!`);
         });
     })
     // eslint-disable-next-line no-console

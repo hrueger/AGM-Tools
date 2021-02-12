@@ -25,7 +25,10 @@ class ProjectController {
             .leftJoinAndSelect("tasks.users", "taskUsers")
             .leftJoinAndSelect("tasks.creator", "taskCreator")
             .getMany() as any;
-        for (const project of projects) {
+        const filteredProjects = projects.filter((p: Project) => 
+            p.users.findIndex((u) => u.id == res.locals.jwtPayload.userId) !== -1
+        );
+        for (const project of filteredProjects) {
             const options: any = {
                 order: {
                     date: "ASC",
@@ -79,7 +82,7 @@ class ProjectController {
             };
             project.linkedFiles = undefined;
         }
-        res.send(projects);
+        res.send(filteredProjects);
     }
 
     public static newProject = async (req: Request, res: Response) => {
