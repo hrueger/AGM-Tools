@@ -33,9 +33,6 @@ jobs:
     - name: Install dependencies
       working-directory: api
       run: npm i
-    - name: Create config files
-      working-directory: api
-      run: npm run createFilesWithApiKeys
     - name: Lint
       working-directory: api
       run: npm run lint

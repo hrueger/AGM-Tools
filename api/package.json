@@ -85,7 +85,6 @@
     },
     "scripts": {
         "build": "tsc",
-        "createFilesWithApiKeys": "node src/scripts/generateSecretFilesWithKeys.js",
         "lint": "eslint . --ext .ts",
         "lint-fix": "eslint . --ext .ts --fix",
         "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",

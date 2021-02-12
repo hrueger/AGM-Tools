@@ -18,9 +18,6 @@ jobs:
     - name: Install dependencies
       working-directory: api
       run: npm i
-    - name: Create files with api keys
-      working-directory: api
-      run: npm run createFilesWithApiKeys
     - name: Build
       working-directory: api
       run: npm run build
@@ -41,7 +38,7 @@ jobs:
       run: npm i
     - name: Run create environment script
       working-directory: AGM-Tools
-      run: npm run createFilesWithApiKeys '${{ secrets.environment_ts_value }}' '${{ secrets.environment_prod_ts_value }}' '${{ secrets.firebase_messaging_sw_js_value }}' '${{ secrets.google_services_json_value }}'
+      run: npm run createFilesWithApiKeys '${{ secrets.firebase_messaging_sw_js_value }}' '${{ secrets.google_services_json_value }}'
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:web
@@ -61,7 +58,7 @@ jobs:
       run: npm i
     - name: Run create environment script
       working-directory: AGM-Tools
-      run: npm run createFilesWithApiKeys '${{ secrets.environment_ts_value }}' '${{ secrets.environment_prod_ts_value }}' '${{ secrets.firebase_messaging_sw_js_value }}' '${{ secrets.google_services_json_value }}'
+      run: npm run createFilesWithApiKeys '${{ secrets.firebase_messaging_sw_js_value }}' '${{ secrets.google_services_json_value }}'
     - name: Build
       working-directory: AGM-Tools
       run: npm run build:android
