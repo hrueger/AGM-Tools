@@ -12,7 +12,7 @@
     "main": "main.js",
     "version": "3.09.22",
     "scripts": {
-        "start": "ng serve --ssl --host 0.0.0.0",
+        "start": "ng serve --host 0.0.0.0",
         "build:web": "ng build --prod --base-href /",
         "build:android": "tns build android",
         "build:ios": "tns build ios",
