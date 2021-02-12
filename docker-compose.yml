@@ -7,9 +7,7 @@ agmtools:
     depends_on:
         - agmtoolsdb
     environment:
-        baseHref: /AGM-Tools/
-        apiUrl: https://your.domain.tld/AGM-Tools/api/
-        appUrl: https://your.domain.tld/AGM-Tools/#/
+        appUrl: https://your.domain.tld/
         documentServerUrl: https://onlyoffice.your.domain.tls:80
         firebase_apiKey: valueFor_firebase_apiKeys
         firebase_appId: valueFor_firebase_appId

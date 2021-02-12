@@ -11,7 +11,6 @@ import * as http from "http";
 import * as socketIO from "socket.io";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import { config } from "./config/config";
 import { Cache } from "./entity/Cache";
 import { Event } from "./entity/Event";
 import { File } from "./entity/File";
@@ -36,6 +35,16 @@ import { ChatStatus } from "./entity/ChatStatus";
 import { Device } from "./entity/Device";
 import { createMailDevices2984503475348 } from "./migration/2984503475348-createMailDevices";
 import UserController from "./controllers/UserController";
+import { getConfig } from "container-env";
+
+const config = getConfig(JSON.parse(fs.readFileSync(path.join(__dirname, "../../container-env.json")).toString()), "/app/agfree-config.json");
+
+export const PATHS = {
+    data: "/data",
+    temp: "/data/temp",
+    tutorials: "/data/tutorials",
+    templates: "/data/templates",
+}
 
 i18n.configure({
     defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
@@ -51,7 +60,7 @@ createConnection({
         migrationsDir: "src/migration",
         subscribersDir: "src/subscriber",
     },
-    database: config.database_name,
+    database: config.DB_NAME,
     entities: [
         Cache,
         ChatStatus,
@@ -70,7 +79,7 @@ createConnection({
         User,
         Usergroup,
     ],
-    host: config.database_host,
+    host: config.DB_HOST,
     logging: false,
     migrations: [
         createUsergroups1574018071536,
@@ -80,11 +89,11 @@ createConnection({
         createMailDevices2984503475348,
     ],
     migrationsRun: true,
-    password: config.database_password,
-    port: toInt(config.database_port),
+    password: config.DB_PASSWORD,
+    port: toInt(config.DB_PORT),
     synchronize: true,
     type: "mysql",
-    username: config.database_user,
+    username: config.DB_USER,
 })
     .then(async (connection) => {
         await connection.query("SET NAMES utf8mb4;");
@@ -92,21 +101,23 @@ createConnection({
         // eslint-disable-next-line no-console
         console.log("Migrations: ", await connection.runMigrations());
         // Check if all folders exist
-        if (!fs.existsSync(config.storagePath)) {
-            fs.mkdirSync(config.storagePath);
+        if (!fs.existsSync(PATHS.data)) {
+            fs.mkdirSync(PATHS.data);
         }
-        if (!fs.existsSync(config.templateFilesStoragePath)) {
-            fs.mkdirSync(config.templateFilesStoragePath);
+        if (!fs.existsSync(PATHS.templates)) {
+            fs.mkdirSync(PATHS.templates);
         }
-        if (!fs.existsSync(config.tempFilesStoragePath)) {
-            fs.mkdirSync(config.tempFilesStoragePath);
+        if (!fs.existsSync(PATHS.temp)) {
+            fs.mkdirSync(PATHS.temp);
         }
-        if (!fs.existsSync(config.tutorialFilesStoragePath)) {
-            fs.mkdirSync(config.tutorialFilesStoragePath);
+        if (!fs.existsSync(PATHS.tutorials)) {
+            fs.mkdirSync(PATHS.tutorials);
         }
         // Create a new express application instance
         const app = express();
 
+        app.locals.config = config;
+        
         // Call midlewares
         app.use(fileUpload());
         app.use(cors());
@@ -116,9 +127,6 @@ createConnection({
 
         // Set all routes from routes folder
         app.use("/api", routes);
-
-        // Set routes for static built frontend
-        app.use("/", express.static(path.join(__dirname, "../../frontend_build")));
 
         const useHTTPS = false; //process.env.NODE_ENV == "development";
         let server;
@@ -139,9 +147,19 @@ createConnection({
                 UserController.socketLogin(app, socket, data);
             });
         });
-        server.listen(config.port, () => {
+
+        // Set routes for static built frontend
+        app.use("/", express.static("/app/dist/frontend"));
+        app.use("*", express.static("/app/dist/frontend/index.html"));
+
+        let port = 80;
+        if (process.env.NODE_ENV?.trim() == "development") {
+            port = 3000;
+        }
+
+        server.listen(port, () => {
             // eslint-disable-next-line no-console
-            console.log(`Server started on localhost:${config.port}!`);
+            console.log(`Server started on port ${port}!`);
         });
     })
     // eslint-disable-next-line no-console

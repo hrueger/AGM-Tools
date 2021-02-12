@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import * as i18n from "i18n";
 import { getRepository } from "typeorm";
-import { config } from "../config/config";
 import { Setting } from "../entity/Setting";
 import { User } from "../entity/User";
 import { Device } from "../entity/Device";
@@ -24,7 +23,7 @@ class SettingsController {
         if (s && s[0] && s[0].value) {
             return s[0].value;
         }
-        return config.defaultLanguage;
+        return res.app.locals.config.DEFAULT_LANGUAGE;
     }
     public static listSettings = async (req: Request, res: Response) => {
         const settings = await SettingsController.getSettings(res);

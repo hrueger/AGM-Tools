@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { environment } from "../../../environments/environment";
+import { getApiUrl } from "../../_helpers/getApiUrl";
 import { RemoteService } from "../../_services/remote.service";
 
 @Component({
@@ -18,6 +18,6 @@ export class ShareComponent {
         });
     }
     public getSrc() {
-        return `${environment.apiUrl}files/share/${this.route.snapshot.params.link}/download`;
+        return `${getApiUrl()}files/share/${this.route.snapshot.params.link}/download`;
     }
 }

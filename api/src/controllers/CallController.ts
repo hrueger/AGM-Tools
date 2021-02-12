@@ -1,7 +1,6 @@
-import { Request, Response } from "express";
+/* import { Request, Response } from "express";
 import fetch from "node-fetch";
 import * as https from "https";
-import { config } from "../config/config";
 
 const httpsAgent = new https.Agent({
     rejectUnauthorized: false,
@@ -56,3 +55,4 @@ class CallController {
 }
 
 export default CallController;
+*/

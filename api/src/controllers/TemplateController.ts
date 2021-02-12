@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import * as path from "path";
 import { getRepository } from "typeorm";
-import { config } from "../config/config";
+import { PATHS } from "..";
 import { Template } from "../entity/Template";
 import { User } from "../entity/User";
 import { RequestWithFiles } from "../utils/iRequestWithFiles";
@@ -17,7 +17,7 @@ class TemplateController {
     }
 
     public static getFile = async (req: RequestWithFiles, res: Response) => {
-        res.sendFile(path.join(config.templateFilesStoragePath, req.params.filename));
+        res.sendFile(path.join(PATHS.templates, req.params.filename));
     }
 
     public static newTemplate = async (req: RequestWithFiles, res: Response) => {
@@ -25,7 +25,7 @@ class TemplateController {
         const { name, description, group } = req.body;
         const filenameparts = req.files.file.name.split(".");
         const filename = `${genID(15)}.${filenameparts[filenameparts.length - 1]}`;
-        req.files.file.mv(path.join(config.templateFilesStoragePath, filename));
+        req.files.file.mv(path.join(PATHS.templates, filename));
         if (!(description && name && group)) {
             res.status(400).send({ message: i18n.__("errors.notAllFieldsProvided") });
             return;

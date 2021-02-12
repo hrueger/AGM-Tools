@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
@@ -9,6 +8,7 @@ import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
 import { TinyConfigService } from "../../_services/tiny-config.service";
 import { MarkdownService } from "../../_services/markdown.service";
+import { getApiUrl } from "../../_helpers/getApiUrl";
 
 @Component({
     selector: "app-edit-tutorial",
@@ -67,7 +67,7 @@ export class EditTutorialComponent implements OnInit {
     }
 
     public getFileSrc(file) {
-        return `${environment.apiUrl}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${getApiUrl()}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     public addStep() {

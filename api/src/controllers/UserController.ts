@@ -9,7 +9,6 @@ import * as jwt from "jsonwebtoken";
 import { User } from "../entity/User";
 import { Usergroup } from "../entity/Usergroup";
 import { Device } from "../entity/Device";
-import { config } from "../config/config";
 
 
 class UserController {
@@ -18,7 +17,7 @@ class UserController {
             const token = d.token.replace("Bearer ", "");
             let jwtPayload;
             try {
-                jwtPayload = (jwt.verify(token, config.jwtSecret) as any);
+                jwtPayload = (jwt.verify(token, app.locals.config.JWT_SECRET) as any);
                 jwtPayload.userId = parseInt(jwtPayload.userId, undefined);
                 app.locals.sockets[jwtPayload.userId] = socket;
             } catch (error) {

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { getRepository, getTreeRepository } from "typeorm";
-import { config } from "../config/config";
+import { PATHS } from "..";
 import { File } from "../entity/File";
 
 export function genID(length = 16) {
@@ -29,7 +29,7 @@ export async function getFilePath(element: File) {
 
 export async function getStoragePath(element: File, projectId?: number) {
     if (element == undefined && projectId) {
-        return path.join(config.storagePath, projectId.toString());
+        return path.join(PATHS.data, projectId.toString());
     }
     if (!projectId) {
         if (!(element.project && element.project.id)) {
@@ -41,7 +41,7 @@ export async function getStoragePath(element: File, projectId?: number) {
             projectId = element.project.id;
         }
     }
-    return path.join(config.storagePath, projectId.toString(), await getFilePath(element));
+    return path.join(PATHS.data, projectId.toString(), await getFilePath(element));
 }
 
 export function deleteFolderRecursive(p: string) {

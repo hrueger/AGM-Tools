@@ -10,7 +10,6 @@ import { NodeSelectEventArgs, TreeViewComponent } from "@syncfusion/ej2-angular-
 import { EmitType, L10n } from "@syncfusion/ej2-base";
 import { SelectedEventArgs } from "@syncfusion/ej2-inputs";
 import { DatePipe } from "@angular/common";
-import { environment } from "../../../environments/environment";
 import { compare, SortEvent, SortableHeader } from "../../_helpers/sortable.directive";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
@@ -20,6 +19,7 @@ import { RemoteService } from "../../_services/remote.service";
 import { FilePickerModalComponent } from "../filePickerModal/filePickerModal";
 import { TinyConfigService } from "../../_services/tiny-config.service";
 import { MarkdownService } from "../../_services/markdown.service";
+import { getApiUrl } from "../../_helpers/getApiUrl";
 
 @Component({
     selector: "app-files",
@@ -34,7 +34,7 @@ export class FilesComponent implements OnInit {
     public imageSource: string;
     public pid: number;
     public settings = {
-        chunkSize: 1024 * 1024, saveUrl: `${environment.apiUrl}files/upload`,
+        chunkSize: 1024 * 1024, saveUrl: `${getApiUrl()}files/upload`,
     };
 
     public currentPath: any[] = [];
@@ -347,7 +347,7 @@ export class FilesComponent implements OnInit {
     }
 
     public getFileSrc(file, download = false) {
-        return `${environment.apiUrl}files/${file.id}${(download ? "/download" : "")}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${getApiUrl()}files/${file.id}${(download ? "/download" : "")}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     public getCurrentFileSrc() {
@@ -423,13 +423,13 @@ export class FilesComponent implements OnInit {
         this.modalService
             .open(shareModal);
         if (shareDropFolder) {
-            this.shareLink = `${environment.appUrl}upload/${item.id}/${item.dropFolder.title.replace(/ /g, "-")}`;
+            this.shareLink = `/upload/${item.id}/${item.dropFolder.title.replace(/ /g, "-")}`;
         } else {
             this.remoteService
                 .getNoCache("post", `files/${item.id}/share${shareDropFolder ? "DropFolder" : ""}`)
                 .subscribe((data) => {
                     if (data.status == true) {
-                        this.shareLink = `${environment.appUrl}share/${data.link}`;
+                        this.shareLink = `/share/${data.link}`;
                     }
                 });
         }
@@ -625,7 +625,7 @@ export class FilesComponent implements OnInit {
                         toolbarNoTabs: false,
                         zoom: 100,
                     },
-                    callbackUrl: `${environment.apiUrl}files/track`,
+                    callbackUrl: `${getApiUrl()}files/track`,
                     /* embedded: {
                     embedUrl: "https://example.com/embedded?doc=exampledocument1.docx",
                     fullscreenUrl: "https://example.com/embedded?doc=exampledocument1.docx#fullscreen",
@@ -672,7 +672,7 @@ export class FilesComponent implements OnInit {
                 type: "desktop",
                 width: "100%",
             },
-            script: `${environment.documentServerUrl}/web-apps/apps/api/documents/api.js`,
+            script: `/web-apps/apps/api/documents/api.js`,
         };
     }
 

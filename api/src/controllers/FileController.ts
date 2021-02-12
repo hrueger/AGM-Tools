@@ -8,7 +8,7 @@ import * as path from "path";
 import * as rimraf from "rimraf";
 import { getRepository, getTreeRepository, Repository } from "typeorm";
 import * as unzipper from "unzipper";
-import { config } from "../config/config";
+import { PATHS } from "..";
 import { File } from "../entity/File";
 import { Project } from "../entity/Project";
 import { Tag } from "../entity/Tag";
@@ -72,7 +72,7 @@ class FileController {
     }
 
     public static convert = async (req: Request, res: Response) => {
-        const convertServiceUrl = `${config.documentServerUrl}/ConvertService.ashx`;
+        const convertServiceUrl = `${res.app.locals.config.DOCUMENT_SERVER_URL}/ConvertService.ashx`;
         fetch(convertServiceUrl, {
             body: JSON.stringify({
                 async: false,
@@ -388,7 +388,7 @@ class FileController {
                     res.status(400).send({ message: i18n.__("errors.notAllFieldsProvided") });
                     return;
                 }
-                const tempSaveDir = path.join(config.tempFilesStoragePath,
+                const tempSaveDir = path.join(PATHS.temp,
                     req.files.chunkFile.name);
                 if (!fs.existsSync(tempSaveDir)) {
                     fs.mkdirSync(tempSaveDir);

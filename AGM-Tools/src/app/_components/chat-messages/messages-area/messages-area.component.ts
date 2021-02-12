@@ -7,7 +7,7 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { Lightbox } from "ngx-lightbox";
-import { environment } from "../../../../environments/environment";
+import { getApiUrl } from "../../../_helpers/getApiUrl";
 import { AlertService } from "../../../_services/alert.service";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { FastTranslateService } from "../../../_services/fast-translate.service";
@@ -74,7 +74,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getImageSrc(imageName, thumbnail = true) {
-        return `${environment.apiUrl
+        return `${getApiUrl()
         }?getAttachment=${
             imageName
         }&token=${
@@ -154,7 +154,7 @@ export class MessagesAreaComponent implements OnInit {
     }
 
     public getLocationImageSrc(message) {
-        return `${environment.apiUrl}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${getApiUrl()}chats/mapProxy/${message.locationLat},${message.locationLong}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     public openLocationInNewTab(message) {

@@ -10,7 +10,7 @@
         }
     },
     "main": "main.js",
-    "version": "3.09.22",
+    "version": "3.10.0",
     "scripts": {
         "start": "ng serve --host 0.0.0.0",
         "build:web": "ng build --prod --base-href /",
@@ -46,8 +46,8 @@
         "@angular/platform-browser": "9.1.7",
         "@angular/platform-browser-dynamic": "9.1.7",
         "@angular/router": "9.1.7",
-        "@fortawesome/fontawesome-free": "5.13.0",
         "@ctrl/ngx-emoji-mart": "3.1.0",
+        "@fortawesome/fontawesome-free": "5.13.0",
         "@nativescript/theme": "2.3.3",
         "@ng-bootstrap/ng-bootstrap": "6.1.0",
         "@ngx-translate/core": "^12.1.2",

@@ -1,10 +1,10 @@
-import { environment } from "../../../environments/environment";
+import { getApiUrl } from "../../_helpers/getApiUrl";
 
 export class ChatComponentCommon {
     public getAvatarSource(chat) {
         if (chat.isUser) {
-            return `${environment.apiUrl}users/${chat.id}`;
+            return `${getApiUrl()}users/${chat.id}`;
         }
-        return `${environment.apiUrl}projects/${chat.id}`;
+        return `${getApiUrl()}projects/${chat.id}`;
     }
 }

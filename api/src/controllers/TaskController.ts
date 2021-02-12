@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import * as Markdown from "markdown-it";
 import { getRepository } from "typeorm";
-import { config } from "../config/config";
 import { Project } from "../entity/Project";
 import { Task } from "../entity/Task";
 import { User } from "../entity/User";
@@ -41,9 +40,9 @@ class TaskController {
             return;
         }
         const md = new Markdown();
-        sendMultipleMails(task.users.map((u) => u.email), {
+        sendMultipleMails(req.app.locals.config, task.users.map((u) => u.email), {
             btnText: i18n.__("tasks.viewTask"),
-            btnUrl: `${config.url}projects/${task.project.id}`,
+            btnUrl: `${res.app.locals.config.URL}projects/${task.project.id}`,
             cardSubtitle: "",
             cardTitle: i18n.__("tasks.dueOn").replace("%s", task.due.toLocaleDateString()),
             content: md.render(task.description),

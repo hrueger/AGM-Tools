@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import * as i18n from "i18n";
 import * as jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
-import { config } from "../config/config";
 import SettingsController from "../controllers/SettingsController";
 import { User } from "../entity/User";
 
@@ -21,7 +20,7 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
 
     // Try to validate the token and get data
     try {
-        jwtPayload = (jwt.verify(token, config.jwtSecret) as any);
+        jwtPayload = (jwt.verify(token, res.app.locals.config.JWT_SECRET) as any);
         res.locals.jwtPayload = jwtPayload;
         res.locals.jwtPayload.userId = parseInt(res.locals.jwtPayload.userId, undefined);
         const userRepository = getRepository(User);
@@ -41,7 +40,7 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
     // The token is valid for 12 hours, because of long uploads
     // We want to send a new token on every request
     const { userId, username } = jwtPayload;
-    const newToken = jwt.sign({ userId, username }, config.jwtSecret, {
+    const newToken = jwt.sign({ userId, username }, res.app.locals.config.JWT_SECRET, {
         expiresIn: "12h",
     });
     res.setHeader("Authorization", newToken);

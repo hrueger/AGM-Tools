@@ -73,16 +73,6 @@ export class DashboardComponent implements OnInit {
         clearInterval(this.countdownInterval);
     }
 
-    public update() {
-        this.remoteService.get("post", "update").subscribe(() => {
-            this.updating = true;
-        });
-        setTimeout(() => {
-            // eslint-disable-next-line no-restricted-globals
-            location.reload();
-        }, 10000);
-    }
-
     public initChart() {
         this.remoteService.get("get", "dashboard/spaceChartData").subscribe((data) => {
             if (data) {
@@ -123,8 +113,8 @@ export class DashboardComponent implements OnInit {
         });
         this.remoteService.get("get", "dashboard/version").subscribe((data) => {
             if (data) {
-                this.version = data.data;
-                this.lastUpdated.version = data.data.time;
+                this.version = data.version;
+                this.lastUpdated.version = new Date();
             }
         });
         this.remoteService

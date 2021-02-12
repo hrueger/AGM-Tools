@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
-import { environment } from "../../environments/environment";
+import { getApiUrl } from "../_helpers/getApiUrl";
 import { AlertService } from "./alert.service";
 import { CacheService } from "./cache.service";
 
@@ -93,7 +93,7 @@ export class RemoteService {
             }
         }
         return this.http
-            .post<any>(`${environment.apiUrl}${url}`, formData, {
+            .post<any>(`${getApiUrl()}${url}`, formData, {
                 /* reportProgress: true,
                 observe: "events", */
                 headers: new HttpHeaders({
@@ -109,19 +109,19 @@ export class RemoteService {
     private getRequest(type: string, path: string, args: any): Observable<any> {
         let req;
         if (type == "get") {
-            req = this.http.get<any>(`${environment.apiUrl}${path}`, {
+            req = this.http.get<any>(`${getApiUrl()}${path}`, {
                 ...args,
             });
         } else if (type == "post") {
-            req = this.http.post<any>(`${environment.apiUrl}${path}`, {
+            req = this.http.post<any>(`${getApiUrl()}${path}`, {
                 ...args,
             });
         } else if (type == "put") {
-            req = this.http.put<any>(`${environment.apiUrl}${path}`, {
+            req = this.http.put<any>(`${getApiUrl()}${path}`, {
                 ...args,
             });
         } else if (type == "delete") {
-            req = this.http.delete<any>(`${environment.apiUrl}${path}`, {
+            req = this.http.delete<any>(`${getApiUrl()}${path}`, {
                 ...args,
             });
         }

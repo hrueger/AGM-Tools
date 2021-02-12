@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
+import * as findUp from "find-up"
 import * as getFolderSize from "get-folder-size";
-import * as http from "http";
+import * as fs from "fs";
 import * as i18n from "i18n";
 import { getRepository, MoreThan } from "typeorm";
-import { config } from "../config/config";
+import { PATHS } from "..";
 import { Cache } from "../entity/Cache";
 import { Event } from "../entity/Event";
 import { Notification } from "../entity/Notification";
@@ -39,30 +40,9 @@ class DashboardController {
     }
     public static version = async (req: Request, res: Response) => {
         try {
-            let data = JSON.parse(await new Promise((resolve, reject) => {
-                http.get("http://localhost:8314", (d) => {
-                    let body = "";
-                    d.on("data", (chunk) => {
-                        body += chunk;
-                    });
-                    d.on("end", () => {
-                        resolve(body);
-                    });
-                }).on("error", (er) => {
-                    reject(er);
-                });
-            }));
-            if (!data) {
-                data = {};
-            }
-            if (!data.data) {
-                data.data = {};
-            }
-            data.data.currentVersion = "1.0.0";
-            // JSON.parse(fs.readFileSync(await findUp("package.json")).toString()).version;
-            res.send(data);
+            res.send({version: JSON.parse(fs.readFileSync(await findUp("package.json")).toString()).version});
         } catch (e) {
-            res.status(500).send({ message: e.toString() });
+            res.send({ version: "unknown" });
         }
     }
     public static notifications = async (req: Request, res: Response) => {
@@ -131,9 +111,9 @@ class DashboardController {
         let lastUpdated;
         if (update || !diskSpaceUsed || !diskSpaceUsed.value
             || DashboardController.daysBetween(diskSpaceUsed.updatedAt, new Date())
-            > toInt(config.cacheExpireDays)) {
+            > toInt(res.app.locals.config.CACHE_EXPIRY_DAYS)) {
             const size = await new Promise<number>((resolve, reject) => {
-                getFolderSize(config.storagePath, (err, s) => {
+                getFolderSize(PATHS.data, (err, s) => {
                     if (err) {
                         reject(err);
                     } else {
@@ -154,11 +134,11 @@ class DashboardController {
             lastUpdated = diskSpaceUsed.updatedAt;
         }
         res.send({
-            free: (toInt(config.availableDiskSpaceInGB) * 1024)
+            free: (toInt(res.app.locals.config.AVAILABLE_DISKSPACE) * 1024)
                 - Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
             lastUpdated,
             system: 0,
-            total: toInt(config.availableDiskSpaceInGB) * 1024,
+            total: toInt(res.app.locals.config.AVAILABLE_DISKSPACE) * 1024,
             used: Math.round(parseInt(diskSpaceUsed.value, undefined) / 1024 / 1024),
         });
     }

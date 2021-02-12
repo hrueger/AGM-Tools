@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component } from "@angular/core";
 import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
-import { environment } from "../../../environments/environment";
 import { AlertService } from "../../_services/alert.service";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
 import { RemoteService } from "../../_services/remote.service";
+import { getApiUrl } from "../../_helpers/getApiUrl";
 
 @Component({
     selector: "app-settings",
@@ -38,7 +38,7 @@ export class SettingsComponent {
     }
 
     public replaceAPIUrl(url: string) {
-        return `${url.replace("{{apiUrl}}", environment.apiUrl)
+        return `${url.replace("{{apiUrl}}", getApiUrl())
         }?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 

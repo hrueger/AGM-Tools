@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import * as Markdown from "markdown-it";
 import { getRepository } from "typeorm";
-import { config } from "../config/config";
 import { Notification } from "../entity/Notification";
 import { User } from "../entity/User";
 import { sendMultipleMails } from "../utils/mailer";
@@ -55,9 +54,9 @@ class NotificationController {
         try {
             id = (await notificationRepository.save(notification)).id;
             const md = new Markdown();
-            sendMultipleMails(notification.receivers.map((u) => u.email), {
+            sendMultipleMails(req.app.locals.config, notification.receivers.map((u) => u.email), {
                 btnText: i18n.__("notifications.viewNotification"),
-                btnUrl: `${config.url}`,
+                btnUrl: `${res.app.locals.config.URL}`,
                 cardSubtitle: i18n.__("notifications.goToDashboard"),
                 cardTitle: "",
                 content: md.render(notification.content),

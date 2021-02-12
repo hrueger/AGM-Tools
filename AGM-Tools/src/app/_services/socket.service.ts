@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import * as socketIO from "socket.io-client";
 import { BehaviorSubject } from "rxjs";
 import { Router } from "@angular/router";
-import { environment } from "../../environments/environment";
 import { AlertService } from "./alert.service";
+import { getApiUrl } from "../_helpers/getApiUrl";
 
 @Injectable()
 export class SocketService {
@@ -13,7 +13,7 @@ export class SocketService {
     constructor(private alertService: AlertService, private router: Router) {}
 
     public init(token) {
-        this.socket = socketIO(`${environment.apiUrl}live`);
+        this.socket = socketIO(`${getApiUrl()}live`);
         this.socket.emit("test", "servus!");
         this.socket.on("connect", () => {
             this.socketAvailable.next(true);

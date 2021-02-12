@@ -2,25 +2,24 @@ import * as emailTemplates from "email-templates";
 import * as i18n from "i18n";
 import * as nodeMailer from "nodemailer";
 import * as path from "path";
-import { config } from "../config/config";
 import { toInt } from "./utils";
 
-export function sendMail(to: string, data: {summary: string;
+export function sendMail(config, to: string, data: {summary: string;
     title: string; subtitle: string; secondTitle: string; content: string; subject: string;
     cardTitle: string; cardSubtitle: string; btnText: string; btnUrl: string;}, template = "base") {
     const locals: any = data;
     locals.sentTo = i18n.__("mail.sentTo").replace("%s", to);
     locals.unsubscribe = i18n.__("mail.unsubscribe");
-    locals.unsubscribeUrl = `${config.url}settings`;
+    locals.unsubscribeUrl = `${config.URL}settings`;
     locals.info = i18n.__("mail.info");
     return new Promise<any>((resolve, reject) => {
         const transporter = nodeMailer.createTransport({
             auth: {
-                pass: config.email_auth_pass,
-                user: config.email_auth_user,
+                user: config.MAIL_SERVER_USER,
+                pass: config.MAIL_SERVER_PASSWORD,
             },
-            host: config.email_host,
-            port: toInt(config.email_port),
+            host: config.MAIL_SENDER_ADDRESS,
+            port: toInt(config.MAIL_SERVER_PORT),
         });
         // eslint-disable-next-line new-cap
         const email = new emailTemplates({
@@ -50,17 +49,17 @@ export function sendMail(to: string, data: {summary: string;
     });
 }
 
-export function sendMultipleMails(to: string[], data: {summary: string;
+export function sendMultipleMails(config, to: string[], data: {summary: string;
     title: string; subtitle: string; secondTitle: string; content: string; subject: string;
     cardTitle: string; cardSubtitle: string; btnText: string; btnUrl: string;}, template = "base") {
     for (const recipient of to) {
-        sendMail(recipient, data, template);
+        sendMail(config, recipient, data, template);
     }
 }
 
-export function sendMailIfAgreed(to: string, data: {summary: string;
+export function sendMailIfAgreed(config, to: string, data: {summary: string;
     title: string; subtitle: string; secondTitle: string; content: string; subject: string;
     cardTitle: string; cardSubtitle: string; btnText: string; btnUrl: string;}, template = "base") {
     // ToDo check if user agreed!
-    sendMail(to, data, template);
+    sendMail(config, to, data, template);
 }

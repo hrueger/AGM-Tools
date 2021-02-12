@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { environment } from "../../../../environments/environment";
+import { getApiUrl } from "../../../_helpers/getApiUrl";
 
 @Component({
     selector: "username",
@@ -10,6 +10,6 @@ export class UsernameComponent {
     @Input() public user: any;
 
     public getAvatarSource(user) {
-        return `${environment.apiUrl}users/${user.id}`;
+        return `${getApiUrl()}users/${user.id}`;
     }
 }

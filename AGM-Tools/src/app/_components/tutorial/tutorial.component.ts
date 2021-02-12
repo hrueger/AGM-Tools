@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Lightbox } from "ngx-lightbox";
-import { environment } from "../../../environments/environment";
+import { getApiUrl } from "../../_helpers/getApiUrl";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { FastTranslateService } from "../../_services/fast-translate.service";
 import { NavbarService } from "../../_services/navbar.service";
@@ -72,7 +72,7 @@ export class TutorialComponent implements OnInit {
     }
 
     public getFileSrc(file) {
-        return `${environment.apiUrl}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
+        return `${getApiUrl()}tutorials/files/${file}?authorization=${this.authenticationService.currentUserValue.token}`;
     }
 
     private async gotNewTutorialData(tutorial: any) {

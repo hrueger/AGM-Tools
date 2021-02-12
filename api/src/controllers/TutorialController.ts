@@ -4,11 +4,11 @@ import * as i18n from "i18n";
 import * as path from "path";
 import { getRepository } from "typeorm";
 import * as fs from "fs";
-import { config } from "../config/config";
 import { Tutorial } from "../entity/Tutorial";
 import { TutorialStep } from "../entity/TutorialStep";
 import { User } from "../entity/User";
 import { genID } from "../utils/utils";
+import { PATHS } from "..";
 
 class TutorialController {
     public static listAll = async (req: Request, res: Response) => {
@@ -206,7 +206,7 @@ class TutorialController {
                 const imageBuffer = Buffer.from(req.body.file.replace(beginning, ""), "base64");
                 const ext = mime.split("/")[1];
                 const newFilename = `${genID()}.${ext}`;
-                fs.writeFileSync(path.join(config.tutorialFilesStoragePath, newFilename),
+                fs.writeFileSync(path.join(PATHS.tutorials, newFilename),
                     imageBuffer);
                 res.send({ status: true, image: newFilename });
                 return;
@@ -217,7 +217,7 @@ class TutorialController {
 
     public static viewFile = async (req: Request, res: Response) => {
         res.sendFile(path.join(
-            config.tutorialFilesStoragePath, path.basename(req.params.filename),
+            PATHS.tutorials, path.basename(req.params.filename),
         ));
     }
 }

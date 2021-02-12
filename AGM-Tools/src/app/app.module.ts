@@ -89,7 +89,7 @@ import { DropFolderComponent } from "./_components/drop-folder/drop-folder.compo
 registerLocaleData(localeDe);
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-    return new TranslateHttpLoader(http, `${environment.appUrl.replace("/#/", "")}/assets/i18n/`, ".json");
+    return new TranslateHttpLoader(http, `/assets/i18n/`, ".json");
 }
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -148,13 +148,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ],
     imports: [
         AngularFireModule.initializeApp({
-            apiKey: environment.firebase_apiKey,
-            authDomain: environment.firebase_authDomain,
-            databaseURL: environment.firebase_databaseURL,
-            projectId: environment.firebase_projectId,
-            storageBucket: environment.firebase_storageBucket,
-            messagingSenderId: environment.firebase_messagingSenderId,
-            appId: environment.firebase_appId,
+            apiKey: "", // environment.firebase_apiKey,
+            authDomain: "", // environment.firebase_authDomain,
+            databaseURL: "", // environment.firebase_databaseURL,
+            projectId: "", // environment.firebase_projectId,
+            storageBucket: "", // environment.firebase_storageBucket,
+            messagingSenderId: "", // environment.firebase_messagingSenderId,
+            appId: "", // environment.firebase_appId,
         }),
         AngularFireDatabaseModule,
         AngularFireAuthModule,
@@ -164,7 +164,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         TreeViewModule,
         UiSwitchModule.forRoot({}),
         DeviceDetectorModule.forRoot(),
-        RouterModule.forRoot(routes, { useHash: true, enableTracing: false }),
+        RouterModule.forRoot(routes, { enableTracing: false }),
         ContextMenuModule.forRoot({
             useBootstrap4: true,
         }),
@@ -213,7 +213,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         MarkdownService,
         {
             provide: LOCALE_ID,
-            useValue: `${environment.defaultLanguage}-${environment.defaultLanguage.toUpperCase}`,
+            useValue: `de-DE`,
         },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: RenewJwtTokenInterceptor, multi: true },

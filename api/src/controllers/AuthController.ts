@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import * as i18n from "i18n";
 import * as jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
-import { config } from "../config/config";
 import { User } from "../entity/User";
 import { sendMail } from "../utils/mailer";
 import { genID } from "../utils/utils";
@@ -37,7 +36,7 @@ class AuthController {
         }
         const token = jwt.sign(
             { userId: user.id, username: user.username },
-            config.jwtSecret,
+            res.app.locals.config.JWT_SECRET,
             { expiresIn: "12h" },
         );
 
@@ -71,8 +70,8 @@ class AuthController {
             res.status(500).send({ message: i18n.__("errors.errorWhileSavingToken") });
             return;
         }
-        const link = `${config.url}resetPassword/${token}`;
-        sendMail(req.params.email, {
+        const link = `${req.app.locals.config.URL}resetPassword/${token}`;
+        sendMail(req.app.locals.config, req.params.email, {
             btnText: i18n.__("resetPassword.resetPassword"),
             btnUrl: link,
             cardSubtitle: "",

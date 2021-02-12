@@ -1,0 +1,151 @@
+{
+    "container": {
+        "name": "agm-tools",
+        "scope": "hrueger"
+    },
+    "variables": [{
+            "name": "DB_NAME",
+            "description": "The name of the database",
+            "default": "agmtools",
+            "type": "string"
+        },
+        {
+            "name": "DB_USER",
+            "description": "The database user",
+            "default": "root",
+            "type": "string"
+        },
+        {
+            "name": "DB_PASSWORD",
+            "description": "The database password",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "DB_PORT",
+            "description": "The port of the database server",
+            "default": 3306,
+            "type": "number"
+        },
+        {
+            "name": "DB_HOST",
+            "description": "The database server hostname or ip address",
+            "default": "localhost",
+            "type": "string"
+        },
+        {
+            "name": "JWT_SECRET",
+            "description": "The JWT secret, just choose a random string",
+            "default": "rwiuerslixalsdkxaxsdjxald",
+            "type": "string"
+        },
+        {
+            "name": "MAIL_SERVER_HOST",
+            "description": "The host of the SMTP Server to use",
+            "default": "localhost",
+            "type": "string"
+        },
+        {
+            "name": "MAIL_SERVER_PORT",
+            "description": "The port of the SMTP Server to use",
+            "default": "25",
+            "type": "number"
+        },
+        {
+            "name": "MAIL_SERVER_USER",
+            "description": "The user of the SMTP Server to use",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "MAIL_SERVER_PASSWORD",
+            "description": "The password of the SMTP Server to use",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "MAIL_SENDER_ADDRESS",
+            "description": "The sender address to use for sending emails.",
+            "default": "no-reply.agmtools@hrueger.github.io",
+            "type": "string"
+        },
+        {
+            "name": "URL",
+            "description": "The url where AGM-Tools will be available. It must end with a slash.",
+            "default": "http://localhost:4200/",
+            "type": "string"
+        },
+        {
+            "name": "DOCUMENT_SERVER_URL",
+            "description": "The url of the ONLYOFFICE DocumentServer",
+            "default": "http://localhost:8080",
+            "type": "string"
+        },
+        {
+            "name": "AVAILABLE_DISKSPACE",
+            "description": "The available disk space",
+            "default": 100,
+            "type": "number"
+        },
+        {
+            "name": "FIREBASE_API_KEY",
+            "description": "",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "FIREBASE_APP_ID",
+            "description": "",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "FIREBASE_AUTH_DOMAIN",
+            "description": "",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "FIREBASE_DATABASE_URL",
+            "description": "",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "FIREBASE_MESSAGING_SENDER_ID",
+            "description": "",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "FIREBASE_PROJECT_ID",
+            "description": "",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "FIREBASE_STORAGE_BUCKET",
+            "description": "",
+            "default": "",
+            "type": "string"
+        },
+        {
+            "name": "CACHE_EXPRRY_DAYS",
+            "description": "",
+            "default": 1,
+            "type": "number"
+        },
+        {
+            "name": "DEFAULT_LANGUAGE",
+            "description": "",
+            "default": "de",
+            "type": "string"
+        },
+        {
+            "name": "MAPBOX_API_KEY",
+            "description": "",
+            "default": "",
+            "type": "string"
+        }
+    ]
+}

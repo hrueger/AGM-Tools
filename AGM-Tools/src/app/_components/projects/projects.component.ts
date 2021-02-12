@@ -8,7 +8,6 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { environment } from "../../../environments/environment";
 import { Project } from "../../_models/project.model";
 import { User } from "../../_models/user.model";
 import { AlertService } from "../../_services/alert.service";
@@ -19,6 +18,7 @@ import { FilePickerModalComponent } from "../filePickerModal/filePickerModal";
 import { PickerModalComponent } from "../pickerModal/pickerModal";
 import { TinyConfigService } from "../../_services/tiny-config.service";
 import { MarkdownService } from "../../_services/markdown.service";
+import { getApiUrl } from "../../_helpers/getApiUrl";
 
 @Component({
     selector: "app-projects",
@@ -167,7 +167,7 @@ export class ProjectsComponent implements OnInit {
     }
 
     public getProjectImageSrc(project) {
-        return `${environment.apiUrl}projects/${project.id}`;
+        return `${getApiUrl()}projects/${project.id}`;
     }
 
     public joinWithComma(items, prop) {

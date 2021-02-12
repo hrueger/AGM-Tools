@@ -4,7 +4,6 @@ import fetch from "node-fetch";
 import {
     Brackets, getRepository, Repository, MoreThan,
 } from "typeorm";
-import { config } from "../config/config";
 import { Message } from "../entity/Message";
 import { Project } from "../entity/Project";
 import { User } from "../entity/User";
@@ -175,7 +174,7 @@ class ChatController {
         const parts = req.params.location.split(",");
         const location = `${parts[1]},${parts[0]}`;
         fetch(`https://api.mapbox.com/v4/mapbox.streets/pin-l-marker+ff0000(\
-        ${location})/${location},15/600x300.png?access_token=${config.mapboxApiKey}`).then((r) => r.body.pipe(res));
+        ${location})/${location},15/600x300.png?access_token=${res.app.locals.config.MAPBOX_API_KEY}`).then((r) => r.body.pipe(res));
     }
 
     private static sendMessage = async (req: Request,

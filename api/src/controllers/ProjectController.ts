@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as i18n from "i18n";
 import * as path from "path";
 import { getRepository } from "typeorm";
-import { config } from "../config/config";
+import { PATHS } from "..";
 import { File } from "../entity/File";
 import { Message } from "../entity/Message";
 import { Project } from "../entity/Project";
@@ -113,7 +113,7 @@ class ProjectController {
             return;
         }
 
-        fs.mkdirSync(path.join(config.storagePath, id.toString()));
+        fs.mkdirSync(path.join(PATHS.data, id.toString()));
         res.status(200).send({ status: true });
     }
 
