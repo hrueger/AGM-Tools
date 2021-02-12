@@ -7,7 +7,7 @@ export class TinyConfigService {
     public get() {
         return {
             // eslint-disable-next-line @typescript-eslint/camelcase
-            base_url: `/assets/tinymce`,
+            base_url: "/assets/tinymce",
             suffix: ".min",
             statusbar: false,
             menubar: false,

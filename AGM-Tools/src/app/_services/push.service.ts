@@ -12,13 +12,13 @@ export class PushService {
         private electronService: ElectronService,
         private deviceDetectorService: DeviceDetectorService,
     ) {
-        /*this.angularFireMessaging.messaging.subscribe(
+        /* this.angularFireMessaging.messaging.subscribe(
             (messaging) => {
                 messaging.onMessage = messaging.onMessage.bind(messaging);
                 messaging.onTokenRefresh = messaging.onTokenRefresh.bind(messaging);
                 messaging.setBackgroundMessageHandler = () => new Promise(() => undefined);
             },
-        );*/
+        ); */
     }
 
     public init() {

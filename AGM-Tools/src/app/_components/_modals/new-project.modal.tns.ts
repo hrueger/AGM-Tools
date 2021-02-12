@@ -16,7 +16,6 @@ export class Project {
     }
 }
 
-
 @Component({
     selector: "new-project-modal",
     templateUrl: "new-project.modal.tns.html",

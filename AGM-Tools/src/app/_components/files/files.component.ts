@@ -447,7 +447,7 @@ export class FilesComponent implements OnInit {
                         return i;
                     });
                 }
-            })
+            });
         }
     }
 
@@ -672,7 +672,7 @@ export class FilesComponent implements OnInit {
                 type: "desktop",
                 width: "100%",
             },
-            script: `/web-apps/apps/api/documents/api.js`,
+            script: "/web-apps/apps/api/documents/api.js",
         };
     }
 

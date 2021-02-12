@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import isElectron from "is-electron";
 import { FastTranslateService } from "./fast-translate.service";
 
-
 @Injectable({
     providedIn: "root",
 })

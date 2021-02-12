@@ -25,9 +25,7 @@ class ProjectController {
             .leftJoinAndSelect("tasks.users", "taskUsers")
             .leftJoinAndSelect("tasks.creator", "taskCreator")
             .getMany() as any;
-        const filteredProjects = projects.filter((p: Project) => 
-            p.users.findIndex((u) => u.id == res.locals.jwtPayload.userId) !== -1
-        );
+        const filteredProjects = projects.filter((p: Project) => p.users.findIndex((u) => u.id == res.locals.jwtPayload.userId) !== -1);
         for (const project of filteredProjects) {
             const options: any = {
                 order: {

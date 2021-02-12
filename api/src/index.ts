@@ -11,6 +11,7 @@ import * as http from "http";
 import * as socketIO from "socket.io";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
+import { getConfig } from "container-env";
 import { Cache } from "./entity/Cache";
 import { Event } from "./entity/Event";
 import { File } from "./entity/File";
@@ -35,7 +36,6 @@ import { ChatStatus } from "./entity/ChatStatus";
 import { Device } from "./entity/Device";
 import { createMailDevices2984503475348 } from "./migration/2984503475348-createMailDevices";
 import UserController from "./controllers/UserController";
-import { getConfig } from "container-env";
 
 const config = getConfig(JSON.parse(fs.readFileSync(path.join(__dirname, "../../container-env.json")).toString()), "/app/agfree-config.json");
 
@@ -44,7 +44,7 @@ export const PATHS = {
     temp: "/data/temp",
     tutorials: "/data/tutorials",
     templates: "/data/templates",
-}
+};
 
 i18n.configure({
     defaultLocale: config.defaultLanguage ? config.defaultLanguage : "en",
@@ -117,7 +117,7 @@ createConnection({
         const app = express();
 
         app.locals.config = config;
-        
+
         // Call midlewares
         app.use(fileUpload());
         app.use(cors());
@@ -128,7 +128,7 @@ createConnection({
         // Set all routes from routes folder
         app.use("/api", routes);
 
-        const useHTTPS = false; //process.env.NODE_ENV == "development";
+        const useHTTPS = false; // process.env.NODE_ENV == "development";
         let server;
         if (useHTTPS) {
             server = https.createServer({

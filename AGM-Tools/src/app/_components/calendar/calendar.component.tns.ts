@@ -24,7 +24,6 @@ export class CustomEvent extends CalendarEvent {
     }
 }
 
-
 export class Colors {
     public static names = {
         aqua: "#00ffff",
@@ -82,7 +81,6 @@ export class Colors {
         return result;
     }
 }
-
 
 @Component({
     selector: "app-calendar",

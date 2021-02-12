@@ -1,6 +1,5 @@
 import { StreamManager } from "openvidu-browser";
 
-
 /**
  * Packs all the information about the user
  */

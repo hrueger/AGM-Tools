@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as findUp from "find-up"
+import * as findUp from "find-up";
 import * as getFolderSize from "get-folder-size";
 import * as fs from "fs";
 import * as i18n from "i18n";
@@ -40,7 +40,7 @@ class DashboardController {
     }
     public static version = async (req: Request, res: Response) => {
         try {
-            res.send({version: JSON.parse(fs.readFileSync(await findUp("package.json")).toString()).version});
+            res.send({ version: JSON.parse(fs.readFileSync(await findUp("package.json")).toString()).version });
         } catch (e) {
             res.send({ version: "unknown" });
         }

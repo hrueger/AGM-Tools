@@ -90,7 +90,6 @@ class SettingsController {
         res.send({ status: true });
     }
 
-
     public static language = async (req: Request, res: Response) => {
         res.send({ lang: await SettingsController.getUserLanguage(res) });
     }

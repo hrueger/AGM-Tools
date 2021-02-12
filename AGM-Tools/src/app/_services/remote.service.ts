@@ -165,7 +165,6 @@ export class RemoteService {
             return false;
         }
 
-
         for (let i = 0; i < aProps.length; i++) {
             const propName = aProps[i];
 

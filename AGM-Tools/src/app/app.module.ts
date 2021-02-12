@@ -85,11 +85,10 @@ import { UserVideoComponent } from "./_components/_helpers/user-video/user-video
 import { OpenViduVideoComponent } from "./_components/_helpers/ov-video/ov-video.component";
 import { DropFolderComponent } from "./_components/drop-folder/drop-folder.component";
 
-
 registerLocaleData(localeDe);
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-    return new TranslateHttpLoader(http, `/assets/i18n/`, ".json");
+    return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
 }
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -213,7 +212,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         MarkdownService,
         {
             provide: LOCALE_ID,
-            useValue: `de-DE`,
+            useValue: "de-DE",
         },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: RenewJwtTokenInterceptor, multi: true },

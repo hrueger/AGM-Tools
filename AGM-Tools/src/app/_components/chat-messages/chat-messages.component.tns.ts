@@ -27,7 +27,6 @@ import { AuthenticationService } from "../../_services/authentication.service";
 import { RemoteService } from "../../_services/remote.service";
 import { ContactPickerComponent } from "../_modals/contact-picker.modal.tns";
 
-
 function progressHandler(): void {
     //
 }
@@ -44,7 +43,6 @@ function completeHandler(): void {
 function cancelledHandler(): void {
     //
 }
-
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

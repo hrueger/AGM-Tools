@@ -7,7 +7,6 @@ import { AuthenticationService } from "../../_services/authentication.service";
 import { UserModel } from "./user-model";
 import { AlertService } from "../../_services/alert.service";
 
-
 interface Device {
     label: string;
     device: string;
@@ -125,7 +124,6 @@ export class CallComponent {
     private updateMainStreamManager(streamManager: StreamManager) {
         this.mainStreamManager = streamManager;
     }
-
 
     private getToken(): Promise<string> {
         return this.createSession(this.mySessionId).then(

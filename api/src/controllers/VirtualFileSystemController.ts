@@ -12,7 +12,6 @@ const itemTypes: any = {
     folder: 1,
 };
 
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getNewGuid() {
     return "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, (c) => {

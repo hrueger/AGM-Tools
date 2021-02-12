@@ -16,7 +16,6 @@ import { User } from "../entity/User";
 import { RequestWithFiles } from "../utils/iRequestWithFiles";
 import { deleteFolderRecursive, genID, getStoragePath } from "../utils/utils";
 
-
 function registerInDB(dir, parentId: number,
     creator: User, project: Project, fileRepo: Repository<File>) {
     fs.readdir(dir, (err, files) => {
@@ -47,7 +46,6 @@ function registerInDB(dir, parentId: number,
         });
     });
 }
-
 
 class FileController {
     public static listAll = async (req: Request, res: Response) => {

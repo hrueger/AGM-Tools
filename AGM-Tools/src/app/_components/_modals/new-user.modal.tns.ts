@@ -17,7 +17,6 @@ export class User {
     }
 }
 
-
 @Component({
     selector: "new-user-mdoal",
     templateUrl: "new-user.modal.tns.html",

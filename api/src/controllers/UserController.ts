@@ -10,7 +10,6 @@ import { User } from "../entity/User";
 import { Usergroup } from "../entity/Usergroup";
 import { Device } from "../entity/Device";
 
-
 class UserController {
     static async socketLogin(app: Express, socket: socketIO.Socket, d: any) {
         if (d.token) {
